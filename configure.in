@@ -1,0 +1,12 @@
+AC_INIT(configure.in)
+AC_PREFIX_DEFAULT(/usr)
+AM_INIT_AUTOMAKE(solitario, 0.1)
+AC_PROG_CXX
+AM_PROG_CC_STDC
+AC_HEADER_STDC
+ACX_SET_RPM_TOPDIR
+AC_OUTPUT(Makefile
+          data/Makefile
+          data/images/Makefile
+          data/mazzi/Makefile
+          solitario.spec)

@@ -1,0 +1,69 @@
+Solitario versione 0.1
+----------------------
+
+Introduzione
+------------
+Questa è la versione Linux del famoso solitario, presente su windows Xp e Linux
+(in gnome è AisleRiot 2.4.0 Harfe), che però utilizza le 40 carte da briscola italiane. 
+
+Regole del gioco
+----------------
+Le regole sono molto semplici: il gioco termina quando tutte le carte 
+vengono accatastate sulle quattro pile libere a disposizione in alto a destra.
+Si parte dagli assi, poi i due fino ad arrivare ai re.
+Si può usare a piacere il mazzo delle rimanenti carte in alto a sinistra, per 
+cercare di scoprire più carte possibili. Le carte si possono sovrapporre in 
+ordine decrescente, facendo attenzione al tipo (al colore nelle carte francesi).
+Spade e bastoni sono dello stesso tipo, così come denari e coppe. Per esempio 
+su un cinque di spade si può sovrapporre un quattro di coppe o di denari, ma 
+non un quattro di bastoni o di spade. Quando si scopre un asso esso va posto
+in uno dei quattro posti liberi in alto a destra.
+Il gioco termina quando non sono più possibili spostamenti da effettuare, oppure
+quando tutte le carte sono state scoperte ed impilate.
+
+Comandi durante il gioco
+------------------------
+La navigazione nei vari menu avviene tramite tastiera. Lo spostamento delle 
+carte con il mouse. Durante la partita sono disponibili i seguenti comandi:
+
+Tasto 'N'  : inizia una nuova partita
+Tasto 'A'  : mostra un'animazione
+
+
+Mazzi di carte supportati
+------------------------- 
+-Piacentine
+-Bergamasche
+-Bolognesi
+-Trevisane
+-Genovesi
+-Milanesi
+-Napoletane
+-Piemontesi
+-Romagnole
+-Sarde
+-Siciliane
+-Toscane
+-Trentine
+-Triestine
+
+Lingue
+------
+- Italiano
+- Dialetto Bredese
+
+Autore
+------
+Igor Sarzi Sartori
+http://kickers.fabbricadigitale.it/briscola/index.php
+
+Credits
+-------
+Il programma utilizza la libreria sdl che si trova su 
+http://www.libsdl.org e la libreria drac sviluppata da Rico Roberto Zuñiga
+Fabio Spataro per i package della versione Linux.
+
+
+Librerie usate
+--------------
+SDL, SDL_image, SDL_mixer, libini
