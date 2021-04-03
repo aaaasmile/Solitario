@@ -55,7 +55,7 @@ Lingue
 Autore
 ------
 Igor Sarzi Sartori
-http://kickers.fabbricadigitale.it/briscola/index.php
+invido.it
 
 Credits
 -------
@@ -67,3 +67,7 @@ Fabio Spataro per i package della versione Linux.
 Librerie usate
 --------------
 SDL, SDL_image, SDL_mixer, libini
+
+Licenza
+-------
+MIT
