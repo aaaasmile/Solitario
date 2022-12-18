@@ -6,6 +6,9 @@ Poi lanciato il comando:
  autoreconf --install
 Ho installato sdl con
 sudo apt install libsdl1.2-dev
+Per le altre librerie sdl:
+sudo apt-get install libsdl-image1.2-dev
+sudo apt-get install libsdl-mixer1.2-dev
 
 così per avere il comando:
 sdl-config --libs

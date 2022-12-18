@@ -1,16 +1,12 @@
-////////////////////////////////////////////////////////////////////////////////
-// File         : win_type_global.h
-// Project      : 
-// Subsystem    : 
-// Component    : 
-// Author       : Igor Sarzi Sartori
-// Description  : global type definition
-////////////////////////////////////////////////////////////////////////////////
-// History      : 01.10.2001   Igor Sarzi Sartori    Created
+//win_type_global.h
 
 
 #ifndef _AIGLOBAL_TYPE_H
 #define _AIGLOBAL_TYPE_H
+
+#if _MSC_VER > 1000
+    #include <StdAfx.h>
+#endif
 
 #ifdef USEDIALOGTRACE
     #include <iostream>
@@ -19,12 +15,17 @@
 #if _MSC_VER > 1000
     #pragma warning(disable:4786)
 	#pragma warning(disable:4996)
+    #include <vector> 
     #include <deque>
-    #include <valarray>
     #include <windows.h>
+    #include <string>
 #else
     #include <deque>
-    #include <valarray>
+    #include <string>
+#endif
+
+#ifndef CONST
+    #define CONST const
 #endif
 
 #ifndef BOOL 
@@ -36,15 +37,19 @@
 #endif
 
 #ifndef TRUE 
-    #define TRUE 1
+    #define TRUE 1==1
 #endif
 
 #ifndef FALSE 
-    #define FALSE 0
+    #define FALSE 0==1
 #endif
 
 #ifndef CHAR 
     #define CHAR char
+#endif
+
+#ifndef STRING 
+	typedef std::string STRING;
 #endif
 
 #ifndef ASSERT
@@ -57,9 +62,15 @@
     typedef CONST CHAR *LPCSTR, *PCSTR;
 #endif
 
+#ifndef LP_FNTHREAD
+    //! function pointer for thread proxy casting
+    typedef int (*LP_FNTHREAD)(void*);
+#endif
+
 #ifndef TRACE
     #include <stdio.h>
-    #ifdef _WINDOWS
+    extern void TraceInLogFile(char* myBuff);
+    #ifdef WIN32
         inline void TRACE(const char* fmt, ...)
         {
             char myBuff[512];
@@ -68,20 +79,20 @@
             va_start( args, fmt );     /* Initialize variable arguments. */
 
             int result = vsprintf(myBuff, fmt, args); 
-#ifdef USEDIALOGTRACE
+        #ifdef USEDIALOGTRACE
             std::cout << "[TR] " <<myBuff;
-#else
+        #else
             ::OutputDebugString(myBuff);
-#endif
+            TraceInLogFile(myBuff);
+        #endif
         }
     #else
+        // non windows
 	    inline void TRACE(const char* fmt, ...)
         {
-     	    // todo: implement trace for anjuta
+     	    // todo: implement trace 
         }
     #endif
 #endif
-
-
 
 #endif
