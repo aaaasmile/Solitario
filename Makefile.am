@@ -7,7 +7,7 @@
 DIST_SUBDIRS = data
 SUBDIRS = data
 
-AM_CPPFLAGS = -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT
+AM_CPPFLAGS = -I/usr/include/SDL2 -D_REENTRANT -I ./libini/libini-1.1.10/include
 
 AM_CXXFLAGS =\
 	-Wunused\
@@ -50,12 +50,11 @@ solitario_SOURCES = \
 	credits.h\
 	win_type_global.h
 
-solitario_LDFLAGS = -L/usr/lib/x86_64-linux-gnu -lSDL
+solitario_LDFLAGS = -lSDL2
 
 solitario_LDADD =\
-	-lSDL_image\
-	-lSDL_mixer\
-	-lini
+	-lSDL2_image\
+	-lSDL2_mixer
 
 MAINTAINERCLEANFILES =\
 	Makefile.in\
