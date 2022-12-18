@@ -369,6 +369,5 @@ config.status:773: creating Makefile
 config.status:945: executing depfiles commands
 config.status:1022: cd .       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make[1]: Entering directory '/mnt/d/scratch/cpp/Solitario'
-make[1]: Nothing to be done for 'am--depfiles'.
 make[1]: Leaving directory '/mnt/d/scratch/cpp/Solitario'
 config.status:1027: $? = 0

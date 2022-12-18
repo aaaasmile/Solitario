@@ -48,7 +48,12 @@ solitario_SOURCES = \
 	StdAfx.h\
 	fading.h\
 	credits.h\
-	win_type_global.h
+	win_type_global.h\
+	./libini/libini-1.1.10/src/headings.h\ 
+	./libini/libini-1.1.10/src/ini.cpp\
+	./libini/libini-1.1.10/src/ini.h\
+  ./libini/libini-1.1.10/src/keys.h\
+	./libini/libini-1.1.10/src/list.h
 
 solitario_LDFLAGS = -lSDL2
 
