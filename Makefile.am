@@ -7,14 +7,12 @@
 DIST_SUBDIRS = data
 SUBDIRS = data
 
-INCLUDES =\
-	-I/usr/include/SDL
+AM_CPPFLAGS = -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT
 
 AM_CXXFLAGS =\
 	-Wunused\
 	-DDATA_PREFIX=\"$(DATA_PREFIX)\"
 	
-#DATA_PREFIX=/usr/share/solitario/
 DATA_PREFIX=data/
 
 bin_PROGRAMS = solitario
@@ -52,8 +50,7 @@ solitario_SOURCES = \
 	credits.h\
 	win_type_global.h
 
-solitario_LDFLAGS =\
-	$(shell sdl-config --libs) 
+solitario_LDFLAGS = -L/usr/lib/x86_64-linux-gnu -lSDL
 
 solitario_LDADD =\
 	-lSDL_image\
