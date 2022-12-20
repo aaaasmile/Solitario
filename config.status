@@ -386,7 +386,7 @@ on `(hostname || uname -n) 2>/dev/null | sed 1q`
 "
 
 # Files that config.status was made for.
-config_files=" Makefile data/Makefile data/images/Makefile data/mazzi/Makefile solitario.spec"
+config_files=" Makefile libini/Makefile data/Makefile data/images/Makefile data/mazzi/Makefile solitario.spec"
 config_commands=" depfiles"
 
 ac_cs_usage="\
@@ -524,6 +524,7 @@ do
   case $ac_config_target in
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+    "libini/Makefile") CONFIG_FILES="$CONFIG_FILES libini/Makefile" ;;
     "data/Makefile") CONFIG_FILES="$CONFIG_FILES data/Makefile" ;;
     "data/images/Makefile") CONFIG_FILES="$CONFIG_FILES data/images/Makefile" ;;
     "data/mazzi/Makefile") CONFIG_FILES="$CONFIG_FILES data/mazzi/Makefile" ;;

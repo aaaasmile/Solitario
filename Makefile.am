@@ -7,7 +7,7 @@
 DIST_SUBDIRS = data
 SUBDIRS = data
 
-AM_CPPFLAGS = -I/usr/include/SDL2 -D_REENTRANT -I ./libini/libini-1.1.10/include
+AM_CPPFLAGS = -I/usr/include/SDL2 -D_REENTRANT -I ./libini/include
 
 AM_CXXFLAGS =\
 	-Wunused\
@@ -48,12 +48,7 @@ solitario_SOURCES = \
 	StdAfx.h\
 	fading.h\
 	credits.h\
-	win_type_global.h\
-	./libini/libini-1.1.10/src/headings.h\ 
-	./libini/libini-1.1.10/src/ini.cpp\
-	./libini/libini-1.1.10/src/ini.h\
-  ./libini/libini-1.1.10/src/keys.h\
-	./libini/libini-1.1.10/src/list.h
+	win_type_global.h
 
 solitario_LDFLAGS = -lSDL2
 

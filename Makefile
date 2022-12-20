@@ -106,7 +106,7 @@ am_solitario_OBJECTS = CCardRegion.$(OBJEXT) CCardStack.$(OBJEXT) \
 	cMusicManager.$(OBJEXT) CustomMenu.$(OBJEXT) \
 	EngineApp.$(OBJEXT) fonts.$(OBJEXT) GameSettings.$(OBJEXT) \
 	gfx_util.$(OBJEXT) Languages.$(OBJEXT) main.$(OBJEXT) \
-	fading.$(OBJEXT) credits.$(OBJEXT) ini.$(OBJEXT)
+	fading.$(OBJEXT) credits.$(OBJEXT)
 solitario_OBJECTS = $(am_solitario_OBJECTS)
 solitario_DEPENDENCIES =
 solitario_LINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
@@ -133,12 +133,8 @@ am__depfiles_remade = ./$(DEPDIR)/CCardRegion.Po \
 	./$(DEPDIR)/cHightScoreMgr.Po ./$(DEPDIR)/cMusicManager.Po \
 	./$(DEPDIR)/credits.Po ./$(DEPDIR)/fading.Po \
 	./$(DEPDIR)/fonts.Po ./$(DEPDIR)/gfx_util.Po \
-	./$(DEPDIR)/ini.Po ./$(DEPDIR)/main.Po
+	./$(DEPDIR)/main.Po
 am__mv = mv -f
-AM_V_lt = $(am__v_lt_$(V))
-am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
-am__v_lt_0 = --silent
-am__v_lt_1 = 
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 AM_V_CXX = $(am__v_CXX_$(V))
@@ -341,7 +337,7 @@ top_builddir = .
 top_srcdir = .
 DIST_SUBDIRS = data
 SUBDIRS = data
-AM_CPPFLAGS = -I/usr/include/SDL2 -D_REENTRANT -I ./libini/libini-1.1.10/include
+AM_CPPFLAGS = -I/usr/include/SDL2 -D_REENTRANT -I ./libini/include
 AM_CXXFLAGS = \
 	-Wunused\
 	-DDATA_PREFIX=\"$(DATA_PREFIX)\"
@@ -378,12 +374,7 @@ solitario_SOURCES = \
 	StdAfx.h\
 	fading.h\
 	credits.h\
-	win_type_global.h\
-	./libini/libini-1.1.10/src/headings.h\
-	./libini/libini-1.1.10/src/ini.cpp\
-	./libini/libini-1.1.10/src/ini.h\
-  ./libini/libini-1.1.10/src/keys.h\
-	./libini/libini-1.1.10/src/list.h
+	win_type_global.h
 
 solitario_LDFLAGS = -lSDL2
 solitario_LDADD = \
@@ -505,7 +496,6 @@ include ./$(DEPDIR)/credits.Po # am--include-marker
 include ./$(DEPDIR)/fading.Po # am--include-marker
 include ./$(DEPDIR)/fonts.Po # am--include-marker
 include ./$(DEPDIR)/gfx_util.Po # am--include-marker
-include ./$(DEPDIR)/ini.Po # am--include-marker
 include ./$(DEPDIR)/main.Po # am--include-marker
 
 $(am__depfiles_remade):
@@ -527,20 +517,6 @@ am--depfiles: $(am__depfiles_remade)
 #	$(AM_V_CXX)source='$<' object='$@' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
-
-ini.o: ./libini/libini-1.1.10/src/ini.cpp
-	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ini.o -MD -MP -MF $(DEPDIR)/ini.Tpo -c -o ini.o `test -f './libini/libini-1.1.10/src/ini.cpp' || echo '$(srcdir)/'`./libini/libini-1.1.10/src/ini.cpp
-	$(AM_V_at)$(am__mv) $(DEPDIR)/ini.Tpo $(DEPDIR)/ini.Po
-#	$(AM_V_CXX)source='./libini/libini-1.1.10/src/ini.cpp' object='ini.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ini.o `test -f './libini/libini-1.1.10/src/ini.cpp' || echo '$(srcdir)/'`./libini/libini-1.1.10/src/ini.cpp
-
-ini.obj: ./libini/libini-1.1.10/src/ini.cpp
-	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ini.obj -MD -MP -MF $(DEPDIR)/ini.Tpo -c -o ini.obj `if test -f './libini/libini-1.1.10/src/ini.cpp'; then $(CYGPATH_W) './libini/libini-1.1.10/src/ini.cpp'; else $(CYGPATH_W) '$(srcdir)/./libini/libini-1.1.10/src/ini.cpp'; fi`
-	$(AM_V_at)$(am__mv) $(DEPDIR)/ini.Tpo $(DEPDIR)/ini.Po
-#	$(AM_V_CXX)source='./libini/libini-1.1.10/src/ini.cpp' object='ini.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ini.obj `if test -f './libini/libini-1.1.10/src/ini.cpp'; then $(CYGPATH_W) './libini/libini-1.1.10/src/ini.cpp'; else $(CYGPATH_W) '$(srcdir)/./libini/libini-1.1.10/src/ini.cpp'; fi`
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run 'make' without going through this Makefile.
@@ -902,7 +878,6 @@ distclean: distclean-recursive
 	-rm -f ./$(DEPDIR)/fading.Po
 	-rm -f ./$(DEPDIR)/fonts.Po
 	-rm -f ./$(DEPDIR)/gfx_util.Po
-	-rm -f ./$(DEPDIR)/ini.Po
 	-rm -f ./$(DEPDIR)/main.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
@@ -964,7 +939,6 @@ maintainer-clean: maintainer-clean-recursive
 	-rm -f ./$(DEPDIR)/fading.Po
 	-rm -f ./$(DEPDIR)/fonts.Po
 	-rm -f ./$(DEPDIR)/gfx_util.Po
-	-rm -f ./$(DEPDIR)/ini.Po
 	-rm -f ./$(DEPDIR)/main.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic \
