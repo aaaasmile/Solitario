@@ -1,3 +1,5 @@
+AM_CPPFLAGS = -I ./include
+
 bin_PROGRAMS = solitario
 solitario_SOURCES = headings.h \
                     ini.cpp \

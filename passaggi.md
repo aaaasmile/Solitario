@@ -40,3 +40,20 @@ https://sourceforge.net/projects/libini/
 L'ho integrata direttamente nel codice in quanto non fa parte della distribuzione 
 di ubuntu.
 
+### Automake
+Automake naturalmente evolve e per ogni versione bisogna stare attenti che
+le macro cambiano di ruolo e di argomenti. Quindi bisogna sapere quale versione
+si sta usando e come funzionano le macro.
+Questo è il link che uso (versione 2.71):
+https://www.gnu.org/software/autoconf/manual/autoconf-2.71/html_node/Initializing-configure.html
+Questo per avere i parametri iniziali definiti poi in config.h (Nome, Versione, e-mail, tarball e URL).
+Il file di partenza è configure.ac e sono partito da zero guardando il tutorial.
+Ho messo le macro indispendabili come:
+AC_INIT -> inizializza le info basilari
+AM_INIT_AUTOMAKE -> comincia ad usarle con dei parametri di verbosità e tolleranza
+AC_PROG_CXX -> definisce il compilatore c++
+AC_CONFIG_FILES -> mette la lista dei makefiles che vengono creati a seconda di dove si trovano i sorgenti
+AC_OUTPUT -> Esegue la creazione dei makefiles
+Da qui ho aggiunto una macro per definire la versione (m4_define) e creare un configure.h
+così che le definizioni del modulo siano disponibili anche nel codice (AC_CONFIG_HEADERS).
+
