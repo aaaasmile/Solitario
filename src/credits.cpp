@@ -30,7 +30,7 @@ char * credit_text[] = {
   "PART OF THE 'BRISCOLA_NET' PROJECT",
   "",
   "-LEAD PROGRAMMER",
-  "IGOR SARZI SARTORI",
+  "Invido.it",
   "",
   "",
   "-CONTRIBUTING ",

@@ -6,7 +6,7 @@ Source: %{name}-%{version}.tar.gz
 Url: https://invido.it
 Copyright: GPL
 Group: Svaghi/Giochi
-Vendor: Igor Sarzi Sartori <6colpiunbucosolo@gmx.net>
+Vendor: Invido.it <6colpiunbucosolo@gmx.net>
 Packager: Fabio Spataro <fabio.spataro@fis.unipr.it>
 Prefix: %{_prefix}
 BuildRoot: %{_tmppath}/%{name}-root

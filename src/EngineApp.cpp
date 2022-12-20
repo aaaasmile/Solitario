@@ -856,7 +856,7 @@ void cEngineApp::Setup(int argc, char *argv[]) {
       /* Display help message: */
 
       printf(
-          "Solitario versione 1.5 (c) 2004 Igor Sarzi Sartori\nFai partire il solitario con le seguenti opzioni:\n"
+          "Solitario versione 1.5 (c) 2004-2022 Invido.it\nFai partire il solitario con le seguenti opzioni:\n"
           "--nosound      - to disable sound/music\n"
           "--fullscreen   - to run in fullscreen, if possible (vs. windowed)\n"
           "--size x,y Fa partire il programma ad una risoluzione x,y \n");
@@ -865,7 +865,7 @@ void cEngineApp::Setup(int argc, char *argv[]) {
     } else if (strcmp(argv[i], "--copyright") == 0 ||
                strcmp(argv[i], "-c") == 0) {
       printf(
-          "\n\"Solitario\" version 1.5, Copyright (C) 2004 Igor Sarzi Sartori\n"
+          "\n\"Solitario\" version 1.5, Copyright (C) 2004-2022 Invido.it\n"
           "This program is free software; you can redistribute it and/or\n"
           "modify it under the terms of the GNU General Public License\n"
           "as published by the Free Software Foundation.  See COPYING.txt\n"

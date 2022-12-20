@@ -3,10 +3,9 @@
 // Project      : 
 // Subsystem    : 
 // Component    : 
-// Author       : Igor Sarzi Sartori (c) 2004
+// Author       : Invido.it (c) 2004-2022
 // Description  : implementation of the cMusicManager class.
 ////////////////////////////////////////////////////////////////////////////////
-// History      : 8.05.2004   Igor Sarzi Sartori    Created
 
 //////////////////////////////////////////////////////////////////////
 /*

@@ -3,10 +3,9 @@
 // Project      : 
 // Subsystem    : 
 // Component    : 
-// Author       : Igor Sarzi Sartori (c) 2004
+// Author       : Invido.it (c) 2004-2022
 // Description  : 
 ////////////////////////////////////////////////////////////////////////////////
-// History      : 8.05.2004   Igor Sarzi Sartori    Created
 
 /*
 *
@@ -47,25 +46,25 @@ cLanguages::cLanguages()
     }
     m_eLangid = LANG_ITA;
     //dialetto
-    m_matStringsLang[LANG_DIAL_MN][ID_START] = "Cümincia";
-    m_matStringsLang[LANG_DIAL_MN][ID_LANGUAGESEL] = "Lengui furèsti";
-    m_matStringsLang[LANG_DIAL_MN][ID_HISCORE] = "Al mèi di mèi";
-    m_matStringsLang[LANG_DIAL_MN][ID_VIDEOSET] = "Giösta al display";
+    m_matStringsLang[LANG_DIAL_MN][ID_START] = "Cï¿½mincia";
+    m_matStringsLang[LANG_DIAL_MN][ID_LANGUAGESEL] = "Lengui furï¿½sti";
+    m_matStringsLang[LANG_DIAL_MN][ID_HISCORE] = "Al mï¿½i di mï¿½i";
+    m_matStringsLang[LANG_DIAL_MN][ID_VIDEOSET] = "Giï¿½sta al display";
     m_matStringsLang[LANG_DIAL_MN][ID_MAINMENU] = "Menu principal";
     m_matStringsLang[LANG_DIAL_MN][ID_EXIT] = "Fnomla che";
-    m_matStringsLang[LANG_DIAL_MN][ID_CHOOSELEVEL] = "Cata föra al jeuq";
+    m_matStringsLang[LANG_DIAL_MN][ID_CHOOSELEVEL] = "Cata fï¿½ra al jeuq";
     m_matStringsLang[LANG_DIAL_MN][ID_BACKMAINMENU] = "Al menu principal";
     m_matStringsLang[LANG_DIAL_MN][ID_EASY] = "Facil";
     m_matStringsLang[LANG_DIAL_MN][ID_HARD] = "Dificilisim";
     m_matStringsLang[LANG_DIAL_MN][ID_HARDER] = "Mia tant facil";
-    m_matStringsLang[LANG_DIAL_MN][ID_BACK] = "Turna indrè";
-    m_matStringsLang[LANG_DIAL_MN][ID_SELECTDISPLAYSETTINGS] = "Cata föra al display";
+    m_matStringsLang[LANG_DIAL_MN][ID_BACK] = "Turna indrï¿½";
+    m_matStringsLang[LANG_DIAL_MN][ID_SELECTDISPLAYSETTINGS] = "Cata fï¿½ra al display";
     m_matStringsLang[LANG_DIAL_MN][ID_INVIDO] = "Invidu";
-    m_matStringsLang[LANG_DIAL_MN][ID_CHOOSELANGUA] = "Cata föra la lengua";
+    m_matStringsLang[LANG_DIAL_MN][ID_CHOOSELANGUA] = "Cata fï¿½ra la lengua";
     m_matStringsLang[LANG_DIAL_MN][ID_ENGLISH] = "L'ingles";
     m_matStringsLang[LANG_DIAL_MN][ID_DIALETMN] = "Al dialet";
     m_matStringsLang[LANG_DIAL_MN][ID_ITALIANO] = "L'italian";
-    m_matStringsLang[LANG_DIAL_MN][ID_ANONIM] = "Anònim";
+    m_matStringsLang[LANG_DIAL_MN][ID_ANONIM] = "Anï¿½nim";
     m_matStringsLang[LANG_DIAL_MN][ID_PUSHBUTTON] = "Schesa an buton";
     m_matStringsLang[LANG_DIAL_MN][ID_CMD_UNKNOWN] = "Cumand mia cunusi";
     m_matStringsLang[LANG_DIAL_MN][ID_CMD_HELP] = "Cumand cat po catar fora:";
@@ -73,11 +72,11 @@ cLanguages::cLanguages()
     m_matStringsLang[LANG_DIAL_MN][ID_CMD_CHATLIST] = "La lista adla gent in dla chat:";
     m_matStringsLang[LANG_DIAL_MN][ID_SOLITARIO] = "Sulitari";
     m_matStringsLang[LANG_DIAL_MN][ID_MAZZONAME] = "Mas ad li carti";
-    m_matStringsLang[LANG_DIAL_MN][ID_SOUNDOPT] = "Müsica";
-    m_matStringsLang[LANG_DIAL_MN][ID_ABILITATO] = "Impiàda";
+    m_matStringsLang[LANG_DIAL_MN][ID_SOUNDOPT] = "Mï¿½sica";
+    m_matStringsLang[LANG_DIAL_MN][ID_ABILITATO] = "Impiï¿½da";
     m_matStringsLang[LANG_DIAL_MN][ID_DISABILITATO] = "Smorsa";
 
-    m_matStringsLang[LANG_DIAL_MN][ID_CHOOSEMAZZO] = "Cata föra al mas ad lì carti";
+    m_matStringsLang[LANG_DIAL_MN][ID_CHOOSEMAZZO] = "Cata fï¿½ra al mas ad lï¿½ carti";
     m_matStringsLang[LANG_DIAL_MN][ID_PIACENTINA] = "Piacentini";
     m_matStringsLang[LANG_DIAL_MN][ID_BERGAMO] = "Bergum";
     m_matStringsLang[LANG_DIAL_MN][ID_BOLOGNA] = "Bulugnesi";
@@ -86,7 +85,7 @@ cLanguages::cLanguages()
     m_matStringsLang[LANG_DIAL_MN][ID_NAPOLI] = "Napuletani";
     m_matStringsLang[LANG_DIAL_MN][ID_PIEMONTE] = "Piemuntesi";
     m_matStringsLang[LANG_DIAL_MN][ID_ROMAGNA] = "Rumagnoli";
-    m_matStringsLang[LANG_DIAL_MN][ID_SARDEGNA] = "Sardagnöli";
+    m_matStringsLang[LANG_DIAL_MN][ID_SARDEGNA] = "Sardagnï¿½li";
     m_matStringsLang[LANG_DIAL_MN][ID_TOSCANA] = "Tuscani";
     m_matStringsLang[LANG_DIAL_MN][ID_TRENTO] = "Trentini";
     m_matStringsLang[LANG_DIAL_MN][ID_TREVISO] = "Trevisani";
