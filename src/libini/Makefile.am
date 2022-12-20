@@ -1,7 +1,7 @@
 AM_CPPFLAGS = -I ./include -DHAVE_STRCASECMP
 
-bin_PROGRAMS = solitario
-solitario_SOURCES = headings.h \
+lib_LIBRARIES   = libini.a
+libini_a_SOURCES = headings.h \
                     ini.cpp \
 					ini.h \
 					keys.h \

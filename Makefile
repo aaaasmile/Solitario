@@ -152,8 +152,8 @@ am__define_uniq_tagged_files = \
     if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
   done | $(am__uniquify_input)`
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in AUTHORS \
-	COPYING ChangeLog INSTALL NEWS README depcomp install-sh \
-	missing
+	COPYING ChangeLog INSTALL NEWS README ar-lib compile depcomp \
+	install-sh missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -201,10 +201,14 @@ distcleancheck_listfiles = find . -type f -print
 ACLOCAL = ${SHELL} '/mnt/d/Projects/github/carte/solitario/missing' aclocal-1.16
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
+AR = ar
 AUTOCONF = ${SHELL} '/mnt/d/Projects/github/carte/solitario/missing' autoconf
 AUTOHEADER = ${SHELL} '/mnt/d/Projects/github/carte/solitario/missing' autoheader
 AUTOMAKE = ${SHELL} '/mnt/d/Projects/github/carte/solitario/missing' automake-1.16
 AWK = gawk
+CC = gcc
+CCDEPMODE = depmode=gcc3
+CFLAGS = -g -O2
 CPPFLAGS = 
 CSCOPE = cscope
 CTAGS = ctags
@@ -239,6 +243,7 @@ PACKAGE_TARNAME = solitario-1.7
 PACKAGE_URL = https://invido.it
 PACKAGE_VERSION = 1.7
 PATH_SEPARATOR = :
+RANLIB = ranlib
 SET_MAKE = 
 SHELL = /bin/bash
 STRIP = 
@@ -247,6 +252,8 @@ abs_builddir = /mnt/d/Projects/github/carte/solitario
 abs_srcdir = /mnt/d/Projects/github/carte/solitario
 abs_top_builddir = /mnt/d/Projects/github/carte/solitario
 abs_top_srcdir = /mnt/d/Projects/github/carte/solitario
+ac_ct_AR = ar
+ac_ct_CC = gcc
 ac_ct_CXX = g++
 am__include = include
 am__leading_dot = .
@@ -286,6 +293,7 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
+AUTOMAKE_OPTIONS = foreign
 SUBDIRS = src data
 DIST_SUBDIRS = data
 DATA_PREFIX = data/

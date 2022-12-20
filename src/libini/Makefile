@@ -86,7 +86,6 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = solitario$(EXEEXT)
 subdir = src/libini
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -97,11 +96,44 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am__installdirs = "$(DESTDIR)$(bindir)"
-PROGRAMS = $(bin_PROGRAMS)
-am_solitario_OBJECTS = ini.$(OBJEXT)
-solitario_OBJECTS = $(am_solitario_OBJECTS)
-solitario_LDADD = $(LDADD)
+am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
+am__vpath_adj = case $$p in \
+    $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
+    *) f=$$p;; \
+  esac;
+am__strip_dir = f=`echo $$p | sed -e 's|^.*/||'`;
+am__install_max = 40
+am__nobase_strip_setup = \
+  srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*|]/\\\\&/g'`
+am__nobase_strip = \
+  for p in $$list; do echo "$$p"; done | sed -e "s|$$srcdirstrip/||"
+am__nobase_list = $(am__nobase_strip_setup); \
+  for p in $$list; do echo "$$p $$p"; done | \
+  sed "s| $$srcdirstrip/| |;"' / .*\//!s/ .*/ ./; s,\( .*\)/[^/]*$$,\1,' | \
+  $(AWK) 'BEGIN { files["."] = "" } { files[$$2] = files[$$2] " " $$1; \
+    if (++n[$$2] == $(am__install_max)) \
+      { print $$2, files[$$2]; n[$$2] = 0; files[$$2] = "" } } \
+    END { for (dir in files) print dir, files[dir] }'
+am__base_list = \
+  sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
+  sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
+am__uninstall_files_from_dir = { \
+  test -z "$$files" \
+    || { test ! -d "$$dir" && test ! -f "$$dir" && test ! -r "$$dir"; } \
+    || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
+         $(am__cd) "$$dir" && rm -f $$files; }; \
+  }
+am__installdirs = "$(DESTDIR)$(libdir)"
+LIBRARIES = $(lib_LIBRARIES)
+ARFLAGS = cru
+AM_V_AR = $(am__v_AR_$(V))
+am__v_AR_ = $(am__v_AR_$(AM_DEFAULT_VERBOSITY))
+am__v_AR_0 = @echo "  AR      " $@;
+am__v_AR_1 = 
+libini_a_AR = $(AR) $(ARFLAGS)
+libini_a_LIBADD =
+am_libini_a_OBJECTS = ini.$(OBJEXT)
+libini_a_OBJECTS = $(am_libini_a_OBJECTS)
 AM_V_P = $(am__v_P_$(V))
 am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))
 am__v_P_0 = false
@@ -144,8 +176,8 @@ AM_V_CCLD = $(am__v_CCLD_$(V))
 am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(solitario_SOURCES)
-DIST_SOURCES = $(solitario_SOURCES)
+SOURCES = $(libini_a_SOURCES)
+DIST_SOURCES = $(libini_a_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -173,10 +205,14 @@ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = ${SHELL} '/mnt/d/Projects/github/carte/solitario/missing' aclocal-1.16
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
+AR = ar
 AUTOCONF = ${SHELL} '/mnt/d/Projects/github/carte/solitario/missing' autoconf
 AUTOHEADER = ${SHELL} '/mnt/d/Projects/github/carte/solitario/missing' autoheader
 AUTOMAKE = ${SHELL} '/mnt/d/Projects/github/carte/solitario/missing' automake-1.16
 AWK = gawk
+CC = gcc
+CCDEPMODE = depmode=gcc3
+CFLAGS = -g -O2
 CPPFLAGS = 
 CSCOPE = cscope
 CTAGS = ctags
@@ -211,6 +247,7 @@ PACKAGE_TARNAME = solitario-1.7
 PACKAGE_URL = https://invido.it
 PACKAGE_VERSION = 1.7
 PATH_SEPARATOR = :
+RANLIB = ranlib
 SET_MAKE = 
 SHELL = /bin/bash
 STRIP = 
@@ -219,6 +256,8 @@ abs_builddir = /mnt/d/Projects/github/carte/solitario/src/libini
 abs_srcdir = /mnt/d/Projects/github/carte/solitario/src/libini
 abs_top_builddir = /mnt/d/Projects/github/carte/solitario
 abs_top_srcdir = /mnt/d/Projects/github/carte/solitario
+ac_ct_AR = ar
+ac_ct_CC = gcc
 ac_ct_CXX = g++
 am__include = include
 am__leading_dot = .
@@ -259,7 +298,8 @@ top_build_prefix = ../../
 top_builddir = ../..
 top_srcdir = ../..
 AM_CPPFLAGS = -I ./include -DHAVE_STRCASECMP
-solitario_SOURCES = headings.h \
+lib_LIBRARIES = libini.a
+libini_a_SOURCES = headings.h \
                     ini.cpp \
 					ini.h \
 					keys.h \
@@ -298,52 +338,42 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
-install-binPROGRAMS: $(bin_PROGRAMS)
+install-libLIBRARIES: $(lib_LIBRARIES)
 	@$(NORMAL_INSTALL)
-	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
-	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(bindir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(bindir)" || exit 1; \
-	fi; \
-	for p in $$list; do echo "$$p $$p"; done | \
-	sed 's/$(EXEEXT)$$//' | \
-	while read p p1; do if test -f $$p \
-	  ; then echo "$$p"; echo "$$p"; else :; fi; \
-	done | \
-	sed -e 'p;s,.*/,,;n;h' \
-	    -e 's|.*|.|' \
-	    -e 'p;x;s,.*/,,;s/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/' | \
-	sed 'N;N;N;s,\n, ,g' | \
-	$(AWK) 'BEGIN { files["."] = ""; dirs["."] = 1 } \
-	  { d=$$3; if (dirs[d] != 1) { print "d", d; dirs[d] = 1 } \
-	    if ($$2 == $$4) files[d] = files[d] " " $$1; \
-	    else { print "f", $$3 "/" $$4, $$1; } } \
-	  END { for (d in files) print "f", d, files[d] }' | \
-	while read type dir files; do \
-	    if test "$$dir" = .; then dir=; else dir=/$$dir; fi; \
-	    test -z "$$files" || { \
-	      echo " $(INSTALL_PROGRAM_ENV) $(INSTALL_PROGRAM) $$files '$(DESTDIR)$(bindir)$$dir'"; \
-	      $(INSTALL_PROGRAM_ENV) $(INSTALL_PROGRAM) $$files "$(DESTDIR)$(bindir)$$dir" || exit $$?; \
-	    } \
-	; done
+	@list='$(lib_LIBRARIES)'; test -n "$(libdir)" || list=; \
+	list2=; for p in $$list; do \
+	  if test -f $$p; then \
+	    list2="$$list2 $$p"; \
+	  else :; fi; \
+	done; \
+	test -z "$$list2" || { \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(libdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(libdir)" || exit 1; \
+	  echo " $(INSTALL_DATA) $$list2 '$(DESTDIR)$(libdir)'"; \
+	  $(INSTALL_DATA) $$list2 "$(DESTDIR)$(libdir)" || exit $$?; }
+	@$(POST_INSTALL)
+	@list='$(lib_LIBRARIES)'; test -n "$(libdir)" || list=; \
+	for p in $$list; do \
+	  if test -f $$p; then \
+	    $(am__strip_dir) \
+	    echo " ( cd '$(DESTDIR)$(libdir)' && $(RANLIB) $$f )"; \
+	    ( cd "$(DESTDIR)$(libdir)" && $(RANLIB) $$f ) || exit $$?; \
+	  else :; fi; \
+	done
 
-uninstall-binPROGRAMS:
+uninstall-libLIBRARIES:
 	@$(NORMAL_UNINSTALL)
-	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
-	files=`for p in $$list; do echo "$$p"; done | \
-	  sed -e 'h;s,^.*/,,;s/$(EXEEXT)$$//;$(transform)' \
-	      -e 's/$$/$(EXEEXT)/' \
-	`; \
-	test -n "$$list" || exit 0; \
-	echo " ( cd '$(DESTDIR)$(bindir)' && rm -f" $$files ")"; \
-	cd "$(DESTDIR)$(bindir)" && rm -f $$files
+	@list='$(lib_LIBRARIES)'; test -n "$(libdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(libdir)'; $(am__uninstall_files_from_dir)
 
-clean-binPROGRAMS:
-	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+clean-libLIBRARIES:
+	-test -z "$(lib_LIBRARIES)" || rm -f $(lib_LIBRARIES)
 
-solitario$(EXEEXT): $(solitario_OBJECTS) $(solitario_DEPENDENCIES) $(EXTRA_solitario_DEPENDENCIES) 
-	@rm -f solitario$(EXEEXT)
-	$(AM_V_CXXLD)$(CXXLINK) $(solitario_OBJECTS) $(solitario_LDADD) $(LIBS)
+libini.a: $(libini_a_OBJECTS) $(libini_a_DEPENDENCIES) $(EXTRA_libini_a_DEPENDENCIES) 
+	$(AM_V_at)-rm -f libini.a
+	$(AM_V_AR)$(libini_a_AR) libini.a $(libini_a_OBJECTS) $(libini_a_LIBADD)
+	$(AM_V_at)$(RANLIB) libini.a
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -459,9 +489,9 @@ distdir-am: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(PROGRAMS)
+all-am: Makefile $(LIBRARIES)
 installdirs:
-	for dir in "$(DESTDIR)$(bindir)"; do \
+	for dir in "$(DESTDIR)$(libdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -496,7 +526,7 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
+clean-am: clean-generic clean-libLIBRARIES mostlyclean-am
 
 distclean: distclean-am
 		-rm -f ./$(DEPDIR)/ini.Po
@@ -522,7 +552,7 @@ install-dvi: install-dvi-am
 
 install-dvi-am:
 
-install-exec-am: install-binPROGRAMS
+install-exec-am: install-libLIBRARIES
 
 install-html: install-html-am
 
@@ -561,23 +591,23 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-binPROGRAMS
+uninstall-am: uninstall-libLIBRARIES
 
 .MAKE: install-am install-strip
 
 .PHONY: CTAGS GTAGS TAGS all all-am am--depfiles check check-am clean \
-	clean-binPROGRAMS clean-generic cscopelist-am ctags ctags-am \
+	clean-generic clean-libLIBRARIES cscopelist-am ctags ctags-am \
 	distclean distclean-compile distclean-generic distclean-tags \
 	distdir dvi dvi-am html html-am info info-am install \
-	install-am install-binPROGRAMS install-data install-data-am \
-	install-dvi install-dvi-am install-exec install-exec-am \
-	install-html install-html-am install-info install-info-am \
-	install-man install-pdf install-pdf-am install-ps \
-	install-ps-am install-strip installcheck installcheck-am \
-	installdirs maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-compile mostlyclean-generic pdf pdf-am \
-	ps ps-am tags tags-am uninstall uninstall-am \
-	uninstall-binPROGRAMS
+	install-am install-data install-data-am install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-info install-info-am \
+	install-libLIBRARIES install-man install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic pdf pdf-am ps ps-am tags tags-am uninstall \
+	uninstall-am uninstall-libLIBRARIES
 
 .PRECIOUS: Makefile
 
