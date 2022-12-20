@@ -5,3 +5,4 @@ stderr.txt
 configure~
 config.log
 temp
+*.a

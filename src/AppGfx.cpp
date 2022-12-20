@@ -840,59 +840,59 @@ void AppGfx::menuMazziChoose() {
     switch (result2) {
         case 0:
             // piacentine
-            m_Settings.DeckType.SetType(cTipoDiMazzo::PIACENTINA);
+            m_Settings.DeckType.SetType(DeckType::PIACENTINA);
             break;
         case 1:
             // bergamo
-            m_Settings.DeckType.SetType(cTipoDiMazzo::BERGAMO);
+            m_Settings.DeckType.SetType(DeckType::BERGAMO);
             break;
         case 2:
             // bologna
-            m_Settings.DeckType.SetType(cTipoDiMazzo::BOLOGNA);
+            m_Settings.DeckType.SetType(DeckType::BOLOGNA);
             break;
         case 3:
             // genova
-            m_Settings.DeckType.SetType(cTipoDiMazzo::GENOVA);
+            m_Settings.DeckType.SetType(DeckType::GENOVA);
             break;
         case 4:
             // milano
-            m_Settings.DeckType.SetType(cTipoDiMazzo::MILANO);
+            m_Settings.DeckType.SetType(DeckType::MILANO);
             break;
         case 5:
             // napoli
-            m_Settings.DeckType.SetType(cTipoDiMazzo::NAPOLI);
+            m_Settings.DeckType.SetType(DeckType::NAPOLI);
             break;
         case 6:
             // piemonte
-            m_Settings.DeckType.SetType(cTipoDiMazzo::PIEMONTE);
+            m_Settings.DeckType.SetType(DeckType::PIEMONTE);
             break;
         case 7:
             // romagna
-            m_Settings.DeckType.SetType(cTipoDiMazzo::ROMAGNA);
+            m_Settings.DeckType.SetType(DeckType::ROMAGNA);
             break;
         case 8:
             // sardegna
-            m_Settings.DeckType.SetType(cTipoDiMazzo::SARDEGNA);
+            m_Settings.DeckType.SetType(DeckType::SARDEGNA);
             break;
         case 9:
             // toscana
-            m_Settings.DeckType.SetType(cTipoDiMazzo::TOSCANA);
+            m_Settings.DeckType.SetType(DeckType::TOSCANA);
             break;
         case 10:
             // sicilia
-            m_Settings.DeckType.SetType(cTipoDiMazzo::SICILIA);
+            m_Settings.DeckType.SetType(DeckType::SICILIA);
             break;
         case 11:
             // trento
-            m_Settings.DeckType.SetType(cTipoDiMazzo::TRENTO);
+            m_Settings.DeckType.SetType(DeckType::TRENTO);
             break;
         case 12:
             // treviso
-            m_Settings.DeckType.SetType(cTipoDiMazzo::TREVISO);
+            m_Settings.DeckType.SetType(DeckType::TREVISO);
             break;
         case 13:
             // trieste
-            m_Settings.DeckType.SetType(cTipoDiMazzo::TRIESTE);
+            m_Settings.DeckType.SetType(DeckType::TRIESTE);
             break;
     }
     delete menuMazzi;
