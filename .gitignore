@@ -1,3 +1,6 @@
 .deps
 autom4te.cache
+stderr.txt
 *.o
+configure~
+config.log
