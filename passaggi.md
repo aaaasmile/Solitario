@@ -66,3 +66,15 @@ AC_OUTPUT -> Esegue la creazione dei makefiles
 Da qui ho aggiunto una macro per definire la versione (m4_define) e creare un configure.h
 così che le definizioni del modulo siano disponibili anche nel codice (AC_CONFIG_HEADERS).
 
+## Sviluppo in VS Code
+Sono partito dalla versione linux, quindi in WSL lancio code (la liea di comando di VsCode) che mi setta l'ambiente
+remoto WSL:Ubuntu-22.04. Il compilatore con automake, configure e make li uso da command line bash.
+Per avere il goto definition in questo ambiente mi serve il path che setto creando un file
+.vsode\c_cpp_properties.json. Tipo:
+    "includePath": [
+                "${workspaceFolder}/src/**",
+                "${workspaceFolder}/src/libini/include",
+                "/usr/include/SDL2"
+            ]
+Ho cambiato anche il task per avere la compilazione diretta da Visual con CTRL + SHIFT + B
+Dalla bash arrivo all'editor premendo il tasto CTRL e spostando il mouse sulla linea della bash
