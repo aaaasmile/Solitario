@@ -1,11 +1,8 @@
 ## Process this file with automake to produce Makefile.in
 
-## Created by Anjuta - will be overwritten
-## If you don't want it to overwrite it,
-## 	Please disable it in the Anjuta project configuration
+SUBDIRS = data src libini
 
 DIST_SUBDIRS = data
-SUBDIRS = data
 
 AM_CPPFLAGS = -I/usr/include/SDL2 -D_REENTRANT -I ./libini/include
 
@@ -16,39 +13,6 @@ AM_CXXFLAGS =\
 DATA_PREFIX=data/
 
 bin_PROGRAMS = solitario
-
-solitario_SOURCES = \
-	CCardRegion.cpp\
-	CCardStack.cpp\
-	CGame.cpp\
-	cHightScoreMgr.cpp\
-	cMusicManager.cpp\
-	CustomMenu.cpp\
-	EngineApp.cpp\
-	fonts.cpp\
-	GameSettings.cpp\
-	gfx_util.cpp\
-	Languages.cpp\
-	main.cpp\
-	fading.cpp\
-	credits.cpp\
-	CCard.h\
-	CCardRegion.h\
-	CCardStack.h\
-	CGame.h\
-	cHightScoreMgr.h\
-	cMusicManager.h\
-	CustomMenu.h\
-	EngineApp.h\
-	fonts.h\
-	GameSettings.h\
-	gfx_util.h\
-	Languages.h\
-	resource.h\
-	StdAfx.h\
-	fading.h\
-	credits.h\
-	win_type_global.h
 
 solitario_LDFLAGS = -lSDL2
 

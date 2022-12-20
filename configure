@@ -612,7 +612,7 @@ PACKAGE_STRING='solitario 1.0'
 PACKAGE_BUGREPORT=''
 PACKAGE_URL=''
 
-ac_unique_file="main.cpp"
+ac_unique_file="src/main.cpp"
 ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
@@ -3595,7 +3595,7 @@ else
 fi
 
 
-ac_config_files="$ac_config_files Makefile libini/Makefile data/Makefile data/images/Makefile data/mazzi/Makefile solitario.spec"
+ac_config_files="$ac_config_files Makefile src/Makefile libini/Makefile data/Makefile data/images/Makefile data/mazzi/Makefile solitario.spec"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -4335,6 +4335,7 @@ do
   case $ac_config_target in
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+    "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "libini/Makefile") CONFIG_FILES="$CONFIG_FILES libini/Makefile" ;;
     "data/Makefile") CONFIG_FILES="$CONFIG_FILES data/Makefile" ;;
     "data/images/Makefile") CONFIG_FILES="$CONFIG_FILES data/images/Makefile" ;;
