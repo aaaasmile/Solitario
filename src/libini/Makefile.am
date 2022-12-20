@@ -1,4 +1,4 @@
-AM_CPPFLAGS = -I ./include
+AM_CPPFLAGS = -I ./include -DHAVE_STRCASECMP
 
 bin_PROGRAMS = solitario
 solitario_SOURCES = headings.h \

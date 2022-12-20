@@ -258,7 +258,7 @@ target_alias =
 top_build_prefix = ../../
 top_builddir = ../..
 top_srcdir = ../..
-AM_CPPFLAGS = -I ./include
+AM_CPPFLAGS = -I ./include -DHAVE_STRCASECMP
 solitario_SOURCES = headings.h \
                     ini.cpp \
 					ini.h \
