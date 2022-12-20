@@ -39,6 +39,8 @@ libini che l'ho ritrovata qui:
 https://sourceforge.net/projects/libini/
 L'ho integrata direttamente nel codice in quanto non fa parte della distribuzione 
 di ubuntu.
+Il progetto usa libtool che non ho installato nel mio sistema:
+sudo apt-get install libtool
 
 ### Automake
 Automake naturalmente evolve e per ogni versione bisogna stare attenti che
