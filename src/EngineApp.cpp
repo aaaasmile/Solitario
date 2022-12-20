@@ -709,8 +709,17 @@ void cEngineApp::hightScoreMenu() {
     m_pMainFont->DrawString(
         m_pScreen, m_LanString.GetStringId(cLanguages::ID_PUSHBUTTON),
         TEXTMIXED, TEXTALIGNCENTER, 0, ty + 260 + SDLFONTSIZE, 0);
-    SDL_Flip(m_pScreen);
+    updateScreenTexture();
     WaitKey();
+}
+
+void cEngineApp::updateScreenTexture() {
+    // SDL 2.0
+    SDL_UpdateTexture(m_pScreenTexture, NULL, m_pScreen->pixels,
+                      m_pScreen->pitch);
+    SDL_RenderClear(m_psdlRenderer);
+    SDL_RenderCopy(m_psdlRenderer, m_pScreenTexture, NULL, NULL);
+    SDL_RenderPresent(m_psdlRenderer);
 }
 
 ////////////////////////////////////////
