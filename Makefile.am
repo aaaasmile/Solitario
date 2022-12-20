@@ -1,24 +1,10 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = data src libini
+SUBDIRS = src data
 
 DIST_SUBDIRS = data
-
-AM_CPPFLAGS = -I/usr/include/SDL2 -D_REENTRANT -I ./libini/include
-
-AM_CXXFLAGS =\
-	-Wunused\
-	-DDATA_PREFIX=\"$(DATA_PREFIX)\"
 	
 DATA_PREFIX=data/
-
-bin_PROGRAMS = solitario
-
-solitario_LDFLAGS = -lSDL2
-
-solitario_LDADD =\
-	-lSDL2_image\
-	-lSDL2_mixer
 
 MAINTAINERCLEANFILES =\
 	Makefile.in\

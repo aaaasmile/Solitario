@@ -1,3 +1,18 @@
+AM_CPPFLAGS = -I/usr/include/SDL2 -D_REENTRANT -I ./libini/include
+
+AM_CXXFLAGS =\
+	-Wunused\
+	-DDATA_PREFIX=\"$(DATA_PREFIX)\"
+
+SUBDIRS = libini
+bin_PROGRAMS = solitario
+
+solitario_LDFLAGS = -lSDL2
+
+solitario_LDADD =\
+	-lSDL2_image\
+	-lSDL2_mixer
+
 solitario_SOURCES = \
 	CCardRegion.cpp\
 	CCardStack.cpp\
