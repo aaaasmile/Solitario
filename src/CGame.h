@@ -109,6 +109,7 @@ public:
     void InitCardCoords(int regionNo) {
         _cardRegionList[regionNo].InitCardCoords();
     }
+    CCardRegion *GetRegion(int regionNo) { return &_cardRegionList[regionNo]; }
 
 private:
     CCardStack _dragStack;

@@ -77,6 +77,6 @@ public:
 };
 
 namespace GAMESET {
-    const GameSettings* GetSettings();
+    GameSettings* GetSettings();
 }
 #endif

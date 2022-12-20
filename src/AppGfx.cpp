@@ -52,6 +52,7 @@ AppGfx::AppGfx() {
     _p_MusicManager = 0;
     _p_Title = 0;
     _bFullScreen = FALSE;
+    _p_GameSettings = GAMESET::GetSettings();
 }
 
 AppGfx::~AppGfx() { terminate(); }
@@ -149,12 +150,12 @@ int AppGfx::startGameLoop() {
     }
     _p_SolitarioGfx = new CGame();
 
-    _p_SolitarioGfx->SetDeckType(_p_GameSettings->DeckType);
+    _p_SolitarioGfx->SetDeckType(_p_GameSettings->deckTypeVal);
     _p_SolitarioGfx->InitDeck(_p_Screen);
 
     _p_SolitarioGfx->ClearSurface();
     _p_SolitarioGfx->Clear();
-    _p_SolitarioGfx->Initialize(_p_Screen);
+    _p_SolitarioGfx->Initialize(_p_Screen, _p_sdlRenderer);
 
     // crea le regioni solo una sola volta
     // region
@@ -192,7 +193,7 @@ int AppGfx::startGameLoop() {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT:
-                    fade(_p_Screen, _p_Screen, 1, 1);
+                    fade(_p_Screen, _p_Screen, 1, 1, _p_sdlRenderer);
                     return 0;
 
                 case SDL_KEYDOWN:
@@ -287,7 +288,8 @@ void AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
                     8, _p_SolitarioGfx->RegionSize(8));
                 cs->SetCardsFaceUp(FALSE);
                 _p_SolitarioGfx->InitDrag(cs, -1, -1);
-                _p_SolitarioGfx->DoDrop(&_p_SolitarioGfx[0]);
+                //_p_SolitarioGfx->DoDrop(&_p_SolitarioGfx[0]);
+                _p_SolitarioGfx->DoDrop(_p_SolitarioGfx->GetRegion(0));
                 _p_SolitarioGfx->Reverse(0);
                 _p_SolitarioGfx->InitCardCoords(0);
             } else if (!srcReg->Empty() && (!_p_SolitarioGfx->Empty(8) ||
@@ -295,7 +297,7 @@ void AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
                 *cs = _p_SolitarioGfx->PopFromRegion(0, 1);
                 cs->SetCardsFaceUp(TRUE);
                 _p_SolitarioGfx->InitDrag(cs, -1, -1);
-                _p_SolitarioGfx->DoDrop(&_p_SolitarioGfx[8]);
+                _p_SolitarioGfx->DoDrop(_p_SolitarioGfx->GetRegion(8));
             }
         }
     }
@@ -366,7 +368,6 @@ void AppGfx::terminate() {
 }
 
 void AppGfx::loadProfile() {
-    _p_GameSettings = GAMESET::GetSettings();
 #ifdef _WINDOWS
     RegistryKey RegKey;
     LONG lRes;
@@ -378,9 +379,10 @@ void AppGfx::loadProfile() {
         _p_GameSettings->strPlayerName = RegKey.getRegStringValue(
             _p_GameSettings->strPlayerName.c_str(), strIDS_KEY_PLAYERNAME);
         // deck type
-        int iVal = RegKey.getRegDWordValue(
-            _p_GameSettings->DeckType.GetTypeIndex(), strIDS_KEY_DECKCURRENT);
-        _p_GameSettings->DeckType.SetTypeIndex(iVal);
+        int iVal =
+            RegKey.getRegDWordValue(_p_GameSettings->deckTypeVal.GetTypeIndex(),
+                                    strIDS_KEY_DECKCURRENT);
+        _p_GameSettings->deckTypeVal.SetTypeIndex(iVal);
 
         // language
         iVal = RegKey.getRegDWordValue(_p_GameSettings->eLanguageCurrent,
@@ -418,13 +420,13 @@ void AppGfx::loadProfile() {
     int iVal;
 
     // deck type
-    iVal = _p_GameSettings->DeckType.GetTypeIndex();
+    iVal = _p_GameSettings->deckTypeVal.GetTypeIndex();
     if (pIni) {
         ini_locateHeading(pIni, lpszSectAll);
         ini_locateKey(pIni, lpszKeyDeck);
         ini_readInt(pIni, &iVal);
     }
-    _p_GameSettings->DeckType.SetTypeIndex(iVal);
+    _p_GameSettings->deckTypeVal.SetTypeIndex(iVal);
     // language
     iVal = _p_GameSettings->eLanguageCurrent;
     if (pIni) {
@@ -462,7 +464,7 @@ void AppGfx::writeProfile() {
                                  strIDS_KEY_PLAYERNAME);
         RegKey.setRegDWordValue(_p_GameSettings->eLanguageCurrent,
                                 strIDS_KEY_LANGUAGECURRENT);
-        RegKey.setRegDWordValue(_p_GameSettings->DeckType.GetType(),
+        RegKey.setRegDWordValue(_p_GameSettings->deckTypeVal.GetType(),
                                 strIDS_KEY_DECKCURRENT);
         RegKey.setRegDWordValue(_p_GameSettings->bMusicEnabled,
                                 strIDS_KEY_MUSICENABLED);
@@ -477,7 +479,7 @@ void AppGfx::writeProfile() {
     // deck type
     ini_locateHeading(pIni, lpszSectAll);
     ini_locateKey(pIni, lpszKeyDeck);
-    ini_writeInt(pIni, (int)_p_GameSettings->DeckType.GetType());
+    ini_writeInt(pIni, (int)_p_GameSettings->deckTypeVal.GetType());
 
     // language
     ini_locateHeading(pIni, lpszSectAll);
@@ -740,59 +742,59 @@ void AppGfx::menuSelectDeck() {
     switch (result2) {
         case 0:
             // piacentine
-            _p_GameSettings->DeckType.SetType(DeckType::PIACENTINA);
+            _p_GameSettings->deckTypeVal.SetType(DeckType::PIACENTINA);
             break;
         case 1:
             // bergamo
-            _p_GameSettings->DeckType.SetType(DeckType::BERGAMO);
+            _p_GameSettings->deckTypeVal.SetType(DeckType::BERGAMO);
             break;
         case 2:
             // bologna
-            _p_GameSettings->DeckType.SetType(DeckType::BOLOGNA);
+            _p_GameSettings->deckTypeVal.SetType(DeckType::BOLOGNA);
             break;
         case 3:
             // genova
-            _p_GameSettings->DeckType.SetType(DeckType::GENOVA);
+            _p_GameSettings->deckTypeVal.SetType(DeckType::GENOVA);
             break;
         case 4:
             // milano
-            _p_GameSettings->DeckType.SetType(DeckType::MILANO);
+            _p_GameSettings->deckTypeVal.SetType(DeckType::MILANO);
             break;
         case 5:
             // napoli
-            _p_GameSettings->DeckType.SetType(DeckType::NAPOLI);
+            _p_GameSettings->deckTypeVal.SetType(DeckType::NAPOLI);
             break;
         case 6:
             // piemonte
-            _p_GameSettings->DeckType.SetType(DeckType::PIEMONTE);
+            _p_GameSettings->deckTypeVal.SetType(DeckType::PIEMONTE);
             break;
         case 7:
             // romagna
-            _p_GameSettings->DeckType.SetType(DeckType::ROMAGNA);
+            _p_GameSettings->deckTypeVal.SetType(DeckType::ROMAGNA);
             break;
         case 8:
             // sardegna
-            _p_GameSettings->DeckType.SetType(DeckType::SARDEGNA);
+            _p_GameSettings->deckTypeVal.SetType(DeckType::SARDEGNA);
             break;
         case 9:
             // toscana
-            _p_GameSettings->DeckType.SetType(DeckType::TOSCANA);
+            _p_GameSettings->deckTypeVal.SetType(DeckType::TOSCANA);
             break;
         case 10:
             // sicilia
-            _p_GameSettings->DeckType.SetType(DeckType::SICILIA);
+            _p_GameSettings->deckTypeVal.SetType(DeckType::SICILIA);
             break;
         case 11:
             // trento
-            _p_GameSettings->DeckType.SetType(DeckType::TRENTO);
+            _p_GameSettings->deckTypeVal.SetType(DeckType::TRENTO);
             break;
         case 12:
             // treviso
-            _p_GameSettings->DeckType.SetType(DeckType::TREVISO);
+            _p_GameSettings->deckTypeVal.SetType(DeckType::TREVISO);
             break;
         case 13:
             // trieste
-            _p_GameSettings->DeckType.SetType(DeckType::TRIESTE);
+            _p_GameSettings->deckTypeVal.SetType(DeckType::TRIESTE);
             break;
     }
     delete menuDecks;

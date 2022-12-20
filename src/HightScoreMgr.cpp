@@ -24,7 +24,7 @@ void HightScoreMgr::Save() {
     unsigned int score, k, nb;
     string name;
 
-    f = open("scores.bin", O_TRUNC | O_WRONLY | O_CREAT);
+    f = open("scores.bin", O_CREAT | O_WRONLY | O_TRUNC, O_WRONLY);
 
     if (f > 0) {
         for (k = 0; k < 10; k++) {

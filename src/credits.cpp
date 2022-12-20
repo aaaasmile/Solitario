@@ -139,7 +139,7 @@ char const chars[38][5][6] = {{".###.", "#..##", "#.#.#", "##..#", ".###."},
 
                               {"..#..", "..#..", ".....", ".....", "....."}};
 
-void draw_text(char* str, int offset, SDL_Surface* screen);
+void draw_text(const char* str, int offset, SDL_Surface* screen);
 
 int line;
 
@@ -155,17 +155,16 @@ int credits(SDL_Surface* p_surf_screen, SDL_Surface* pSurfTitle,
         SDL_CreateTextureFromSurface(psdlRenderer, p_surf_screen);
 
     /* Clear window: */
-    fade(p_surf_screen, p_surf_screen, 2, 1);
-    // SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+    fade(p_surf_screen, p_surf_screen, 2, 1, psdlRenderer);
 
     /* Draw title: */
 
-    dest.x = (screen->w - pSurfTitle->w) / 2;
+    dest.x = (p_surf_screen->w - pSurfTitle->w) / 2;
     dest.y = 0;
     dest.w = pSurfTitle->w;
     dest.h = pSurfTitle->h;
 
-    SDL_BlitSurface(pSurfTitle, NULL, screen, &dest);
+    SDL_BlitSurface(pSurfTitle, NULL, p_surf_screen, &dest);
 
     /* --- MAIN OPTIONS SCREEN LOOP: --- */
 
@@ -200,26 +199,27 @@ int credits(SDL_Surface* p_surf_screen, SDL_Surface* pSurfTitle,
 
         src.x = 0;
         src.y = (pSurfTitle->h) + 2;
-        src.w = screen->w;
-        src.h = screen->h - (pSurfTitle->h);
+        src.w = p_surf_screen->w;
+        src.h = p_surf_screen->h - (pSurfTitle->h);
 
         dest.x = 0;
         dest.y = (pSurfTitle->h);
         dest.w = src.w;
         dest.h = src.h;
 
-        SDL_BlitSurface(screen, &src, screen, &dest);
+        SDL_BlitSurface(p_surf_screen, &src, p_surf_screen, &dest);
 
         dest.x = 0;
-        dest.y = (screen->h) - 2;
-        dest.w = screen->w;
+        dest.y = (p_surf_screen->h) - 2;
+        dest.w = p_surf_screen->w;
         dest.h = 2;
 
-        SDL_FillRect(screen, &dest, SDL_MapRGB(screen->format, 0, 0, 0));
+        SDL_FillRect(p_surf_screen, &dest,
+                     SDL_MapRGB(p_surf_screen->format, 0, 0, 0));
 
         scroll++;
 
-        draw_text(credit_text[line], scroll, screen);
+        draw_text(credit_text[line], scroll, p_surf_screen);
 
         if (scroll >= 9) {
             scroll = 0;
@@ -229,7 +229,7 @@ int credits(SDL_Surface* p_surf_screen, SDL_Surface* pSurfTitle,
                 done = 1;
         }
 
-        SDL_Flip(screen);
+        // SDL_Flip(p_surf_screen); //TODO SDL 2.0
 
         /* Pause (keep frame-rate event) */
 
@@ -239,8 +239,7 @@ int credits(SDL_Surface* p_surf_screen, SDL_Surface* pSurfTitle,
         }
     } while (!done);
 
-    fade(screen, screen, 1, 1);
-    /* Return the chosen command: */
+    fade(p_surf_screen, p_surf_screen, 1, 1, psdlRenderer);
 
     return quit;
 }

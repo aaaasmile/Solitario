@@ -24,9 +24,9 @@ public:
 
     void Init();
     void MainMenu();
-    std::string GetPlayerName() { return _p_GameSettings.strPlayerName; }
+    std::string GetPlayerName() { return _p_GameSettings->strPlayerName; }
     void SetPlayerName(std::string strVal) {
-        _p_GameSettings.strPlayerName = strVal;
+        _p_GameSettings->strPlayerName = strVal;
     }
     LanguageMgr* GetLanguageMan() { return &_LanguageMgr; }
     void ParseCmdLine(int argc, char* argv[]);
@@ -58,7 +58,7 @@ private:
     SDL_Renderer* _p_sdlRenderer;
 
     CustomFont* _p_CustomFont;
-    const GameSettings* _p_GameSettings;
+    GameSettings* _p_GameSettings;
     CGame* _p_SolitarioGfx;
     MusicManager* _p_MusicManager;
     HightScoreMgr _HScoreMgr;

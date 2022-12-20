@@ -2,9 +2,14 @@
 
 #include <assert.h>
 
-static const GameSettings _GameSettings;
+GameSettings* g_p_GameSettings;
 
-static const GameSettings* GAMESET::GetSettings() { return &_GameSettings; }
+GameSettings* GAMESET::GetSettings() {
+    if (g_p_GameSettings == NULL) {
+        g_p_GameSettings = new GameSettings();
+    }
+    return g_p_GameSettings;
+}
 
 void DeckType::SetType(eDeckType eType) {
     _eType = eType;
