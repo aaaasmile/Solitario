@@ -20,9 +20,6 @@
 #define CRD_RESERVE 2
 #define CRD_WASTE 3
 
-// globals
-SDL_Surface *screen;
-
 typedef std::vector<std::string> VCT_STRINGS;
 
 #ifdef _WINDOWS
@@ -147,14 +144,88 @@ void AppGfx::setVideoResolution() {
     _p_ScreenTexture =
         SDL_CreateTexture(_p_sdlRenderer, SDL_PIXELFORMAT_ARGB8888,
                           SDL_TEXTUREACCESS_STREAMING, _iScreenW, _iScreenH);
-    screen = _p_Screen;
 }
 
-void AppGfx::NewGame() {
+int AppGfx::startGameLoop() {
     if (_p_SolitarioGfx != NULL) {
         delete _p_SolitarioGfx;
     }
     _p_SolitarioGfx = new CGame();
+
+    _p_SolitarioGfx->SetDeckType(_GameSettings.DeckType);
+    _p_SolitarioGfx->InitDeck(_p_Screen);
+
+    _p_SolitarioGfx->ClearSurface();
+    _p_SolitarioGfx->Clear();
+    _p_SolitarioGfx->Initialize(_p_Screen);
+
+    // crea le regioni solo una sola volta
+    // region
+    // index 0
+    _p_SolitarioGfx->CreateRegion(CRD_PILE, CRD_VISIBLE | CRD_3D, 0, 0,
+                                  CRD_OSYMBOL, 35, 10, 2, 2);
+    // index 1-7
+    int i;
+    for (i = 1; i <= 7; i++)
+        _p_SolitarioGfx->CreateRegion(
+            CRD_FOUNDATION, CRD_VISIBLE | CRD_DODRAG | CRD_DODROP,
+            CRD_DOOPCOLOR | CRD_DOLOWER | CRD_DOLOWERBY1 | CRD_DOKING,
+            CRD_DRAGFACEUP, CRD_HSYMBOL, (g_CARDWIDTH * (i - 1)) + (i * 17),
+            g_CARDHEIGHT + 40, 0, 32);
+    // index 8
+    _p_SolitarioGfx->CreateRegion(
+        CRD_RESERVE, CRD_VISIBLE | CRD_FACEUP | CRD_DODRAG | CRD_3D, CRD_DOALL,
+        CRD_DRAGTOP, CRD_NSYMBOL, g_CARDWIDTH + 65, 10, 0, 0);
+    // index 9-12
+    for (i = 4; i <= 7; i++)
+        _p_SolitarioGfx->CreateRegion(
+            CRD_WASTE, CRD_VISIBLE | CRD_3D | CRD_DODRAG | CRD_DODROP,
+            CRD_DOSINGLE | CRD_DOHIGHER | CRD_DOHIGHERBY1 | CRD_DOACE |
+                CRD_DOSUIT,
+            CRD_DRAGTOP, CRD_HSYMBOL, (g_CARDWIDTH * (i - 1)) + (i * 17), 10, 0,
+            0);
+
+    newGame();
+    _p_SolitarioGfx->DrawStaticScene();
+
+    SDL_Event event;
+    int done = 0;
+
+    while (done == 0) {
+        while (SDL_PollEvent(&event)) {
+            switch (event.type) {
+                case SDL_QUIT:
+                    fade(_p_Screen, _p_Screen, 1, 1);
+                    return 0;
+
+                case SDL_KEYDOWN:
+                    if (event.key.keysym.sym == SDLK_ESCAPE) {
+                        done = 1;
+                    }
+                    handleGameLoopKeyDownEvent(event);
+                    break;
+
+                case SDL_MOUSEBUTTONDOWN:
+                    handleGameLoopMouseDownEvent(event);
+                    break;
+
+                case SDL_MOUSEMOTION:
+                    handleGameLoopMouseMoveEvent(event);
+                    break;
+
+                case SDL_MOUSEBUTTONUP:
+                    handleGameLoopMouseUpEvent(event);
+                    break;
+            }
+        }
+        if (_GameSettings.bMusicEnabled) {
+            _p_MusicManager->StartMusic();
+        }
+    }
+    return 0;
+}
+
+void AppGfx::newGame() {
     _p_SolitarioGfx[0].SetSymbol(CRD_OSYMBOL);
 
     _p_SolitarioGfx->EmptyStacks();
@@ -175,9 +246,9 @@ void AppGfx::NewGame() {
     }
 }
 
-void AppGfx::HandleKeyDownEvent(SDL_Event &event) {
+void AppGfx::handleGameLoopKeyDownEvent(SDL_Event &event) {
     if (event.key.keysym.sym == SDLK_n) {
-        NewGame();
+        newGame();
         _p_SolitarioGfx->DrawBackground(FALSE);
         _p_SolitarioGfx->DrawStaticScene();
     }
@@ -189,7 +260,7 @@ void AppGfx::HandleKeyDownEvent(SDL_Event &event) {
     };
 }
 
-void AppGfx::HandleMouseDownEvent(SDL_Event &event) {
+void AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
     CCardRegion *srcReg;
     if (event.button.button == SDL_BUTTON_LEFT) {
         srcReg = _p_SolitarioGfx->OnMouseDown(event.button.x, event.button.y);
@@ -251,12 +322,12 @@ void AppGfx::HandleMouseDownEvent(SDL_Event &event) {
     }
 }
 
-void AppGfx::HandleMouseMoveEvent(SDL_Event &event) {
+void AppGfx::handleGameLoopMouseMoveEvent(SDL_Event &event) {
     if (event.motion.state == SDL_BUTTON(1) && _bStartdrag)
         _p_SolitarioGfx->DoDrag(event.motion.x, event.motion.y);
 }
 
-void AppGfx::HandleMouseUpEvent(SDL_Event &event) {
+void AppGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
     if (_bStartdrag) {
         _bStartdrag = FALSE;
         _p_SolitarioGfx->DoDrop();
@@ -272,7 +343,7 @@ void AppGfx::HandleMouseUpEvent(SDL_Event &event) {
         (_p_SolitarioGfx[11].Size() == 10) &&
         (_p_SolitarioGfx[12].Size() == 10)) {
         _p_SolitarioGfx->AnimateCards();
-        NewGame();
+        newGame();
         _p_SolitarioGfx->DrawStaticScene();
     }
 }
@@ -318,7 +389,7 @@ void AppGfx::loadProfile() {
                 _GameSettings.eLanguageCurrent = LanguageMgr::LANG_ITA;
                 break;
             case 1:
-                _GameSettings.eLanguageCurrent = LanguageMgr::LANG_DIAL_MN;
+                _GameSettings.eLanguageCurrent = LanguageMgr::LANG_DIAL_BREDA;
                 break;
         }
         // music
@@ -453,8 +524,7 @@ void AppGfx::MainMenu() {
         switch (result) {
             case 0:
                 // STARTGAME
-                PlayGame();
-                // bEnd = TRUE;
+                startGameLoop();
                 break;
             case 1:
                 // MENU select a new language
@@ -481,7 +551,7 @@ void AppGfx::MainMenu() {
                     case 1:
                         // dialect mn
                         _GameSettings.eLanguageCurrent =
-                            LanguageMgr::LANG_DIAL_MN;
+                            LanguageMgr::LANG_DIAL_BREDA;
                         break;
                     case 2:
                         // english
@@ -569,7 +639,7 @@ void AppGfx::MainMenu() {
     delete menu;
 }
 
-int AppGfx::WaitKey() {
+int AppGfx::waitKeyLoop() {
     SDL_Event event;
     while (1) {
         if (SDL_WaitEvent(&event) == 1) {
@@ -618,7 +688,7 @@ void AppGfx::hightScoreMenu() {
         _p_Screen, _LanguageMgr.GetStringId(LanguageMgr::ID_PUSHBUTTON),
         TEXTMIXED, TEXTALIGNCENTER, 0, ty + 260 + SDLFONTSIZE, 0);
     updateScreenTexture();
-    WaitKey();
+    waitKeyLoop();
 }
 
 void AppGfx::updateScreenTexture() {
@@ -628,80 +698,6 @@ void AppGfx::updateScreenTexture() {
     SDL_RenderClear(_p_sdlRenderer);
     SDL_RenderCopy(_p_sdlRenderer, _p_ScreenTexture, NULL, NULL);
     SDL_RenderPresent(_p_sdlRenderer);
-}
-
-int AppGfx::PlayGame() {
-    _p_SolitarioGfx->SetDeckType(_GameSettings.DeckType);
-    _p_SolitarioGfx->InitDeck(screen);
-
-    _p_SolitarioGfx->ClearSurface();
-    _p_SolitarioGfx->Clear();
-    _p_SolitarioGfx->Initialize(screen);
-
-    // crea le regioni solo una sola volta
-    // region
-    // index 0
-    _p_SolitarioGfx->CreateRegion(CRD_PILE, CRD_VISIBLE | CRD_3D, 0, 0,
-                                  CRD_OSYMBOL, 35, 10, 2, 2);
-    // index 1-7
-    int i;
-    for (i = 1; i <= 7; i++)
-        _p_SolitarioGfx->CreateRegion(
-            CRD_FOUNDATION, CRD_VISIBLE | CRD_DODRAG | CRD_DODROP,
-            CRD_DOOPCOLOR | CRD_DOLOWER | CRD_DOLOWERBY1 | CRD_DOKING,
-            CRD_DRAGFACEUP, CRD_HSYMBOL, (g_CARDWIDTH * (i - 1)) + (i * 17),
-            g_CARDHEIGHT + 40, 0, 32);
-    // index 8
-    _p_SolitarioGfx->CreateRegion(
-        CRD_RESERVE, CRD_VISIBLE | CRD_FACEUP | CRD_DODRAG | CRD_3D, CRD_DOALL,
-        CRD_DRAGTOP, CRD_NSYMBOL, g_CARDWIDTH + 65, 10, 0, 0);
-    // index 9-12
-    for (i = 4; i <= 7; i++)
-        _p_SolitarioGfx->CreateRegion(
-            CRD_WASTE, CRD_VISIBLE | CRD_3D | CRD_DODRAG | CRD_DODROP,
-            CRD_DOSINGLE | CRD_DOHIGHER | CRD_DOHIGHERBY1 | CRD_DOACE |
-                CRD_DOSUIT,
-            CRD_DRAGTOP, CRD_HSYMBOL, (g_CARDWIDTH * (i - 1)) + (i * 17), 10, 0,
-            0);
-
-    NewGame();
-    _p_SolitarioGfx->DrawStaticScene();
-
-    SDL_Event event;
-    int done = 0;
-
-    while (done == 0) {
-        while (SDL_PollEvent(&event)) {
-            switch (event.type) {
-                case SDL_QUIT:
-                    fade(_p_Screen, _p_Screen, 1, 1);
-                    return 0;
-
-                case SDL_KEYDOWN:
-                    if (event.key.keysym.sym == SDLK_ESCAPE) {
-                        done = 1;
-                    }
-                    HandleKeyDownEvent(event);
-                    break;
-
-                case SDL_MOUSEBUTTONDOWN:
-                    HandleMouseDownEvent(event);
-                    break;
-
-                case SDL_MOUSEMOTION:
-                    HandleMouseMoveEvent(event);
-                    break;
-
-                case SDL_MOUSEBUTTONUP:
-                    HandleMouseUpEvent(event);
-                    break;
-            }
-        }
-        if (_GameSettings.bMusicEnabled) {
-            _p_MusicManager->StartMusic();
-        }
-    }
-    return 0;
 }
 
 void AppGfx::menuSelectDeck() {

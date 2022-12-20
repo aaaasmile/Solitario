@@ -2,105 +2,91 @@
 
 #include <assert.h>
 
-////////////////////////////////////////
-//       SetType
-/*! Set type of the new deck
- */
 void DeckType::SetType(eDeckType eType) {
-    m_eType = eType;
+    _eType = eType;
     switch (eType) {
         case PIACENTINA:
-            m_strMazzoName = "Piacentine";
-            m_strResFileName = "mazzo_piac.pac";
-            m_strSymbolName = "symb_336.bmp";
+            _strDeckName = "Piacentine";
+            _strResFileName = "mazzo_piac.pac";
+            _strSymbolFileName = "symb_336.bmp";
             break;
         case BERGAMO:
-            m_strMazzoName = "Bergamasche";
-            m_strResFileName = "bergamo_cards.pac";
-            m_strSymbolName = "symb_320.bmp";
+            _strDeckName = "Bergamasche";
+            _strResFileName = "bergamo_cards.pac";
+            _strSymbolFileName = "symb_320.bmp";
             break;
         case BOLOGNA:
-            m_strMazzoName = "Bolognesi";
-            m_strResFileName = "bologna_cards.pac";
-            m_strSymbolName = "symb_320.bmp";
+            _strDeckName = "Bolognesi";
+            _strResFileName = "bologna_cards.pac";
+            _strSymbolFileName = "symb_320.bmp";
             break;
         case GENOVA:
-            m_strMazzoName = "Genovesi";
-            m_strResFileName = "genova_cards.pac";
-            m_strSymbolName = "symb_368.bmp";
+            _strDeckName = "Genovesi";
+            _strResFileName = "genova_cards.pac";
+            _strSymbolFileName = "symb_368.bmp";
             break;
         case MILANO:
-            m_strMazzoName = "Milanesi";
-            m_strResFileName = "milano_cards.pac";
-            m_strSymbolName = "symb_320.bmp";
+            _strDeckName = "Milanesi";
+            _strResFileName = "milano_cards.pac";
+            _strSymbolFileName = "symb_320.bmp";
             break;
         case NAPOLI:
-            m_strMazzoName = "Napoletane";
-            m_strResFileName = "napoli_cards.pac";
-            m_strSymbolName = "symb_368.bmp";
+            _strDeckName = "Napoletane";
+            _strResFileName = "napoli_cards.pac";
+            _strSymbolFileName = "symb_368.bmp";
             break;
         case PIEMONTE:
-            m_strMazzoName = "Piemontesi";
-            m_strResFileName = "piemonte_cards.pac";
-            m_strSymbolName = "symb_368.bmp";
+            _strDeckName = "Piemontesi";
+            _strResFileName = "piemonte_cards.pac";
+            _strSymbolFileName = "symb_368.bmp";
             break;
         case ROMAGNA:
-            m_strMazzoName = "Romagnole";
-            m_strResFileName = "romagna_cards.pac";
-            m_strSymbolName = "symb_336.bmp";
+            _strDeckName = "Romagnole";
+            _strResFileName = "romagna_cards.pac";
+            _strSymbolFileName = "symb_336.bmp";
             break;
         case SARDEGNA:
-            m_strMazzoName = "Sarde";
-            m_strResFileName = "sardegna_cards.pac";
-            m_strSymbolName = "symb_368.bmp";
+            _strDeckName = "Sarde";
+            _strResFileName = "sardegna_cards.pac";
+            _strSymbolFileName = "symb_368.bmp";
             break;
         case SICILIA:
-            m_strMazzoName = "Siciliane";
-            m_strResFileName = "sicilia_cards.pac";
-            m_strSymbolName = "symb_368.bmp";
+            _strDeckName = "Siciliane";
+            _strResFileName = "sicilia_cards.pac";
+            _strSymbolFileName = "symb_368.bmp";
             break;
         case TOSCANA:
-            m_strMazzoName = "Toscane";
-            m_strResFileName = "toscana_cards.pac";
-            m_strSymbolName = "symb_368.bmp";
+            _strDeckName = "Toscane";
+            _strResFileName = "toscana_cards.pac";
+            _strSymbolFileName = "symb_368.bmp";
             break;
         case TRENTO:
-            m_strMazzoName = "Trentine";
-            m_strResFileName = "trento_cards.pac";
-            m_strSymbolName = "symb_336.bmp";
+            _strDeckName = "Trentine";
+            _strResFileName = "trento_cards.pac";
+            _strSymbolFileName = "symb_336.bmp";
             break;
         case TREVISO:
-            m_strMazzoName = "Trevigiane";
-            m_strResFileName = "carte_trevisane.pac";
-            m_strSymbolName = "symb_320.bmp";
+            _strDeckName = "Trevigiane";
+            _strResFileName = "carte_trevisane.pac";
+            _strSymbolFileName = "symb_320.bmp";
             break;
         case TRIESTE:
-            m_strMazzoName = "Triestine";
-            m_strResFileName = "trieste_cards.pac";
-            m_strSymbolName = "symb_320.bmp";
+            _strDeckName = "Triestine";
+            _strResFileName = "trieste_cards.pac";
+            _strSymbolFileName = "symb_320.bmp";
             break;
         default:
             assert(0);
     }
 }
 
-////////////////////////////////////////
-//       Clone
-/*!
-// \param cTipoDiMazzo &Val :
-*/
-void DeckType::Clone(DeckType &Val) {
-    m_eType = Val.GetType();
-    m_strMazzoName = Val.GetMazzoName();
-    m_strResFileName = Val.GetResFileName();
-    m_strSymbolName = Val.GetSymbolFileName();
+void DeckType::CopyFrom(DeckType &Val) {
+    _eType = Val.GetType();
+    _strDeckName = Val.GetDeckName();
+    _strResFileName = Val.GetResFileName();
+    _strSymbolFileName = Val.GetSymbolFileName();
 }
 
-////////////////////////////////////////
-//       SetTypeIndex
-/*!
-// \param int iVal :
-*/
 void DeckType::SetTypeIndex(int iVal) {
     switch (iVal) {
         case 0:

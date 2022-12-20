@@ -11,11 +11,6 @@ void CustomFont::ClearFont() {
     }
 }
 
-////////////////////////////////////////
-//       LoadFont
-/*!
-// \param string filename :
-*/
 bool CustomFont::LoadFont(string filename) {
     ClearFont();
     Bitmap = SDL_LoadBMP(filename.c_str());
@@ -31,6 +26,7 @@ bool CustomFont::LoadFont(string filename) {
     }
     return false;
 }
+
 void CustomFont::DrawString(SDL_Surface *surface, string message,
                             unsigned char textcase, char alignment, int x,
                             int y, unsigned int color) {

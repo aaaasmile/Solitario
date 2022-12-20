@@ -22,8 +22,8 @@ int const CARDBACKLOC = 40 * g_CARDWIDTH;  // modify to allow custom card backs
 #define FRAMETICKS (1000 / FPS)
 #define THINKINGS_PER_TICK 1
 
-static const char *lpszBackGGameFile = DATA_PREFIX "im001537.jpg";
-static const char *lpszMazziDir = DATA_PREFIX "mazzo/";
+static const char *lpszBackgroundImgFile = DATA_PREFIX "im001537.jpg";
+static const char *lpszDeckDir = DATA_PREFIX "mazzo/";
 
 CGame::CGame() {
     _p_background = 0;
@@ -40,7 +40,7 @@ void CGame::Initialize(SDL_Surface *s) {
     _p_background = SDL_CreateRGBSurface(SDL_SWSURFACE, _p_screen->w,
                                          _p_screen->h, 32, 0, 0, 0, 0);
     SDL_Surface *Temp;
-    SDL_RWops *srcBack = SDL_RWFromFile(lpszBackGGameFile, "rb");
+    SDL_RWops *srcBack = SDL_RWFromFile(lpszBackgroundImgFile, "rb");
     Temp = IMG_LoadJPG_RW(srcBack);
     // _p_scene_background = SDL_DisplayFormat(Temp); // TODO SDL 2.0
     SDL_FreeSurface(Temp);
@@ -168,8 +168,8 @@ bool CGame::InitDrag(CCardStack *CargoStack, int x, int y) {
     DragRegion.InitCardCoords();
     DragRegion.DrawCardStack(_p_dragface);
 
-    oldx = x;
-    oldy = y;
+    _oldx = x;
+    _oldy = y;
 
     // SDL_Flip(_p_screen); // TODO Sdl 2.0
     return true;
@@ -193,17 +193,17 @@ void CGame::DoDrag(int x, int y) {
     if (_dragCard.y < 0)
         rcs.y = rcd.y = 0;
 
-    if (x < oldx)
-        _dragCard.x -= oldx - x;
+    if (x < _oldx)
+        _dragCard.x -= _oldx - x;
     else
-        _dragCard.x += x - oldx;
-    if (y < oldy)
-        _dragCard.y -= oldy - y;
+        _dragCard.x += x - _oldx;
+    if (y < _oldy)
+        _dragCard.y -= _oldy - y;
     else
-        _dragCard.y += y - oldy;
+        _dragCard.y += y - _oldy;
 
-    oldx = x;
-    oldy = y;
+    _oldx = x;
+    _oldy = y;
 
     SDL_Rect dest;
     dest.x = _dragCard.x;
@@ -563,10 +563,6 @@ int CGame::AnimateCards() {
     return 0;
 }
 
-////////////////////////////////////////
-//       LoadDeckFromPac
-/*! Load card from custom deck
- */
 void CGame::LoadDeckFromPac() {
     SDL_Surface *Temp;
 
@@ -575,7 +571,7 @@ void CGame::LoadDeckFromPac() {
     CHAR buff[128];
 
     for (int k = 0; k < 4; k++) {
-        std::string strFileName = lpszMazziDir;
+        std::string strFileName = lpszDeckDir;
         switch (k) {
             case 0:
                 strSuffix = "bastoni";
@@ -621,10 +617,6 @@ void CGame::LoadDeckFromPac() {
     }
 }
 
-////////////////////////////////////////
-//       LoadSymbols
-/*! Load all _p_symbols from jpg files
- */
 void CGame::LoadSymbols() {
     // _p_symbols
     VCT_STRINGS vct_Strings;
@@ -636,9 +628,9 @@ void CGame::LoadSymbols() {
 
     SDL_Surface *Temp = 0;
     for (int i = 0; i < NUM_SYMBOLS; i++) {
-        std::string strDir = lpszMazziDir;
+        std::string strDir = lpszDeckDir;
         std::string strFileSymbName;
-        strFileSymbName = lpszMazziDir + vct_Strings[i];
+        strFileSymbName = lpszDeckDir + vct_Strings[i];
         SDL_RWops *srcBack = SDL_RWFromFile(strFileSymbName.c_str(), "rb");
         if (srcBack) {
             Temp = IMG_LoadJPG_RW(srcBack);
@@ -654,10 +646,6 @@ void CGame::LoadSymbols() {
     SDL_FreeSurface(Temp);
 }
 
-////////////////////////////////////////
-//       LoadCardPac
-/*! Carica il mazzo delle carte dal file in formato pac
- */
 int CGame::LoadCardPac() {
     char describtion[100];
     Uint8 num_anims;
@@ -665,7 +653,7 @@ int CGame::LoadCardPac() {
     Uint16 frames;
     Uint16 *delays;
 
-    std::string strFileName = lpszMazziDir;
+    std::string strFileName = lpszDeckDir;
     strFileName += _DeckType.GetResFileName();
 
     SDL_RWops *src = SDL_RWFromFile(strFileName.c_str(), "rb");
@@ -700,7 +688,6 @@ int CGame::LoadCardPac() {
     } else
         s = temp;  // we are dedicated windows traybar server
 
-    deck = s;
     g_CARDWIDTH = w / 4;
     g_CARDHEIGHT = h / 10;
 

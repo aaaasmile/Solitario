@@ -18,10 +18,6 @@ HightScoreMgr::HightScoreMgr() {}
 
 HightScoreMgr::~HightScoreMgr() {}
 
-////////////////////////////////////////
-//       Save
-/*! Save hight score in file
- */
 void HightScoreMgr::Save() {
     int f;
     char buffer[16];
@@ -42,10 +38,6 @@ void HightScoreMgr::Save() {
     }
 }
 
-////////////////////////////////////////
-//       Load
-/*! Load hight scores from file
- */
 void HightScoreMgr::Load() {
     int f;
     char buffer[16];

@@ -21,7 +21,7 @@ const unsigned int CRD_XSYMBOL = 1;
 const unsigned int CRD_OSYMBOL = 2;
 const unsigned int CRD_HSYMBOL = 3;
 
-class CGame : public std::vector<CCardRegion> {
+class CGame {
     enum { NUM_CARDS_ONDECK = 40, NUM_SYMBOLS = 4 };
 
 public:
@@ -29,9 +29,8 @@ public:
     ~CGame();
 
     void Initialize(SDL_Surface *s);
-
-    void Clear() { this->clear(); }
-    int Size() { return this->size(); }
+    void Clear() { _cardRegionList.clear(); }
+    int Size() { return _cardRegionList.size(); }
 
     void CreateRegion(int id, unsigned int attribs, unsigned int amode,
                       int dmode, int symbol, int x, int y, int xoffset,
@@ -75,8 +74,8 @@ public:
     int DrawSymbol(int x, int y, int nSymbol);
     int DrawSymbol(int x, int y, int nSymbol, SDL_Surface *s);
 
-    int AnimateCards();  // might take seconds as parameter
-    void SetDeckType(DeckType &Val) { _DeckType.Clone(Val); }
+    int AnimateCards();
+    void SetDeckType(DeckType &Val) { _DeckType.CopyFrom(Val); }
     void ClearSurface();
 
     void LoadDeckFromPac();
@@ -92,8 +91,8 @@ private:
     SDL_Surface *_p_dragface;
     SDL_Surface *_p_scene_background;
 
-    int oldx;
-    int oldy;
+    int _oldx;
+    int _oldy;
 
     SDL_Surface *_p_srfDeck;
     SDL_Surface *_p_symbols;
@@ -104,6 +103,7 @@ private:
     DeckType _DeckType;
     SDL_Surface *_p_CardsSurf[NUM_CARDS_ONDECK];
     SDL_Surface *_p_Symbol[NUM_SYMBOLS];
+    std::vector<CCardRegion> _cardRegionList;
 };
 
 #endif  // CGAME_H

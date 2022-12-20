@@ -1,11 +1,3 @@
-// fading.h
-
-/*
-  Fading with alphablending
-  (c) Patrick Kooman, 2002
-  contact: patrick@2dgame-tutorial.com
-*/
-
 #include <stdio.h>
 
 #include "SDL.h"

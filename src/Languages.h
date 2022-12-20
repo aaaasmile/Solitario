@@ -6,18 +6,15 @@
 #include <string>
 
 //! class LanguageMgr
-class LanguageMgr
-{
+class LanguageMgr {
 public:
-    enum eLangId
-    {
+    enum eLangId {
         LANG_ITA = 0,
-        LANG_DIAL_MN,
+        LANG_DIAL_BREDA,
         LANG_ENG,
-        TOT_LANG // it mus be  always on the last place
+        TOT_LANG  // it mus be  always on the last place
     };
-    enum eStringID
-    {
+    enum eStringID {
         ID_START = 0,
         ID_LANGUAGESEL,
         ID_HISCORE,
@@ -63,18 +60,18 @@ public:
         ID_ABILITATO,
         ID_DISABILITATO,
         ID_CREDITS,
-        TOT_STRINGS // it mus be always on the last place
+        TOT_STRINGS  // it mus be always on the last place
     };
 
 public:
     LanguageMgr();
-    void  SetLang(eLangId eVal){m_eLangid = eVal;}
-    std::string  GetStringId(eStringID eId);
-    char*        GetCStringId(eStringID eId);
+    void SetLang(eLangId eVal) { _eLangid = eVal; }
+    std::string GetStringId(eStringID eId);
+    char* GetCStringId(eStringID eId);
 
 private:
-    eLangId      m_eLangid;
-    std::string  m_matStringsLang[TOT_LANG][TOT_STRINGS];
-};  
+    eLangId _eLangid;
+    std::string _mtxLangString[TOT_LANG][TOT_STRINGS];
+};
 
 #endif

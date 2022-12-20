@@ -29,19 +29,19 @@ public:
 
 public:
     void SetType(eDeckType eType);
-    std::string GetResFileName() { return m_strResFileName; }
-    std::string GetMazzoName() { return m_strMazzoName; }
-    std::string GetSymbolFileName() { return m_strSymbolName; }
-    eDeckType GetType() { return m_eType; }
-    void Clone(DeckType &Val);
+    std::string GetDeckName() { return _strDeckName; }
+    std::string GetResFileName() { return _strResFileName; }
+    std::string GetSymbolFileName() { return _strSymbolFileName; }
+    eDeckType GetType() { return _eType; }
+    void CopyFrom(DeckType &Val);
     void SetTypeIndex(int iVal);
-    int GetTypeIndex() { return (int)m_eType; }
+    int GetTypeIndex() { return (int)_eType; }
 
 private:
-    eDeckType m_eType;
-    std::string m_strMazzoName;
-    std::string m_strResFileName;
-    std::string m_strSymbolName;
+    eDeckType _eType;
+    std::string _strDeckName;
+    std::string _strSymbolFileName;
+    std::string _strResFileName;
 };
 
 class GameSettings {

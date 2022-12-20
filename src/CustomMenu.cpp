@@ -12,6 +12,7 @@ CustomMenu::CustomMenu() {
     Font->LoadFont(lpszFontFile);
     Screen = NULL;
 }
+
 CustomMenu::~CustomMenu() {
     if (Bitmap != NULL)
         SDL_FreeSurface(Bitmap);
@@ -22,10 +23,6 @@ void CustomMenu::AddItems(string item) { Items.push_back(item); }
 
 void CustomMenu::ClearItems() { Items.clear(); }
 
-////////////////////////////////////////
-//       Run
-/*! Run menu
- */
 int CustomMenu::Run() {
     bool bEnd = false;
     bool bRedraw = true;
@@ -185,12 +182,6 @@ void CustomMenu::DrawBitmap(unsigned char alignment, Uint32 color,
     while (SDL_BlitSurface(Bitmap, &s, screen, &t) == -2) SDL_Delay(50);
 }
 
-////////////////////////////////////////
-//       SetAlpha
-/*! Set alpha blending level
-// \param unsigned char alpha :
-*/
 void CustomMenu::SetAlpha(unsigned char alpha) {
-    // SDL_SetAlpha(Screen, SDL_SRCALPHA, alpha);
     SDL_SetSurfaceAlphaMod(Screen, alpha);  // SDL 2.0
 }

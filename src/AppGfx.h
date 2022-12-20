@@ -1,4 +1,3 @@
-// EngineApp.h
 #ifndef __ENGINE_APP_H
 #define __ENGINE_APP_H
 
@@ -34,16 +33,16 @@ public:
     void ParseCmdLine(int argc, char* argv[]);
 
 private:
-    int WaitKey();
+    int waitKeyLoop();
+    int startGameLoop();
     void setVideoResolution();
     void terminate();
     void hightScoreMenu();
-    void NewGame();
-    void HandleKeyDownEvent(SDL_Event& event);
-    void HandleMouseDownEvent(SDL_Event& event);
-    void HandleMouseMoveEvent(SDL_Event& event);
-    void HandleMouseUpEvent(SDL_Event& event);
-    int PlayGame();
+    void newGame();
+    void handleGameLoopKeyDownEvent(SDL_Event& event);
+    void handleGameLoopMouseDownEvent(SDL_Event& event);
+    void handleGameLoopMouseMoveEvent(SDL_Event& event);
+    void handleGameLoopMouseUpEvent(SDL_Event& event);
     void menuSelectDeck();
     void loadProfile();
     void writeProfile();

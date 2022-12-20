@@ -1,8 +1,5 @@
 #include "gfx_util.h"
 
-/**********************************************************************************************
-    SET TRANSLUCENCY FOR AN AREA
-********************************************************************************************/
 void GFX_UTIL::ScreenShade(SDL_Surface *surface, SDL_Rect *rect, float opacity,
                            unsigned char r1, unsigned char g1,
                            unsigned char b1) {
@@ -31,9 +28,6 @@ void GFX_UTIL::ScreenShade(SDL_Surface *surface, SDL_Rect *rect, float opacity,
                   rect->y + rect->h - 2, r1, g1, b1, 255);
 }
 
-/** ********************************************************************************************
-    DRAW A NON-FILLED BOX (RGBA)
-********************************************************************************************/
 void GFX_UTIL::rectangleRGBA(SDL_Surface *screen, int x1, int y1, int x2,
                              int y2, unsigned char r, unsigned char g,
                              unsigned char b, unsigned char a) {
@@ -59,9 +53,7 @@ void GFX_UTIL::rectangleRGBA(SDL_Surface *screen, int x1, int y1, int x2,
     if (bneedunlock == true)
         SDL_UnlockSurface(screen);
 }
-/** ********************************************************************************************
-    DRAW A FILLED BOX (RGBA)
-********************************************************************************************/
+
 void GFX_UTIL::boxRGBA(SDL_Surface *screen, int x1, int y1, int x2, int y2,
                        unsigned char r, unsigned char g, unsigned char b,
                        unsigned char a) {
@@ -143,13 +135,6 @@ void inline GFX_UTIL::SetPixel(SDL_Surface *surface, int x, int y,
     }
 }
 
-///////////////////////////// Namespace STR_UTIL
-
-////////////////////////////////////////
-//       intToString
-/*!
-// \param int iNumber :
-*/
 std::string STR_UTIL::intToString(int iNumber) {
     std::string temp;
     char buffer[15];
