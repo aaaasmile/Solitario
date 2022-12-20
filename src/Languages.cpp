@@ -32,10 +32,10 @@
 
 
 ////////////////////////////////////////
-//       cLanguages
+//       LanguageMgr
 /*! constructor
 */
-cLanguages::cLanguages()
+LanguageMgr::LanguageMgr()
 {
     for (int i = 0; i< TOT_STRINGS; i++)
     {
@@ -167,7 +167,7 @@ cLanguages::cLanguages()
 /*! 
 // \param eStringID eId : 
 */
-std::string cLanguages::GetStringId(eStringID eId)
+std::string LanguageMgr::GetStringId(eStringID eId)
 {
     std::string strRet ="Err trans.";
 
@@ -187,7 +187,7 @@ std::string cLanguages::GetStringId(eStringID eId)
 /*! 
 // \param eStringID eId : 
 */
-char*  cLanguages::GetCStringId(eStringID eId)
+char*  LanguageMgr::GetCStringId(eStringID eId)
 {
     std::string strRet ="Err trans.";
 

@@ -44,7 +44,7 @@ private:
     std::string m_strSymbolName;
 };
 
-class cGameSettings {
+class GameSettings {
 public:
     std::string strPlayerName;
     long lDelayTimer;
@@ -56,11 +56,11 @@ public:
     long lIpRemote_3;
     long lIpRemote_4;
     DeckType DeckType;
-    cLanguages::eLangId eLanguageCurrent;
+    LanguageMgr::eLangId eLanguageCurrent;
     bool bMusicEnabled;
 
 public:
-    cGameSettings() {
+    GameSettings() {
         strPlayerName = "Anonimo";
         lDelayTimer = 3;
         bAutoTerminate = true;
@@ -71,7 +71,7 @@ public:
         lIpRemote_3 = 0;
         lIpRemote_4 = 1;
         DeckType.SetType(DeckType::PIACENTINA);
-        eLanguageCurrent = cLanguages::LANG_ITA;
+        eLanguageCurrent = LanguageMgr::LANG_ITA;
         bMusicEnabled = false;
     }
 };

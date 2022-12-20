@@ -1,31 +1,10 @@
-// EngineApp.cpp
-/*
- *
- *	This program is free software; you can redistribute it and/or
- *	modify it under the terms of the GNU General Public License
- *	as published by the Free Software Foundation; either version 2
- *	of the License, or (at your option) any later version.
- *
- *	This program is distributed in the hope that it will be useful,
- *	but WITHOUT ANY WARRANTY; without even the implied warranty of
- *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *	GNU General Public License for more details.
- *
- *	You should have received a copy of the GNU General Public License
- *	along with this program; if not, write to the Free Software
- *	Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,
- *USA.
- *
- *
- **/
-
 #include "AppGfx.h"
 
 #include <stdlib.h>
 #include <time.h>
 
+#include "MusicManager.h"
 #include "StdAfx.h"
-#include "cMusicManager.h"
 #include "gfx_util.h"
 #include "win_type_global.h"
 #ifdef _WINDOWS
@@ -46,11 +25,6 @@ SDL_Surface *screen;
 
 typedef std::vector<std::string> VCT_STRINGS;
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////// class cEngineApp
-//////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
-
 #ifdef _WINDOWS
 static LPCSTR strIDS_KEY_LASTPATH = "SOFTWARE\\BredaSoft\\Solitario";
 static LPCSTR strIDS_KEY_PLAYERNAME = "PlayerName";
@@ -70,87 +44,155 @@ static const char *lpszFontFile = DATA_PREFIX "images/font.bmp";
 static const char *lpszTitleFile = DATA_PREFIX "images/title.png";
 static const char *lpszBackGroundFile = DATA_PREFIX "im001537.jpg";
 
-////////////////////////////////////////
-//       cEngineApp
-/*! constructor
- */
 AppGfx::AppGfx() {
-    m_pScreen = NULL;
-    m_iScreenW = 1024;  // 640;
-    m_iScreenH = 768;   // 480;
-    m_iBpp = 0;
-    m_pimgBackground = NULL;
-    m_pMainFont = NULL;
-    m_bStartdrag = FALSE;
-    m_pMusicManager = 0;
-    m_pTitle = 0;
-    m_bFullScreen = FALSE;
+    _p_Screen = NULL;
+    _iScreenW = 1024;  // 640;
+    _iScreenH = 768;   // 480;
+    _iBpp = 0;
+    _p_imgBackground = NULL;
+    _p_CustomFont = NULL;
+    _bStartdrag = FALSE;
+    _p_MusicManager = 0;
+    _p_Title = 0;
+    _bFullScreen = FALSE;
 }
 
-////////////////////////////////////////
-//       ~cEngineApp
-/*! destructor
- */
 AppGfx::~AppGfx() { terminate(); }
 
-////////////////////////////////////////
-//       NewGame
-/*! Start a new game
- */
+void AppGfx::Init() {
+    loadProfile();
+
+    if (!SDL_WasInit(SDL_INIT_VIDEO)) {
+        if (SDL_Init(0) < 0) {
+            fprintf(stderr, "Couldn't initialize SDL: %s\n", SDL_GetError());
+            exit(1);
+        }
+    }
+    setVideoResolution();
+
+    _p_MusicManager = new MusicManager;
+    _p_MusicManager->Init();
+
+    _LanguageMgr.SetLang(_GameSettings.eLanguageCurrent);
+
+    _p_CustomFont = new CustomFont;
+    _p_CustomFont->LoadFont(lpszFontFile);
+
+    // caption
+    // SDL_WM_SetCaption(_LanguageMgr.GetCStringId(LanguageMgr::ID_SOLITARIO),
+    // NULL);
+    SDL_SetWindowTitle(_p_Window, _LanguageMgr.GetCStringId(
+                                      LanguageMgr::ID_SOLITARIO));  // SDL 2.0
+
+    // icona trasparente
+    SDL_Surface *psIcon = SDL_LoadBMP(lpszIconProgFile);
+    if (psIcon == 0) {
+        fprintf(stderr, "Icon not found\n");
+        exit(1);
+    }
+    SDL_SetColorKey(psIcon, TRUE,
+                    SDL_MapRGB(psIcon->format, 0, 128, 0));  // SDL 2.0
+    SDL_SetWindowIcon(_p_Window, psIcon);                    // SDL 2.0
+
+    // initialize random generator. Pay attention to the different version of
+    // srand
+#ifdef _GLIBCPP_HAVE_DRAND48
+    srand48((unsigned)time(0));
+#else
+    srand((unsigned)time(0));
+#endif
+
+    _p_Title = IMG_Load(lpszTitleFile);
+    if (_p_Title == 0) {
+        fprintf(stderr, "Title image not found\n");
+        exit(1);
+    }
+}
+
+void AppGfx::setVideoResolution() {
+    int flagwin = 0;
+    if (_p_Window != NULL) {
+        SDL_DestroyWindow(_p_Window);
+    }
+
+    if (_p_Window == NULL) {
+        fprintf(stderr, "Cannot create window: %s\n", SDL_GetError());
+        exit(1);
+    }
+    _p_sdlRenderer =
+        SDL_CreateRenderer(_p_Window, -1, SDL_RENDERER_ACCELERATED);
+
+    if (_p_sdlRenderer == NULL) {
+        fprintf(stderr, "Cannot create renderer: %s\n", SDL_GetError());
+        exit(1);
+    }
+    if (_p_Screen) {
+        SDL_FreeSurface(_p_Screen);
+    }
+    if (_bFullScreen) {
+        flagwin = SDL_WINDOW_FULLSCREEN_DESKTOP;
+    } else {
+        flagwin = SDL_WINDOW_SHOWN;
+    }
+    _p_Window = SDL_CreateWindow("Solitario", SDL_WINDOWPOS_UNDEFINED,
+                                 SDL_WINDOWPOS_UNDEFINED, _iScreenW, _iScreenH,
+                                 flagwin);
+
+    _p_Screen = SDL_CreateRGBSurface(0, _iScreenW, _iScreenH, 32, 0x00FF0000,
+                                     0x0000FF00, 0x000000FF, 0xFF000000);
+    if (_p_Screen == NULL) {
+        fprintf(stderr, "Error setvideomode: %s\n", SDL_GetError());
+        exit(1);
+    }
+    _p_ScreenTexture =
+        SDL_CreateTexture(_p_sdlRenderer, SDL_PIXELFORMAT_ARGB8888,
+                          SDL_TEXTUREACCESS_STREAMING, _iScreenW, _iScreenH);
+    screen = _p_Screen;
+}
+
 void AppGfx::NewGame() {
-    // Reset pile symbol
-    m_SolitarioGfx[0].SetSymbol(CRD_OSYMBOL);
+    if (_p_SolitarioGfx != NULL) {
+        delete _p_SolitarioGfx;
+    }
+    _p_SolitarioGfx = new CGame();
+    _p_SolitarioGfx[0].SetSymbol(CRD_OSYMBOL);
 
-    // Empty the card regions from the previous game
-    m_SolitarioGfx.EmptyStacks();
+    _p_SolitarioGfx->EmptyStacks();
 
-    // create then shuffle the deck
-    m_SolitarioGfx[0].NewDeck();
-    m_SolitarioGfx[0].Shuffle();
+    _p_SolitarioGfx[0].NewDeck();
+    _p_SolitarioGfx[0].Shuffle();
 
     // deal
     int i;
     for (i = 1; i <= 7; i++) {
-        m_SolitarioGfx[i].Push(m_SolitarioGfx[0].Pop(i));
+        _p_SolitarioGfx[i].Push(_p_SolitarioGfx[0].Pop(i));
     }
 
-    // initialize all card coordinates
-    m_SolitarioGfx.InitAllCoords();
+    _p_SolitarioGfx->InitAllCoords();
 
-    // set initial faced up cards in foundations
     for (i = 1; i <= 7; i++) {
-        m_SolitarioGfx[i].SetCardFaceUp(TRUE, m_SolitarioGfx[i].Size() - 1);
+        _p_SolitarioGfx[i].SetCardFaceUp(TRUE, _p_SolitarioGfx[i].Size() - 1);
     }
 }
 
-////////////////////////////////////////
-//       HandleKeyDownEvent
-/*! User press a key on keyboard
-// \param SDL_Event &event :
-*/
 void AppGfx::HandleKeyDownEvent(SDL_Event &event) {
     if (event.key.keysym.sym == SDLK_n) {
         NewGame();
-        m_SolitarioGfx.DrawBackground(FALSE);
-        m_SolitarioGfx.DrawStaticScene();
+        _p_SolitarioGfx->DrawBackground(FALSE);
+        _p_SolitarioGfx->DrawStaticScene();
     }
     if (event.key.keysym.sym == SDLK_a) {
-        m_SolitarioGfx.AnimateCards();
-    };  // Test animation
+        _p_SolitarioGfx->AnimateCards();
+    };
     if (event.key.keysym.sym == SDLK_r) {
-        m_SolitarioGfx.DrawStaticScene();
-    };  // Refresh
+        _p_SolitarioGfx->DrawStaticScene();
+    };
 }
 
-////////////////////////////////////////
-//       HandleMouseDownEvent
-/*!
-// \param SDL_Event &event :
-*/
 void AppGfx::HandleMouseDownEvent(SDL_Event &event) {
     CCardRegion *srcReg;
     if (event.button.button == SDL_BUTTON_LEFT) {
-        srcReg = m_SolitarioGfx.OnMouseDown(event.button.x, event.button.y);
+        srcReg = _p_SolitarioGfx->OnMouseDown(event.button.x, event.button.y);
         if (srcReg == NULL)
             return;
         // clicked on the top of the foundations
@@ -161,35 +203,35 @@ void AppGfx::HandleMouseDownEvent(SDL_Event &event) {
         // clicked on the foundations, reserve, wastes for dragging
         if (((srcReg->Id == CRD_FOUNDATION) || (srcReg->Id == CRD_RESERVE) ||
              (srcReg->Id == CRD_WASTE)) &&
-            m_SolitarioGfx.InitDrag(event.button.x, event.button.y)) {
-            m_bStartdrag = TRUE;
+            _p_SolitarioGfx->InitDrag(event.button.x, event.button.y)) {
+            _bStartdrag = TRUE;
             // SDL_WM_GrabInput(SDL_GRAB_ON); // TODO SDL 2.0
         }
         // clicked on the pile
         if (srcReg->Id == CRD_PILE) {
             CCardStack *cs = new CCardStack;
             if (srcReg->Empty() &&
-                !m_SolitarioGfx[8].Empty())  // Bring back the cards
+                !_p_SolitarioGfx[8].Empty())  // Bring back the cards
             {
-                *cs = m_SolitarioGfx[8].Pop(m_SolitarioGfx[8].Size());
+                *cs = _p_SolitarioGfx[8].Pop(_p_SolitarioGfx[8].Size());
                 cs->SetCardsFaceUp(FALSE);
-                m_SolitarioGfx.InitDrag(cs, -1, -1);
-                m_SolitarioGfx.DoDrop(&m_SolitarioGfx[0]);
-                m_SolitarioGfx[0].Reverse();
-                m_SolitarioGfx[0].InitCardCoords();
-            } else if (!srcReg->Empty() && (!m_SolitarioGfx[8].Empty() ||
-                                            m_SolitarioGfx[8].Empty())) {
-                *cs = m_SolitarioGfx[0].Pop(1);
+                _p_SolitarioGfx->InitDrag(cs, -1, -1);
+                _p_SolitarioGfx->DoDrop(&_p_SolitarioGfx[0]);
+                _p_SolitarioGfx[0]->Reverse();
+                _p_SolitarioGfx[0]->InitCardCoords();
+            } else if (!srcReg->Empty() && (!_p_SolitarioGfx[8].Empty() ||
+                                            _p_SolitarioGfx[8].Empty())) {
+                *cs = _p_SolitarioGfx[0].Pop(1);
                 cs->SetCardsFaceUp(TRUE);
-                m_SolitarioGfx.InitDrag(cs, -1, -1);
-                m_SolitarioGfx.DoDrop(&m_SolitarioGfx[8]);
+                _p_SolitarioGfx->InitDrag(cs, -1, -1);
+                _p_SolitarioGfx->DoDrop(&_p_SolitarioGfx[8]);
             }
         }
     }
 
     // substitute right-click for double-click event
     if (event.button.button == SDL_BUTTON_RIGHT) {
-        srcReg = m_SolitarioGfx.OnMouseDown(event.button.x, event.button.y);
+        srcReg = _p_SolitarioGfx->OnMouseDown(event.button.x, event.button.y);
         if (srcReg == NULL)
             return;
         CCardRegion *cr;
@@ -198,81 +240,60 @@ void AppGfx::HandleMouseDownEvent(SDL_Event &event) {
         // clicked on the top of the foundations
         if (((srcReg->Id == CRD_FOUNDATION) || (srcReg->Id == CRD_RESERVE)) &&
             card.FaceUp() && srcReg->PtOnTop(event.button.x, event.button.y)) {
-            cr = m_SolitarioGfx.FindDropRegion(CRD_WASTE, card);
+            cr = _p_SolitarioGfx->FindDropRegion(CRD_WASTE, card);
             if (cr) {
                 CCardStack *cs = new CCardStack;
                 *cs = srcReg->Pop(1);
-                m_SolitarioGfx.InitDrag(cs, -1, -1);
-                m_SolitarioGfx.DoDrop(cr);
+                _p_SolitarioGfx->InitDrag(cs, -1, -1);
+                _p_SolitarioGfx->DoDrop(cr);
             }
         }
     }
 }
 
-////////////////////////////////////////
-//       HandleMouseMoveEvent
-/*!
-// \param SDL_Event &event :
-*/
 void AppGfx::HandleMouseMoveEvent(SDL_Event &event) {
-    if (event.motion.state == SDL_BUTTON(1) && m_bStartdrag)
-        m_SolitarioGfx.DoDrag(event.motion.x, event.motion.y);
+    if (event.motion.state == SDL_BUTTON(1) && _bStartdrag)
+        _p_SolitarioGfx->DoDrag(event.motion.x, event.motion.y);
 }
 
-////////////////////////////////////////
-//       HandleMouseUpEvent
-/*!
-// \param SDL_Event &event :
-*/
 void AppGfx::HandleMouseUpEvent(SDL_Event &event) {
-    if (m_bStartdrag) {
-        m_bStartdrag = FALSE;
-        m_SolitarioGfx.DoDrop();
+    if (_bStartdrag) {
+        _bStartdrag = FALSE;
+        _p_SolitarioGfx->DoDrop();
         // SDL_WM_GrabInput(SDL_GRAB_OFF); // TODO SDL 2.0
     }
-    if (m_SolitarioGfx[0].Empty() && m_SolitarioGfx[8].Empty()) {
-        m_SolitarioGfx[0].SetSymbol(1);
-        m_SolitarioGfx.DrawStaticScene();
+    if (_p_SolitarioGfx[0]->Empty() && _p_SolitarioGfx[8].Empty()) {
+        _p_SolitarioGfx[0]->SetSymbol(1);
+        _p_SolitarioGfx->DrawStaticScene();
     }
     // victory
-    if ((m_SolitarioGfx[9].Size() == 10) && (m_SolitarioGfx[10].Size() == 10) &&
-        (m_SolitarioGfx[11].Size() == 10) &&
-        (m_SolitarioGfx[12].Size() == 10)) {
-        m_SolitarioGfx.AnimateCards();
+    if ((_p_SolitarioGfx[9].Size() == 10) &&
+        (_p_SolitarioGfx[10].Size() == 10) &&
+        (_p_SolitarioGfx[11].Size() == 10) &&
+        (_p_SolitarioGfx[12].Size() == 10)) {
+        _p_SolitarioGfx->AnimateCards();
         NewGame();
-        m_SolitarioGfx.DrawStaticScene();
+        _p_SolitarioGfx->DrawStaticScene();
     }
 }
 
-////////////////////////////////////////
-//       terminate
-/*! Terminate stuff
- */
 void AppGfx::terminate() {
-    // save hight score
-    // m_HScore.Save();
-    // save settings
     writeProfile();
-
     SDL_ShowCursor(SDL_ENABLE);
 
-    if (m_pimgBackground != NULL) {
-        SDL_FreeSurface(m_pimgBackground);
-        m_pimgBackground = NULL;
+    if (_p_imgBackground != NULL) {
+        SDL_FreeSurface(_p_imgBackground);
+        _p_imgBackground = NULL;
     }
-    delete m_pMainFont;
-    if (m_pScreen != NULL) {
-        SDL_FreeSurface(m_pScreen);
-        m_pScreen = NULL;
+    delete _p_CustomFont;
+    if (_p_Screen != NULL) {
+        SDL_FreeSurface(_p_Screen);
+        _p_Screen = NULL;
     }
-    delete m_pMusicManager;
+    delete _p_MusicManager;
     SDL_Quit();
 }
 
-////////////////////////////////////////
-//       loadProfile
-/*! Read settings in the registry.
- */
 void AppGfx::loadProfile() {
 #ifdef _WINDOWS
     RegistryKey RegKey;
@@ -282,31 +303,31 @@ void AppGfx::loadProfile() {
 
     if (!lRes) {
         // player name
-        m_Settings.strPlayerName = RegKey.getRegStringValue(
-            m_Settings.strPlayerName.c_str(), strIDS_KEY_PLAYERNAME);
+        _GameSettings.strPlayerName = RegKey.getRegStringValue(
+            _GameSettings.strPlayerName.c_str(), strIDS_KEY_PLAYERNAME);
         // deck type
-        int iVal = RegKey.getRegDWordValue(m_Settings.DeckType.GetTypeIndex(),
-                                           strIDS_KEY_DECKCURRENT);
-        m_Settings.DeckType.SetTypeIndex(iVal);
+        int iVal = RegKey.getRegDWordValue(
+            _GameSettings.DeckType.GetTypeIndex(), strIDS_KEY_DECKCURRENT);
+        _GameSettings.DeckType.SetTypeIndex(iVal);
 
         // language
-        iVal = RegKey.getRegDWordValue(m_Settings.eLanguageCurrent,
+        iVal = RegKey.getRegDWordValue(_GameSettings.eLanguageCurrent,
                                        strIDS_KEY_LANGUAGECURRENT);
         switch (iVal) {
             case 0:
-                m_Settings.eLanguageCurrent = cLanguages::LANG_ITA;
+                _GameSettings.eLanguageCurrent = LanguageMgr::LANG_ITA;
                 break;
             case 1:
-                m_Settings.eLanguageCurrent = cLanguages::LANG_DIAL_MN;
+                _GameSettings.eLanguageCurrent = LanguageMgr::LANG_DIAL_MN;
                 break;
         }
         // music
         iVal = RegKey.getRegDWordValue(0, strIDS_KEY_MUSICENABLED);
-        if (!m_bOverride) {
+        if (!_bOverride) {
             if (iVal == 0) {
-                m_Settings.bMusicEnabled = FALSE;
+                _GameSettings.bMusicEnabled = FALSE;
             } else {
-                m_Settings.bMusicEnabled = TRUE;
+                _GameSettings.bMusicEnabled = TRUE;
             }
         }
     } else {
@@ -324,21 +345,21 @@ void AppGfx::loadProfile() {
     int iVal;
 
     // deck type
-    iVal = m_Settings.DeckType.GetTypeIndex();
+    iVal = _GameSettings.DeckType.GetTypeIndex();
     if (pIni) {
         ini_locateHeading(pIni, lpszSectAll);
         ini_locateKey(pIni, lpszKeyDeck);
         ini_readInt(pIni, &iVal);
     }
-    m_Settings.DeckType.SetTypeIndex(iVal);
+    _GameSettings.DeckType.SetTypeIndex(iVal);
     // language
-    iVal = m_Settings.eLanguageCurrent;
+    iVal = _GameSettings.eLanguageCurrent;
     if (pIni) {
         ini_locateHeading(pIni, lpszSectAll);
         ini_locateKey(pIni, lpszKeyLang);
         ini_readInt(pIni, &iVal);
     }
-    m_Settings.eLanguageCurrent = (cLanguages::eLangId)iVal;
+    _GameSettings.eLanguageCurrent = (LanguageMgr::eLangId)iVal;
     // music
     iVal = FALSE;
     if (pIni) {
@@ -346,8 +367,8 @@ void AppGfx::loadProfile() {
         ini_locateKey(pIni, lpszKeyMusic);
         ini_readInt(pIni, &iVal);
     }
-    if (!m_bOverride) {
-        m_Settings.bMusicEnabled = iVal;
+    if (!_bOverride) {
+        _GameSettings.bMusicEnabled = iVal;
     }
 
     ini_close(pIni);
@@ -364,13 +385,13 @@ void AppGfx::writeProfile() {
     LONG lRes;
     lRes = RegKey.Open(HKEY_CURRENT_USER, strIDS_KEY_LASTPATH);
     if (!lRes) {
-        RegKey.setRegStringValue(m_Settings.strPlayerName.c_str(),
+        RegKey.setRegStringValue(_GameSettings.strPlayerName.c_str(),
                                  strIDS_KEY_PLAYERNAME);
-        RegKey.setRegDWordValue(m_Settings.eLanguageCurrent,
+        RegKey.setRegDWordValue(_GameSettings.eLanguageCurrent,
                                 strIDS_KEY_LANGUAGECURRENT);
-        RegKey.setRegDWordValue(m_Settings.DeckType.GetType(),
+        RegKey.setRegDWordValue(_GameSettings.DeckType.GetType(),
                                 strIDS_KEY_DECKCURRENT);
-        RegKey.setRegDWordValue(m_Settings.bMusicEnabled,
+        RegKey.setRegDWordValue(_GameSettings.bMusicEnabled,
                                 strIDS_KEY_MUSICENABLED);
         RegKey.Close();
     }
@@ -383,128 +404,22 @@ void AppGfx::writeProfile() {
     // deck type
     ini_locateHeading(pIni, lpszSectAll);
     ini_locateKey(pIni, lpszKeyDeck);
-    ini_writeInt(pIni, (int)m_Settings.DeckType.GetType());
+    ini_writeInt(pIni, (int)_GameSettings.DeckType.GetType());
 
     // language
     ini_locateHeading(pIni, lpszSectAll);
     ini_locateKey(pIni, lpszKeyLang);
-    ini_writeInt(pIni, m_Settings.eLanguageCurrent);
+    ini_writeInt(pIni, _GameSettings.eLanguageCurrent);
 
     // music
     ini_locateHeading(pIni, lpszSectAll);
     ini_locateKey(pIni, lpszKeyMusic);
-    ini_writeInt(pIni, m_Settings.bMusicEnabled);
+    ini_writeInt(pIni, _GameSettings.bMusicEnabled);
 
     ini_close(pIni);
 #endif
 }
 
-////////////////////////////////////////
-//       Init
-/*! Init application
- */
-void AppGfx::Init() {
-    // load setting in the registry
-    loadProfile();
-
-    // Initialize SDL
-    if (!SDL_WasInit(SDL_INIT_VIDEO)) {
-        if (SDL_Init(0) < 0) {
-            fprintf(stderr, "Couldn't initialize SDL: %s\n", SDL_GetError());
-            exit(1);
-        }
-    }
-    setVideoResolution();
-
-    m_pMusicManager = new MusicManager;
-    m_pMusicManager->Init();
-
-    // set application language
-    m_LanString.SetLang(m_Settings.eLanguageCurrent);
-
-    m_pMainFont = new CustomFont;
-    m_pMainFont->LoadFont(lpszFontFile);
-
-    // caption
-    // SDL_WM_SetCaption(m_LanString.GetCStringId(cLanguages::ID_SOLITARIO),
-    // NULL);
-    SDL_SetWindowTitle(m_pWindow, m_LanString.GetCStringId(
-                                      cLanguages::ID_SOLITARIO));  // SDL 2.0
-
-    // icona trasparente
-    SDL_Surface *psIcon = SDL_LoadBMP(lpszIconProgFile);
-    if (psIcon == 0) {
-        fprintf(stderr, "Icon not found\n");
-        exit(1);
-    }
-    SDL_SetColorKey(psIcon, TRUE,
-                    SDL_MapRGB(psIcon->format, 0, 128, 0));  // SDL 2.0
-    SDL_SetWindowIcon(m_pWindow, psIcon);                    // SDL 2.0
-
-    // initialize random generator. Pay attention to the different version of
-    // srand
-#ifdef _GLIBCPP_HAVE_DRAND48
-    srand48((unsigned)time(0));
-#else
-    srand((unsigned)time(0));
-#endif
-
-    m_pTitle = IMG_Load(lpszTitleFile);
-    if (m_pTitle == 0) {
-        fprintf(stderr, "Title image not found\n");
-        exit(1);
-    }
-}
-
-////////////////////////////////////////
-//       setVideoResolution
-/*! Set video resolution
- */
-void AppGfx::setVideoResolution() {
-    int flagwin = 0;
-    if (m_pWindow != NULL) {
-        SDL_DestroyWindow(m_pWindow);
-    }
-
-    if (m_pWindow == NULL) {
-        fprintf(stderr, "Cannot create window: %s\n", SDL_GetError());
-        exit(1);
-    }
-    m_psdlRenderer =
-        SDL_CreateRenderer(m_pWindow, -1, SDL_RENDERER_ACCELERATED);
-
-    if (m_psdlRenderer == NULL) {
-        fprintf(stderr, "Cannot create renderer: %s\n", SDL_GetError());
-        exit(1);
-    }
-    if (m_pScreen) {
-        SDL_FreeSurface(m_pScreen);
-    }
-    if (m_bFullScreen) {
-        flagwin = SDL_WINDOW_FULLSCREEN_DESKTOP;
-    } else {
-        flagwin = SDL_WINDOW_SHOWN;
-    }
-    m_pWindow = SDL_CreateWindow("Solitario", SDL_WINDOWPOS_UNDEFINED,
-                                 SDL_WINDOWPOS_UNDEFINED, m_iScreenW,
-                                 m_iScreenH, flagwin);
-
-    m_pScreen = SDL_CreateRGBSurface(0, m_iScreenW, m_iScreenH, 32, 0x00FF0000,
-                                     0x0000FF00, 0x000000FF, 0xFF000000);
-    if (m_pScreen == NULL) {
-        fprintf(stderr, "Error setvideomode: %s\n", SDL_GetError());
-        exit(1);
-    }
-    m_pScreenTexture =
-        SDL_CreateTexture(m_psdlRenderer, SDL_PIXELFORMAT_ARGB8888,
-                          SDL_TEXTUREACCESS_STREAMING, m_iScreenW, m_iScreenH);
-    screen = m_pScreen;
-}
-
-////////////////////////////////////////
-//       MainMenu
-/*! Run main menu until application end
- */
 void AppGfx::MainMenu() {
     CustomMenu *menu;
     signed int result, result2;
@@ -513,25 +428,25 @@ void AppGfx::MainMenu() {
     string temp;
 
     menu = new CustomMenu;
-    menu->SetScreen(m_pScreen);
+    menu->SetScreen(_p_Screen);
     menu->FilenameBackground = lpszBackGroundFile;
     menuw = 445;
     menuh = 150;
-    menux = (m_pScreen->w - menuw) / 2;
-    menuy = (m_pScreen->h - menuh) / 2;
+    menux = (_p_Screen->w - menuw) / 2;
+    menuy = (_p_Screen->h - menuh) / 2;
     menu->SetArea(menux, menuy, menuw, menuh);
-    menu->SetColors(SDL_MapRGBA(m_pScreen->format, 0, 0, 0, 0),
-                    SDL_MapRGBA(m_pScreen->format, 128, 0, 0, 255));
+    menu->SetColors(SDL_MapRGBA(_p_Screen->format, 0, 0, 0, 0),
+                    SDL_MapRGBA(_p_Screen->format, 128, 0, 0, 255));
 
     while (bEnd == FALSE) {
         // SET MAIN MENU ITEMS
         menu->ClearItems();
-        menu->AddItems(m_LanString.GetStringId(cLanguages::ID_START));
-        menu->AddItems(m_LanString.GetStringId(cLanguages::ID_LANGUAGESEL));
-        menu->AddItems(m_LanString.GetStringId(cLanguages::ID_SOUNDOPT));
-        menu->AddItems(m_LanString.GetStringId(cLanguages::ID_CREDITS));
-        menu->SetLabels(m_LanString.GetStringId(cLanguages::ID_MAINMENU),
-                        m_LanString.GetStringId(cLanguages::ID_EXIT));
+        menu->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_START));
+        menu->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_LANGUAGESEL));
+        menu->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_SOUNDOPT));
+        menu->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_CREDITS));
+        menu->SetLabels(_LanguageMgr.GetStringId(LanguageMgr::ID_MAINMENU),
+                        _LanguageMgr.GetStringId(LanguageMgr::ID_EXIT));
 
         // RUN MENU
         result = menu->Run();
@@ -545,13 +460,13 @@ void AppGfx::MainMenu() {
                 // MENU select a new language
                 menu->ClearItems();
                 menu->SetLabels(
-                    m_LanString.GetStringId(cLanguages::ID_CHOOSELANGUA),
-                    m_LanString.GetStringId(cLanguages::ID_BACKMAINMENU));
+                    _LanguageMgr.GetStringId(LanguageMgr::ID_CHOOSELANGUA),
+                    _LanguageMgr.GetStringId(LanguageMgr::ID_BACKMAINMENU));
                 menu->AddItems(
-                    m_LanString.GetStringId(cLanguages::ID_ITALIANO));
+                    _LanguageMgr.GetStringId(LanguageMgr::ID_ITALIANO));
                 menu->AddItems(
-                    m_LanString.GetStringId(cLanguages::ID_DIALETMN));
-                // menu->AddItems(m_LanString.GetStringId(cLanguages::ID_ENGLISH));
+                    _LanguageMgr.GetStringId(LanguageMgr::ID_DIALETMN));
+                // menu->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_ENGLISH));
 
                 result2 = menu->Run();  // SHOW LANGUAGE MENU
                 // cambiare l'ordine del menu, vuol dire cambiare cambiare
@@ -560,49 +475,50 @@ void AppGfx::MainMenu() {
                 switch (result2) {
                     case 0:
                         // italian
-                        m_Settings.eLanguageCurrent = cLanguages::LANG_ITA;
+                        _GameSettings.eLanguageCurrent = LanguageMgr::LANG_ITA;
 
                         break;
                     case 1:
                         // dialect mn
-                        m_Settings.eLanguageCurrent = cLanguages::LANG_DIAL_MN;
+                        _GameSettings.eLanguageCurrent =
+                            LanguageMgr::LANG_DIAL_MN;
                         break;
                     case 2:
                         // english
-                        m_Settings.eLanguageCurrent = cLanguages::LANG_ENG;
+                        _GameSettings.eLanguageCurrent = LanguageMgr::LANG_ENG;
                         break;
                 }
-                m_LanString.SetLang(m_Settings.eLanguageCurrent);
-                SDL_SetWindowTitle(m_pWindow, m_LanString.GetCStringId(
-                                                  cLanguages::ID_SOLITARIO));
+                _LanguageMgr.SetLang(_GameSettings.eLanguageCurrent);
+                SDL_SetWindowTitle(_p_Window, _LanguageMgr.GetCStringId(
+                                                  LanguageMgr::ID_SOLITARIO));
                 break;
             case 2:
                 // OPZIONI SUONO MENU
                 menu->ClearItems();
                 menu->SetLabels(
-                    m_LanString.GetStringId(cLanguages::ID_SOUNDOPT),
-                    m_LanString.GetStringId(cLanguages::ID_BACKMAINMENU));
+                    _LanguageMgr.GetStringId(LanguageMgr::ID_SOUNDOPT),
+                    _LanguageMgr.GetStringId(LanguageMgr::ID_BACKMAINMENU));
                 menu->AddItems(
-                    m_LanString.GetStringId(cLanguages::ID_ABILITATO));
+                    _LanguageMgr.GetStringId(LanguageMgr::ID_ABILITATO));
                 menu->AddItems(
-                    m_LanString.GetStringId(cLanguages::ID_DISABILITATO));
+                    _LanguageMgr.GetStringId(LanguageMgr::ID_DISABILITATO));
                 result2 = menu->Run();
                 switch (result2) {
                     case 0:
                         // sound on
-                        m_Settings.bMusicEnabled = TRUE;
-                        m_pMusicManager->StartMusic();
+                        _GameSettings.bMusicEnabled = TRUE;
+                        _p_MusicManager->StartMusic();
                         break;
                     case 1:
                         // sound off
-                        m_Settings.bMusicEnabled = FALSE;
-                        m_pMusicManager->StopMusic();
+                        _GameSettings.bMusicEnabled = FALSE;
+                        _p_MusicManager->StopMusic();
                         break;
                 }
                 break;
             case 3:
                 // CREDITS
-                credits(m_pScreen, m_pTitle);
+                credits(_p_Screen, _p_Title);
                 break;
 
             case 12:  // HIGH SCORE
@@ -610,37 +526,37 @@ void AppGfx::MainMenu() {
                 break;
             case 122:  // VIDEO RESOLUTION MENU
                 menu->ClearItems();
-                menu->SetLabels(m_LanString.GetStringId(
-                                    cLanguages::ID_SELECTDISPLAYSETTINGS),
-                                m_LanString.GetStringId(cLanguages::ID_BACK));
+                menu->SetLabels(_LanguageMgr.GetStringId(
+                                    LanguageMgr::ID_SELECTDISPLAYSETTINGS),
+                                _LanguageMgr.GetStringId(LanguageMgr::ID_BACK));
                 menu->AddItems("800x600 x 32bits");
                 menu->AddItems("1024x768 x 32bits");
                 menu->AddItems("Full screen");
                 result2 = menu->Run();
                 switch (result2) {
                     case 0:
-                        m_iScreenW = 800;
-                        m_iScreenH = 600;
-                        m_iBpp = 32;
+                        _iScreenW = 800;
+                        _iScreenH = 600;
+                        _iBpp = 32;
                         break;
                     case 1:
-                        m_iScreenW = 1024;
-                        m_iScreenH = 768;
-                        m_iBpp = 32;
+                        _iScreenW = 1024;
+                        _iScreenH = 768;
+                        _iBpp = 32;
                         break;
                     case 2:
-                        m_iScreenW = 1024;
-                        m_iScreenH = 768;
-                        m_iBpp = 32;
-                        m_bFullScreen = TRUE;
+                        _iScreenW = 1024;
+                        _iScreenH = 768;
+                        _iBpp = 32;
+                        _bFullScreen = TRUE;
                         break;
                 }
                 setVideoResolution();
                 // ADJUST MENU POSITION SINCE SCREEN PROBABLY HAVE CHANGED
-                menux = (m_pScreen->w - menuw) / 2;
+                menux = (_p_Screen->w - menuw) / 2;
                 menu->SetArea(menux, menuy, menuw, menuh);
-                menu->SetColors(SDL_MapRGBA(m_pScreen->format, 0, 0, 0, 0),
-                                SDL_MapRGBA(m_pScreen->format, 128, 0, 0, 255));
+                menu->SetColors(SDL_MapRGBA(_p_Screen->format, 0, 0, 0, 0),
+                                SDL_MapRGBA(_p_Screen->format, 128, 0, 0, 255));
                 break;
             case -1:
                 // EXIT
@@ -653,10 +569,6 @@ void AppGfx::MainMenu() {
     delete menu;
 }
 
-////////////////////////////////////////
-//       WaitKey
-/*! Wait key during a menu
- */
 int AppGfx::WaitKey() {
     SDL_Event event;
     while (1) {
@@ -673,41 +585,37 @@ int AppGfx::WaitKey() {
     }
 }
 
-////////////////////////////////////////
-//       hightScoreMenu
-/*! Shows the hight score menu
- */
 void AppGfx::hightScoreMenu() {
     int tx, ty;
     std::string temp;
 
-    SDL_FillRect(m_pScreen, &m_pScreen->clip_rect,
-                 SDL_MapRGBA(m_pScreen->format, 0, 0, 0, 0));
-    tx = (m_pScreen->w - 400) / 2;
-    ty = (m_pScreen->h - 260) / 2;
+    SDL_FillRect(_p_Screen, &_p_Screen->clip_rect,
+                 SDL_MapRGBA(_p_Screen->format, 0, 0, 0, 0));
+    tx = (_p_Screen->w - 400) / 2;
+    ty = (_p_Screen->h - 260) / 2;
 
-    m_pMainFont->DrawString(
-        m_pScreen, m_LanString.GetStringId(cLanguages::ID_HISCORE), TEXTMIXED,
+    _p_CustomFont->DrawString(
+        _p_Screen, _LanguageMgr.GetStringId(LanguageMgr::ID_HISCORE), TEXTMIXED,
         TEXTALIGNCENTER, 0, ty - 10 - SDLFONTSIZE * 2, 0);
-    m_pMainFont->DrawString(m_pScreen, "-------------", TEXTMIXED,
-                            TEXTALIGNCENTER, 0, ty - 10 - SDLFONTSIZE, 0);
+    _p_CustomFont->DrawString(_p_Screen, "-------------", TEXTMIXED,
+                              TEXTALIGNCENTER, 0, ty - 10 - SDLFONTSIZE, 0);
 
-    GFX_UTIL::boxRGBA(m_pScreen, tx, ty, tx + 400, ty + 260, 0, 0, 48, 255);
+    GFX_UTIL::boxRGBA(_p_Screen, tx, ty, tx + 400, ty + 260, 0, 0, 48, 255);
     for (int k = 0; k < 10; k++) {
-        temp = STR_UTIL::intToString(m_HScore.HS_Scores[k]);
-        m_pMainFont->DrawString(m_pScreen, temp, TEXTMIXED, TEXTALIGNLEFT,
-                                tx + 5, ty + 10 + (SDLFONTSIZE + 8) * k, 0);
-        if (m_HScore.HS_Names[k].size() == 0) {
-            temp = m_LanString.GetStringId(cLanguages::ID_ANONIM);
+        temp = STR_UTIL::intToString(_HScoreMgr.HS_Scores[k]);
+        _p_CustomFont->DrawString(_p_Screen, temp, TEXTMIXED, TEXTALIGNLEFT,
+                                  tx + 5, ty + 10 + (SDLFONTSIZE + 8) * k, 0);
+        if (_HScoreMgr.HS_Names[k].size() == 0) {
+            temp = _LanguageMgr.GetStringId(LanguageMgr::ID_ANONIM);
         } else {
-            temp = m_HScore.HS_Names[k];
+            temp = _HScoreMgr.HS_Names[k];
         }
-        m_pMainFont->DrawString(m_pScreen, temp, TEXTMIXED, TEXTALIGNLEFT,
-                                tx + 400 - 15 * SDLFONTSIZE,
-                                ty + 10 + (SDLFONTSIZE + 8) * k, 0);
+        _p_CustomFont->DrawString(_p_Screen, temp, TEXTMIXED, TEXTALIGNLEFT,
+                                  tx + 400 - 15 * SDLFONTSIZE,
+                                  ty + 10 + (SDLFONTSIZE + 8) * k, 0);
     }
-    m_pMainFont->DrawString(
-        m_pScreen, m_LanString.GetStringId(cLanguages::ID_PUSHBUTTON),
+    _p_CustomFont->DrawString(
+        _p_Screen, _LanguageMgr.GetStringId(LanguageMgr::ID_PUSHBUTTON),
         TEXTMIXED, TEXTALIGNCENTER, 0, ty + 260 + SDLFONTSIZE, 0);
     updateScreenTexture();
     WaitKey();
@@ -715,46 +623,41 @@ void AppGfx::hightScoreMenu() {
 
 void AppGfx::updateScreenTexture() {
     // SDL 2.0
-    SDL_UpdateTexture(m_pScreenTexture, NULL, m_pScreen->pixels,
-                      m_pScreen->pitch);
-    SDL_RenderClear(m_psdlRenderer);
-    SDL_RenderCopy(m_psdlRenderer, m_pScreenTexture, NULL, NULL);
-    SDL_RenderPresent(m_psdlRenderer);
+    SDL_UpdateTexture(_p_ScreenTexture, NULL, _p_Screen->pixels,
+                      _p_Screen->pitch);
+    SDL_RenderClear(_p_sdlRenderer);
+    SDL_RenderCopy(_p_sdlRenderer, _p_ScreenTexture, NULL, NULL);
+    SDL_RenderPresent(_p_sdlRenderer);
 }
 
-////////////////////////////////////////
-//       PlayGame
-/*! Play the game
- */
 int AppGfx::PlayGame() {
-    // card deck
-    m_SolitarioGfx.SetDeckType(m_Settings.DeckType);
-    m_SolitarioGfx.InitDeck(screen);
+    _p_SolitarioGfx->SetDeckType(_GameSettings.DeckType);
+    _p_SolitarioGfx->InitDeck(screen);
 
-    m_SolitarioGfx.ClearSurface();
-    m_SolitarioGfx.Clear();
-    m_SolitarioGfx.Initialize(screen);
+    _p_SolitarioGfx->ClearSurface();
+    _p_SolitarioGfx->Clear();
+    _p_SolitarioGfx->Initialize(screen);
 
     // crea le regioni solo una sola volta
     // region
     // index 0
-    m_SolitarioGfx.CreateRegion(CRD_PILE, CRD_VISIBLE | CRD_3D, 0, 0,
-                                CRD_OSYMBOL, 35, 10, 2, 2);
+    _p_SolitarioGfx->CreateRegion(CRD_PILE, CRD_VISIBLE | CRD_3D, 0, 0,
+                                  CRD_OSYMBOL, 35, 10, 2, 2);
     // index 1-7
     int i;
     for (i = 1; i <= 7; i++)
-        m_SolitarioGfx.CreateRegion(
+        _p_SolitarioGfx->CreateRegion(
             CRD_FOUNDATION, CRD_VISIBLE | CRD_DODRAG | CRD_DODROP,
             CRD_DOOPCOLOR | CRD_DOLOWER | CRD_DOLOWERBY1 | CRD_DOKING,
             CRD_DRAGFACEUP, CRD_HSYMBOL, (g_CARDWIDTH * (i - 1)) + (i * 17),
             g_CARDHEIGHT + 40, 0, 32);
     // index 8
-    m_SolitarioGfx.CreateRegion(
+    _p_SolitarioGfx->CreateRegion(
         CRD_RESERVE, CRD_VISIBLE | CRD_FACEUP | CRD_DODRAG | CRD_3D, CRD_DOALL,
         CRD_DRAGTOP, CRD_NSYMBOL, g_CARDWIDTH + 65, 10, 0, 0);
     // index 9-12
     for (i = 4; i <= 7; i++)
-        m_SolitarioGfx.CreateRegion(
+        _p_SolitarioGfx->CreateRegion(
             CRD_WASTE, CRD_VISIBLE | CRD_3D | CRD_DODRAG | CRD_DODROP,
             CRD_DOSINGLE | CRD_DOHIGHER | CRD_DOHIGHERBY1 | CRD_DOACE |
                 CRD_DOSUIT,
@@ -762,7 +665,7 @@ int AppGfx::PlayGame() {
             0);
 
     NewGame();
-    m_SolitarioGfx.DrawStaticScene();
+    _p_SolitarioGfx->DrawStaticScene();
 
     SDL_Event event;
     int done = 0;
@@ -771,7 +674,7 @@ int AppGfx::PlayGame() {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT:
-                    fade(m_pScreen, m_pScreen, 1, 1);
+                    fade(_p_Screen, _p_Screen, 1, 1);
                     return 0;
 
                 case SDL_KEYDOWN:
@@ -794,124 +697,112 @@ int AppGfx::PlayGame() {
                     break;
             }
         }
-        if (m_Settings.bMusicEnabled) {
-            m_pMusicManager->StartMusic();
+        if (_GameSettings.bMusicEnabled) {
+            _p_MusicManager->StartMusic();
         }
     }
     return 0;
 }
 
-////////////////////////////////////////
-//       menuMazziChoose
-/*! Menu per la scelta dei mazzi di carte
- */
-void AppGfx::menuMazziChoose() {
-    CustomMenu *menuMazzi = new CustomMenu;
-    menuMazzi->SetScreen(m_pScreen);
-    menuMazzi->FilenameBackground = lpszBackGroundFile;
+void AppGfx::menuSelectDeck() {
+    CustomMenu *menuDecks = new CustomMenu;
+    menuDecks->SetScreen(_p_Screen);
+    menuDecks->FilenameBackground = lpszBackGroundFile;
     int menuMazziw = 445;
     int menuMazzih = 500;
-    int menuMazzix = (m_pScreen->w - menuMazziw) / 2;
-    int menuMazziy = m_pScreen->h - menuMazzih - 10;
-    menuMazzi->SetArea(menuMazzix, menuMazziy, menuMazziw, menuMazzih);
-    menuMazzi->SetColors(SDL_MapRGBA(m_pScreen->format, 0, 0, 0, 0),
-                         SDL_MapRGBA(m_pScreen->format, 128, 0, 0, 255));
+    int menuMazzix = (_p_Screen->w - menuMazziw) / 2;
+    int menuMazziy = _p_Screen->h - menuMazzih - 10;
+    menuDecks->SetArea(menuMazzix, menuMazziy, menuMazziw, menuMazzih);
+    menuDecks->SetColors(SDL_MapRGBA(_p_Screen->format, 0, 0, 0, 0),
+                         SDL_MapRGBA(_p_Screen->format, 128, 0, 0, 255));
 
-    menuMazzi->ClearItems();
-    menuMazzi->SetLabels(m_LanString.GetStringId(cLanguages::ID_CHOOSEMAZZO),
-                         m_LanString.GetStringId(cLanguages::ID_BACKMAINMENU));
-    menuMazzi->AddItems(m_LanString.GetStringId(cLanguages::ID_PIACENTINA));
-    menuMazzi->AddItems(m_LanString.GetStringId(cLanguages::ID_BERGAMO));
-    menuMazzi->AddItems(m_LanString.GetStringId(cLanguages::ID_BOLOGNA));
-    menuMazzi->AddItems(m_LanString.GetStringId(cLanguages::ID_GENOVA));
-    menuMazzi->AddItems(m_LanString.GetStringId(cLanguages::ID_MILANO));
-    menuMazzi->AddItems(m_LanString.GetStringId(cLanguages::ID_NAPOLI));
-    menuMazzi->AddItems(m_LanString.GetStringId(cLanguages::ID_PIEMONTE));
-    menuMazzi->AddItems(m_LanString.GetStringId(cLanguages::ID_ROMAGNA));
-    menuMazzi->AddItems(m_LanString.GetStringId(cLanguages::ID_SARDEGNA));
-    menuMazzi->AddItems(m_LanString.GetStringId(cLanguages::ID_SICILIA));
-    menuMazzi->AddItems(m_LanString.GetStringId(cLanguages::ID_TOSCANA));
-    menuMazzi->AddItems(m_LanString.GetStringId(cLanguages::ID_TRENTO));
-    menuMazzi->AddItems(m_LanString.GetStringId(cLanguages::ID_TREVISO));
-    menuMazzi->AddItems(m_LanString.GetStringId(cLanguages::ID_TRIESTE));
+    menuDecks->ClearItems();
+    menuDecks->SetLabels(
+        _LanguageMgr.GetStringId(LanguageMgr::ID_CHOOSEMAZZO),
+        _LanguageMgr.GetStringId(LanguageMgr::ID_BACKMAINMENU));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_PIACENTINA));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_BERGAMO));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_BOLOGNA));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_GENOVA));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_MILANO));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_NAPOLI));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_PIEMONTE));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_ROMAGNA));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_SARDEGNA));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_SICILIA));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_TOSCANA));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_TRENTO));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_TREVISO));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_TRIESTE));
 
-    int result2 = menuMazzi->Run();
+    int result2 = menuDecks->Run();
 
     switch (result2) {
         case 0:
             // piacentine
-            m_Settings.DeckType.SetType(DeckType::PIACENTINA);
+            _GameSettings.DeckType.SetType(DeckType::PIACENTINA);
             break;
         case 1:
             // bergamo
-            m_Settings.DeckType.SetType(DeckType::BERGAMO);
+            _GameSettings.DeckType.SetType(DeckType::BERGAMO);
             break;
         case 2:
             // bologna
-            m_Settings.DeckType.SetType(DeckType::BOLOGNA);
+            _GameSettings.DeckType.SetType(DeckType::BOLOGNA);
             break;
         case 3:
             // genova
-            m_Settings.DeckType.SetType(DeckType::GENOVA);
+            _GameSettings.DeckType.SetType(DeckType::GENOVA);
             break;
         case 4:
             // milano
-            m_Settings.DeckType.SetType(DeckType::MILANO);
+            _GameSettings.DeckType.SetType(DeckType::MILANO);
             break;
         case 5:
             // napoli
-            m_Settings.DeckType.SetType(DeckType::NAPOLI);
+            _GameSettings.DeckType.SetType(DeckType::NAPOLI);
             break;
         case 6:
             // piemonte
-            m_Settings.DeckType.SetType(DeckType::PIEMONTE);
+            _GameSettings.DeckType.SetType(DeckType::PIEMONTE);
             break;
         case 7:
             // romagna
-            m_Settings.DeckType.SetType(DeckType::ROMAGNA);
+            _GameSettings.DeckType.SetType(DeckType::ROMAGNA);
             break;
         case 8:
             // sardegna
-            m_Settings.DeckType.SetType(DeckType::SARDEGNA);
+            _GameSettings.DeckType.SetType(DeckType::SARDEGNA);
             break;
         case 9:
             // toscana
-            m_Settings.DeckType.SetType(DeckType::TOSCANA);
+            _GameSettings.DeckType.SetType(DeckType::TOSCANA);
             break;
         case 10:
             // sicilia
-            m_Settings.DeckType.SetType(DeckType::SICILIA);
+            _GameSettings.DeckType.SetType(DeckType::SICILIA);
             break;
         case 11:
             // trento
-            m_Settings.DeckType.SetType(DeckType::TRENTO);
+            _GameSettings.DeckType.SetType(DeckType::TRENTO);
             break;
         case 12:
             // treviso
-            m_Settings.DeckType.SetType(DeckType::TREVISO);
+            _GameSettings.DeckType.SetType(DeckType::TREVISO);
             break;
         case 13:
             // trieste
-            m_Settings.DeckType.SetType(DeckType::TRIESTE);
+            _GameSettings.DeckType.SetType(DeckType::TRIESTE);
             break;
     }
-    delete menuMazzi;
+    delete menuDecks;
 }
 
-////////////////////////////////////////
-//       setup
-/*!
-// \param int argc :
-// \param char * argv[] :
-*/
-void AppGfx::Setup(int argc, char *argv[]) {
-    /* Get options from the command line: */
-    m_bOverride = FALSE;
+void AppGfx::ParseCmdLine(int argc, char *argv[]) {
+    _bOverride = FALSE;
 
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
-            /* Display help message: */
-
             printf(
                 "Solitario versione 1.5 (c) 2004-2022 Invido.it\nFai partire "
                 "il "
@@ -943,17 +834,15 @@ void AppGfx::Setup(int argc, char *argv[]) {
             exit(0);
         } else if (strcmp(argv[i], "--usage") == 0 ||
                    strcmp(argv[i], "-u") == 0) {
-            /* Display (happy) usage: */
-
             usage(0, argv[0]);
         } else if (strcmp(argv[i], "--fullscreen") == 0 ||
                    strcmp(argv[i], "-f") == 0) {
-            m_bFullScreen = TRUE;
+            _bFullScreen = TRUE;
         } else if (strcmp(argv[i], "--nosound") == 0 ||
                    strcmp(argv[i], "--quiet") == 0 ||
                    strcmp(argv[i], "-q") == 0) {
-            m_Settings.bMusicEnabled = false;
-            m_bOverride = TRUE;
+            _GameSettings.bMusicEnabled = false;
+            _bOverride = TRUE;
         } else if (strcmp(argv[i], "--version") == 0 ||
                    strcmp(argv[i], "-v") == 0) {
             printf("Solitario versione 1.5\n");
@@ -974,19 +863,12 @@ void AppGfx::Setup(int argc, char *argv[]) {
                 i++;
             }
         } else {
-            /* Display 'made' usage: */
-
             fprintf(stderr, "Unknown option: %s\n", argv[i]);
             usage(1, argv[0]);
         }
     }
 }
 
-////////////////////////////////////////
-//       parseScreenSize
-/*!
-// \param LPCSTR strOpz :
-*/
 BOOL AppGfx::parseScreenSize(LPCSTR strInput) {
     char string[2048];
     memset(string, 0, 2048);
@@ -1000,26 +882,19 @@ BOOL AppGfx::parseScreenSize(LPCSTR strInput) {
     token = strtok(string, seps);
     while (token != NULL) {
         vct_String.push_back(token);
-        /* Get next token: */
         token = strtok(NULL, seps);
     }
 
     int iNumElemntArr = vct_String.size();
 
     if (iNumElemntArr == 2) {
-        sscanf((LPCSTR)vct_String[0].c_str(), "%d", &m_iScreenW);
-        sscanf((LPCSTR)vct_String[1].c_str(), "%d", &m_iScreenH);
+        sscanf((LPCSTR)vct_String[0].c_str(), "%d", &_iScreenW);
+        sscanf((LPCSTR)vct_String[1].c_str(), "%d", &_iScreenH);
         bRet = TRUE;
     }
     return bRet;
 }
 
-////////////////////////////////////////
-//       usage
-/*!
-// \param int err :
-// \param char * cmd :
-*/
 void AppGfx::usage(int err, char *cmd) {
     FILE *f;
 

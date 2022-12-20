@@ -12,8 +12,8 @@
 
 #include "CGame.h"
 #include "CustomMenu.h"
+#include "HightScoreMgr.h"
 #include "Languages.h"
-#include "cHightScoreMgr.h"
 #include "win_type_global.h"
 
 class MusicManager;
@@ -25,13 +25,13 @@ public:
 
     void Init();
     void MainMenu();
-    std::string GetPlayerName() { return m_Settings.strPlayerName; }
+    std::string GetPlayerName() { return _GameSettings.strPlayerName; }
     void SetPlayerName(std::string strVal) {
-        m_Settings.strPlayerName = strVal;
+        _GameSettings.strPlayerName = strVal;
     }
-    cLanguages* GetLanguageMan() { return &m_LanString; }
-    cGameSettings* GetSettings() { return &m_Settings; }
-    void Setup(int argc, char* argv[]);
+    LanguageMgr* GetLanguageMan() { return &_LanguageMgr; }
+    GameSettings* GetSettings() { return &_GameSettings; }
+    void ParseCmdLine(int argc, char* argv[]);
 
 private:
     int WaitKey();
@@ -44,7 +44,7 @@ private:
     void HandleMouseMoveEvent(SDL_Event& event);
     void HandleMouseUpEvent(SDL_Event& event);
     int PlayGame();
-    void menuMazziChoose();
+    void menuSelectDeck();
     void loadProfile();
     void writeProfile();
     void usage(int err, char* cmd);
@@ -52,24 +52,25 @@ private:
     void updateScreenTexture();
 
 private:
-    SDL_Surface* m_pScreen;
-    SDL_Texture* m_pScreenTexture;
-    SDL_Window* m_pWindow;
-    SDL_Renderer* m_psdlRenderer;
-    int m_iScreenW;
-    int m_iScreenH;
-    int m_iBpp;
-    SDL_Surface* m_pimgBackground;
-    CustomFont* m_pMainFont;
-    HightScoreMgr m_HScore;
-    cLanguages m_LanString;
-    cGameSettings m_Settings;
-    CGame m_SolitarioGfx;
-    BOOL m_bStartdrag;
-    MusicManager* m_pMusicManager;
-    SDL_Surface* m_pTitle;
-    BOOL m_bFullScreen;
-    BOOL m_bOverride;
+    SDL_Surface* _p_Screen;
+    SDL_Surface* _p_imgBackground;
+    SDL_Texture* _p_ScreenTexture;
+    SDL_Surface* _p_Title;
+    SDL_Window* _p_Window;
+    SDL_Renderer* _p_sdlRenderer;
+    int _iScreenW;
+    int _iScreenH;
+    int _iBpp;
+
+    CustomFont* _p_CustomFont;
+    HightScoreMgr _HScoreMgr;
+    LanguageMgr _LanguageMgr;
+    GameSettings _GameSettings;
+    CGame* _p_SolitarioGfx;
+    BOOL _bStartdrag;
+    MusicManager* _p_MusicManager;
+    BOOL _bFullScreen;
+    BOOL _bOverride;
 };
 
 #endif

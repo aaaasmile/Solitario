@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
     ::SetCurrentDirectory(strDirname.c_str());
 #endif
     AppGfx* app = new AppGfx();
-    app->Setup(argc, argv);
+    app->ParseCmdLine(argc, argv);
     app->Init();
 
     app->MainMenu();
