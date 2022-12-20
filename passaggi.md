@@ -41,6 +41,13 @@ L'ho integrata direttamente nel codice in quanto non fa parte della distribuzion
 di ubuntu.
 Il progetto usa libtool che non ho installato nel mio sistema:
 sudo apt-get install libtool
+Però compilo la libini in modo statico e libtool non mi serve in quanto viene usato runlib.
+In configure.ac metto:
+AC_PROG_RANLIB
+AM_PROG_AR
+Alla fine nella sottodirectory libini ho il file libini.a da linkare staticamente al
+programma principale. Nota che ranlib e ar sono due programmi che servono per 
+creare il file libini.a. Runlib sembra un alias di ar.
 
 ### Automake
 Automake naturalmente evolve e per ogni versione bisogna stare attenti che

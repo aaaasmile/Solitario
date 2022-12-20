@@ -1,6 +1,6 @@
 AM_CPPFLAGS = -I ./include -DHAVE_STRCASECMP
 
-lib_LTLIBRARIES   = libini.a
+lib_LIBRARIES   = libini.a
 libini_a_SOURCES = headings.h \
                     ini.cpp \
 					ini.h \
