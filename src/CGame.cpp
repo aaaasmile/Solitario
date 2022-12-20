@@ -1,31 +1,3 @@
-////////////////////////////////////////////////////////////////////////////////
-// File         : cGame.cpp
-// Project      :
-// Subsystem    :
-// Component    :
-// Author       : Invido.it (c) 2004-2022 adapted from Rico Roberto Zuniga
-// Description  : implementation of the cMusicManager class.
-////////////////////////////////////////////////////////////////////////////////
-
-/**
- *
- *	This program is free software; you can redistribute it and/or
- *	modify it under the terms of the GNU General Public License
- *	as published by the Free Software Foundation; either version 2
- *	of the License, or (at your option) any later version.
- *
- *	This program is distributed in the hope that it will be useful,
- *	but WITHOUT ANY WARRANTY; without even the implied warranty of
- *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *	GNU General Public License for more details.
- *
- *	You should have received a copy of the GNU General Public License
- *	along with this program; if not, write to the Free Software
- *	Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- *
- **/
-
 #include "CGame.h"
 
 #include <SDL_endian.h>
@@ -73,8 +45,10 @@ CGame::~CGame() { ClearSurface(); }
 /*! clear stuff
  */
 void CGame::ClearSurface() {
-    if (background) SDL_FreeSurface(background);
-    if (scene_background) SDL_FreeSurface(scene_background);
+    if (background)
+        SDL_FreeSurface(background);
+    if (scene_background)
+        SDL_FreeSurface(scene_background);
 }
 
 void CGame::CreateRegion(int id, unsigned int attribs, unsigned int amode,
@@ -125,10 +99,12 @@ bool CGame::InitDrag(int x, int y) { return InitDrag(NULL, x, y); }
 // optimization needed
 bool CGame::InitDrag(CCardStack *CargoStack, int x, int y) {
     if (CargoStack == NULL) {
-        if (SourceRegion->Empty()) return false;
+        if (SourceRegion->Empty())
+            return false;
 
         int idx = SourceRegion->GetClickedCard(x, y);
-        if (idx == -1) return false;  // no card found
+        if (idx == -1)
+            return false;  // no card found
 
         switch (SourceRegion->GetDragMode()) {
             case CRD_DRAGCARDS:
@@ -201,8 +177,10 @@ void CGame::DoDrag(int x, int y) {
     rcd.x = dcard.x - 2;
     rcd.y = dcard.y - 2;
 
-    if (dcard.x < 0) rcs.x = rcd.x = 0;
-    if (dcard.y < 0) rcs.y = rcd.y = 0;
+    if (dcard.x < 0)
+        rcs.x = rcd.x = 0;
+    if (dcard.y < 0)
+        rcs.y = rcd.y = 0;
 
     if (x < oldx)
         dcard.x -= oldx - x;
@@ -237,7 +215,8 @@ void CGame::DoDrop(CCardRegion *DestRegion) {
     else
         BestRegion = this->GetBestStack(dcard.x, dcard.y, g_CARDWIDTH,
                                         g_CARDHEIGHT, &DragStack);
-    if (BestRegion == NULL) BestRegion = SourceRegion;
+    if (BestRegion == NULL)
+        BestRegion = SourceRegion;
 
     DestStack = BestRegion->GetCardStack();
     DestStack->Push(DragStack);
@@ -256,7 +235,8 @@ void CGame::DoDrop(CCardRegion *DestRegion) {
     DragStack.Clear();
 
     // when no movement
-    if (dcard.x == vi->x && dcard.y == vi->y) return;
+    if (dcard.x == vi->x && dcard.y == vi->y)
+        return;
 
     ZoomCard(dcard.x, dcard.y, vi->x, vi->y, dcard.width, dcard.height,
              background, dragface);
@@ -269,7 +249,8 @@ CCardRegion *CGame::FindDropRegion(int Id, CCard card) {
 
 CCardRegion *CGame::FindDropRegion(int Id, CCardStack stack) {
     for (rVI vi = this->begin(); vi != this->end(); ++vi) {
-        if ((vi->Id == Id) && vi->CanDrop(&stack)) return &(*vi);
+        if ((vi->Id == Id) && vi->CanDrop(&stack))
+            return &(*vi);
     }
     return NULL;
 }
@@ -300,8 +281,10 @@ void CGame::ZoomCard(int &sx, int &sy, int &dx, int &dy, int w, int h,
         rcd.x = sx - 2;
         rcd.y = sy - 2;
 
-        if (sx < 0) rcs.x = rcd.x = 0;
-        if (sy < 0) rcs.y = rcd.y = 0;
+        if (sx < 0)
+            rcs.x = rcd.x = 0;
+        if (sy < 0)
+            rcs.y = rcd.y = 0;
 
         sx = dest.x = px;
         sy = dest.y = py;
@@ -348,7 +331,8 @@ CCardRegion *CGame::GetBestStack(int x, int y, int w, int h,
 
     for (rVI vi = this->begin(); vi != this->end(); ++vi) {
         SDL_PumpEvents();
-        if (vi->CanDrop(stack)) percent = vi->GetOverlapRatio(x, y, w, h);
+        if (vi->CanDrop(stack))
+            percent = vi->GetOverlapRatio(x, y, w, h);
 
         if (percent > maxoverlap) {
             maxoverlap = percent;
@@ -414,10 +398,13 @@ modo verticale.
 // \param SDL_Surface *s : screen surface
 */
 int CGame::DrawCard(int x, int y, int nCdIndex, SDL_Surface *s) {
-    if (s == NULL) s = scr;
+    if (s == NULL)
+        s = scr;
 
-    if (nCdIndex < 0) nCdIndex = 0;
-    if (nCdIndex > NUM_CARDS) nCdIndex = NUM_CARDS - 1;
+    if (nCdIndex < 0)
+        nCdIndex = 0;
+    if (nCdIndex > NUM_CARDS)
+        nCdIndex = NUM_CARDS - 1;
 
     int iSegnoIx = nCdIndex / 10;
     int iCartaIx = nCdIndex % 10;
@@ -442,12 +429,15 @@ int CGame::DrawCard(int x, int y, int nCdIndex, SDL_Surface *s) {
 // \param SDL_Surface *s :
 */
 int CGame::DrawCard(VI vi, SDL_Surface *s) {
-    if (s == NULL) s = scr;
+    if (s == NULL)
+        s = scr;
 
     int nCdIndex = vi->Idx;
 
-    if (nCdIndex < 0) nCdIndex = 0;
-    if (nCdIndex > NUM_CARDS) nCdIndex = NUM_CARDS - 1;
+    if (nCdIndex < 0)
+        nCdIndex = 0;
+    if (nCdIndex > NUM_CARDS)
+        nCdIndex = NUM_CARDS - 1;
 
     // SrcCard.x = iSegnoIx * g_CARDWIDTH;
     // SrcCard.y = iCartaIx * g_CARDHEIGHT;
@@ -482,7 +472,8 @@ int CGame::DrawCardBack(int x, int y) { return DrawCardBack(x, y, NULL); }
 // \param SDL_Surface *s :
 */
 int CGame::DrawCardBack(int x, int y, SDL_Surface *s) {
-    if (s == NULL) s = scr;
+    if (s == NULL)
+        s = scr;
 
     SrcCard.x = 0;
     SrcCard.y = 0;
@@ -522,10 +513,13 @@ int CGame::DrawSymbol(int x, int y, int nSymbol) {
 // \param SDL_Surface *s :
 */
 int CGame::DrawSymbol(int x, int y, int nSymbol, SDL_Surface *s) {
-    if (nSymbol < 1) return 0;
-    if (nSymbol > 3) nSymbol = 3;
+    if (nSymbol < 1)
+        return 0;
+    if (nSymbol > 3)
+        nSymbol = 3;
 
-    if (s == NULL) s = scr;
+    if (s == NULL)
+        s = scr;
 
     SrcCard.x = 0;
     SrcCard.y = 0;
@@ -573,7 +567,8 @@ int CGame::AnimateCards() {
         do  // while card is within the screen
         {
             SDL_PumpEvents();
-            if (SDL_GetMouseState(NULL, NULL)) return -1;  // stop the animation
+            if (SDL_GetMouseState(NULL, NULL))
+                return -1;  // stop the animation
 
             yspeed = yspeed + GRAVITY;
             x += xspeed;
@@ -708,7 +703,8 @@ int CGame::LoadCardPac() {
     frames = SDL_ReadLE16(src);
 
     delays = (Uint16 *)malloc(sizeof(Uint16) * frames);
-    if (!delays) return 2;
+    if (!delays)
+        return 2;
 
     for (int i = 0; i < frames; i++) {
         // file format stores delays in 1/100th of second
@@ -720,13 +716,14 @@ int CGame::LoadCardPac() {
     SDL_Surface *s;
     SDL_Surface *temp;
     temp = IMG_LoadPNG_RW(src);
-    if (!temp) return 0;
+    if (!temp)
+        return 0;
 
     if (SDL_WasInit(SDL_INIT_VIDEO) != 0) {
         // converte l'immagine al formato video scelto
         // s = SDL_DisplayFormat(temp);  // TODO SDL 2.0
         SDL_FreeSurface(temp);
-        SDL_SetColorKey(s, TRUE, SDL_MapRGB(s->format, 0, 128, 0)); // SDL 2.0
+        SDL_SetColorKey(s, TRUE, SDL_MapRGB(s->format, 0, 128, 0));  // SDL 2.0
     } else
         s = temp;  // we are dedicated windows traybar server
 

@@ -10,7 +10,8 @@
             "defines": [
                 "_DEBUG",
                 "UNICODE",
-                "_UNICODE"
+                "_UNICODE",
+                "DATA_PREFIX"
             ],
             "cppStandard": "c++17",
             "cStandard": "c17"
