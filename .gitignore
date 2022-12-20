@@ -4,3 +4,4 @@ stderr.txt
 *.o
 configure~
 config.log
+temp
