@@ -233,17 +233,14 @@ void AppGfx::newGame() {
     // deal
     int i;
     for (i = 1; i <= 7; i++) {
-        _p_SolitarioGfx->PushInRegion(
-            i, _p_SolitarioGfx->PopFromRegion(
-                   0));  //[i].Push(_p_SolitarioGfx[0].Pop(i));
+        _p_SolitarioGfx->PushInRegion(i, _p_SolitarioGfx->PopFromRegion(0));
     }
 
     _p_SolitarioGfx->InitAllCoords();
 
     for (i = 1; i <= 7; i++) {
-        //_p_SolitarioGfx[i].SetCardFaceUp(TRUE, _p_SolitarioGfx[i].Size() - 1);
         _p_SolitarioGfx->SetCardFaceUp(i, TRUE,
-                                       _p_SolitarioGfx->RegionSize() - 1);
+                                       _p_SolitarioGfx->RegionSize(i) - 1);
     }
 }
 
@@ -255,10 +252,10 @@ void AppGfx::handleGameLoopKeyDownEvent(SDL_Event &event) {
     }
     if (event.key.keysym.sym == SDLK_a) {
         _p_SolitarioGfx->AnimateCards();
-    };
+    }
     if (event.key.keysym.sym == SDLK_r) {
         _p_SolitarioGfx->DrawStaticScene();
-    };
+    }
 }
 
 void AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
@@ -283,17 +280,19 @@ void AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
         if (srcReg->Id == CRD_PILE) {
             CCardStack *cs = new CCardStack;
             if (srcReg->Empty() &&
-                !_p_SolitarioGfx[8].Empty())  // Bring back the cards
+                !_p_SolitarioGfx->Empty(8))  // Bring back the cards
             {
-                *cs = _p_SolitarioGfx[8].Pop(_p_SolitarioGfx[8].Size());
+                //*cs = _p_SolitarioGfx[8].Pop(_p_SolitarioGfx[8].Size());
+                *cs = _p_SolitarioGfx->PopFromRegion(
+                    8, _p_SolitarioGfx->RegionSize(8));
                 cs->SetCardsFaceUp(FALSE);
                 _p_SolitarioGfx->InitDrag(cs, -1, -1);
                 _p_SolitarioGfx->DoDrop(&_p_SolitarioGfx[0]);
-                _p_SolitarioGfx[0]->Reverse();
-                _p_SolitarioGfx[0]->InitCardCoords();
-            } else if (!srcReg->Empty() && (!_p_SolitarioGfx[8].Empty() ||
-                                            _p_SolitarioGfx[8].Empty())) {
-                *cs = _p_SolitarioGfx[0].Pop(1);
+                _p_SolitarioGfx->Reverse(0);
+                _p_SolitarioGfx->InitCardCoords(0);
+            } else if (!srcReg->Empty() && (!_p_SolitarioGfx->Empty(8) ||
+                                            _p_SolitarioGfx->Empty(8))) {
+                *cs = _p_SolitarioGfx->PopFromRegion(0, 1);
                 cs->SetCardsFaceUp(TRUE);
                 _p_SolitarioGfx->InitDrag(cs, -1, -1);
                 _p_SolitarioGfx->DoDrop(&_p_SolitarioGfx[8]);
@@ -334,8 +333,8 @@ void AppGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
         _p_SolitarioGfx->DoDrop();
         // SDL_WM_GrabInput(SDL_GRAB_OFF); // TODO SDL 2.0
     }
-    if (_p_SolitarioGfx[0]->Empty() && _p_SolitarioGfx[8].Empty()) {
-        _p_SolitarioGfx[0]->SetSymbol(1);
+    if (_p_SolitarioGfx->Empty(0) && _p_SolitarioGfx->Empty(8)) {
+        _p_SolitarioGfx->SetSymbol(0, 1);
         _p_SolitarioGfx->DrawStaticScene();
     }
     // victory

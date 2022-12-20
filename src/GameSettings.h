@@ -55,7 +55,7 @@ public:
     long lIpRemote_2;
     long lIpRemote_3;
     long lIpRemote_4;
-    DeckType DeckType;
+    DeckType deckTypeVal;
     LanguageMgr::eLangId eLanguageCurrent;
     bool bMusicEnabled;
 
@@ -70,13 +70,13 @@ public:
         lIpRemote_2 = 0;
         lIpRemote_3 = 0;
         lIpRemote_4 = 1;
-        DeckType.SetType(DeckType::PIACENTINA);
+        deckTypeVal.SetType(DeckType::PIACENTINA);
         eLanguageCurrent = LanguageMgr::LANG_ITA;
         bMusicEnabled = false;
     }
 };
 
 namespace GAMESET {
-    static const GameSettings* GetSettings();
+    const GameSettings* GetSettings();
 }
 #endif

@@ -86,8 +86,9 @@ public:
     void SetSymbol(int regionNo, int symbol) {
         _cardRegionList[regionNo].SetSymbol(symbol);
     }
-    void NewDeck(int regionNo) { _cardRegionList[regionNo].NewDeck() }
-    void Shuffle(int regionNo) { _cardRegionList[regionNo].Shuffle() }
+    void NewDeck(int regionNo) { _cardRegionList[regionNo].NewDeck(); }
+    bool Empty(int regionNo) { return _cardRegionList[regionNo].Empty(); }
+    void Shuffle(int regionNo) { _cardRegionList[regionNo].Shuffle(); }
     void PushInRegion(int regionNo, CCard card) {
         _cardRegionList[regionNo].Push(card);
     }
@@ -97,11 +98,16 @@ public:
     CCard PopFromRegion(int regionNo) {
         return _cardRegionList[regionNo].Pop();
     }
-    CCardStack PopFromRegion(int regionNo) {
+    CCardStack PopFromRegion(int regionNo, int items) {
         return _cardRegionList[regionNo].Pop(items);
     }
     void SetCardFaceUp(int regionNo, bool fTrue, int idx) {
         _cardRegionList[regionNo].SetCardFaceUp(fTrue, idx);
+    }
+    int RegionSize(int regionNo) { return _cardRegionList[regionNo].Size(); }
+    void Reverse(int regionNo) { _cardRegionList[regionNo].Reverse(); }
+    void InitCardCoords(int regionNo) {
+        _cardRegionList[regionNo].InitCardCoords();
     }
 
 private:
