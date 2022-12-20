@@ -70,14 +70,11 @@ void AppGfx::Init() {
     _p_MusicManager = new MusicManager;
     _p_MusicManager->Init();
 
-    _LanguageMgr.SetLang(_p_GameSettings.eLanguageCurrent);
+    _LanguageMgr.SetLang(_p_GameSettings->eLanguageCurrent);
 
     _p_CustomFont = new CustomFont;
     _p_CustomFont->LoadFont(lpszFontFile);
 
-    // caption
-    // SDL_WM_SetCaption(_LanguageMgr.GetCStringId(LanguageMgr::ID_SOLITARIO),
-    // NULL);
     SDL_SetWindowTitle(_p_Window, _LanguageMgr.GetCStringId(
                                       LanguageMgr::ID_SOLITARIO));  // SDL 2.0
 
@@ -152,7 +149,7 @@ int AppGfx::startGameLoop() {
     }
     _p_SolitarioGfx = new CGame();
 
-    _p_SolitarioGfx->SetDeckType(_p_GameSettings.DeckType);
+    _p_SolitarioGfx->SetDeckType(_p_GameSettings->DeckType);
     _p_SolitarioGfx->InitDeck(_p_Screen);
 
     _p_SolitarioGfx->ClearSurface();
@@ -218,7 +215,7 @@ int AppGfx::startGameLoop() {
                     break;
             }
         }
-        if (_p_GameSettings.bMusicEnabled) {
+        if (_p_GameSettings->bMusicEnabled) {
             _p_MusicManager->StartMusic();
         }
     }
@@ -226,23 +223,27 @@ int AppGfx::startGameLoop() {
 }
 
 void AppGfx::newGame() {
-    _p_SolitarioGfx[0].SetSymbol(CRD_OSYMBOL);
+    _p_SolitarioGfx->SetSymbol(0, CRD_OSYMBOL);
 
     _p_SolitarioGfx->EmptyStacks();
 
-    _p_SolitarioGfx[0].NewDeck();
-    _p_SolitarioGfx[0].Shuffle();
+    _p_SolitarioGfx->NewDeck(0);
+    _p_SolitarioGfx->Shuffle(0);
 
     // deal
     int i;
     for (i = 1; i <= 7; i++) {
-        _p_SolitarioGfx[i].Push(_p_SolitarioGfx[0].Pop(i));
+        _p_SolitarioGfx->PushInRegion(
+            i, _p_SolitarioGfx->PopFromRegion(
+                   0));  //[i].Push(_p_SolitarioGfx[0].Pop(i));
     }
 
     _p_SolitarioGfx->InitAllCoords();
 
     for (i = 1; i <= 7; i++) {
-        _p_SolitarioGfx[i].SetCardFaceUp(TRUE, _p_SolitarioGfx[i].Size() - 1);
+        //_p_SolitarioGfx[i].SetCardFaceUp(TRUE, _p_SolitarioGfx[i].Size() - 1);
+        _p_SolitarioGfx->SetCardFaceUp(i, TRUE,
+                                       _p_SolitarioGfx->RegionSize() - 1);
     }
 }
 
@@ -375,31 +376,32 @@ void AppGfx::loadProfile() {
 
     if (!lRes) {
         // player name
-        _p_GameSettings.strPlayerName = RegKey.getRegStringValue(
-            _p_GameSettings.strPlayerName.c_str(), strIDS_KEY_PLAYERNAME);
+        _p_GameSettings->strPlayerName = RegKey.getRegStringValue(
+            _p_GameSettings->strPlayerName.c_str(), strIDS_KEY_PLAYERNAME);
         // deck type
         int iVal = RegKey.getRegDWordValue(
-            _p_GameSettings.DeckType.GetTypeIndex(), strIDS_KEY_DECKCURRENT);
-        _p_GameSettings.DeckType.SetTypeIndex(iVal);
+            _p_GameSettings->DeckType.GetTypeIndex(), strIDS_KEY_DECKCURRENT);
+        _p_GameSettings->DeckType.SetTypeIndex(iVal);
 
         // language
-        iVal = RegKey.getRegDWordValue(_p_GameSettings.eLanguageCurrent,
+        iVal = RegKey.getRegDWordValue(_p_GameSettings->eLanguageCurrent,
                                        strIDS_KEY_LANGUAGECURRENT);
         switch (iVal) {
             case 0:
-                _p_GameSettings.eLanguageCurrent = LanguageMgr::LANG_ITA;
+                _p_GameSettings->eLanguageCurrent = LanguageMgr::LANG_ITA;
                 break;
             case 1:
-                _p_GameSettings.eLanguageCurrent = LanguageMgr::LANG_DIAL_BREDA;
+                _p_GameSettings->eLanguageCurrent =
+                    LanguageMgr::LANG_DIAL_BREDA;
                 break;
         }
         // music
         iVal = RegKey.getRegDWordValue(0, strIDS_KEY_MUSICENABLED);
         if (!_bOverride) {
             if (iVal == 0) {
-                _p_GameSettings.bMusicEnabled = FALSE;
+                _p_GameSettings->bMusicEnabled = FALSE;
             } else {
-                _p_GameSettings.bMusicEnabled = TRUE;
+                _p_GameSettings->bMusicEnabled = TRUE;
             }
         }
     } else {
@@ -417,21 +419,21 @@ void AppGfx::loadProfile() {
     int iVal;
 
     // deck type
-    iVal = _p_GameSettings.DeckType.GetTypeIndex();
+    iVal = _p_GameSettings->DeckType.GetTypeIndex();
     if (pIni) {
         ini_locateHeading(pIni, lpszSectAll);
         ini_locateKey(pIni, lpszKeyDeck);
         ini_readInt(pIni, &iVal);
     }
-    _p_GameSettings.DeckType.SetTypeIndex(iVal);
+    _p_GameSettings->DeckType.SetTypeIndex(iVal);
     // language
-    iVal = _p_GameSettings.eLanguageCurrent;
+    iVal = _p_GameSettings->eLanguageCurrent;
     if (pIni) {
         ini_locateHeading(pIni, lpszSectAll);
         ini_locateKey(pIni, lpszKeyLang);
         ini_readInt(pIni, &iVal);
     }
-    _p_GameSettings.eLanguageCurrent = (LanguageMgr::eLangId)iVal;
+    _p_GameSettings->eLanguageCurrent = (LanguageMgr::eLangId)iVal;
     // music
     iVal = FALSE;
     if (pIni) {
@@ -440,7 +442,7 @@ void AppGfx::loadProfile() {
         ini_readInt(pIni, &iVal);
     }
     if (!_bOverride) {
-        _p_GameSettings.bMusicEnabled = iVal;
+        _p_GameSettings->bMusicEnabled = iVal;
     }
 
     ini_close(pIni);
@@ -457,13 +459,13 @@ void AppGfx::writeProfile() {
     LONG lRes;
     lRes = RegKey.Open(HKEY_CURRENT_USER, strIDS_KEY_LASTPATH);
     if (!lRes) {
-        RegKey.setRegStringValue(_p_GameSettings.strPlayerName.c_str(),
+        RegKey.setRegStringValue(_p_GameSettings->strPlayerName.c_str(),
                                  strIDS_KEY_PLAYERNAME);
-        RegKey.setRegDWordValue(_p_GameSettings.eLanguageCurrent,
+        RegKey.setRegDWordValue(_p_GameSettings->eLanguageCurrent,
                                 strIDS_KEY_LANGUAGECURRENT);
-        RegKey.setRegDWordValue(_p_GameSettings.DeckType.GetType(),
+        RegKey.setRegDWordValue(_p_GameSettings->DeckType.GetType(),
                                 strIDS_KEY_DECKCURRENT);
-        RegKey.setRegDWordValue(_p_GameSettings.bMusicEnabled,
+        RegKey.setRegDWordValue(_p_GameSettings->bMusicEnabled,
                                 strIDS_KEY_MUSICENABLED);
         RegKey.Close();
     }
@@ -476,17 +478,17 @@ void AppGfx::writeProfile() {
     // deck type
     ini_locateHeading(pIni, lpszSectAll);
     ini_locateKey(pIni, lpszKeyDeck);
-    ini_writeInt(pIni, (int)_p_GameSettings.DeckType.GetType());
+    ini_writeInt(pIni, (int)_p_GameSettings->DeckType.GetType());
 
     // language
     ini_locateHeading(pIni, lpszSectAll);
     ini_locateKey(pIni, lpszKeyLang);
-    ini_writeInt(pIni, _p_GameSettings.eLanguageCurrent);
+    ini_writeInt(pIni, _p_GameSettings->eLanguageCurrent);
 
     // music
     ini_locateHeading(pIni, lpszSectAll);
     ini_locateKey(pIni, lpszKeyMusic);
-    ini_writeInt(pIni, _p_GameSettings.bMusicEnabled);
+    ini_writeInt(pIni, _p_GameSettings->bMusicEnabled);
 
     ini_close(pIni);
 #endif
@@ -546,22 +548,22 @@ void AppGfx::MainMenu() {
                 switch (result2) {
                     case 0:
                         // italian
-                        _p_GameSettings.eLanguageCurrent =
+                        _p_GameSettings->eLanguageCurrent =
                             LanguageMgr::LANG_ITA;
 
                         break;
                     case 1:
                         // dialect mn
-                        _p_GameSettings.eLanguageCurrent =
+                        _p_GameSettings->eLanguageCurrent =
                             LanguageMgr::LANG_DIAL_BREDA;
                         break;
                     case 2:
                         // english
-                        _p_GameSettings.eLanguageCurrent =
+                        _p_GameSettings->eLanguageCurrent =
                             LanguageMgr::LANG_ENG;
                         break;
                 }
-                _LanguageMgr.SetLang(_p_GameSettings.eLanguageCurrent);
+                _LanguageMgr.SetLang(_p_GameSettings->eLanguageCurrent);
                 SDL_SetWindowTitle(_p_Window, _LanguageMgr.GetCStringId(
                                                   LanguageMgr::ID_SOLITARIO));
                 break;
@@ -579,12 +581,12 @@ void AppGfx::MainMenu() {
                 switch (result2) {
                     case 0:
                         // sound on
-                        _p_GameSettings.bMusicEnabled = TRUE;
+                        _p_GameSettings->bMusicEnabled = TRUE;
                         _p_MusicManager->StartMusic();
                         break;
                     case 1:
                         // sound off
-                        _p_GameSettings.bMusicEnabled = FALSE;
+                        _p_GameSettings->bMusicEnabled = FALSE;
                         _p_MusicManager->StopMusic();
                         break;
                 }
@@ -739,59 +741,59 @@ void AppGfx::menuSelectDeck() {
     switch (result2) {
         case 0:
             // piacentine
-            _p_GameSettings.DeckType.SetType(DeckType::PIACENTINA);
+            _p_GameSettings->DeckType.SetType(DeckType::PIACENTINA);
             break;
         case 1:
             // bergamo
-            _p_GameSettings.DeckType.SetType(DeckType::BERGAMO);
+            _p_GameSettings->DeckType.SetType(DeckType::BERGAMO);
             break;
         case 2:
             // bologna
-            _p_GameSettings.DeckType.SetType(DeckType::BOLOGNA);
+            _p_GameSettings->DeckType.SetType(DeckType::BOLOGNA);
             break;
         case 3:
             // genova
-            _p_GameSettings.DeckType.SetType(DeckType::GENOVA);
+            _p_GameSettings->DeckType.SetType(DeckType::GENOVA);
             break;
         case 4:
             // milano
-            _p_GameSettings.DeckType.SetType(DeckType::MILANO);
+            _p_GameSettings->DeckType.SetType(DeckType::MILANO);
             break;
         case 5:
             // napoli
-            _p_GameSettings.DeckType.SetType(DeckType::NAPOLI);
+            _p_GameSettings->DeckType.SetType(DeckType::NAPOLI);
             break;
         case 6:
             // piemonte
-            _p_GameSettings.DeckType.SetType(DeckType::PIEMONTE);
+            _p_GameSettings->DeckType.SetType(DeckType::PIEMONTE);
             break;
         case 7:
             // romagna
-            _p_GameSettings.DeckType.SetType(DeckType::ROMAGNA);
+            _p_GameSettings->DeckType.SetType(DeckType::ROMAGNA);
             break;
         case 8:
             // sardegna
-            _p_GameSettings.DeckType.SetType(DeckType::SARDEGNA);
+            _p_GameSettings->DeckType.SetType(DeckType::SARDEGNA);
             break;
         case 9:
             // toscana
-            _p_GameSettings.DeckType.SetType(DeckType::TOSCANA);
+            _p_GameSettings->DeckType.SetType(DeckType::TOSCANA);
             break;
         case 10:
             // sicilia
-            _p_GameSettings.DeckType.SetType(DeckType::SICILIA);
+            _p_GameSettings->DeckType.SetType(DeckType::SICILIA);
             break;
         case 11:
             // trento
-            _p_GameSettings.DeckType.SetType(DeckType::TRENTO);
+            _p_GameSettings->DeckType.SetType(DeckType::TRENTO);
             break;
         case 12:
             // treviso
-            _p_GameSettings.DeckType.SetType(DeckType::TREVISO);
+            _p_GameSettings->DeckType.SetType(DeckType::TREVISO);
             break;
         case 13:
             // trieste
-            _p_GameSettings.DeckType.SetType(DeckType::TRIESTE);
+            _p_GameSettings->DeckType.SetType(DeckType::TRIESTE);
             break;
     }
     delete menuDecks;
@@ -840,7 +842,7 @@ void AppGfx::ParseCmdLine(int argc, char *argv[]) {
         } else if (strcmp(argv[i], "--nosound") == 0 ||
                    strcmp(argv[i], "--quiet") == 0 ||
                    strcmp(argv[i], "-q") == 0) {
-            _p_GameSettings.bMusicEnabled = false;
+            _p_GameSettings->bMusicEnabled = false;
             _bOverride = TRUE;
         } else if (strcmp(argv[i], "--version") == 0 ||
                    strcmp(argv[i], "-v") == 0) {

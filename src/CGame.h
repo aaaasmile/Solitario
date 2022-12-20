@@ -81,6 +81,29 @@ public:
     void LoadDeckFromPac();
     void LoadSymbols();
 
+    void DrawCardStack(SDL_Surface *s, CCardRegion *pcardRegion);
+    void DrawCardStack(rVI vi);
+    void SetSymbol(int regionNo, int symbol) {
+        _cardRegionList[regionNo].SetSymbol(symbol);
+    }
+    void NewDeck(int regionNo) { _cardRegionList[regionNo].NewDeck() }
+    void Shuffle(int regionNo) { _cardRegionList[regionNo].Shuffle() }
+    void PushInRegion(int regionNo, CCard card) {
+        _cardRegionList[regionNo].Push(card);
+    }
+    void PushInRegion(int regionNo, CCardStack cs) {
+        _cardRegionList[regionNo].Push(cs);
+    }
+    CCard PopFromRegion(int regionNo) {
+        return _cardRegionList[regionNo].Pop();
+    }
+    CCardStack PopFromRegion(int regionNo) {
+        return _cardRegionList[regionNo].Pop(items);
+    }
+    void SetCardFaceUp(int regionNo, bool fTrue, int idx) {
+        _cardRegionList[regionNo].SetCardFaceUp(fTrue, idx);
+    }
+
 private:
     CCardStack _dragStack;
     DRAGCARD _dragCard;

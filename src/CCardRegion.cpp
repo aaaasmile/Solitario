@@ -2,34 +2,12 @@
 
 #include "CGame.h"
 
-void CCardRegion::DrawCardStack() { DrawCardStack(NULL); }
-
-////////////////////////////////////////
-//       DrawCardStack
-/*!
-// \param SDL_Surface *s :
-*/
-void CCardRegion::DrawCardStack(SDL_Surface *s) {
-    if (!(Attributes & CRD_VISIBLE))
-        return;
-
-    m_pGameGfx->DrawSymbol(xCoord, yCoord, Symbol);
-    for (VI vi = InternalStack.begin(); vi != InternalStack.end(); ++vi) {
-        if (vi->FaceUp()) {
-            // DrawCard(vi->x, vi->y, vi->Idx, s);
-            m_pGameGfx->DrawCard(vi, s);
-        } else {
-            m_pGameGfx->DrawCardBack(vi->x, vi->y, s);
-        }
-    }
-}
-
 void CCardRegion::InitCardCoords() {
     if (InternalStack.Empty())
         return;
 
-    int x = xCoord;
-    int y = yCoord;
+    int x = XCoord;
+    int y = YCoord;
 
     int pos = 0;
     int it = 0;
@@ -39,8 +17,8 @@ void CCardRegion::InitCardCoords() {
             vi->SetCardLoc(x, y);
             if (!((it++) % 4))
                 pos++;
-            x = (pos * 2) + xCoord;
-            y = pos + yCoord;
+            x = (pos * 2) + XCoord;
+            y = pos + YCoord;
         }
     }
 
@@ -68,8 +46,8 @@ bool CCardRegion::PtInStack(int x, int y) {
     int StackWidth = this->GetStackWidth();
     int StackHeight = this->GetStackHeight();
 
-    if (x >= xCoord && x <= xCoord + StackWidth && y >= yCoord &&
-        y <= yCoord + StackHeight)
+    if (x >= XCoord && x <= XCoord + StackWidth && y >= YCoord &&
+        y <= YCoord + StackHeight)
         return true;
     else
         return false;
@@ -102,12 +80,12 @@ int CCardRegion::GetOverlapRatio(int x, int y, int w, int h) {
                 |_______|
     */
     if (PtInStack(x, y)) {
-        if (xCoord + StackWidth > x + w)
+        if (XCoord + StackWidth > x + w)
             wi = w;
         else
-            wi = (xCoord + StackWidth) - x;
+            wi = (XCoord + StackWidth) - x;
 
-        hi = (yCoord + StackHeight) - y;
+        hi = (YCoord + StackHeight) - y;
     }
     /*
          _______________________________
@@ -120,8 +98,8 @@ int CCardRegion::GetOverlapRatio(int x, int y, int w, int h) {
     |_______|
     */
     else if (PtInStack(x + w, y)) {
-        wi = (x + w) - xCoord;
-        hi = (yCoord + StackHeight) - y;
+        wi = (x + w) - XCoord;
+        hi = (YCoord + StackHeight) - y;
     }
     /*
                  _______
@@ -134,12 +112,12 @@ int CCardRegion::GetOverlapRatio(int x, int y, int w, int h) {
     |_______________________________|
     */
     else if (PtInStack(x, y + h)) {
-        if (xCoord + StackWidth > x + w)
+        if (XCoord + StackWidth > x + w)
             wi = w;
         else
-            wi = (xCoord + StackWidth) - x;
+            wi = (XCoord + StackWidth) - x;
 
-        hi = (y + h) - yCoord;
+        hi = (y + h) - YCoord;
     }
     /*
      _______
@@ -152,8 +130,8 @@ int CCardRegion::GetOverlapRatio(int x, int y, int w, int h) {
         |_______________________________|
     */
     else if (PtInStack(x + w, y + h)) {
-        wi = (x + w) - xCoord;
-        hi = (y + h) - yCoord;
+        wi = (x + w) - XCoord;
+        hi = (y + h) - YCoord;
     }
     /*
      _______________________________
@@ -169,11 +147,6 @@ int CCardRegion::GetOverlapRatio(int x, int y, int w, int h) {
     return wi * hi;
 }
 
-////////////////////////////////////////
-//       CanDrop
-/*! Dice se si pu� effettuare il drop
-// \param CCardStack *stack :
-*/
 bool CCardRegion::CanDrop(CCardStack *stack) {
     if (InternalStack.Empty() &&
         (!(AcceptMode & CRD_DOKING) && !(AcceptMode & CRD_DOACE)))
@@ -197,7 +170,7 @@ bool CCardRegion::CanDrop(CCardStack *stack) {
         return false;
 
     //	printf("vi->Suit() = %i, vi->Rank() = %i, myvi->Suit() = %i,
-    //myvi->Rank() = %i\n",vi->Suit(),vi->Rank(),myvi->Suit(),myvi->Rank());
+    // myvi->Rank() = %i\n",vi->Suit(),vi->Rank(),myvi->Suit(),myvi->Rank());
 
     if (!(Attributes & CRD_DODROP))
         return false;
@@ -222,8 +195,6 @@ bool CCardRegion::CanDrop(CCardStack *stack) {
         return false;
     }
 
-    //	if( ( ( !(AcceptMode&CRD_DORED) && (AcceptMode&CRD_DOBLACK) ) || (
-    //!(AcceptMode&CRD_DORED) && !(AcceptMode&CRD_DOBLACK) ) ) && vi->IsRed() )
     if ((!(AcceptMode & CRD_DORED) && (AcceptMode & CRD_DOBLACK)) &&
         vi->IsRed()) {
         //		printf("!fRed && fBlack returned false\n");

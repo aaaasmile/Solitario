@@ -5,8 +5,6 @@
 
 #include "CCardStack.h"
 
-class CGame;
-
 // Drag Modes
 const unsigned int CRD_DRAGSTACKS = 1;  // Drag complete stacks
 const unsigned int CRD_DRAGCARDS = 2;   // Drag individual cards
@@ -30,15 +28,15 @@ const unsigned int CRD_DOOPCOLOR =
 const unsigned int CRD_DORED =
     (1 << 3);  // TRUE:accept reds,						FALSE:accept only blacks
 const unsigned int CRD_DOBLACK =
-    (1 << 4);  // TRUE:accept blacks,					FALSE:accept only reds if
-               // CRD_DORED is true
+    (1 << 4);  // TRUE:accept blacks,					FALSE:accept only reds
+               // if CRD_DORED is true
 const unsigned int CRD_DOHIGHER = (1 << 5);  // TRUE:accept higher valued
                                              // FALSE:don't accept higher valued
 const unsigned int CRD_DOLOWER = (1 << 6);   // TRUE:accept lower valued
                                              // FALSE:don't accept lower valued
 const unsigned int CRD_DOHIGHERBY1 =
-    (1 << 7);  // TRUE:accept 1 rank higher				FALSE:don't accept higher
-               // valued
+    (1 << 7);  // TRUE:accept 1 rank higher				FALSE:don't accept
+               // higher valued
 const unsigned int CRD_DOLOWERBY1 =
     (1 << 8);  // TRUE:accept 1 rank lower				FALSE:don't accept lower
                // valued
@@ -53,35 +51,33 @@ const unsigned int CRD_DOACE =
 const unsigned int CRD_DOKING =
     (1 << 12);  // TRUE:accept only kings				FALSE:don't accept king
 
-//! class CCardRegion
 class CCardRegion {
 public:
     CCardRegion(int id, unsigned int attribs, unsigned int amode, int dmode,
-                int symbol, int x, int y, int xoff, int yoff, CGame *pValGame)
+                int symbol, int x, int y, int xoff, int yoff)
         : Id(id),
           Attributes(attribs),
           AcceptMode(amode),
           DragMode(dmode),
           Symbol(symbol),
-          xCoord(x),
-          yCoord(y),
+          XCoord(x),
+          YCoord(y),
           xOffset(xoff),
-          yOffset(yoff),
-          m_pGameGfx(pValGame) {}
+          yOffset(yoff) {}
 
-    CCardRegion() { m_pGameGfx = 0; }
+    CCardRegion() {}
     ~CCardRegion() {}
 
     void SetCardStack(const CCardStack &cs) { InternalStack = cs; }
     CCardStack *GetCardStack() { return &InternalStack; }
 
     void SetCoords(int x, int y) {
-        xCoord = x;
-        yCoord = y;
+        XCoord = x;
+        YCoord = y;
     }
     void GetCoords(int &x, int &y) {
-        x = xCoord;
-        y = yCoord;
+        x = XCoord;
+        y = YCoord;
     }
 
     void SetOffsets(int x, int y) {
@@ -105,11 +101,11 @@ public:
     bool FaceDown() const { return !(Attributes & CRD_FACEUP); }
     bool CanDrag() const { return Attributes & CRD_DODRAG; }
 
-    void SetCardFaceUp(bool fTrue, int Idx) {
-        InternalStack[Idx].SetFaceUp(fTrue);
+    void SetCardFaceUp(bool fTrue, int idx) {
+        InternalStack[idx].SetFaceUp(fTrue);
     }
-    bool CardFaceUp(int Idx) {
-        InternalStack[Idx].FaceUp();
+    bool CardFaceUp(int idx) {
+        InternalStack[idx].FaceUp();
         return true;
     }
 
@@ -122,13 +118,7 @@ public:
     void SetAttributes(unsigned int attr) { Attributes = attr; }
     int GetAttributes() { return Attributes; }
 
-    //---------------------------------------------------------------------------------------
-    // Defined in CCardRegion.cpp
-
     bool CanDrop(CCardStack *stack);
-
-    void DrawCardStack();
-    void DrawCardStack(SDL_Surface *s);
 
     void InitCardCoords();
     int GetOverlapRatio(int x, int y, int width, int height);
@@ -138,9 +128,6 @@ public:
 
     int GetStackWidth();
     int GetStackHeight();
-
-    //---------------------------------------------------------------------------------------
-    // CCardStack object wrappers
 
     void NewDeck() { InternalStack.NewDeck(); }
     void Shuffle() { InternalStack.Shuffle(); }
@@ -163,25 +150,20 @@ public:
     }
     CCard GetCard(int index) { return InternalStack.GetCard(index); }
 
-    //---------------------------------------------------------------------------------------
-
     int Id;
+    unsigned int Attributes;
+    CCardStack InternalStack;
+    int XCoord;
+    int YCoord;
+    int Symbol;
 
 private:
-    CCardStack InternalStack;
-
-    int xCoord;
-    int yCoord;
-
     int xOffset;
     int yOffset;
 
     int DragMode;
-    int Symbol;
 
-    unsigned int Attributes;
     unsigned int AcceptMode;
-    CGame *m_pGameGfx;
 };
 
 #endif  // CCARDREGION_H

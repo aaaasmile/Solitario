@@ -55,6 +55,26 @@ int CGame::InitDeck(SDL_Surface *s) {
     return 0;
 }
 
+void CGame::DrawCardStack(rVI vi) {
+    CCardRegion *cardRegion = &(*vi);
+    DrawCardStack(NULL, cardRegion);
+}
+
+void CGame::DrawCardStack(SDL_Surface *s, CCardRegion *pcardRegion) {
+    if (!(pcardRegion->Attributes & CRD_VISIBLE))
+        return;
+
+    DrawSymbol(pcardRegion->XCoord, pcardRegion->YCoord, pcardRegion->Symbol);
+    for (VI vi = pcardRegion->InternalStack.begin();
+         vi != pcardRegion->InternalStack.end(); ++vi) {
+        if (vi->FaceUp()) {
+            DrawCard(vi, s);
+        } else {
+            DrawCardBack(vi->x, vi->y, s);
+        }
+    }
+}
+
 void CGame::ClearSurface() {
     if (_p_background)
         SDL_FreeSurface(_p_background);
@@ -66,14 +86,14 @@ void CGame::CreateRegion(int id, unsigned int attribs, unsigned int amode,
                          int dmode, int symbol, int x, int y, int xoffset,
                          int yoffset) {
     CCardRegion *cr = new CCardRegion(id, attribs, amode, dmode, symbol, x, y,
-                                      xoffset, yoffset, this);
-    this->push_back(*cr);
+                                      xoffset, yoffset);
+    _cardRegionList.push_back(*cr);
 }
 
 bool CGame::DeleteRegion(CCardRegion *pRegion) {
-    for (rVI vi = this->begin(); vi != this->end(); ++vi) {
+    for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
         if (&(*vi) == pRegion) {
-            this->erase(vi);
+            _cardRegionList.erase(vi);
             return true;
         }
     }
@@ -82,20 +102,19 @@ bool CGame::DeleteRegion(CCardRegion *pRegion) {
 }
 
 void CGame::EmptyStacks() {
-    for (rVI vi = this->begin(); vi != this->end(); ++vi) vi->Clear();
+    for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi)
+        vi->Clear();
 }
 
 void CGame::InitAllCoords() {
-    for (rVI vi = this->begin(); vi != this->end(); ++vi) {
+    for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
         vi->InitCardCoords();
         vi->InitCardFaces();
     }
 }
 
-//------------------------------------------------------------------------------------------------
-// Drag and drop
 CCardRegion *CGame::OnMouseDown(int x, int y) {
-    for (rVI vi = this->begin(); vi != this->end(); ++vi) {
+    for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
         if (vi->PtInStack(x, y)) {
             _p_sourceRegion = &(*vi);
             return _p_sourceRegion;
@@ -106,7 +125,6 @@ CCardRegion *CGame::OnMouseDown(int x, int y) {
 
 bool CGame::InitDrag(int x, int y) { return InitDrag(NULL, x, y); }
 
-// optimization needed
 bool CGame::InitDrag(CCardStack *CargoStack, int x, int y) {
     if (CargoStack == NULL) {
         if (_p_sourceRegion->Empty())
@@ -150,7 +168,7 @@ bool CGame::InitDrag(CCardStack *CargoStack, int x, int y) {
 
     CCardRegion DragRegion(0, _p_sourceRegion->GetAttributes() | CRD_FACEUP, 0,
                            0, 0, 0, 0, _p_sourceRegion->GetxOffset(),
-                           _p_sourceRegion->GetyOffset(), this);
+                           _p_sourceRegion->GetyOffset());
     DragRegion.Push(_dragStack);
 
     _dragCard.x = _dragStack[0].x;
@@ -164,9 +182,10 @@ bool CGame::InitDrag(CCardStack *CargoStack, int x, int y) {
     SDL_SetColorKey(_p_dragface, TRUE,
                     SDL_MapRGB(_p_dragface->format, 0, 255, 0));  // SDL 2.0
 
-    DragRegion.DrawCardStack(_p_screen);
+    // DragRegion.DrawCardStack(_p_screen);
+    DrawCardStack(_p_screen, &DragRegion);
     DragRegion.InitCardCoords();
-    DragRegion.DrawCardStack(_p_dragface);
+    DrawCardStack(_p_dragface, &DragRegion);
 
     _oldx = x;
     _oldy = y;
@@ -216,7 +235,7 @@ void CGame::DoDrag(int x, int y) {
 }
 
 void CGame::DoDrop() { DoDrop(NULL); }
-// optimization needed
+
 void CGame::DoDrop(CCardRegion *DestRegion) {
     CCardStack *DestStack;
     CCardRegion *BestRegion;
@@ -224,8 +243,8 @@ void CGame::DoDrop(CCardRegion *DestRegion) {
     if (DestRegion != NULL)
         BestRegion = DestRegion;
     else
-        BestRegion = this->GetBestStack(_dragCard.x, _dragCard.y, g_CARDWIDTH,
-                                        g_CARDHEIGHT, &_dragStack);
+        BestRegion = GetBestStack(_dragCard.x, _dragCard.y, g_CARDWIDTH,
+                                  g_CARDHEIGHT, &_dragStack);
     if (BestRegion == NULL)
         BestRegion = _p_sourceRegion;
 
@@ -259,7 +278,7 @@ CCardRegion *CGame::FindDropRegion(int Id, CCard card) {
 }
 
 CCardRegion *CGame::FindDropRegion(int Id, CCardStack stack) {
-    for (rVI vi = this->begin(); vi != this->end(); ++vi) {
+    for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
         if ((vi->Id == Id) && vi->CanDrop(&stack))
             return &(*vi);
     }
@@ -310,9 +329,9 @@ void CGame::ZoomCard(int &sx, int &sy, int &dx, int &dy, int w, int h,
 }
 
 void CGame::DrawStaticScene() {
-    for (rVI vi = this->begin(); vi != this->end(); ++vi) {
+    for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
         SDL_PumpEvents();
-        vi->DrawCardStack();
+        DrawCardStack(vi);
     }
 
     // SDL_Flip(_p_screen); // TODO Sdl 2.0
@@ -327,7 +346,8 @@ void CGame::DrawBackground(BOOL bIsInit) {
         }
     }
 
-    for (rVI vi = this->begin(); vi != this->end(); ++vi) vi->DrawCardStack();
+    for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi)
+        DrawCardStack(vi);
 }
 
 CCardRegion *CGame::GetBestStack(int x, int y, int w, int h,
@@ -336,7 +356,7 @@ CCardRegion *CGame::GetBestStack(int x, int y, int w, int h,
     int percent = 0;
     CCardRegion *best = 0;
 
-    for (rVI vi = this->begin(); vi != this->end(); ++vi) {
+    for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
         SDL_PumpEvents();
         if (vi->CanDrop(stack))
             percent = vi->GetOverlapRatio(x, y, w, h);
@@ -349,27 +369,10 @@ CCardRegion *CGame::GetBestStack(int x, int y, int w, int h,
     return best;
 }
 
-////////////////////////////////////////
-//       DrawCard
-/*!
-// \param int x :
-// \param int y :
-// \param int nCdIndex :
-*/
 int CGame::DrawCard(int x, int y, int nCdIndex) {
     return DrawCard(x, y, nCdIndex, NULL);
 }
 
-////////////////////////////////////////
-//       DrawCard
-/*! Disegna una carta da briscola. Il mazzo è composto dai segni disposti in
-modo verticale.
-// L'ordine dei segni è: bastoni, coppe, denari, spade.
-// \param int x : x coordinata destination
-// \param int y : y coordinate
-// \param int nCdIndex : card index
-// \param SDL_Surface *s : _p_screen surface
-*/
 int CGame::DrawCard(int x, int y, int nCdIndex, SDL_Surface *s) {
     if (s == NULL)
         s = _p_srfDeck;
@@ -395,12 +398,6 @@ int CGame::DrawCard(int x, int y, int nCdIndex, SDL_Surface *s) {
     return SDL_BlitSurface(_p_CardsSurf[nCdIndex], &_rctSrcCard, s, &dest);
 }
 
-////////////////////////////////////////
-//       DrawCard
-/*!
-// \param VI vi :
-// \param SDL_Surface *s :
-*/
 int CGame::DrawCard(VI vi, SDL_Surface *s) {
     if (s == NULL)
         s = _p_srfDeck;
@@ -412,8 +409,6 @@ int CGame::DrawCard(VI vi, SDL_Surface *s) {
     if (nCdIndex > NUM_CARDS)
         nCdIndex = NUM_CARDS - 1;
 
-    // _rctSrcCard.x = iSegnoIx * g_CARDWIDTH;
-    // _rctSrcCard.y = iCartaIx * g_CARDHEIGHT;
     _rctSrcCard.x = 0;
     _rctSrcCard.y = 0;
     _rctSrcCard.w = _p_CardsSurf[nCdIndex]->clip_rect.w;
@@ -429,21 +424,8 @@ int CGame::DrawCard(VI vi, SDL_Surface *s) {
     return SDL_BlitSurface(_p_CardsSurf[nCdIndex], &_rctSrcCard, s, &dest);
 }
 
-////////////////////////////////////////
-//       DrawCardBack
-/*! Disegna il retro della carta
-// \param int x :
-// \param int y :
-*/
 int CGame::DrawCardBack(int x, int y) { return DrawCardBack(x, y, NULL); }
 
-////////////////////////////////////////
-//       DrawCardBack
-/*! Disegna il dorso della carta
-// \param int x :
-// \param int y :
-// \param SDL_Surface *s :
-*/
 int CGame::DrawCardBack(int x, int y, SDL_Surface *s) {
     if (s == NULL)
         s = _p_srfDeck;
@@ -460,31 +442,10 @@ int CGame::DrawCardBack(int x, int y, SDL_Surface *s) {
     return SDL_BlitSurface(_p_Symbol[0], &_rctSrcCard, s, &dest);
 }
 
-////////////////////////////////////////
-//       DrawSymbol
-/*!
-Symbols:
-    0:	Blank, no symbol
-    1:	X symbol
-    2:	O symbol
-    3:	Holder symbol
-// \param int x :
-// \param int y :
-// \param int nSymbol :
-*/
 int CGame::DrawSymbol(int x, int y, int nSymbol) {
     return DrawSymbol(x, y, nSymbol, NULL);
 }
 
-////////////////////////////////////////
-//       DrawSymbol
-/*! Disegna uno dei simboli dalla tabella dei simboli. 4 simboli numerati da 0 a
-3
-// \param int x :
-// \param int y :
-// \param int nSymbol :
-// \param SDL_Surface *s :
-*/
 int CGame::DrawSymbol(int x, int y, int nSymbol, SDL_Surface *s) {
     if (nSymbol < 1)
         return 0;
@@ -506,10 +467,6 @@ int CGame::DrawSymbol(int x, int y, int nSymbol, SDL_Surface *s) {
     return SDL_BlitSurface(_p_Symbol[nSymbol], &_rctSrcCard, s, &dest);
 }
 
-////////////////////////////////////////
-//       AnimateCards
-/*! Mostra una piccola animazione delle carte
- */
 int CGame::AnimateCards() {
     srand((unsigned)time(NULL));
 
