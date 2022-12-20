@@ -35,8 +35,9 @@ CGame::CGame() {
 
 CGame::~CGame() { ClearSurface(); }
 
-void CGame::Initialize(SDL_Surface *s) {
+void CGame::Initialize(SDL_Surface *s, SDL_Renderer *r) {
     _p_screen = s;
+    _p_sdlRenderer = r;
     _p_background = SDL_CreateRGBSurface(SDL_SWSURFACE, _p_screen->w,
                                          _p_screen->h, 32, 0, 0, 0, 0);
     SDL_Surface *Temp;
@@ -342,7 +343,7 @@ void CGame::DrawBackground(BOOL bIsInit) {
         if (!bIsInit) {
             SDL_BlitSurface(_p_scene_background, NULL, _p_screen, NULL);
         } else {
-            fade(_p_screen, _p_scene_background, 2, 0);
+            fade(_p_screen, _p_scene_background, 2, 0, _p_sdlRenderer);
         }
     }
 

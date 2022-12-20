@@ -28,7 +28,7 @@ public:
     CGame();
     ~CGame();
 
-    void Initialize(SDL_Surface *s);
+    void Initialize(SDL_Surface *s, SDL_Renderer *r);
     void Clear() { _cardRegionList.clear(); }
     int Size() { return _cardRegionList.size(); }
 
@@ -119,6 +119,7 @@ private:
     SDL_Surface *_p_background;
     SDL_Surface *_p_dragface;
     SDL_Surface *_p_scene_background;
+    SDL_Renderer *_p_sdlRenderer;
 
     int _oldx;
     int _oldy;

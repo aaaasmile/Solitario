@@ -17,10 +17,10 @@ solitario_SOURCES = \
 	CCardRegion.cpp\
 	CCardStack.cpp\
 	CGame.cpp\
-	cHightScoreMgr.cpp\
-	cMusicManager.cpp\
+	HightScoreMgr.cpp\
+	MusicManager.cpp\
 	CustomMenu.cpp\
-	EngineApp.cpp\
+	AppGfx.cpp\
 	fonts.cpp\
 	GameSettings.cpp\
 	gfx_util.cpp\
@@ -32,10 +32,10 @@ solitario_SOURCES = \
 	CCardRegion.h\
 	CCardStack.h\
 	CGame.h\
-	cHightScoreMgr.h\
-	cMusicManager.h\
+	HightScoreMgr.h\
+	MusicManager.h\
 	CustomMenu.h\
-	EngineApp.h\
+	AppGfx.h\
 	fonts.h\
 	GameSettings.h\
 	gfx_util.h\

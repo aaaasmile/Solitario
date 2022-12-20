@@ -100,11 +100,10 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_solitario_OBJECTS = CCardRegion.$(OBJEXT) CCardStack.$(OBJEXT) \
-	CGame.$(OBJEXT) cHightScoreMgr.$(OBJEXT) \
-	cMusicManager.$(OBJEXT) CustomMenu.$(OBJEXT) \
-	EngineApp.$(OBJEXT) fonts.$(OBJEXT) GameSettings.$(OBJEXT) \
-	gfx_util.$(OBJEXT) Languages.$(OBJEXT) main.$(OBJEXT) \
-	fading.$(OBJEXT) credits.$(OBJEXT)
+	CGame.$(OBJEXT) HightScoreMgr.$(OBJEXT) MusicManager.$(OBJEXT) \
+	CustomMenu.$(OBJEXT) AppGfx.$(OBJEXT) fonts.$(OBJEXT) \
+	GameSettings.$(OBJEXT) gfx_util.$(OBJEXT) Languages.$(OBJEXT) \
+	main.$(OBJEXT) fading.$(OBJEXT) credits.$(OBJEXT)
 solitario_OBJECTS = $(am_solitario_OBJECTS)
 solitario_DEPENDENCIES =
 solitario_LINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
@@ -124,14 +123,13 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I. -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/CCardRegion.Po \
+am__depfiles_remade = ./$(DEPDIR)/AppGfx.Po ./$(DEPDIR)/CCardRegion.Po \
 	./$(DEPDIR)/CCardStack.Po ./$(DEPDIR)/CGame.Po \
-	./$(DEPDIR)/CustomMenu.Po ./$(DEPDIR)/EngineApp.Po \
-	./$(DEPDIR)/GameSettings.Po ./$(DEPDIR)/Languages.Po \
-	./$(DEPDIR)/cHightScoreMgr.Po ./$(DEPDIR)/cMusicManager.Po \
-	./$(DEPDIR)/credits.Po ./$(DEPDIR)/fading.Po \
-	./$(DEPDIR)/fonts.Po ./$(DEPDIR)/gfx_util.Po \
-	./$(DEPDIR)/main.Po
+	./$(DEPDIR)/CustomMenu.Po ./$(DEPDIR)/GameSettings.Po \
+	./$(DEPDIR)/HightScoreMgr.Po ./$(DEPDIR)/Languages.Po \
+	./$(DEPDIR)/MusicManager.Po ./$(DEPDIR)/credits.Po \
+	./$(DEPDIR)/fading.Po ./$(DEPDIR)/fonts.Po \
+	./$(DEPDIR)/gfx_util.Po ./$(DEPDIR)/main.Po
 am__mv = mv -f
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -336,10 +334,10 @@ solitario_SOURCES = \
 	CCardRegion.cpp\
 	CCardStack.cpp\
 	CGame.cpp\
-	cHightScoreMgr.cpp\
-	cMusicManager.cpp\
+	HightScoreMgr.cpp\
+	MusicManager.cpp\
 	CustomMenu.cpp\
-	EngineApp.cpp\
+	AppGfx.cpp\
 	fonts.cpp\
 	GameSettings.cpp\
 	gfx_util.cpp\
@@ -351,10 +349,10 @@ solitario_SOURCES = \
 	CCardRegion.h\
 	CCardStack.h\
 	CGame.h\
-	cHightScoreMgr.h\
-	cMusicManager.h\
+	HightScoreMgr.h\
+	MusicManager.h\
 	CustomMenu.h\
-	EngineApp.h\
+	AppGfx.h\
 	fonts.h\
 	GameSettings.h\
 	gfx_util.h\
@@ -451,15 +449,15 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+include ./$(DEPDIR)/AppGfx.Po # am--include-marker
 include ./$(DEPDIR)/CCardRegion.Po # am--include-marker
 include ./$(DEPDIR)/CCardStack.Po # am--include-marker
 include ./$(DEPDIR)/CGame.Po # am--include-marker
 include ./$(DEPDIR)/CustomMenu.Po # am--include-marker
-include ./$(DEPDIR)/EngineApp.Po # am--include-marker
 include ./$(DEPDIR)/GameSettings.Po # am--include-marker
+include ./$(DEPDIR)/HightScoreMgr.Po # am--include-marker
 include ./$(DEPDIR)/Languages.Po # am--include-marker
-include ./$(DEPDIR)/cHightScoreMgr.Po # am--include-marker
-include ./$(DEPDIR)/cMusicManager.Po # am--include-marker
+include ./$(DEPDIR)/MusicManager.Po # am--include-marker
 include ./$(DEPDIR)/credits.Po # am--include-marker
 include ./$(DEPDIR)/fading.Po # am--include-marker
 include ./$(DEPDIR)/fonts.Po # am--include-marker
@@ -685,15 +683,15 @@ clean: clean-recursive
 clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-recursive
-		-rm -f ./$(DEPDIR)/CCardRegion.Po
+		-rm -f ./$(DEPDIR)/AppGfx.Po
+	-rm -f ./$(DEPDIR)/CCardRegion.Po
 	-rm -f ./$(DEPDIR)/CCardStack.Po
 	-rm -f ./$(DEPDIR)/CGame.Po
 	-rm -f ./$(DEPDIR)/CustomMenu.Po
-	-rm -f ./$(DEPDIR)/EngineApp.Po
 	-rm -f ./$(DEPDIR)/GameSettings.Po
+	-rm -f ./$(DEPDIR)/HightScoreMgr.Po
 	-rm -f ./$(DEPDIR)/Languages.Po
-	-rm -f ./$(DEPDIR)/cHightScoreMgr.Po
-	-rm -f ./$(DEPDIR)/cMusicManager.Po
+	-rm -f ./$(DEPDIR)/MusicManager.Po
 	-rm -f ./$(DEPDIR)/credits.Po
 	-rm -f ./$(DEPDIR)/fading.Po
 	-rm -f ./$(DEPDIR)/fonts.Po
@@ -744,15 +742,15 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-recursive
-		-rm -f ./$(DEPDIR)/CCardRegion.Po
+		-rm -f ./$(DEPDIR)/AppGfx.Po
+	-rm -f ./$(DEPDIR)/CCardRegion.Po
 	-rm -f ./$(DEPDIR)/CCardStack.Po
 	-rm -f ./$(DEPDIR)/CGame.Po
 	-rm -f ./$(DEPDIR)/CustomMenu.Po
-	-rm -f ./$(DEPDIR)/EngineApp.Po
 	-rm -f ./$(DEPDIR)/GameSettings.Po
+	-rm -f ./$(DEPDIR)/HightScoreMgr.Po
 	-rm -f ./$(DEPDIR)/Languages.Po
-	-rm -f ./$(DEPDIR)/cHightScoreMgr.Po
-	-rm -f ./$(DEPDIR)/cMusicManager.Po
+	-rm -f ./$(DEPDIR)/MusicManager.Po
 	-rm -f ./$(DEPDIR)/credits.Po
 	-rm -f ./$(DEPDIR)/fading.Po
 	-rm -f ./$(DEPDIR)/fonts.Po
