@@ -33,7 +33,7 @@ public:
     std::string GetResFileName() { return _strResFileName; }
     std::string GetSymbolFileName() { return _strSymbolFileName; }
     eDeckType GetType() { return _eType; }
-    void CopyFrom(DeckType &Val);
+    void CopyFrom(DeckType& Val);
     void SetTypeIndex(int iVal);
     int GetTypeIndex() { return (int)_eType; }
 
@@ -76,4 +76,7 @@ public:
     }
 };
 
+namespace GAMESET {
+    static const GameSettings* GetSettings();
+}
 #endif

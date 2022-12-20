@@ -1,98 +1,93 @@
-//win_type_global.h
-
-
 #ifndef _AIGLOBAL_TYPE_H
 #define _AIGLOBAL_TYPE_H
 
 #if _MSC_VER > 1000
-    #include <StdAfx.h>
+#include <StdAfx.h>
 #endif
 
 #ifdef USEDIALOGTRACE
-    #include <iostream>
+#include <iostream>
 #endif
 
 #if _MSC_VER > 1000
-    #pragma warning(disable:4786)
-	#pragma warning(disable:4996)
-    #include <vector> 
-    #include <deque>
-    #include <windows.h>
-    #include <string>
+#pragma warning(disable : 4786)
+#pragma warning(disable : 4996)
+#include <windows.h>
+
+#include <deque>
+#include <string>
+#include <vector>
 #else
-    #include <deque>
-    #include <string>
+#include <deque>
+#include <string>
 #endif
 
 #ifndef CONST
-    #define CONST const
+#define CONST const
 #endif
 
-#ifndef BOOL 
-    typedef int BOOL;
+#ifndef BOOL
+typedef int BOOL;
 #endif
 
 #ifndef BYTE
-    typedef unsigned char BYTE;
+typedef unsigned char BYTE;
 #endif
 
-#ifndef TRUE 
-    #define TRUE 1==1
+#ifndef TRUE
+#define TRUE 1 == 1
 #endif
 
-#ifndef FALSE 
-    #define FALSE 0==1
+#ifndef FALSE
+#define FALSE 0 == 1
 #endif
 
-#ifndef CHAR 
-    #define CHAR char
+#ifndef CHAR
+#define CHAR char
 #endif
 
-#ifndef STRING 
-	typedef std::string STRING;
+#ifndef STRING
+typedef std::string STRING;
 #endif
 
 #ifndef ASSERT
-    #include <assert.h>
-    #define ASSERT(f) \
-	assert(f);
+#include <assert.h>
+#define ASSERT(f) assert(f);
 #endif
 
 #ifndef LPCSTR
-    typedef CONST CHAR *LPCSTR, *PCSTR;
+typedef CONST CHAR *LPCSTR, *PCSTR;
 #endif
 
 #ifndef LP_FNTHREAD
-    //! function pointer for thread proxy casting
-    typedef int (*LP_FNTHREAD)(void*);
+//! function pointer for thread proxy casting
+typedef int (*LP_FNTHREAD)(void*);
 #endif
 
 #ifndef TRACE
-    #include <stdio.h>
-    extern void TraceInLogFile(char* myBuff);
-    #ifdef WIN32
-        inline void TRACE(const char* fmt, ...)
-        {
-            char myBuff[512];
-            va_list args;
+#include <stdio.h>
+extern void TraceInLogFile(char* myBuff);
+#ifdef WIN32
+inline void TRACE(const char* fmt, ...) {
+    char myBuff[512];
+    va_list args;
 
-            va_start( args, fmt );     /* Initialize variable arguments. */
+    va_start(args, fmt); /* Initialize variable arguments. */
 
-            int result = vsprintf(myBuff, fmt, args); 
-        #ifdef USEDIALOGTRACE
-            std::cout << "[TR] " <<myBuff;
-        #else
-            ::OutputDebugString(myBuff);
-            TraceInLogFile(myBuff);
-        #endif
-        }
-    #else
-        // non windows
-	    inline void TRACE(const char* fmt, ...)
-        {
-     	    // todo: implement trace 
-        }
-    #endif
+    int result = vsprintf(myBuff, fmt, args);
+#ifdef USEDIALOGTRACE
+    std::cout << "[TR] " << myBuff;
+#else
+    ::OutputDebugString(myBuff);
+    TraceInLogFile(myBuff);
+#endif
+}
+#else
+// non windows
+inline void TRACE(const char* fmt, ...) {
+    // todo: implement trace
+}
+#endif
 #endif
 
 #endif

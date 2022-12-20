@@ -1,110 +1,48 @@
-////////////////////////////////////////////////////////////////////////////////
-// File         : cMusicManager.cpp
-// Project      : 
-// Subsystem    : 
-// Component    : 
-// Author       : Invido.it (c) 2004-2022
-// Description  : implementation of the cMusicManager class.
-////////////////////////////////////////////////////////////////////////////////
+#include "MusicManager.h"
 
-//////////////////////////////////////////////////////////////////////
-/*
-*
-*	This program is free software; you can redistribute it and/or
-*	modify it under the terms of the GNU General Public License
-*	as published by the Free Software Foundation; either version 2
-*	of the License, or (at your option) any later version.
-*
-*	This program is distributed in the hope that it will be useful,
-*	but WITHOUT ANY WARRANTY; without even the implied warranty of
-*	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*	GNU General Public License for more details.
-*
-*	You should have received a copy of the GNU General Public License
-*	along with this program; if not, write to the Free Software
-*	Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-*
-*
-**/
-
-
-#include "StdAfx.h"
-#include "EngineApp.h" 
 #include <SDL.h>
-#include "cMusicManager.h"
+
+#include "GameSettings.h"
+#include "StdAfx.h"
 #include "gfx_util.h"
 
-extern cEngineApp TheApp;
+static const char* lpszMusicFile = DATA_PREFIX "watermusic.it";
 
-static const char * lpszMusicFile = DATA_PREFIX"watermusic.it";
+MusicManager::MusicManager() { m_pMusics = 0; }
 
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
+MusicManager::~MusicManager() {}
 
-MusicManager::MusicManager()
-{
-    m_pMusics = 0;
-}
-
-MusicManager::~MusicManager()
-{
-
-}
-
-
-////////////////////////////////////////
-//       Init
-/*! Initialize audio stuff
-*/
-void MusicManager::Init()
-{
-    // sound
-    if (SDL_Init(SDL_INIT_AUDIO) < 0)
-    {
+void MusicManager::Init() {
+    const GameSettings* p_GameSettings = GAMESET::GetSettings();
+    if (SDL_Init(SDL_INIT_AUDIO) < 0) {
         fprintf(stderr,
-  	      "\nWarning: I could not initialize audio!\n"
-	      "The Simple DirectMedia error that occured was:\n"
-	      "%s\n\n", SDL_GetError());
-	       
+                "\nWarning: I could not initialize audio!\n"
+                "The Simple DirectMedia error that occured was:\n"
+                "%s\n\n",
+                SDL_GetError());
     }
-    if (Mix_OpenAudio(44100, AUDIO_S16, 2, 1024) < 0)
-    {
+    if (Mix_OpenAudio(44100, AUDIO_S16, 2, 1024) < 0) {
         fprintf(stderr,
-	      "\nWarning: I could not set up audio for 44100 Hz "
-	      "16-bit stereo.\n"
-	      "The Simple DirectMedia error that occured was:\n"
-	      "%s\n\n", SDL_GetError());
-        
+                "\nWarning: I could not set up audio for 44100 Hz "
+                "16-bit stereo.\n"
+                "The Simple DirectMedia error that occured was:\n"
+                "%s\n\n",
+                SDL_GetError());
     }
 
     m_pMusics = Mix_LoadMUS(lpszMusicFile);
-    if (TheApp.GetSettings()->bMusicEnabled)
-    {
+    if (p_GameSettings->bMusicEnabled) {
         Mix_PlayMusic(m_pMusics, 0);
     }
 }
 
-////////////////////////////////////////
-//       StopMusic
-/*! Stop play music
-*/
-void MusicManager::StopMusic()
-{
+void MusicManager::StopMusic() {
     Mix_FadeOutMusic(100);
     Mix_HaltMusic();
 }
 
-
-
-////////////////////////////////////////
-//       StartMusic
-/*! Start play music
-*/
-void MusicManager::StartMusic()
-{
-    if (!Mix_PlayingMusic())
-    {
+void MusicManager::StartMusic() {
+    if (!Mix_PlayingMusic()) {
         Mix_PlayMusic(m_pMusics, 0);
     }
 }

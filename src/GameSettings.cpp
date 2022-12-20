@@ -2,6 +2,10 @@
 
 #include <assert.h>
 
+static const GameSettings _GameSettings;
+
+static const GameSettings* GAMESET::GetSettings() { return &_GameSettings; }
+
 void DeckType::SetType(eDeckType eType) {
     _eType = eType;
     switch (eType) {
@@ -80,7 +84,7 @@ void DeckType::SetType(eDeckType eType) {
     }
 }
 
-void DeckType::CopyFrom(DeckType &Val) {
+void DeckType::CopyFrom(DeckType& Val) {
     _eType = Val.GetType();
     _strDeckName = Val.GetDeckName();
     _strResFileName = Val.GetResFileName();
