@@ -76,36 +76,34 @@ public:
     int DrawSymbol(int x, int y, int nSymbol, SDL_Surface *s);
 
     int AnimateCards();  // might take seconds as parameter
-    void SetDeckType(DeckType &Val) { m_DeckType.Clone(Val); }
+    void SetDeckType(DeckType &Val) { _DeckType.Clone(Val); }
     void ClearSurface();
 
-    void LoadCustomDeck();
+    void LoadDeckFromPac();
     void LoadSymbols();
 
 private:
-    CCardStack DragStack;
-    CCardRegion *SourceRegion;
+    CCardStack _dragStack;
+    DRAGCARD _dragCard;
+    CCardRegion *_p_sourceRegion;
 
-    SDL_Surface *screen;
-    SDL_Surface *background;
-    SDL_Surface *dragface;
-    SDL_Surface *scene_background;
-
-    DRAGCARD dcard;
+    SDL_Surface *_p_screen;
+    SDL_Surface *_p_background;
+    SDL_Surface *_p_dragface;
+    SDL_Surface *_p_scene_background;
 
     int oldx;
     int oldy;
 
-    SDL_Surface *deck;
-    SDL_Surface *scr;
-    SDL_Surface *symbols;
+    SDL_Surface *_p_srfDeck;
+    SDL_Surface *_p_symbols;
 
-    SDL_Rect SrcBack;
-    SDL_Rect SrcCard;
+    SDL_Rect _rctSrcBack;
+    SDL_Rect _rctSrcCard;
 
-    DeckType m_DeckType;
-    SDL_Surface *m_pCardsSurf[NUM_CARDS_ONDECK];
-    SDL_Surface *m_pSymbol[NUM_SYMBOLS];
+    DeckType _DeckType;
+    SDL_Surface *_p_CardsSurf[NUM_CARDS_ONDECK];
+    SDL_Surface *_p_Symbol[NUM_SYMBOLS];
 };
 
 #endif  // CGAME_H

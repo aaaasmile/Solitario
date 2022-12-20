@@ -25,30 +25,41 @@ int const CARDBACKLOC = 40 * g_CARDWIDTH;  // modify to allow custom card backs
 static const char *lpszBackGGameFile = DATA_PREFIX "im001537.jpg";
 static const char *lpszMazziDir = DATA_PREFIX "mazzo/";
 
-// constructor
 CGame::CGame() {
-    background = 0;
-    scene_background = 0;
+    _p_background = 0;
+    _p_scene_background = 0;
     for (int i = 0; i < NUM_CARDS_ONDECK; i++) {
-        m_pCardsSurf[i] = 0;
+        _p_CardsSurf[i] = 0;
     }
 }
 
-////////////////////////////////////////
-//       ~CGame
-/*! Destructor
- */
 CGame::~CGame() { ClearSurface(); }
 
-////////////////////////////////////////
-//       ClearSurface
-/*! clear stuff
- */
+void CGame::Initialize(SDL_Surface *s) {
+    _p_screen = s;
+    _p_background = SDL_CreateRGBSurface(SDL_SWSURFACE, _p_screen->w,
+                                         _p_screen->h, 32, 0, 0, 0, 0);
+    SDL_Surface *Temp;
+    SDL_RWops *srcBack = SDL_RWFromFile(lpszBackGGameFile, "rb");
+    Temp = IMG_LoadJPG_RW(srcBack);
+    // _p_scene_background = SDL_DisplayFormat(Temp); // TODO SDL 2.0
+    SDL_FreeSurface(Temp);
+
+    DrawBackground(TRUE);
+}
+
+int CGame::InitDeck(SDL_Surface *s) {
+    LoadDeckFromPac();
+    LoadSymbols();
+    _p_srfDeck = s;
+    return 0;
+}
+
 void CGame::ClearSurface() {
-    if (background)
-        SDL_FreeSurface(background);
-    if (scene_background)
-        SDL_FreeSurface(scene_background);
+    if (_p_background)
+        SDL_FreeSurface(_p_background);
+    if (_p_scene_background)
+        SDL_FreeSurface(_p_scene_background);
 }
 
 void CGame::CreateRegion(int id, unsigned int attribs, unsigned int amode,
@@ -83,12 +94,11 @@ void CGame::InitAllCoords() {
 
 //------------------------------------------------------------------------------------------------
 // Drag and drop
-
 CCardRegion *CGame::OnMouseDown(int x, int y) {
     for (rVI vi = this->begin(); vi != this->end(); ++vi) {
         if (vi->PtInStack(x, y)) {
-            SourceRegion = &(*vi);
-            return SourceRegion;
+            _p_sourceRegion = &(*vi);
+            return _p_sourceRegion;
         }
     }
     return NULL;
@@ -99,68 +109,69 @@ bool CGame::InitDrag(int x, int y) { return InitDrag(NULL, x, y); }
 // optimization needed
 bool CGame::InitDrag(CCardStack *CargoStack, int x, int y) {
     if (CargoStack == NULL) {
-        if (SourceRegion->Empty())
+        if (_p_sourceRegion->Empty())
             return false;
 
-        int idx = SourceRegion->GetClickedCard(x, y);
+        int idx = _p_sourceRegion->GetClickedCard(x, y);
         if (idx == -1)
             return false;  // no card found
 
-        switch (SourceRegion->GetDragMode()) {
+        switch (_p_sourceRegion->GetDragMode()) {
             case CRD_DRAGCARDS:
-                DragStack.Push(SourceRegion->RemoveCard(idx));
+                _dragStack.Push(_p_sourceRegion->RemoveCard(idx));
                 break;
 
             case CRD_DRAGTOP:
-                if (SourceRegion->Size() - 1 == idx)
-                    DragStack.Push(SourceRegion->Pop());
+                if (_p_sourceRegion->Size() - 1 == idx)
+                    _dragStack.Push(_p_sourceRegion->Pop());
                 else
                     return false;
                 break;
 
             case CRD_DRAGFACEUP:
-                if (SourceRegion->CardFaceUp(idx))
-                    DragStack.Push(
-                        SourceRegion->Pop(SourceRegion->Size() - idx));
+                if (_p_sourceRegion->CardFaceUp(idx))
+                    _dragStack.Push(
+                        _p_sourceRegion->Pop(_p_sourceRegion->Size() - idx));
                 else
                     return false;
                 break;
 
-            default:  // CRD_DRAGSTACKS
-                DragStack.Push(SourceRegion->Pop(SourceRegion->Size() - idx));
+            default:
+                _dragStack.Push(
+                    _p_sourceRegion->Pop(_p_sourceRegion->Size() - idx));
         }
     } else
-        DragStack.Push(*CargoStack);
+        _dragStack.Push(*CargoStack);
 
-    SourceRegion->InitCardCoords();
+    _p_sourceRegion->InitCardCoords();
 
     DrawBackground(FALSE);
-    SDL_BlitSurface(screen, NULL, background, NULL);
+    SDL_BlitSurface(_p_screen, NULL, _p_background, NULL);
 
-    CCardRegion DragRegion(0, SourceRegion->GetAttributes() | CRD_FACEUP, 0, 0,
-                           0, 0, 0, SourceRegion->GetxOffset(),
-                           SourceRegion->GetyOffset(), this);
-    DragRegion.Push(DragStack);
+    CCardRegion DragRegion(0, _p_sourceRegion->GetAttributes() | CRD_FACEUP, 0,
+                           0, 0, 0, 0, _p_sourceRegion->GetxOffset(),
+                           _p_sourceRegion->GetyOffset(), this);
+    DragRegion.Push(_dragStack);
 
-    dcard.x = DragStack[0].x;
-    dcard.y = DragStack[0].y;
-    dcard.width = DragRegion.GetStackWidth();
-    dcard.height = DragRegion.GetStackHeight();
+    _dragCard.x = _dragStack[0].x;
+    _dragCard.y = _dragStack[0].y;
+    _dragCard.width = DragRegion.GetStackWidth();
+    _dragCard.height = DragRegion.GetStackHeight();
 
-    dragface = SDL_CreateRGBSurface(SDL_SWSURFACE, dcard.width, dcard.height,
-                                    32, 0, 0, 0, 0);
-    SDL_FillRect(dragface, NULL, SDL_MapRGB(dragface->format, 0, 255, 0));
-    SDL_SetColorKey(dragface, TRUE,
-                    SDL_MapRGB(dragface->format, 0, 255, 0));  // SDL 2.0
+    _p_dragface = SDL_CreateRGBSurface(SDL_SWSURFACE, _dragCard.width,
+                                       _dragCard.height, 32, 0, 0, 0, 0);
+    SDL_FillRect(_p_dragface, NULL, SDL_MapRGB(_p_dragface->format, 0, 255, 0));
+    SDL_SetColorKey(_p_dragface, TRUE,
+                    SDL_MapRGB(_p_dragface->format, 0, 255, 0));  // SDL 2.0
 
-    DragRegion.DrawCardStack(screen);
+    DragRegion.DrawCardStack(_p_screen);
     DragRegion.InitCardCoords();
-    DragRegion.DrawCardStack(dragface);
+    DragRegion.DrawCardStack(_p_dragface);
 
     oldx = x;
     oldy = y;
 
-    // SDL_Flip(screen); // TODO Sdl 2.0
+    // SDL_Flip(_p_screen); // TODO Sdl 2.0
     return true;
 }
 
@@ -169,39 +180,39 @@ void CGame::DoDrag(int x, int y) {
     SDL_Rect rcs;
     SDL_Rect rcd;
 
-    rcs.x = dcard.x - 2;
-    rcs.y = dcard.y - 2;
-    rcs.w = dcard.width + 4;
-    rcs.h = dcard.height + 4;
+    rcs.x = _dragCard.x - 2;
+    rcs.y = _dragCard.y - 2;
+    rcs.w = _dragCard.width + 4;
+    rcs.h = _dragCard.height + 4;
 
-    rcd.x = dcard.x - 2;
-    rcd.y = dcard.y - 2;
+    rcd.x = _dragCard.x - 2;
+    rcd.y = _dragCard.y - 2;
 
-    if (dcard.x < 0)
+    if (_dragCard.x < 0)
         rcs.x = rcd.x = 0;
-    if (dcard.y < 0)
+    if (_dragCard.y < 0)
         rcs.y = rcd.y = 0;
 
     if (x < oldx)
-        dcard.x -= oldx - x;
+        _dragCard.x -= oldx - x;
     else
-        dcard.x += x - oldx;
+        _dragCard.x += x - oldx;
     if (y < oldy)
-        dcard.y -= oldy - y;
+        _dragCard.y -= oldy - y;
     else
-        dcard.y += y - oldy;
+        _dragCard.y += y - oldy;
 
     oldx = x;
     oldy = y;
 
     SDL_Rect dest;
-    dest.x = dcard.x;
-    dest.y = dcard.y;
+    dest.x = _dragCard.x;
+    dest.y = _dragCard.y;
 
-    SDL_BlitSurface(background, &rcs, screen, &rcd);
-    SDL_BlitSurface(dragface, NULL, screen, &dest);
+    SDL_BlitSurface(_p_background, &rcs, _p_screen, &rcd);
+    SDL_BlitSurface(_p_dragface, NULL, _p_screen, &dest);
 
-    // SDL_Flip(screen); // TODO Sdl 2.0
+    // SDL_Flip(_p_screen); // TODO Sdl 2.0
 }
 
 void CGame::DoDrop() { DoDrop(NULL); }
@@ -213,33 +224,33 @@ void CGame::DoDrop(CCardRegion *DestRegion) {
     if (DestRegion != NULL)
         BestRegion = DestRegion;
     else
-        BestRegion = this->GetBestStack(dcard.x, dcard.y, g_CARDWIDTH,
-                                        g_CARDHEIGHT, &DragStack);
+        BestRegion = this->GetBestStack(_dragCard.x, _dragCard.y, g_CARDWIDTH,
+                                        g_CARDHEIGHT, &_dragStack);
     if (BestRegion == NULL)
-        BestRegion = SourceRegion;
+        BestRegion = _p_sourceRegion;
 
     DestStack = BestRegion->GetCardStack();
-    DestStack->Push(DragStack);
+    DestStack->Push(_dragStack);
     BestRegion->InitCardCoords();
 
     VI vi;
-    switch (SourceRegion->GetDragMode()) {
+    switch (_p_sourceRegion->GetDragMode()) {
         case 2:
         case 3:
             vi = DestStack->end() - 1;
             break;
         default:  // 1 and 4
-            vi = DestStack->end() - DragStack.Size();
+            vi = DestStack->end() - _dragStack.Size();
     }
 
-    DragStack.Clear();
+    _dragStack.Clear();
 
     // when no movement
-    if (dcard.x == vi->x && dcard.y == vi->y)
+    if (_dragCard.x == vi->x && _dragCard.y == vi->y)
         return;
 
-    ZoomCard(dcard.x, dcard.y, vi->x, vi->y, dcard.width, dcard.height,
-             background, dragface);
+    ZoomCard(_dragCard.x, _dragCard.y, vi->x, vi->y, _dragCard.width,
+             _dragCard.height, _p_background, _p_dragface);
 }
 CCardRegion *CGame::FindDropRegion(int Id, CCard card) {
     CCardStack stack;
@@ -255,7 +266,7 @@ CCardRegion *CGame::FindDropRegion(int Id, CCardStack stack) {
     return NULL;
 }
 
-void CalcPt(int x0, int y0, int x1, int y1, float t, int &X, int &Y) {
+void calcPt(int x0, int y0, int x1, int y1, float t, int &X, int &Y) {
     X = int(x0 + t * (x1 - x0) + .5);
     Y = int(y0 + t * (y1 - y0) + .5);
 }
@@ -271,7 +282,7 @@ void CGame::ZoomCard(int &sx, int &sy, int &dx, int &dy, int w, int h,
 
     for (float i = 0.0; i <= 1.0; i += precision) {
         SDL_PumpEvents();
-        CalcPt(sx, sy, dx, dy, i, px, py);
+        calcPt(sx, sy, dx, dy, i, px, py);
 
         rcs.x = sx - 2;
         rcs.y = sy - 2;
@@ -289,13 +300,13 @@ void CGame::ZoomCard(int &sx, int &sy, int &dx, int &dy, int w, int h,
         sx = dest.x = px;
         sy = dest.y = py;
 
-        SDL_BlitSurface(bg, &rcs, screen, &rcd);   // background
-        SDL_BlitSurface(fg, NULL, screen, &dest);  // foreground
+        SDL_BlitSurface(bg, &rcs, _p_screen, &rcd);
+        SDL_BlitSurface(fg, NULL, _p_screen, &dest);
 
-        // SDL_Flip(screen); // TODO Sdl 2.0
+        // SDL_Flip(_p_screen); // TODO Sdl 2.0
     }
     DrawStaticScene();
-    SDL_FreeSurface(dragface);
+    SDL_FreeSurface(_p_dragface);
 }
 
 void CGame::DrawStaticScene() {
@@ -304,19 +315,15 @@ void CGame::DrawStaticScene() {
         vi->DrawCardStack();
     }
 
-    // SDL_Flip(screen); // TODO Sdl 2.0
+    // SDL_Flip(_p_screen); // TODO Sdl 2.0
 }
 
-////////////////////////////////////////
-//       DrawBackground
-/*! Draw background of the game
- */
 void CGame::DrawBackground(BOOL bIsInit) {
-    if (scene_background) {
+    if (_p_scene_background) {
         if (!bIsInit) {
-            SDL_BlitSurface(scene_background, NULL, screen, NULL);
+            SDL_BlitSurface(_p_scene_background, NULL, _p_screen, NULL);
         } else {
-            fade(screen, scene_background, 2, 0);
+            fade(_p_screen, _p_scene_background, 2, 0);
         }
     }
 
@@ -343,40 +350,6 @@ CCardRegion *CGame::GetBestStack(int x, int y, int w, int h,
 }
 
 ////////////////////////////////////////
-//       Initialize
-/*! initialize the game
-// \param SDL_Surface *s : screen surface
-*/
-void CGame::Initialize(SDL_Surface *s) {
-    screen = s;
-    background = SDL_CreateRGBSurface(SDL_SWSURFACE, screen->w, screen->h, 32,
-                                      0, 0, 0, 0);
-    // background
-    SDL_Surface *Temp;
-    SDL_RWops *srcBack = SDL_RWFromFile(lpszBackGGameFile, "rb");
-    Temp = IMG_LoadJPG_RW(srcBack);
-    // scene_background = SDL_DisplayFormat(Temp); // TODO SDL 2.0
-    SDL_FreeSurface(Temp);
-
-    DrawBackground(TRUE);
-}
-
-////////////////////////////////////////
-//       InitDeck
-/*! Inizializza il mazzo
-// \param SDL_Surface *s :
-*/
-int CGame::InitDeck(SDL_Surface *s) {
-    // load deck from pac file
-    LoadCustomDeck();
-    scr = s;
-
-    LoadSymbols();
-
-    return 0;
-}
-
-////////////////////////////////////////
 //       DrawCard
 /*!
 // \param int x :
@@ -395,11 +368,11 @@ modo verticale.
 // \param int x : x coordinata destination
 // \param int y : y coordinate
 // \param int nCdIndex : card index
-// \param SDL_Surface *s : screen surface
+// \param SDL_Surface *s : _p_screen surface
 */
 int CGame::DrawCard(int x, int y, int nCdIndex, SDL_Surface *s) {
     if (s == NULL)
-        s = scr;
+        s = _p_srfDeck;
 
     if (nCdIndex < 0)
         nCdIndex = 0;
@@ -410,16 +383,16 @@ int CGame::DrawCard(int x, int y, int nCdIndex, SDL_Surface *s) {
     int iCartaIx = nCdIndex % 10;
     TRACE("Segno %d, carta: %d", iSegnoIx, iCartaIx);
 
-    SrcCard.x = 0;
-    SrcCard.y = 0;
-    SrcCard.w = m_pCardsSurf[nCdIndex]->clip_rect.w;
-    SrcCard.h = m_pCardsSurf[nCdIndex]->clip_rect.h;
+    _rctSrcCard.x = 0;
+    _rctSrcCard.y = 0;
+    _rctSrcCard.w = _p_CardsSurf[nCdIndex]->clip_rect.w;
+    _rctSrcCard.h = _p_CardsSurf[nCdIndex]->clip_rect.h;
 
     SDL_Rect dest;
     dest.x = x;
     dest.y = y;
 
-    return SDL_BlitSurface(m_pCardsSurf[nCdIndex], &SrcCard, s, &dest);
+    return SDL_BlitSurface(_p_CardsSurf[nCdIndex], &_rctSrcCard, s, &dest);
 }
 
 ////////////////////////////////////////
@@ -430,7 +403,7 @@ int CGame::DrawCard(int x, int y, int nCdIndex, SDL_Surface *s) {
 */
 int CGame::DrawCard(VI vi, SDL_Surface *s) {
     if (s == NULL)
-        s = scr;
+        s = _p_srfDeck;
 
     int nCdIndex = vi->Idx;
 
@@ -439,12 +412,12 @@ int CGame::DrawCard(VI vi, SDL_Surface *s) {
     if (nCdIndex > NUM_CARDS)
         nCdIndex = NUM_CARDS - 1;
 
-    // SrcCard.x = iSegnoIx * g_CARDWIDTH;
-    // SrcCard.y = iCartaIx * g_CARDHEIGHT;
-    SrcCard.x = 0;
-    SrcCard.y = 0;
-    SrcCard.w = m_pCardsSurf[nCdIndex]->clip_rect.w;
-    SrcCard.h = m_pCardsSurf[nCdIndex]->clip_rect.h;
+    // _rctSrcCard.x = iSegnoIx * g_CARDWIDTH;
+    // _rctSrcCard.y = iCartaIx * g_CARDHEIGHT;
+    _rctSrcCard.x = 0;
+    _rctSrcCard.y = 0;
+    _rctSrcCard.w = _p_CardsSurf[nCdIndex]->clip_rect.w;
+    _rctSrcCard.h = _p_CardsSurf[nCdIndex]->clip_rect.h;
 
     SDL_Rect dest;
     dest.x = vi->x;
@@ -453,7 +426,7 @@ int CGame::DrawCard(VI vi, SDL_Surface *s) {
     TRACE("Draw card ix = %d, segno = %d, valore %d \n", vi->Idx, vi->Suit(),
           vi->Rank());
 
-    return SDL_BlitSurface(m_pCardsSurf[nCdIndex], &SrcCard, s, &dest);
+    return SDL_BlitSurface(_p_CardsSurf[nCdIndex], &_rctSrcCard, s, &dest);
 }
 
 ////////////////////////////////////////
@@ -473,18 +446,18 @@ int CGame::DrawCardBack(int x, int y) { return DrawCardBack(x, y, NULL); }
 */
 int CGame::DrawCardBack(int x, int y, SDL_Surface *s) {
     if (s == NULL)
-        s = scr;
+        s = _p_srfDeck;
 
-    SrcCard.x = 0;
-    SrcCard.y = 0;
-    SrcCard.w = m_pSymbol[0]->clip_rect.w;
-    SrcCard.h = m_pSymbol[0]->clip_rect.h;
+    _rctSrcCard.x = 0;
+    _rctSrcCard.y = 0;
+    _rctSrcCard.w = _p_Symbol[0]->clip_rect.w;
+    _rctSrcCard.h = _p_Symbol[0]->clip_rect.h;
 
     SDL_Rect dest;
     dest.x = x;
     dest.y = y;
 
-    return SDL_BlitSurface(m_pSymbol[0], &SrcCard, s, &dest);
+    return SDL_BlitSurface(_p_Symbol[0], &_rctSrcCard, s, &dest);
 }
 
 ////////////////////////////////////////
@@ -519,18 +492,18 @@ int CGame::DrawSymbol(int x, int y, int nSymbol, SDL_Surface *s) {
         nSymbol = 3;
 
     if (s == NULL)
-        s = scr;
+        s = _p_srfDeck;
 
-    SrcCard.x = 0;
-    SrcCard.y = 0;
-    SrcCard.w = m_pSymbol[nSymbol]->clip_rect.w;
-    SrcCard.h = m_pSymbol[nSymbol]->clip_rect.h;
+    _rctSrcCard.x = 0;
+    _rctSrcCard.y = 0;
+    _rctSrcCard.w = _p_Symbol[nSymbol]->clip_rect.w;
+    _rctSrcCard.h = _p_Symbol[nSymbol]->clip_rect.h;
 
     SDL_Rect dest;
     dest.x = x;
     dest.y = y;
 
-    return SDL_BlitSurface(m_pSymbol[nSymbol], &SrcCard, s, &dest);
+    return SDL_BlitSurface(_p_Symbol[nSymbol], &_rctSrcCard, s, &dest);
 }
 
 ////////////////////////////////////////
@@ -548,14 +521,14 @@ int CGame::AnimateCards() {
     int yspeed;
 
     int GRAVITY = 1;
-    unsigned int MAXY = scr->h;
+    unsigned int MAXY = _p_srfDeck->h;
     float BOUNCE = 0.8f;
 
     do {
         rot = rand() % 2;
         id = rand() % 51;
-        x = rand() % scr->w;
-        y = rand() % scr->h / 2;
+        x = rand() % _p_srfDeck->w;
+        y = rand() % _p_srfDeck->h / 2;
 
         if (rot)
             xspeed = -4;
@@ -564,7 +537,7 @@ int CGame::AnimateCards() {
 
         yspeed = 0;
 
-        do  // while card is within the screen
+        do  // while card is within the _p_screen
         {
             SDL_PumpEvents();
             if (SDL_GetMouseState(NULL, NULL))
@@ -579,22 +552,22 @@ int CGame::AnimateCards() {
                 yspeed = int(-yspeed * BOUNCE);
             }
 
-            DrawCard(x, y, id, scr);
-            // SDL_Flip(scr); // TODO Sdl 2.0
+            DrawCard(x, y, id, _p_srfDeck);
+            // SDL_Flip(_p_srfDeck); // TODO Sdl 2.0
         }
         // 73 here is CARDWIDTH, but when using CARDWIDTH, it doesn't work
-        while ((x + 73 > 0) && (x < scr->w));
-        //		while((x + CARDWIDTH > 0) && (x < scr->w));
+        while ((x + 73 > 0) && (x < _p_srfDeck->w));
+        //		while((x + CARDWIDTH > 0) && (x < _p_srfDeck->w));
     } while (1);  // or while within specified time
 
     return 0;
 }
 
 ////////////////////////////////////////
-//       LoadCustomDeck
+//       LoadDeckFromPac
 /*! Load card from custom deck
  */
-void CGame::LoadCustomDeck() {
+void CGame::LoadDeckFromPac() {
     SDL_Surface *Temp;
 
     std::string strTmp;
@@ -630,7 +603,7 @@ void CGame::LoadCustomDeck() {
             if (srcBack) {
                 Temp = IMG_LoadJPG_RW(srcBack);
                 if (Temp) {
-                    // m_pCardsSurf[i + k * 10] = SDL_DisplayFormat(Temp); //
+                    // _p_CardsSurf[i + k * 10] = SDL_DisplayFormat(Temp); //
                     // TODO SDL 2.0
                 } else {
                     ASSERT(0);
@@ -642,18 +615,18 @@ void CGame::LoadCustomDeck() {
     }
     SDL_FreeSurface(Temp);
 
-    if (m_pCardsSurf[0]) {
-        g_CARDWIDTH = m_pCardsSurf[0]->clip_rect.w;
-        g_CARDHEIGHT = m_pCardsSurf[0]->clip_rect.h;
+    if (_p_CardsSurf[0]) {
+        g_CARDWIDTH = _p_CardsSurf[0]->clip_rect.w;
+        g_CARDHEIGHT = _p_CardsSurf[0]->clip_rect.h;
     }
 }
 
 ////////////////////////////////////////
 //       LoadSymbols
-/*! Load all symbols from jpg files
+/*! Load all _p_symbols from jpg files
  */
 void CGame::LoadSymbols() {
-    // symbols
+    // _p_symbols
     VCT_STRINGS vct_Strings;
     vct_Strings.push_back("dorso.jpg");
     vct_Strings.push_back("fine_1.jpg");
@@ -670,7 +643,7 @@ void CGame::LoadSymbols() {
         if (srcBack) {
             Temp = IMG_LoadJPG_RW(srcBack);
             if (Temp) {
-                // m_pSymbol[i] = SDL_DisplayFormat(Temp); // TODO SDL 2.0
+                // _p_Symbol[i] = SDL_DisplayFormat(Temp); // TODO SDL 2.0
             } else {
                 ASSERT(0);
             }
@@ -693,7 +666,7 @@ int CGame::LoadCardPac() {
     Uint16 *delays;
 
     std::string strFileName = lpszMazziDir;
-    strFileName += m_DeckType.GetResFileName();
+    strFileName += _DeckType.GetResFileName();
 
     SDL_RWops *src = SDL_RWFromFile(strFileName.c_str(), "rb");
     SDL_RWread(src, describtion, 100, 1);
