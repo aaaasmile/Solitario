@@ -2,9 +2,9 @@
 
 #include "win_type_global.h"
 
-sdlFont::sdlFont() { Bitmap = NULL; }
-sdlFont::~sdlFont() { ClearFont(); }
-void sdlFont::ClearFont() {
+CustomFont::CustomFont() { Bitmap = NULL; }
+CustomFont::~CustomFont() { ClearFont(); }
+void CustomFont::ClearFont() {
     if (Bitmap != NULL) {
         SDL_FreeSurface(Bitmap);
         Bitmap = NULL;
@@ -16,7 +16,7 @@ void sdlFont::ClearFont() {
 /*!
 // \param string filename :
 */
-bool sdlFont::LoadFont(string filename) {
+bool CustomFont::LoadFont(string filename) {
     ClearFont();
     Bitmap = SDL_LoadBMP(filename.c_str());
     if (Bitmap == 0) {
@@ -31,9 +31,9 @@ bool sdlFont::LoadFont(string filename) {
     }
     return false;
 }
-void sdlFont::DrawString(SDL_Surface *surface, string message,
-                         unsigned char textcase, char alignment, int x, int y,
-                         unsigned int color) {
+void CustomFont::DrawString(SDL_Surface *surface, string message,
+                            unsigned char textcase, char alignment, int x,
+                            int y, unsigned int color) {
     unsigned char c;
     int ax;
     rSource.w = SDLFONTSIZE;

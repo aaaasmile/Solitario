@@ -42,12 +42,12 @@ static const char * lpszMusicFile = DATA_PREFIX"watermusic.it";
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-cMusicManager::cMusicManager()
+MusicManager::MusicManager()
 {
     m_pMusics = 0;
 }
 
-cMusicManager::~cMusicManager()
+MusicManager::~MusicManager()
 {
 
 }
@@ -57,7 +57,7 @@ cMusicManager::~cMusicManager()
 //       Init
 /*! Initialize audio stuff
 */
-void cMusicManager::Init()
+void MusicManager::Init()
 {
     // sound
     if (SDL_Init(SDL_INIT_AUDIO) < 0)
@@ -89,7 +89,7 @@ void cMusicManager::Init()
 //       StopMusic
 /*! Stop play music
 */
-void cMusicManager::StopMusic()
+void MusicManager::StopMusic()
 {
     Mix_FadeOutMusic(100);
     Mix_HaltMusic();
@@ -101,7 +101,7 @@ void cMusicManager::StopMusic()
 //       StartMusic
 /*! Start play music
 */
-void cMusicManager::StartMusic()
+void MusicManager::StartMusic()
 {
     if (!Mix_PlayingMusic())
     {

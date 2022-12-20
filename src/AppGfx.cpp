@@ -19,7 +19,7 @@
  *
  **/
 
-#include "EngineApp.h"
+#include "AppGfx.h"
 
 #include <stdlib.h>
 #include <time.h>
@@ -74,7 +74,7 @@ static const char *lpszBackGroundFile = DATA_PREFIX "im001537.jpg";
 //       cEngineApp
 /*! constructor
  */
-cEngineApp::cEngineApp() {
+AppGfx::AppGfx() {
     m_pScreen = NULL;
     m_iScreenW = 1024;  // 640;
     m_iScreenH = 768;   // 480;
@@ -91,13 +91,13 @@ cEngineApp::cEngineApp() {
 //       ~cEngineApp
 /*! destructor
  */
-cEngineApp::~cEngineApp() { terminate(); }
+AppGfx::~AppGfx() { terminate(); }
 
 ////////////////////////////////////////
 //       NewGame
 /*! Start a new game
  */
-void cEngineApp::NewGame() {
+void AppGfx::NewGame() {
     // Reset pile symbol
     m_SolitarioGfx[0].SetSymbol(CRD_OSYMBOL);
 
@@ -128,7 +128,7 @@ void cEngineApp::NewGame() {
 /*! User press a key on keyboard
 // \param SDL_Event &event :
 */
-void cEngineApp::HandleKeyDownEvent(SDL_Event &event) {
+void AppGfx::HandleKeyDownEvent(SDL_Event &event) {
     if (event.key.keysym.sym == SDLK_n) {
         NewGame();
         m_SolitarioGfx.DrawBackground(FALSE);
@@ -147,7 +147,7 @@ void cEngineApp::HandleKeyDownEvent(SDL_Event &event) {
 /*!
 // \param SDL_Event &event :
 */
-void cEngineApp::HandleMouseDownEvent(SDL_Event &event) {
+void AppGfx::HandleMouseDownEvent(SDL_Event &event) {
     CCardRegion *srcReg;
     if (event.button.button == SDL_BUTTON_LEFT) {
         srcReg = m_SolitarioGfx.OnMouseDown(event.button.x, event.button.y);
@@ -214,7 +214,7 @@ void cEngineApp::HandleMouseDownEvent(SDL_Event &event) {
 /*!
 // \param SDL_Event &event :
 */
-void cEngineApp::HandleMouseMoveEvent(SDL_Event &event) {
+void AppGfx::HandleMouseMoveEvent(SDL_Event &event) {
     if (event.motion.state == SDL_BUTTON(1) && m_bStartdrag)
         m_SolitarioGfx.DoDrag(event.motion.x, event.motion.y);
 }
@@ -224,7 +224,7 @@ void cEngineApp::HandleMouseMoveEvent(SDL_Event &event) {
 /*!
 // \param SDL_Event &event :
 */
-void cEngineApp::HandleMouseUpEvent(SDL_Event &event) {
+void AppGfx::HandleMouseUpEvent(SDL_Event &event) {
     if (m_bStartdrag) {
         m_bStartdrag = FALSE;
         m_SolitarioGfx.DoDrop();
@@ -248,7 +248,7 @@ void cEngineApp::HandleMouseUpEvent(SDL_Event &event) {
 //       terminate
 /*! Terminate stuff
  */
-void cEngineApp::terminate() {
+void AppGfx::terminate() {
     // save hight score
     // m_HScore.Save();
     // save settings
@@ -273,7 +273,7 @@ void cEngineApp::terminate() {
 //       loadProfile
 /*! Read settings in the registry.
  */
-void cEngineApp::loadProfile() {
+void AppGfx::loadProfile() {
 #ifdef _WINDOWS
     RegistryKey RegKey;
     LONG lRes;
@@ -358,7 +358,7 @@ void cEngineApp::loadProfile() {
 //       writeProfile
 /*! Save current settings in the registry
  */
-void cEngineApp::writeProfile() {
+void AppGfx::writeProfile() {
 #ifdef _WINDOWS
     RegistryKey RegKey;
     LONG lRes;
@@ -403,7 +403,7 @@ void cEngineApp::writeProfile() {
 //       Init
 /*! Init application
  */
-void cEngineApp::Init() {
+void AppGfx::Init() {
     // load setting in the registry
     loadProfile();
 
@@ -416,13 +416,13 @@ void cEngineApp::Init() {
     }
     setVideoResolution();
 
-    m_pMusicManager = new cMusicManager;
+    m_pMusicManager = new MusicManager;
     m_pMusicManager->Init();
 
     // set application language
     m_LanString.SetLang(m_Settings.eLanguageCurrent);
 
-    m_pMainFont = new sdlFont;
+    m_pMainFont = new CustomFont;
     m_pMainFont->LoadFont(lpszFontFile);
 
     // caption
@@ -460,7 +460,7 @@ void cEngineApp::Init() {
 //       setVideoResolution
 /*! Set video resolution
  */
-void cEngineApp::setVideoResolution() {
+void AppGfx::setVideoResolution() {
     int flagwin = 0;
     if (m_pWindow != NULL) {
         SDL_DestroyWindow(m_pWindow);
@@ -505,14 +505,14 @@ void cEngineApp::setVideoResolution() {
 //       MainMenu
 /*! Run main menu until application end
  */
-void cEngineApp::MainMenu() {
-    sdlMenu *menu;
+void AppGfx::MainMenu() {
+    CustomMenu *menu;
     signed int result, result2;
     BOOL bEnd = FALSE;
     int menux, menuy, menuw, menuh;
     string temp;
 
-    menu = new sdlMenu;
+    menu = new CustomMenu;
     menu->SetScreen(m_pScreen);
     menu->FilenameBackground = lpszBackGroundFile;
     menuw = 445;
@@ -657,7 +657,7 @@ void cEngineApp::MainMenu() {
 //       WaitKey
 /*! Wait key during a menu
  */
-int cEngineApp::WaitKey() {
+int AppGfx::WaitKey() {
     SDL_Event event;
     while (1) {
         if (SDL_WaitEvent(&event) == 1) {
@@ -677,7 +677,7 @@ int cEngineApp::WaitKey() {
 //       hightScoreMenu
 /*! Shows the hight score menu
  */
-void cEngineApp::hightScoreMenu() {
+void AppGfx::hightScoreMenu() {
     int tx, ty;
     std::string temp;
 
@@ -713,7 +713,7 @@ void cEngineApp::hightScoreMenu() {
     WaitKey();
 }
 
-void cEngineApp::updateScreenTexture() {
+void AppGfx::updateScreenTexture() {
     // SDL 2.0
     SDL_UpdateTexture(m_pScreenTexture, NULL, m_pScreen->pixels,
                       m_pScreen->pitch);
@@ -726,7 +726,7 @@ void cEngineApp::updateScreenTexture() {
 //       PlayGame
 /*! Play the game
  */
-int cEngineApp::PlayGame() {
+int AppGfx::PlayGame() {
     // card deck
     m_SolitarioGfx.SetDeckType(m_Settings.DeckType);
     m_SolitarioGfx.InitDeck(screen);
@@ -805,8 +805,8 @@ int cEngineApp::PlayGame() {
 //       menuMazziChoose
 /*! Menu per la scelta dei mazzi di carte
  */
-void cEngineApp::menuMazziChoose() {
-    sdlMenu *menuMazzi = new sdlMenu;
+void AppGfx::menuMazziChoose() {
+    CustomMenu *menuMazzi = new CustomMenu;
     menuMazzi->SetScreen(m_pScreen);
     menuMazzi->FilenameBackground = lpszBackGroundFile;
     int menuMazziw = 445;
@@ -904,7 +904,7 @@ void cEngineApp::menuMazziChoose() {
 // \param int argc :
 // \param char * argv[] :
 */
-void cEngineApp::Setup(int argc, char *argv[]) {
+void AppGfx::Setup(int argc, char *argv[]) {
     /* Get options from the command line: */
     m_bOverride = FALSE;
 
@@ -987,7 +987,7 @@ void cEngineApp::Setup(int argc, char *argv[]) {
 /*!
 // \param LPCSTR strOpz :
 */
-BOOL cEngineApp::parseScreenSize(LPCSTR strInput) {
+BOOL AppGfx::parseScreenSize(LPCSTR strInput) {
     char string[2048];
     memset(string, 0, 2048);
     char seps[] = " ,\t\n";
@@ -1020,7 +1020,7 @@ BOOL cEngineApp::parseScreenSize(LPCSTR strInput) {
 // \param int err :
 // \param char * cmd :
 */
-void cEngineApp::usage(int err, char *cmd) {
+void AppGfx::usage(int err, char *cmd) {
     FILE *f;
 
     if (err == 0)

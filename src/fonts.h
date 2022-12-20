@@ -20,7 +20,7 @@ using namespace std;
 
 #define SDLFONTSIZE 16
 
-class sdlFont {
+class CustomFont {
 private:
     SDL_Surface *Bitmap;
     string Filename;
@@ -33,8 +33,8 @@ public:
     void DrawString(SDL_Surface *surface, string message,
                     unsigned char textcase, char alignment, int x, int y,
                     unsigned int color);
-    sdlFont();
-    ~sdlFont();
+    CustomFont();
+    ~CustomFont();
 };
 
 #endif

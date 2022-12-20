@@ -8,10 +8,7 @@
                 "/usr/include/SDL2"
             ],
             "defines": [
-                "_DEBUG",
-                "UNICODE",
-                "_UNICODE",
-                "DATA_PREFIX"
+                "DATA_PREFIX=\"\""
             ],
             "cppStandard": "c++17",
             "cStandard": "c17"

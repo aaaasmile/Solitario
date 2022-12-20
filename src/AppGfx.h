@@ -16,12 +16,12 @@
 #include "cHightScoreMgr.h"
 #include "win_type_global.h"
 
-class cMusicManager;
+class MusicManager;
 
-class cEngineApp {
+class AppGfx {
 public:
-    cEngineApp();
-    ~cEngineApp();
+    AppGfx();
+    ~AppGfx();
 
     void Init();
     void MainMenu();
@@ -60,13 +60,13 @@ private:
     int m_iScreenH;
     int m_iBpp;
     SDL_Surface* m_pimgBackground;
-    sdlFont* m_pMainFont;
-    cHightScoreMgr m_HScore;
+    CustomFont* m_pMainFont;
+    HightScoreMgr m_HScore;
     cLanguages m_LanString;
     cGameSettings m_Settings;
     CGame m_SolitarioGfx;
     BOOL m_bStartdrag;
-    cMusicManager* m_pMusicManager;
+    MusicManager* m_pMusicManager;
     SDL_Surface* m_pTitle;
     BOOL m_bFullScreen;
     BOOL m_bOverride;

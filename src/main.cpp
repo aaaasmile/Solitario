@@ -1,12 +1,9 @@
-// File         : main.cpp
 #include <SDL_image.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "EngineApp.h"
+#include "AppGfx.h"
 #include "StdAfx.h"
-
-cEngineApp TheApp;
 
 ////////////////////////////////////////
 //       main
@@ -14,7 +11,7 @@ cEngineApp TheApp;
 // \param int argc :
 // \param char *argv[] :
 */
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     // app name and set the directory on installed application
 #ifdef _WINDOWS
     std::string strAppName;
@@ -24,11 +21,11 @@ int main(int argc, char *argv[]) {
     std::string strDirname = strAppName.substr(0, 38);
     ::SetCurrentDirectory(strDirname.c_str());
 #endif
+    AppGfx* app = new AppGfx();
+    app->Setup(argc, argv);
+    app->Init();
 
-    TheApp.Setup(argc, argv);
-    TheApp.Init();
-
-    TheApp.MainMenu();
+    app->MainMenu();
 
     return EXIT_SUCCESS;
 }

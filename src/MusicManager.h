@@ -10,10 +10,10 @@
 #include "SDL_mixer.h"
 
 //! class cMusicManager
-class cMusicManager {
+class MusicManager {
 public:
-    cMusicManager();
-    virtual ~cMusicManager();
+    MusicManager();
+    virtual ~MusicManager();
 
     void Init();
     void StopMusic();
