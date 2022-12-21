@@ -8,35 +8,19 @@
 #include <SDL2/SDL.h>
 #include <SDL_image.h>
 
-#include <string>
-#include <vector>
-
+#include "error_info.h"
 #include "fonts.h"
+#include "win_type_global.h"
 
 using namespace std;
 
 class CustomMenu {
-private:
-    SDL_Surface *Bitmap;
-    string LabelMenu;
-    string LabelExit;
-
-    CustomFont *Font;
-
-    signed int iCurPos;
-
-    vector<string> Items;
-
-    SDL_Rect Rect;
-    Uint32 ColorBack;
-    Uint32 ColorHighlight;
-    SDL_Surface *Screen;
-
 public:
     string FilenameBackground;
 
     CustomMenu();
     ~CustomMenu();
+    LPErrInApp Initialize();
     void AddItems(string item);
     void ClearItems();
     void DrawBitmap(unsigned char alignment, Uint32 color, SDL_Surface *screen);
@@ -49,6 +33,22 @@ public:
     void SetColors(Uint32 back, Uint32 high);
     void SetScreen(SDL_Surface *pVal) { Screen = pVal; }
     void SetAlpha(unsigned char alpha);
+
+private:
+    SDL_Surface *Bitmap;
+    string LabelMenu;
+    string LabelExit;
+
+    CustomFont *Font;
+
+    signed int iCurPos;
+
+    VCT_STRINGS Items;
+
+    SDL_Rect Rect;
+    Uint32 ColorBack;
+    Uint32 ColorHighlight;
+    SDL_Surface *Screen;
 };
 
 #endif

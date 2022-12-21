@@ -85,7 +85,7 @@ inline void TRACE(const char* fmt, ...) {
     char myBuff[1024];
     va_list args;
     va_start(args, fmt);
-    int result = vsprintf(myBuff, fmt, args);
+    vsprintf(myBuff, fmt, args);
     fprintf(stdout, "[TR]%s\n", myBuff);
 }
 #endif

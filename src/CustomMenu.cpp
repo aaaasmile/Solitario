@@ -8,8 +8,6 @@ CustomMenu::CustomMenu() {
     LabelMenu = "Menu";
     LabelExit = "Exit";
     Bitmap = NULL;
-    Font = new CustomFont;
-    Font->LoadFont(lpszFontFile);
     Screen = NULL;
 }
 
@@ -17,6 +15,11 @@ CustomMenu::~CustomMenu() {
     if (Bitmap != NULL)
         SDL_FreeSurface(Bitmap);
     delete Font;
+}
+
+LPErrInApp CustomMenu::Initialize() {
+    Font = new CustomFont;
+    return Font->LoadFont(lpszFontFile);
 }
 
 void CustomMenu::AddItems(string item) { Items.push_back(item); }

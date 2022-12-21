@@ -9,7 +9,7 @@
 
 #include <string>
 
-using namespace std;
+#include "error_info.h"
 
 #define TEXTUPPER 0
 #define TEXTLOWER 1
@@ -21,20 +21,20 @@ using namespace std;
 #define SDLFONTSIZE 16
 
 class CustomFont {
-private:
-    SDL_Surface *Bitmap;
-    string Filename;
-    SDL_Rect rSource;
-    SDL_Rect rTarget;
-
 public:
     void ClearFont();
-    bool LoadFont(string filename);
-    void DrawString(SDL_Surface *surface, string message,
+    LPErrInApp LoadFont(std::string filename);
+    void DrawString(SDL_Surface *surface, std::string message,
                     unsigned char textcase, char alignment, int x, int y,
                     unsigned int color);
     CustomFont();
     ~CustomFont();
+
+private:
+    SDL_Surface *_p_Bitmap;
+    std::string _Filename;
+    SDL_Rect _rSource;
+    SDL_Rect _rTarget;
 };
 
 #endif

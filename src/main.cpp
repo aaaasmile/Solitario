@@ -21,7 +21,11 @@ int main(int argc, char* argv[]) {
         fprintf(stderr, "Init error: %s\n", err->ErrorText.c_str());
         exit(1);
     }
-    app->MainMenu();
+    err = app->StartMainMenu();
+    if (err != NULL) {
+        fprintf(stderr, "App error: %s\n", err->ErrorText.c_str());
+        exit(1);
+    }
 
     return EXIT_SUCCESS;
 }

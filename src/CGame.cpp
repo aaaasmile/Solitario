@@ -35,28 +35,37 @@ CGame::CGame() {
 
 CGame::~CGame() { ClearSurface(); }
 
-int CGame::Initialize(SDL_Surface *s, SDL_Renderer *r) {
-    int ern = 0;
+LPErrInApp CGame::Initialize(SDL_Surface *s, SDL_Renderer *r) {
+    LPErrInApp err;
     _p_screen = s;
     _p_sdlRenderer = r;
     _p_ScreenTexture = SDL_CreateTexture(
         r, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, s->w, s->h);
+    if (_p_ScreenTexture == NULL) {
+        return ERR_UTIL::ErrorCreate("Cannot create texture: %s\n",
+                                     SDL_GetError());
+    }
 
     _p_background = SDL_CreateRGBSurface(SDL_SWSURFACE, _p_screen->w,
                                          _p_screen->h, 32, 0, 0, 0, 0);
     SDL_RWops *srcBack = SDL_RWFromFile(lpszBackgroundImgFile, "rb");
     if (srcBack == 0) {
-        // TODO error handling
+        return ERR_UTIL::ErrorCreate("Error in SDL_RWFromFile: %s\n",
+                                     SDL_GetError());
     }
     _p_scene_background = IMG_LoadJPG_RW(srcBack);
-
-    ern = LoadCardPac();
-    if (ern < 0) {
-        return errno;
+    if (_p_scene_background == 0) {
+        return ERR_UTIL::ErrorCreate("Cannot create scene background: %s\n",
+                                     SDL_GetError());
     }
-    ern = LoadSymbolsForPac();
-    if (ern < 0) {
-        return ern;
+
+    err = LoadCardPac();
+    if (err != NULL) {
+        return err;
+    }
+    err = LoadSymbolsForPac();
+    if (err != NULL) {
+        return err;
     }
 
     DrawBackground(TRUE);
@@ -596,8 +605,7 @@ void CGame::LoadSymbolsFromSingleFile() {
     }
 }
 
-int CGame::LoadCardPac() {
-    // TODO Error handling properly
+LPErrInApp CGame::LoadCardPac() {
     char describtion[100];
     Uint8 num_anims;
     Uint16 w, h;
@@ -608,15 +616,19 @@ int CGame::LoadCardPac() {
     strFileName += _DeckType.GetResFileName();
 
     SDL_RWops *src = SDL_RWFromFile(strFileName.c_str(), "rb");
+    if (src == 0) {
+        return ERR_UTIL::ErrorCreate("SDL_RWFromFile on pac file error: %s\n",
+                                     SDL_GetError());
+    }
     SDL_RWread(src, describtion, 100, 1);
-    SDL_RWread(src, &num_anims, 1, 1);  // TODO Error handling
-    w = SDL_ReadLE16(src);              // witdh of the picture (pac of 4 cards)
+    SDL_RWread(src, &num_anims, 1, 1);
+    w = SDL_ReadLE16(src);  // witdh of the picture (pac of 4 cards)
     h = SDL_ReadLE16(src);  // height of the picture (pac of 10 rows of cards)
     frames = SDL_ReadLE16(src);
 
     delays = (Uint16 *)malloc(sizeof(Uint16) * frames);
     if (!delays)
-        return -1;
+        return ERR_UTIL::ErrorCreate("Malloc failed");
 
     for (int i = 0; i < frames; i++) {
         // file format stores delays in 1/100th of second
@@ -627,6 +639,10 @@ int CGame::LoadCardPac() {
 
     SDL_Surface *s;
     s = IMG_LoadPNG_RW(src);
+    if (src == 0) {
+        return ERR_UTIL::ErrorCreate("IMG_LoadPNG_RW on pac file error: %s\n",
+                                     SDL_GetError());
+    }
 
     SDL_SetColorKey(s, TRUE, SDL_MapRGB(s->format, 0, 128, 0));
 
@@ -635,14 +651,18 @@ int CGame::LoadCardPac() {
     _p_srfDeck = s;
 
     free(delays);
-    return 0;
+    return NULL;
 }
 
-int CGame::LoadSymbolsForPac() {
+LPErrInApp CGame::LoadSymbolsForPac() {
     std::string strFileSymbName = lpszDataDir;
     strFileSymbName += _DeckType.GetSymbolFileName();
 
     _p_symbols = SDL_LoadBMP(strFileSymbName.c_str());
+    if (_p_symbols == 0) {
+        return ERR_UTIL::ErrorCreate("LOad bitmap failed: %s\n",
+                                     SDL_GetError());
+    }
 
     if (_DeckType.GetSymbolFileName() == "symb_336.bmp") {
         SDL_SetColorKey(_p_symbols, TRUE,
@@ -655,5 +675,5 @@ int CGame::LoadSymbolsForPac() {
     g_SYMBOLWIDTH = _p_symbols->w / 4;
     g_SYMBOLHEIGHT = _p_symbols->h;
 
-    return 0;
+    return NULL;
 }

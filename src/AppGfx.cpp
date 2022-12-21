@@ -82,7 +82,10 @@ LPErrInApp AppGfx::Init() {
     _LanguageMgr.SetLang(_p_GameSettings->eLanguageCurrent);
 
     _p_CustomFont = new CustomFont;
-    _p_CustomFont->LoadFont(lpszFontFile);
+    err = _p_CustomFont->LoadFont(lpszFontFile);
+    if (err != NULL) {
+        return err;
+    }
 
     SDL_SetWindowTitle(_p_Window,
                        _LanguageMgr.GetCStringId(LanguageMgr::ID_SOLITARIO));
@@ -156,7 +159,8 @@ LPErrInApp AppGfx::createWindow() {
     return NULL;
 }
 
-int AppGfx::startGameLoop() {
+LPErrInApp AppGfx::startGameLoop() {
+    LPErrInApp err;
     if (_p_SolitarioGfx != NULL) {
         delete _p_SolitarioGfx;
     }
@@ -165,7 +169,9 @@ int AppGfx::startGameLoop() {
     _p_SolitarioGfx->SetDeckType(_p_GameSettings->deckTypeVal);
     _p_SolitarioGfx->ClearSurface();
     _p_SolitarioGfx->Clear();
-    _p_SolitarioGfx->Initialize(_p_Screen, _p_sdlRenderer);
+    err = _p_SolitarioGfx->Initialize(_p_Screen, _p_sdlRenderer);
+    if (err != NULL)
+        return err;
 
     // index 0
     _p_SolitarioGfx->CreateRegion(CRD_PILE, CRD_VISIBLE | CRD_3D, 0, 0,
@@ -228,7 +234,7 @@ int AppGfx::startGameLoop() {
             _p_MusicManager->StartMusic();
         }
     }
-    return 0;
+    return NULL;
 }
 
 void AppGfx::newGame() {
@@ -498,14 +504,19 @@ void AppGfx::writeProfile() {
 #endif
 }
 
-void AppGfx::MainMenu() {
+LPErrInApp AppGfx::StartMainMenu() {
     CustomMenu *menu;
     signed int result, result2;
     BOOL bEnd = FALSE;
     int menux, menuy, menuw, menuh;
     string temp;
+    LPErrInApp err;
 
-    menu = new CustomMenu;
+    menu = new CustomMenu();
+    err = menu->Initialize();
+    if (err != NULL)
+        return err;
+
     menu->SetScreen(_p_Screen);
     menu->FilenameBackground = lpszBackGroundFile;
     menuw = 445;
@@ -531,7 +542,9 @@ void AppGfx::MainMenu() {
         switch (result) {
             case 0:
                 // STARTGAME
-                startGameLoop();
+                err = startGameLoop();
+                if (err != NULL)
+                    return err;
                 break;
             case 1:
                 // MENU select a new language
@@ -646,6 +659,7 @@ void AppGfx::MainMenu() {
         }
     }
     delete menu;
+    return NULL;
 }
 
 int AppGfx::waitKeyLoop() {

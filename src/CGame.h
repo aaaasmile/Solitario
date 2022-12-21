@@ -5,6 +5,7 @@
 
 #include "CCardRegion.h"
 #include "GameSettings.h"
+#include "error_info.h"
 #include "win_type_global.h"
 
 typedef std::vector<CCardRegion>::iterator rVI;
@@ -28,7 +29,7 @@ public:
     CGame();
     ~CGame();
 
-    int Initialize(SDL_Surface *s, SDL_Renderer *r);
+    LPErrInApp Initialize(SDL_Surface *s, SDL_Renderer *r);
     void Clear() { _cardRegionList.clear(); }
     int Size() { return _cardRegionList.size(); }
 
@@ -76,8 +77,8 @@ public:
     void SetDeckType(DeckType &Val) { _DeckType.CopyFrom(Val); }
     void ClearSurface();
 
-    int LoadCardPac();
-    int LoadSymbolsForPac();
+    LPErrInApp LoadCardPac();
+    LPErrInApp LoadSymbolsForPac();
     void LoadDeckFromSingleFile();
     void LoadSymbolsFromSingleFile();
 

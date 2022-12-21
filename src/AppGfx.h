@@ -24,7 +24,7 @@ public:
     ~AppGfx();
 
     LPErrInApp Init();
-    void MainMenu();
+    LPErrInApp StartMainMenu();
     std::string GetPlayerName() { return _p_GameSettings->strPlayerName; }
     void SetPlayerName(std::string strVal) {
         _p_GameSettings->strPlayerName = strVal;
@@ -34,7 +34,7 @@ public:
 
 private:
     int waitKeyLoop();
-    int startGameLoop();
+    LPErrInApp startGameLoop();
     LPErrInApp createWindow();
     void terminate();
     void hightScoreMenu();
