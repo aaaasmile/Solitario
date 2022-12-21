@@ -13,6 +13,7 @@
 #include "CustomMenu.h"
 #include "HightScoreMgr.h"
 #include "Languages.h"
+#include "error_info.h"
 #include "win_type_global.h"
 
 class MusicManager;
@@ -22,7 +23,7 @@ public:
     AppGfx();
     ~AppGfx();
 
-    void Init();
+    LPErrInApp Init();
     void MainMenu();
     std::string GetPlayerName() { return _p_GameSettings->strPlayerName; }
     void SetPlayerName(std::string strVal) {
@@ -34,7 +35,7 @@ public:
 private:
     int waitKeyLoop();
     int startGameLoop();
-    void setVideoResolution();
+    LPErrInApp createWindow();
     void terminate();
     void hightScoreMenu();
     void newGame();
@@ -43,7 +44,7 @@ private:
     void handleGameLoopMouseMoveEvent(SDL_Event& event);
     void handleGameLoopMouseUpEvent(SDL_Event& event);
     void menuSelectDeck();
-    void loadProfile();
+    LPErrInApp loadProfile();
     void writeProfile();
     void usage(int err, char* cmd);
     BOOL parseScreenSize(LPCSTR strOpz);

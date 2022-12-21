@@ -109,7 +109,8 @@ am_solitario_OBJECTS = src/CCardRegion.$(OBJEXT) \
 	src/CustomMenu.$(OBJEXT) src/AppGfx.$(OBJEXT) \
 	src/fonts.$(OBJEXT) src/GameSettings.$(OBJEXT) \
 	src/gfx_util.$(OBJEXT) src/Languages.$(OBJEXT) \
-	src/main.$(OBJEXT) src/fading.$(OBJEXT) src/credits.$(OBJEXT)
+	src/main.$(OBJEXT) src/fading.$(OBJEXT) src/credits.$(OBJEXT) \
+	src/error_info.$(OBJEXT)
 solitario_OBJECTS = $(am_solitario_OBJECTS)
 solitario_DEPENDENCIES = libini/libini.a
 AM_V_P = $(am__v_P_$(V))
@@ -132,9 +133,9 @@ am__depfiles_remade = src/$(DEPDIR)/AppGfx.Po \
 	src/$(DEPDIR)/CGame.Po src/$(DEPDIR)/CustomMenu.Po \
 	src/$(DEPDIR)/GameSettings.Po src/$(DEPDIR)/HightScoreMgr.Po \
 	src/$(DEPDIR)/Languages.Po src/$(DEPDIR)/MusicManager.Po \
-	src/$(DEPDIR)/credits.Po src/$(DEPDIR)/fading.Po \
-	src/$(DEPDIR)/fonts.Po src/$(DEPDIR)/gfx_util.Po \
-	src/$(DEPDIR)/main.Po
+	src/$(DEPDIR)/credits.Po src/$(DEPDIR)/error_info.Po \
+	src/$(DEPDIR)/fading.Po src/$(DEPDIR)/fonts.Po \
+	src/$(DEPDIR)/gfx_util.Po src/$(DEPDIR)/main.Po
 am__mv = mv -f
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -376,6 +377,8 @@ solitario_SOURCES = \
 	src/main.cpp\
 	src/fading.cpp\
 	src/credits.cpp\
+	src/error_info.cpp\
+	src/error_info.h\
 	src/CCard.h\
 	src/CCardRegion.h\
 	src/CCardStack.h\
@@ -520,6 +523,8 @@ src/fading.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/credits.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
+src/error_info.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
 
 solitario$(EXEEXT): $(solitario_OBJECTS) $(solitario_DEPENDENCIES) $(EXTRA_solitario_DEPENDENCIES) 
 	@rm -f solitario$(EXEEXT)
@@ -542,6 +547,7 @@ include src/$(DEPDIR)/HightScoreMgr.Po # am--include-marker
 include src/$(DEPDIR)/Languages.Po # am--include-marker
 include src/$(DEPDIR)/MusicManager.Po # am--include-marker
 include src/$(DEPDIR)/credits.Po # am--include-marker
+include src/$(DEPDIR)/error_info.Po # am--include-marker
 include src/$(DEPDIR)/fading.Po # am--include-marker
 include src/$(DEPDIR)/fonts.Po # am--include-marker
 include src/$(DEPDIR)/gfx_util.Po # am--include-marker
@@ -927,6 +933,7 @@ distclean: distclean-recursive
 	-rm -f src/$(DEPDIR)/Languages.Po
 	-rm -f src/$(DEPDIR)/MusicManager.Po
 	-rm -f src/$(DEPDIR)/credits.Po
+	-rm -f src/$(DEPDIR)/error_info.Po
 	-rm -f src/$(DEPDIR)/fading.Po
 	-rm -f src/$(DEPDIR)/fonts.Po
 	-rm -f src/$(DEPDIR)/gfx_util.Po
@@ -988,6 +995,7 @@ maintainer-clean: maintainer-clean-recursive
 	-rm -f src/$(DEPDIR)/Languages.Po
 	-rm -f src/$(DEPDIR)/MusicManager.Po
 	-rm -f src/$(DEPDIR)/credits.Po
+	-rm -f src/$(DEPDIR)/error_info.Po
 	-rm -f src/$(DEPDIR)/fading.Po
 	-rm -f src/$(DEPDIR)/fonts.Po
 	-rm -f src/$(DEPDIR)/gfx_util.Po

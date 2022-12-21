@@ -3,10 +3,13 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "../config.h"
 #include "MusicManager.h"
 #include "StdAfx.h"
+#include "error_info.h"
 #include "gfx_util.h"
 #include "win_type_global.h"
+
 #ifdef _WINDOWS
 #include "regkey.h"
 #else
@@ -57,16 +60,22 @@ AppGfx::AppGfx() {
 
 AppGfx::~AppGfx() { terminate(); }
 
-void AppGfx::Init() {
-    loadProfile();
+LPErrInApp AppGfx::Init() {
+    LPErrInApp err = loadProfile();
+    if (err != NULL) {
+        return err;
+    }
 
     if (!SDL_WasInit(SDL_INIT_VIDEO)) {
         if (SDL_Init(0) < 0) {
-            fprintf(stderr, "Couldn't initialize SDL: %s\n", SDL_GetError());
-            exit(1);
+            return ERR_UTIL::ErrorCreate("Couldn't initialize SDL: %s\n",
+                                         SDL_GetError());
         }
     }
-    setVideoResolution();
+    err = createWindow();
+    if (err != NULL) {
+        return err;
+    }
 
     _p_MusicManager = new MusicManager;
     _p_MusicManager->Init();
@@ -82,8 +91,7 @@ void AppGfx::Init() {
     // icona trasparente
     SDL_Surface *psIcon = SDL_LoadBMP(lpszIconProgFile);
     if (psIcon == 0) {
-        fprintf(stderr, "Icon not found\n");
-        exit(1);
+        return ERR_UTIL::ErrorCreate("Icon not found");
     }
     SDL_SetColorKey(psIcon, TRUE, SDL_MapRGB(psIcon->format, 0, 128, 0));
     SDL_SetWindowIcon(_p_Window, psIcon);
@@ -98,27 +106,23 @@ void AppGfx::Init() {
 
     _p_Title = IMG_Load(lpszTitleFile);
     if (_p_Title == 0) {
-        fprintf(stderr, "Title image not found\n");
-        exit(1);
+        return ERR_UTIL::ErrorCreate("Title image not found");
     }
+    return NULL;
 }
 
-void AppGfx::setVideoResolution() {
+LPErrInApp AppGfx::createWindow() {
     int flagwin = 0;
     if (_p_Window != NULL) {
         SDL_DestroyWindow(_p_Window);
     }
 
-    if (_p_Window == NULL) {
-        fprintf(stderr, "Cannot create window: %s\n", SDL_GetError());
-        exit(1);
-    }
     _p_sdlRenderer =
         SDL_CreateRenderer(_p_Window, -1, SDL_RENDERER_ACCELERATED);
 
     if (_p_sdlRenderer == NULL) {
-        fprintf(stderr, "Cannot create renderer: %s\n", SDL_GetError());
-        exit(1);
+        return ERR_UTIL::ErrorCreate("Cannot create renderer: %s\n",
+                                     SDL_GetError());
     }
     if (_p_Screen) {
         SDL_FreeSurface(_p_Screen);
@@ -131,16 +135,25 @@ void AppGfx::setVideoResolution() {
     _p_Window = SDL_CreateWindow("Solitario", SDL_WINDOWPOS_UNDEFINED,
                                  SDL_WINDOWPOS_UNDEFINED, _iScreenW, _iScreenH,
                                  flagwin);
+    if (_p_Window == NULL) {
+        return ERR_UTIL::ErrorCreate("Error SDL_CreateWindow: %s\n",
+                                     SDL_GetError());
+    }
 
     _p_Screen = SDL_CreateRGBSurface(0, _iScreenW, _iScreenH, 32, 0x00FF0000,
                                      0x0000FF00, 0x000000FF, 0xFF000000);
     if (_p_Screen == NULL) {
-        fprintf(stderr, "Error setvideomode: %s\n", SDL_GetError());
-        exit(1);
+        return ERR_UTIL::ErrorCreate("Error SDL_CreateRGBSurface: %s\n",
+                                     SDL_GetError());
     }
     _p_ScreenTexture =
         SDL_CreateTexture(_p_sdlRenderer, SDL_PIXELFORMAT_ARGB8888,
                           SDL_TEXTUREACCESS_STREAMING, _iScreenW, _iScreenH);
+    if (_p_ScreenTexture == NULL) {
+        return ERR_UTIL::ErrorCreate("Error SDL_CreateTexture: %s\n",
+                                     SDL_GetError());
+    }
+    return NULL;
 }
 
 int AppGfx::startGameLoop() {
@@ -154,8 +167,6 @@ int AppGfx::startGameLoop() {
     _p_SolitarioGfx->Clear();
     _p_SolitarioGfx->Initialize(_p_Screen, _p_sdlRenderer);
 
-    // crea le regioni solo una sola volta
-    // region
     // index 0
     _p_SolitarioGfx->CreateRegion(CRD_PILE, CRD_VISIBLE | CRD_3D, 0, 0,
                                   CRD_OSYMBOL, 35, 10, 2, 2);
@@ -272,7 +283,6 @@ void AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
              (srcReg->Id == CRD_WASTE)) &&
             _p_SolitarioGfx->InitDrag(event.button.x, event.button.y)) {
             _bStartdrag = TRUE;
-            // SDL_WM_GrabInput(SDL_GRAB_ON); //SDL 1.2
             SDL_SetRelativeMouseMode(SDL_TRUE);  // SDL 2.0
         }
         // clicked on the pile
@@ -281,12 +291,10 @@ void AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
             if (srcReg->Empty() &&
                 !_p_SolitarioGfx->Empty(8))  // Bring back the cards
             {
-                //*cs = _p_SolitarioGfx[8].Pop(_p_SolitarioGfx[8].Size());
                 *cs = _p_SolitarioGfx->PopFromRegion(
                     8, _p_SolitarioGfx->RegionSize(8));
                 cs->SetCardsFaceUp(FALSE);
                 _p_SolitarioGfx->InitDrag(cs, -1, -1);
-                //_p_SolitarioGfx->DoDrop(&_p_SolitarioGfx[0]);
                 _p_SolitarioGfx->DoDrop(_p_SolitarioGfx->GetRegion(0));
                 _p_SolitarioGfx->Reverse(0);
                 _p_SolitarioGfx->InitCardCoords(0);
@@ -331,7 +339,6 @@ void AppGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
     if (_bStartdrag) {
         _bStartdrag = FALSE;
         _p_SolitarioGfx->DoDrop();
-        // SDL_WM_GrabInput(SDL_GRAB_OFF); //SDL 1.2
         SDL_SetRelativeMouseMode(SDL_FALSE);  // SDL 2.0
     }
     if (_p_SolitarioGfx->Empty(0) && _p_SolitarioGfx->Empty(8)) {
@@ -366,7 +373,7 @@ void AppGfx::terminate() {
     SDL_Quit();
 }
 
-void AppGfx::loadProfile() {
+LPErrInApp AppGfx::loadProfile() {
 #ifdef _WINDOWS
     RegistryKey RegKey;
     LONG lRes;
@@ -414,7 +421,7 @@ void AppGfx::loadProfile() {
     ini_fd_t pIni = ini_open(lpszIniFileName, "r", "#");
 
     if (pIni == NULL)
-        return;
+        return ERR_UTIL::ErrorCreate("Ini file error %s", lpszIniFileName);
 
     int iVal;
 
@@ -446,13 +453,10 @@ void AppGfx::loadProfile() {
     }
 
     ini_close(pIni);
+    return NULL;
 #endif
 }
 
-////////////////////////////////////////
-//       writeProfile
-/*! Save current settings in the registry
- */
 void AppGfx::writeProfile() {
 #ifdef _WINDOWS
     RegistryKey RegKey;
@@ -626,7 +630,7 @@ void AppGfx::MainMenu() {
                         _bFullScreen = TRUE;
                         break;
                 }
-                setVideoResolution();
+                createWindow();
                 // ADJUST MENU POSITION SINCE SCREEN PROBABLY HAVE CHANGED
                 menux = (_p_Screen->w - menuw) / 2;
                 menu->SetArea(menux, menuy, menuw, menuh);

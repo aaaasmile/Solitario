@@ -3,6 +3,7 @@
 
 #include "AppGfx.h"
 #include "StdAfx.h"
+#include "error_info.h"
 
 int main(int argc, char* argv[]) {
 #ifdef _WINDOWS
@@ -15,7 +16,11 @@ int main(int argc, char* argv[]) {
 #endif
     AppGfx* app = new AppGfx();
     app->ParseCmdLine(argc, argv);
-    app->Init();
+    LPErrInApp err = app->Init();
+    if (err != NULL) {
+        fprintf(stderr, "Init error: %s\n", err->ErrorText.c_str());
+        exit(1);
+    }
     app->MainMenu();
 
     return EXIT_SUCCESS;

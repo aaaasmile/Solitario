@@ -36,6 +36,8 @@ solitario_SOURCES = \
 	src/main.cpp\
 	src/fading.cpp\
 	src/credits.cpp\
+	src/error_info.cpp\
+	src/error_info.h\
 	src/CCard.h\
 	src/CCardRegion.h\
 	src/CCardStack.h\
