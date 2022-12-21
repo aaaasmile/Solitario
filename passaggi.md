@@ -48,8 +48,14 @@ AM_PROG_AR
 Alla fine nella sottodirectory libini ho il file libini.a da linkare staticamente al
 programma principale. Nota che ranlib e ar sono due programmi che servono per 
 creare il file libini.a. Runlib sembra un alias di ar.
+Nota che la libreria nel progetto ha un proprio target e make file.
+Il file libini.a, peró, non viene installato ma semplicemente linkato.
+(concept of a "convenience library", which is an intermediate target that is never itself installed, 
+but contains object code that can be linked into an executable or a larger library. 
+=> Preso da https://stackoverflow.com/questions/58359548/how-to-write-automake-files-to-recursive-build-subdirectories 
+un link che mi ha fatto creare il file finale e spiegato un po' di automake).
 
-### Automake
+## Automake
 Automake naturalmente evolve e per ogni versione bisogna stare attenti che
 le macro cambiano di ruolo e di argomenti. Quindi bisogna sapere quale versione
 si sta usando e come funzionano le macro.
@@ -64,7 +70,15 @@ AC_PROG_CXX -> definisce il compilatore c++
 AC_CONFIG_FILES -> mette la lista dei makefiles che vengono creati a seconda di dove si trovano i sorgenti
 AC_OUTPUT -> Esegue la creazione dei makefiles
 Da qui ho aggiunto una macro per definire la versione (m4_define) e creare un configure.h
-così che le definizioni del modulo siano disponibili anche nel codice (AC_CONFIG_HEADERS).
+così che le definizioni del modulo siano disponibili anche nel codice (AC_CONFIG_HEADERS)
+e linkare staticamente del codice come libini.
+
+### Automake Makefile
+Ho organizzato il mio codice in diverse directory. Il Makefile nella root è storico
+e serve per creare gli rpm. Non crea nessun target.
+Quello nella subdir src contiene il codice del solitario
+Quello nella subdir src/libini contiene la libreria ini.
+
 
 ## Sviluppo in VS Code
 Sono partito dalla versione linux, quindi in WSL lancio code (la liea di comando di VsCode) che mi setta l'ambiente

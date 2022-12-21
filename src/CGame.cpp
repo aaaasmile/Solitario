@@ -38,7 +38,7 @@ CGame::CGame() {
 CGame::~CGame() { ClearSurface(); }
 
 int CGame::Initialize(SDL_Surface *s, SDL_Renderer *r) {
-    int errno;
+    int ern = 0;
     _p_screen = s;
     _p_sdlRenderer = r;
     _p_ScreenTexture = SDL_CreateTexture(
@@ -52,13 +52,13 @@ int CGame::Initialize(SDL_Surface *s, SDL_Renderer *r) {
     }
     _p_scene_background = IMG_LoadJPG_RW(srcBack);
 
-    errno = LoadCardPac();
-    if (errno < 0) {
+    ern = LoadCardPac();
+    if (ern < 0) {
         return errno;
     }
-    errno = LoadSymbolsForPac();
-    if (errno < 0) {
-        return errno;
+    ern = LoadSymbolsForPac();
+    if (ern < 0) {
+        return ern;
     }
 
     DrawBackground(TRUE);

@@ -106,8 +106,6 @@ am_solitario_OBJECTS = CCardRegion.$(OBJEXT) CCardStack.$(OBJEXT) \
 	main.$(OBJEXT) fading.$(OBJEXT) credits.$(OBJEXT)
 solitario_OBJECTS = $(am_solitario_OBJECTS)
 solitario_DEPENDENCIES = libini/libini.a
-solitario_LINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
-	$(solitario_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -325,7 +323,9 @@ AM_CXXFLAGS = \
 	-DDATA_PREFIX=\"$(DATA_PREFIX)\"
 
 SUBDIRS = libini
-solitario_LDFLAGS = -lSDL2
+
+# LDFLAGS are needed?
+#solitario_LDFLAGS = -lSDL2
 solitario_LDADD = \
 	-lSDL2_image\
 	-lSDL2_mixer \
@@ -443,7 +443,7 @@ clean-binPROGRAMS:
 
 solitario$(EXEEXT): $(solitario_OBJECTS) $(solitario_DEPENDENCIES) $(EXTRA_solitario_DEPENDENCIES) 
 	@rm -f solitario$(EXEEXT)
-	$(AM_V_CXXLD)$(solitario_LINK) $(solitario_OBJECTS) $(solitario_LDADD) $(LIBS)
+	$(AM_V_CXXLD)$(CXXLINK) $(solitario_OBJECTS) $(solitario_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)

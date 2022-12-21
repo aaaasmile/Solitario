@@ -5,9 +5,12 @@ AM_CXXFLAGS =\
 	-DDATA_PREFIX=\"$(DATA_PREFIX)\"
 
 SUBDIRS = libini
+
+# Note: specifying output into a different directory
 bin_PROGRAMS = solitario
 
-solitario_LDFLAGS = -lSDL2
+# LDFLAGS are needed?
+#solitario_LDFLAGS = -lSDL2
 
 solitario_LDADD =\
 	-lSDL2_image\
