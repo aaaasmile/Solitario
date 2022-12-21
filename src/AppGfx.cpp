@@ -23,8 +23,6 @@
 #define CRD_RESERVE 2
 #define CRD_WASTE 3
 
-typedef std::vector<std::string> VCT_STRINGS;
-
 #ifdef _WINDOWS
 static LPCSTR strIDS_KEY_LASTPATH = "SOFTWARE\\BredaSoft\\Solitario";
 static LPCSTR strIDS_KEY_PLAYERNAME = "PlayerName";
@@ -61,6 +59,7 @@ AppGfx::AppGfx() {
 AppGfx::~AppGfx() { terminate(); }
 
 LPErrInApp AppGfx::Init() {
+    TRACE("Init App");
     LPErrInApp err = loadProfile();
     if (err != NULL) {
         return err;
@@ -116,14 +115,6 @@ LPErrInApp AppGfx::createWindow() {
     if (_p_Window != NULL) {
         SDL_DestroyWindow(_p_Window);
     }
-
-    _p_sdlRenderer =
-        SDL_CreateRenderer(_p_Window, -1, SDL_RENDERER_ACCELERATED);
-
-    if (_p_sdlRenderer == NULL) {
-        return ERR_UTIL::ErrorCreate("Cannot create renderer: %s\n",
-                                     SDL_GetError());
-    }
     if (_p_Screen) {
         SDL_FreeSurface(_p_Screen);
     }
@@ -132,11 +123,20 @@ LPErrInApp AppGfx::createWindow() {
     } else {
         flagwin = SDL_WINDOW_SHOWN;
     }
+
     _p_Window = SDL_CreateWindow("Solitario", SDL_WINDOWPOS_UNDEFINED,
                                  SDL_WINDOWPOS_UNDEFINED, _iScreenW, _iScreenH,
                                  flagwin);
     if (_p_Window == NULL) {
         return ERR_UTIL::ErrorCreate("Error SDL_CreateWindow: %s\n",
+                                     SDL_GetError());
+    }
+
+    _p_sdlRenderer =
+        SDL_CreateRenderer(_p_Window, -1, SDL_RENDERER_ACCELERATED);
+
+    if (_p_sdlRenderer == NULL) {
+        return ERR_UTIL::ErrorCreate("Cannot create renderer: %s\n",
                                      SDL_GetError());
     }
 

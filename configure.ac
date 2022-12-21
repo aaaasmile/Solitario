@@ -13,7 +13,7 @@ AC_INIT([solitario],
 #some settings for make and autoconf
 AM_INIT_AUTOMAKE([-Wall -Werror foreign subdir-objects])
 # The value of the Variable DATA_PREFIX used in compile is define here below
-AC_SUBST(DATA_PREFIX,["Data"]) 
+AC_SUBST(DATA_PREFIX,["data/"]) 
 AC_PROG_CXX
 # static library stuff
 AC_PROG_RANLIB

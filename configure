@@ -3137,7 +3137,7 @@ END
 fi
 
 # The value of the Variable DATA_PREFIX used in compile is define here below
-DATA_PREFIX="Data"
+DATA_PREFIX="data/"
 
 
 

@@ -192,7 +192,7 @@ CXX = g++
 CXXDEPMODE = depmode=gcc3
 CXXFLAGS = -g -O2
 CYGPATH_W = echo
-DATA_PREFIX = Data
+DATA_PREFIX = data/
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
 ECHO_C = 

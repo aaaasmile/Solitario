@@ -8,8 +8,6 @@
 #include "gfx_util.h"
 #include "win_type_global.h"
 
-typedef std::vector<std::string> VCT_STRINGS;
-
 // card graphics
 unsigned int g_CARDWIDTH = 0;
 unsigned int g_CARDHEIGHT = 0;

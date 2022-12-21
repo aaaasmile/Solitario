@@ -13,14 +13,11 @@
 #pragma warning(disable : 4786)
 #pragma warning(disable : 4996)
 #include <windows.h>
+#endif
 
 #include <deque>
 #include <string>
 #include <vector>
-#else
-#include <deque>
-#include <string>
-#endif
 
 #ifndef CONST
 #define CONST const
@@ -85,9 +82,15 @@ inline void TRACE(const char* fmt, ...) {
 #else
 // non windows
 inline void TRACE(const char* fmt, ...) {
-    // todo: implement trace
+    char myBuff[1024];
+    va_list args;
+    va_start(args, fmt);
+    int result = vsprintf(myBuff, fmt, args);
+    fprintf(stdout, "[TR]%s\n", myBuff);
 }
 #endif
 #endif
+
+typedef std::vector<std::string> VCT_STRINGS;
 
 #endif
