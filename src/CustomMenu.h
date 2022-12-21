@@ -23,32 +23,33 @@ public:
     LPErrInApp Initialize();
     void AddItems(string item);
     void ClearItems();
-    void DrawBitmap(unsigned char alignment, Uint32 color, SDL_Surface *screen);
+    LPErrInApp DrawBitmap(unsigned char alignment, Uint32 color,
+                          SDL_Surface *screen);
     SDL_Rect *GetArea();
-    void LoadBackground();
-    int Run();
+    LPErrInApp LoadBackground();
+    LPErrInApp Run(int &slectedItem);
     void SetLabels(string menu, string exit);
     void SetBitmap(string filename);
     void SetArea(int x, int y, int w, int h);
     void SetColors(Uint32 back, Uint32 high);
-    void SetScreen(SDL_Surface *pVal) { Screen = pVal; }
+    void SetScreen(SDL_Surface *pVal) { _p_Screen = pVal; }
     void SetAlpha(unsigned char alpha);
 
 private:
-    SDL_Surface *Bitmap;
-    string LabelMenu;
-    string LabelExit;
+    SDL_Surface *_p_BackgroundBitmap;
+    string _labelMenu;
+    string _labelExit;
 
-    CustomFont *Font;
+    CustomFont *_p_Font;
 
-    signed int iCurPos;
+    signed int _iCurPos;
 
-    VCT_STRINGS Items;
+    VCT_STRINGS _vctItems;
 
-    SDL_Rect Rect;
-    Uint32 ColorBack;
-    Uint32 ColorHighlight;
-    SDL_Surface *Screen;
+    SDL_Rect _rect;
+    Uint32 _colorBack;
+    Uint32 _colorHighlight;
+    SDL_Surface *_p_Screen;
 };
 
 #endif

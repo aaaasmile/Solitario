@@ -512,7 +512,7 @@ LPErrInApp AppGfx::StartMainMenu() {
     string temp;
     LPErrInApp err;
 
-    menu = new CustomMenu();
+    menu = new CustomMenu;
     err = menu->Initialize();
     if (err != NULL)
         return err;
@@ -538,7 +538,10 @@ LPErrInApp AppGfx::StartMainMenu() {
                         _LanguageMgr.GetStringId(LanguageMgr::ID_EXIT));
 
         // RUN MENU
-        result = menu->Run();
+        err = menu->Run(result);
+        if (err != NULL)
+            return err;
+        TRACE("Menu selected %d", result);
         switch (result) {
             case 0:
                 // STARTGAME
@@ -558,7 +561,10 @@ LPErrInApp AppGfx::StartMainMenu() {
                     _LanguageMgr.GetStringId(LanguageMgr::ID_DIALETMN));
                 // menu->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_ENGLISH));
 
-                result2 = menu->Run();  // SHOW LANGUAGE MENU
+                err = menu->Run(result2);  // SHOW LANGUAGE MENU
+                if (err != NULL)
+                    return err;
+                TRACE("Sub Menu selected %d", result2);
                 // cambiare l'ordine del menu, vuol dire cambiare cambiare
                 // l'ordine anche quando si salva il registro e nella
                 // definizione dei linguaggi
@@ -594,7 +600,10 @@ LPErrInApp AppGfx::StartMainMenu() {
                     _LanguageMgr.GetStringId(LanguageMgr::ID_ABILITATO));
                 menu->AddItems(
                     _LanguageMgr.GetStringId(LanguageMgr::ID_DISABILITATO));
-                result2 = menu->Run();
+                err = menu->Run(result2);
+                if (err != NULL)
+                    return err;
+                TRACE("Sub Menu selected %d", result2);
                 switch (result2) {
                     case 0:
                         // sound on
@@ -624,7 +633,10 @@ LPErrInApp AppGfx::StartMainMenu() {
                 menu->AddItems("800x600 x 32bits");
                 menu->AddItems("1024x768 x 32bits");
                 menu->AddItems("Full screen");
-                result2 = menu->Run();
+                err = menu->Run(result2);
+                if (err != NULL)
+                    return err;
+                TRACE("Sub Menu selected %d", result2);
                 switch (result2) {
                     case 0:
                         _iScreenW = 800;
@@ -723,7 +735,7 @@ void AppGfx::updateScreenTexture() {
     SDL_RenderPresent(_p_sdlRenderer);
 }
 
-void AppGfx::menuSelectDeck() {
+LPErrInApp AppGfx::menuSelectDeck() {
     CustomMenu *menuDecks = new CustomMenu;
     menuDecks->SetScreen(_p_Screen);
     menuDecks->FilenameBackground = lpszBackGroundFile;
@@ -754,8 +766,11 @@ void AppGfx::menuSelectDeck() {
     menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_TREVISO));
     menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_TRIESTE));
 
-    int result2 = menuDecks->Run();
-
+    int result2;
+    LPErrInApp err = menuDecks->Run(result2);
+    if (err != NULL)
+        return err;
+    TRACE("Menu deck selected %d", result2);
     switch (result2) {
         case 0:
             // piacentine
@@ -815,6 +830,7 @@ void AppGfx::menuSelectDeck() {
             break;
     }
     delete menuDecks;
+    return NULL;
 }
 
 void AppGfx::ParseCmdLine(int argc, char *argv[]) {

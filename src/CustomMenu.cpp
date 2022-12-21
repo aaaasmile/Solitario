@@ -5,28 +5,29 @@
 static const char *lpszFontFile = DATA_PREFIX "images/font.bmp";
 
 CustomMenu::CustomMenu() {
-    LabelMenu = "Menu";
-    LabelExit = "Exit";
-    Bitmap = NULL;
-    Screen = NULL;
+    _labelMenu = "Menu";
+    _labelExit = "Exit";
+    _p_BackgroundBitmap = NULL;
+    _p_Screen = NULL;
 }
 
 CustomMenu::~CustomMenu() {
-    if (Bitmap != NULL)
-        SDL_FreeSurface(Bitmap);
-    delete Font;
+    if (_p_BackgroundBitmap != NULL)
+        SDL_FreeSurface(_p_BackgroundBitmap);
+    delete _p_Font;
 }
 
 LPErrInApp CustomMenu::Initialize() {
-    Font = new CustomFont;
-    return Font->LoadFont(lpszFontFile);
+    _p_Font = new CustomFont;
+    return _p_Font->LoadFont(lpszFontFile);
 }
 
-void CustomMenu::AddItems(string item) { Items.push_back(item); }
+void CustomMenu::AddItems(string item) { _vctItems.push_back(item); }
 
-void CustomMenu::ClearItems() { Items.clear(); }
+void CustomMenu::ClearItems() { _vctItems.clear(); }
 
-int CustomMenu::Run() {
+LPErrInApp CustomMenu::Run(int &slectedItem) {
+    TRACE("Menu Run with %d item(s)", _vctItems.size());
     bool bEnd = false;
     bool bRedraw = true;
     SDL_Rect trect;
@@ -34,38 +35,45 @@ int CustomMenu::Run() {
     string name, temp;
     Uint32 tcolor;
     int counter = 0;
-    Items.push_back(LabelExit);
-    iCurPos = 0;
-    trect.x = Rect.x;
-    trect.w = Rect.w;
+    slectedItem = -1;
+    _vctItems.push_back(_labelExit);
+    _iCurPos = 0;
+    trect.x = _rect.x;
+    trect.w = _rect.w;
     trect.h = SDLFONTSIZE;
-    LoadBackground();
+    LPErrInApp err = LoadBackground();
+    if (err != NULL)
+        return err;
     SDL_Surface *surface;  // TODO SDL 1.2
     while (bEnd == false) {
         if (bRedraw == true) {
             if (FilenameBackground.size() > 0) {
-                DrawBitmap(3, SDL_MapRGB(Screen->format, 0, 0, 0), surface);
+                err = DrawBitmap(3, SDL_MapRGB(_p_Screen->format, 0, 0, 0),
+                                 surface);
+                if (err != NULL)
+                    return err;
             }
 
-            SDL_FillRect(Screen, &Rect, ColorBack);
-            Font->DrawString(Screen, LabelMenu, TEXTMIXED, TEXTALIGNCENTER, 0,
-                             Rect.y + 5, 0);
+            SDL_FillRect(_p_Screen, &_rect, _colorBack);
+            _p_Font->DrawString(_p_Screen, _labelMenu, TEXTMIXED,
+                                TEXTALIGNCENTER, 0, _rect.y + 5, 0);
 
-            for (unsigned int k = 0; k < Items.size(); k++) {
-                trect.y = Rect.y + (25 + SDLFONTSIZE) + ((SDLFONTSIZE + 5) * k);
+            for (unsigned int k = 0; k < _vctItems.size(); k++) {
+                trect.y =
+                    _rect.y + (25 + SDLFONTSIZE) + ((SDLFONTSIZE + 5) * k);
 
-                if (k == iCurPos) {
-                    tcolor = ColorHighlight;
+                if (k == _iCurPos) {
+                    tcolor = _colorHighlight;
                 } else {
-                    tcolor = ColorBack;
+                    tcolor = _colorBack;
                 }
 
-                SDL_FillRect(Screen, &trect, tcolor);
-                Font->DrawString(
-                    Screen, Items[k], TEXTMIXED, TEXTALIGNCENTER, 0,
-                    Rect.y + (25 + SDLFONTSIZE) + ((SDLFONTSIZE + 5) * k), 0);
+                SDL_FillRect(_p_Screen, &trect, tcolor);
+                _p_Font->DrawString(
+                    _p_Screen, _vctItems[k], TEXTMIXED, TEXTALIGNCENTER, 0,
+                    _rect.y + (25 + SDLFONTSIZE) + ((SDLFONTSIZE + 5) * k), 0);
             }
-            // SDL_Flip(Screen); // TODO SDL 1.2
+            // SDL_Flip(_p_Screen); // TODO SDL 1.2
             bRedraw = false;
         }
         if (SDL_WaitEvent(&event) == 1) {
@@ -73,32 +81,32 @@ int CustomMenu::Run() {
                 case SDL_KEYDOWN:
                     switch (event.key.keysym.sym) {
                         case SDLK_ESCAPE:
-                            iCurPos = -1;
+                            _iCurPos = -1;
                             bEnd = true;
                             break;
                         case SDLK_RETURN:
-                            if (iCurPos == Items.size() - 1)
-                                iCurPos = -1;
+                            if (_iCurPos == _vctItems.size() - 1)
+                                _iCurPos = -1;
                             bEnd = true;
                             break;
                         case SDLK_UP:
-                            if (iCurPos == 0)
-                                iCurPos = (signed int)Items.size() - 1;
+                            if (_iCurPos == 0)
+                                _iCurPos = (signed int)_vctItems.size() - 1;
                             else
-                                iCurPos--;
+                                _iCurPos--;
                             bRedraw = true;
                             break;
                         case SDLK_DOWN:
-                            if (iCurPos == Items.size() - 1)
-                                iCurPos = 0;
+                            if (_iCurPos == _vctItems.size() - 1)
+                                _iCurPos = 0;
                             else
-                                iCurPos++;
+                                _iCurPos++;
                             bRedraw = true;
                             break;
                     };
                     break;
                 case SDL_QUIT:
-                    iCurPos = -1;
+                    _iCurPos = -1;
                     bEnd = true;
                     break;
             }
@@ -108,49 +116,61 @@ int CustomMenu::Run() {
         if (counter % 10 == 0)
             bRedraw = true;
     }
-    Items.pop_back();
-    return iCurPos;
+    _vctItems.pop_back();
+    slectedItem = _iCurPos;
+    return NULL;
 }
 
 void CustomMenu::SetLabels(string menu, string exit) {
-    LabelMenu = menu;
-    LabelExit = exit;
+    _labelMenu = menu;
+    _labelExit = exit;
 }
 
 void CustomMenu::SetBitmap(string filename) { FilenameBackground = filename; }
 void CustomMenu::SetArea(int x, int y, int w, int h) {
-    Rect.x = x;
-    Rect.y = y;
-    Rect.w = w;
-    Rect.h = h;
+    _rect.x = x;
+    _rect.y = y;
+    _rect.w = w;
+    _rect.h = h;
 }
 void CustomMenu::SetColors(Uint32 back, Uint32 high) {
-    ColorBack = back;
-    ColorHighlight = high;
+    _colorBack = back;
+    _colorHighlight = high;
 }
 
-SDL_Rect *CustomMenu::GetArea() { return &Rect; }
+SDL_Rect *CustomMenu::GetArea() { return &_rect; }
 
-void CustomMenu::LoadBackground() {
-    if (Bitmap != NULL)
-        SDL_FreeSurface(Bitmap);
+LPErrInApp CustomMenu::LoadBackground() {
+    if (_p_BackgroundBitmap != NULL) {
+        SDL_FreeSurface(_p_BackgroundBitmap);
+    }
+    if (FilenameBackground.size() > 0) {
+        return NULL;
+    }
 
-    Bitmap = IMG_Load(FilenameBackground.c_str());
+    _p_BackgroundBitmap = IMG_Load(FilenameBackground.c_str());
+    if (_p_BackgroundBitmap == NULL) {
+        return ERR_UTIL::ErrorCreate("Error IMG_Load: %s\n", SDL_GetError());
+    }
+    return NULL;
 }
 
-void CustomMenu::DrawBitmap(unsigned char alignment, Uint32 color,
-                            SDL_Surface *screen) {
+LPErrInApp CustomMenu::DrawBitmap(unsigned char alignment, Uint32 color,
+                                  SDL_Surface *screen) {
+    if (_p_BackgroundBitmap == NULL) {
+        return NULL;  // No background bitmap provided, ignore draw
+    }
     SDL_Rect s, t;
 
     // SDL_Surface *screen = SDL_GetVideoSurface();
 
-    if ((Bitmap == NULL) || (screen == NULL))
-        return;
+    if (screen == NULL)
+        return ERR_UTIL::ErrorCreate("Cannot draw bitmap: screen is invalid");
 
-    s.w = Bitmap->w;
-    t.w = Bitmap->w;
-    s.h = Bitmap->h;
-    t.h = Bitmap->h;
+    s.w = _p_BackgroundBitmap->w;
+    t.w = _p_BackgroundBitmap->w;
+    s.h = _p_BackgroundBitmap->h;
+    t.h = _p_BackgroundBitmap->h;
     s.x = 0;
     s.y = 0;
     switch (alignment) {
@@ -159,32 +179,34 @@ void CustomMenu::DrawBitmap(unsigned char alignment, Uint32 color,
             t.y = 0;
             break;
         case 1:  // CENTER
-            t.x = (screen->w - Bitmap->w) / 2;
-            t.y = (screen->h - Bitmap->h) / 2;
+            t.x = (screen->w - _p_BackgroundBitmap->w) / 2;
+            t.y = (screen->h - _p_BackgroundBitmap->h) / 2;
             break;
         case 2:  // RIGHT
-            t.x = (screen->w - Bitmap->w);
-            t.y = (screen->h - Bitmap->h);
+            t.x = (screen->w - _p_BackgroundBitmap->w);
+            t.y = (screen->h - _p_BackgroundBitmap->h);
             break;
         case 3:  // HORIZONTAL CENTER ONLY
-            t.x = (screen->w - Bitmap->w) / 2;
+            t.x = (screen->w - _p_BackgroundBitmap->w) / 2;
             t.y = 0;
             break;
         case 4:  // VERTICAL CENTER ONLY
             t.x = 0;
-            t.y = (screen->h - Bitmap->h) / 2;
+            t.y = (screen->h - _p_BackgroundBitmap->h) / 2;
             break;
     }
     //   if (Bitmap->format->palette && screen->format->palette)
-    //     SDL_SetColors(screen, Bitmap->format->palette->colors, 0, // TODO
-    //     SDL 2.0
+    //     SDL_SetColors(screen, Bitmap->format->palette->colors, 0,
+    //     TODO SDL 1.2 SDL 2.0
     //                   Bitmap->format->palette->ncolors);
 
     SDL_FillRect(screen, &screen->clip_rect, color);
 
-    while (SDL_BlitSurface(Bitmap, &s, screen, &t) == -2) SDL_Delay(50);
+    while (SDL_BlitSurface(_p_BackgroundBitmap, &s, screen, &t) == -2)
+        SDL_Delay(50);
+    return NULL;
 }
 
 void CustomMenu::SetAlpha(unsigned char alpha) {
-    SDL_SetSurfaceAlphaMod(Screen, alpha);  // SDL 2.0
+    SDL_SetSurfaceAlphaMod(_p_Screen, alpha);
 }
