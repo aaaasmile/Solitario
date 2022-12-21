@@ -644,6 +644,7 @@ CPPFLAGS
 LDFLAGS
 CXXFLAGS
 CXX
+DATA_PREFIX
 AM_BACKSLASH
 AM_DEFAULT_VERBOSITY
 AM_DEFAULT_V
@@ -2517,6 +2518,7 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
+#some settings for make and autoconf
 am__api_version='1.16'
 
 
@@ -3133,6 +3135,9 @@ END
     as_fn_error $? "Your 'rm' program is bad, sorry." "$LINENO" 5
   fi
 fi
+
+# The value of the Variable DATA_PREFIX used in compile is define here below
+DATA_PREFIX="Data"
 
 
 
@@ -3957,6 +3962,7 @@ else
 fi
 
 
+# static library stuff
 if test -n "$ac_tool_prefix"; then
   # Extract the first word of "${ac_tool_prefix}ranlib", so it can be a program name with args.
 set dummy ${ac_tool_prefix}ranlib; ac_word=$2
@@ -5174,10 +5180,13 @@ unknown)
   ;;
 esac
 
-ac_config_headers="$ac_config_headers config.h"
+# generate config.h
+ac_config_headers="$ac_config_headers src/config.h"
 
+#include make file list
 ac_config_files="$ac_config_files Makefile libini/Makefile"
 
+#generate files
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
 # tests run on this system so they can be shared between configure
@@ -5904,7 +5913,7 @@ for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
-    "config.h") CONFIG_HEADERS="$CONFIG_HEADERS config.h" ;;
+    "src/config.h") CONFIG_HEADERS="$CONFIG_HEADERS src/config.h" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "libini/Makefile") CONFIG_FILES="$CONFIG_FILES libini/Makefile" ;;
 

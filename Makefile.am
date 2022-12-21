@@ -12,7 +12,7 @@ SUBDIRS = libini
 # Note: specifying output into a different directory
 bin_PROGRAMS = solitario
 
-# LDFLAGS are needed?
+# LDFLAGS are not needed at the moment
 #solitario_LDFLAGS = -lSDL2
 
 solitario_LDADD =\
@@ -36,22 +36,5 @@ solitario_SOURCES = \
 	src/main.cpp\
 	src/fading.cpp\
 	src/credits.cpp\
-	src/error_info.cpp\
-	src/error_info.h\
-	src/CCard.h\
-	src/CCardRegion.h\
-	src/CCardStack.h\
-	src/CGame.h\
-	src/HightScoreMgr.h\
-	src/MusicManager.h\
-	src/CustomMenu.h\
-	src/AppGfx.h\
-	src/fonts.h\
-	src/GameSettings.h\
-	src/gfx_util.h\
-	src/Languages.h\
-	src/resource.h\
-	src/StdAfx.h\
-	src/fading.h\
-	src/credits.h\
-	src/win_type_global.h
+	src/error_info.cpp
+	

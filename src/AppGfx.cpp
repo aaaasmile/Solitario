@@ -3,9 +3,9 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "../config.h"
 #include "MusicManager.h"
 #include "StdAfx.h"
+#include "config.h"
 #include "error_info.h"
 #include "gfx_util.h"
 #include "win_type_global.h"

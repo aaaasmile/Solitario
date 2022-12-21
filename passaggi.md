@@ -2,9 +2,10 @@
 Il Solitario è un programma in C++ che usa la libreria SDL 1.2. È stato scritto 
 nel lontano 2004 dove ho compilato la versione per Linux e Windows.
 Dopo 17 anni ho messo la repository su github e la compilazione è rimasta indietro.
+Così ho pensato di sviluppare la nuova versione con SDL2, Visual Code e WSL2 come target.
 
 ## Compilazione per Ubuntu 22.04.1 LTS
-Per le mie prove ho usato WSL su windows con la App Ubuntu 22.04.1 LTS.
+Per le mie prove ho usato WSL2 su windows con la App Ubuntu 22.04.1 LTS.
     uname- r
     5.15.79.1-microsoft-standard-WSL2
 

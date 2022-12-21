@@ -1,5 +1,5 @@
-/* config.h.  Generated from config.h.in by configure.  */
-/* config.h.in.  Generated from configure.ac by autoheader.  */
+/* src/config.h.  Generated from config.h.in by configure.  */
+/* src/config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* Name of package */
 #define PACKAGE "solitario-1.7"
