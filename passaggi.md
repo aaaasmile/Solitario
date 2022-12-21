@@ -125,5 +125,8 @@ nel task.jon ho messo il "Debug Build", che altro non è che il make standard vi
 che aggiunge di default il parametro -g. Basta mettere un Breakpoint in main.cpp e 
 premere F5 e gdb parte subito.
 
+### Stato
+Il menu ha ancora bisogno di correzzioni sdl 1.2 -> sdl 2.0
+
 
 
