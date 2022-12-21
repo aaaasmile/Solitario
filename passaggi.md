@@ -74,11 +74,15 @@ così che le definizioni del modulo siano disponibili anche nel codice (AC_CONFI
 e linkare staticamente del codice come libini.
 
 ### Automake Makefile
-Ho organizzato il mio codice in diverse directory. Il Makefile nella root è storico
-e serve per creare gli rpm. Non crea nessun target.
-Quello nella subdir src contiene il codice del solitario
-Quello nella subdir src/libini contiene la libreria ini.
-
+Ho organizzato il mio codice in diverse directory (libini e src). 
+Il Makefile nella root mi serve, per ora, solo per il target e la libini.
+Quello nella subdir ./libini contiene la libreria ini per creare il file libini.a
+Entrambi Makefile hanno il loro posto nella macro AC_CONFIG_FILES  del file configure.ac.
+Nota che per compilare i files tipo src/main.cpp ho dovuto mettere nella macro 
+AM_INIT_AUTOMAKE l'opzione subdir-objects.
+Avevo provato a mettere il makefile del target nella sottodirectory src, ma non
+volevo il risultato in quella directory. Molto più facile è avere il target
+dove risiede il Makefile.
 
 ## Sviluppo in VS Code
 Sono partito dalla versione linux, quindi in WSL lancio code (la liea di comando di VsCode) che mi setta l'ambiente

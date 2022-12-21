@@ -14,6 +14,7 @@
 
 
 
+
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
     false; \
@@ -85,6 +86,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
+bin_PROGRAMS = solitario$(EXEEXT)
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -98,6 +100,18 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
+am__installdirs = "$(DESTDIR)$(bindir)"
+PROGRAMS = $(bin_PROGRAMS)
+am__dirstamp = $(am__leading_dot)dirstamp
+am_solitario_OBJECTS = src/CCardRegion.$(OBJEXT) \
+	src/CCardStack.$(OBJEXT) src/CGame.$(OBJEXT) \
+	src/HightScoreMgr.$(OBJEXT) src/MusicManager.$(OBJEXT) \
+	src/CustomMenu.$(OBJEXT) src/AppGfx.$(OBJEXT) \
+	src/fonts.$(OBJEXT) src/GameSettings.$(OBJEXT) \
+	src/gfx_util.$(OBJEXT) src/Languages.$(OBJEXT) \
+	src/main.$(OBJEXT) src/fading.$(OBJEXT) src/credits.$(OBJEXT)
+solitario_OBJECTS = $(am_solitario_OBJECTS)
+solitario_DEPENDENCIES = libini/libini.a
 AM_V_P = $(am__v_P_$(V))
 am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))
 am__v_P_0 = false
@@ -110,8 +124,45 @@ AM_V_at = $(am__v_at_$(V))
 am__v_at_ = $(am__v_at_$(AM_DEFAULT_VERBOSITY))
 am__v_at_0 = @
 am__v_at_1 = 
-SOURCES =
-DIST_SOURCES =
+DEFAULT_INCLUDES = -I.
+depcomp = $(SHELL) $(top_srcdir)/depcomp
+am__maybe_remake_depfiles = depfiles
+am__depfiles_remade = src/$(DEPDIR)/AppGfx.Po \
+	src/$(DEPDIR)/CCardRegion.Po src/$(DEPDIR)/CCardStack.Po \
+	src/$(DEPDIR)/CGame.Po src/$(DEPDIR)/CustomMenu.Po \
+	src/$(DEPDIR)/GameSettings.Po src/$(DEPDIR)/HightScoreMgr.Po \
+	src/$(DEPDIR)/Languages.Po src/$(DEPDIR)/MusicManager.Po \
+	src/$(DEPDIR)/credits.Po src/$(DEPDIR)/fading.Po \
+	src/$(DEPDIR)/fonts.Po src/$(DEPDIR)/gfx_util.Po \
+	src/$(DEPDIR)/main.Po
+am__mv = mv -f
+CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+AM_V_CXX = $(am__v_CXX_$(V))
+am__v_CXX_ = $(am__v_CXX_$(AM_DEFAULT_VERBOSITY))
+am__v_CXX_0 = @echo "  CXX     " $@;
+am__v_CXX_1 = 
+CXXLD = $(CXX)
+CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
+	-o $@
+AM_V_CXXLD = $(am__v_CXXLD_$(V))
+am__v_CXXLD_ = $(am__v_CXXLD_$(AM_DEFAULT_VERBOSITY))
+am__v_CXXLD_0 = @echo "  CXXLD   " $@;
+am__v_CXXLD_1 = 
+COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
+	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+AM_V_CC = $(am__v_CC_$(V))
+am__v_CC_ = $(am__v_CC_$(AM_DEFAULT_VERBOSITY))
+am__v_CC_0 = @echo "  CC      " $@;
+am__v_CC_1 = 
+CCLD = $(CC)
+LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+AM_V_CCLD = $(am__v_CCLD_$(V))
+am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
+am__v_CCLD_0 = @echo "  CCLD    " $@;
+am__v_CCLD_1 = 
+SOURCES = $(solitario_SOURCES)
+DIST_SOURCES = $(solitario_SOURCES)
 RECURSIVE_TARGETS = all-recursive check-recursive cscopelist-recursive \
 	ctags-recursive dvi-recursive html-recursive info-recursive \
 	install-data-recursive install-dvi-recursive \
@@ -294,23 +345,60 @@ top_build_prefix =
 top_builddir = .
 top_srcdir = .
 AUTOMAKE_OPTIONS = foreign
-SUBDIRS = src
 DIST_SUBDIRS = data
-DATA_PREFIX = data/
-MAINTAINERCLEANFILES = \
-	Makefile.in\
-	aclocal.m4\
-	configure\
-	decomp\
-	install-sh\
-	missing\
-	mkinstalldirs\
-	$(PACKAGE)-$(VERSION).tar.gz
+AM_CPPFLAGS = -I/usr/include/SDL2 -D_REENTRANT -I ./libini/include
+AM_CXXFLAGS = \
+	-Wunused\
+	-DDATA_PREFIX=\"$(DATA_PREFIX)\"
+
+SUBDIRS = libini
+
+# LDFLAGS are needed?
+#solitario_LDFLAGS = -lSDL2
+solitario_LDADD = \
+	-lSDL2_image\
+	-lSDL2_mixer \
+	-lSDL2 \
+	libini/libini.a
+
+solitario_SOURCES = \
+	src/CCardRegion.cpp\
+	src/CCardStack.cpp\
+	src/CGame.cpp\
+	src/HightScoreMgr.cpp\
+	src/MusicManager.cpp\
+	src/CustomMenu.cpp\
+	src/AppGfx.cpp\
+	src/fonts.cpp\
+	src/GameSettings.cpp\
+	src/gfx_util.cpp\
+	src/Languages.cpp\
+	src/main.cpp\
+	src/fading.cpp\
+	src/credits.cpp\
+	src/CCard.h\
+	src/CCardRegion.h\
+	src/CCardStack.h\
+	src/CGame.h\
+	src/HightScoreMgr.h\
+	src/MusicManager.h\
+	src/CustomMenu.h\
+	src/AppGfx.h\
+	src/fonts.h\
+	src/GameSettings.h\
+	src/gfx_util.h\
+	src/Languages.h\
+	src/resource.h\
+	src/StdAfx.h\
+	src/fading.h\
+	src/credits.h\
+	src/win_type_global.h
 
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
 .SUFFIXES:
+.SUFFIXES: .cpp .o .obj
 am--refresh: Makefile
 	@:
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
@@ -359,6 +447,127 @@ $(srcdir)/config.h.in:  $(am__configure_deps)
 
 distclean-hdr:
 	-rm -f config.h stamp-h1
+install-binPROGRAMS: $(bin_PROGRAMS)
+	@$(NORMAL_INSTALL)
+	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(bindir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(bindir)" || exit 1; \
+	fi; \
+	for p in $$list; do echo "$$p $$p"; done | \
+	sed 's/$(EXEEXT)$$//' | \
+	while read p p1; do if test -f $$p \
+	  ; then echo "$$p"; echo "$$p"; else :; fi; \
+	done | \
+	sed -e 'p;s,.*/,,;n;h' \
+	    -e 's|.*|.|' \
+	    -e 'p;x;s,.*/,,;s/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/' | \
+	sed 'N;N;N;s,\n, ,g' | \
+	$(AWK) 'BEGIN { files["."] = ""; dirs["."] = 1 } \
+	  { d=$$3; if (dirs[d] != 1) { print "d", d; dirs[d] = 1 } \
+	    if ($$2 == $$4) files[d] = files[d] " " $$1; \
+	    else { print "f", $$3 "/" $$4, $$1; } } \
+	  END { for (d in files) print "f", d, files[d] }' | \
+	while read type dir files; do \
+	    if test "$$dir" = .; then dir=; else dir=/$$dir; fi; \
+	    test -z "$$files" || { \
+	      echo " $(INSTALL_PROGRAM_ENV) $(INSTALL_PROGRAM) $$files '$(DESTDIR)$(bindir)$$dir'"; \
+	      $(INSTALL_PROGRAM_ENV) $(INSTALL_PROGRAM) $$files "$(DESTDIR)$(bindir)$$dir" || exit $$?; \
+	    } \
+	; done
+
+uninstall-binPROGRAMS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
+	files=`for p in $$list; do echo "$$p"; done | \
+	  sed -e 'h;s,^.*/,,;s/$(EXEEXT)$$//;$(transform)' \
+	      -e 's/$$/$(EXEEXT)/' \
+	`; \
+	test -n "$$list" || exit 0; \
+	echo " ( cd '$(DESTDIR)$(bindir)' && rm -f" $$files ")"; \
+	cd "$(DESTDIR)$(bindir)" && rm -f $$files
+
+clean-binPROGRAMS:
+	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+src/$(am__dirstamp):
+	@$(MKDIR_P) src
+	@: > src/$(am__dirstamp)
+src/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) src/$(DEPDIR)
+	@: > src/$(DEPDIR)/$(am__dirstamp)
+src/CCardRegion.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/CCardStack.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/CGame.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/HightScoreMgr.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/MusicManager.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/CustomMenu.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/AppGfx.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/fonts.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/GameSettings.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/gfx_util.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/Languages.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/main.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/fading.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/credits.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+
+solitario$(EXEEXT): $(solitario_OBJECTS) $(solitario_DEPENDENCIES) $(EXTRA_solitario_DEPENDENCIES) 
+	@rm -f solitario$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(solitario_OBJECTS) $(solitario_LDADD) $(LIBS)
+
+mostlyclean-compile:
+	-rm -f *.$(OBJEXT)
+	-rm -f src/*.$(OBJEXT)
+
+distclean-compile:
+	-rm -f *.tab.c
+
+include src/$(DEPDIR)/AppGfx.Po # am--include-marker
+include src/$(DEPDIR)/CCardRegion.Po # am--include-marker
+include src/$(DEPDIR)/CCardStack.Po # am--include-marker
+include src/$(DEPDIR)/CGame.Po # am--include-marker
+include src/$(DEPDIR)/CustomMenu.Po # am--include-marker
+include src/$(DEPDIR)/GameSettings.Po # am--include-marker
+include src/$(DEPDIR)/HightScoreMgr.Po # am--include-marker
+include src/$(DEPDIR)/Languages.Po # am--include-marker
+include src/$(DEPDIR)/MusicManager.Po # am--include-marker
+include src/$(DEPDIR)/credits.Po # am--include-marker
+include src/$(DEPDIR)/fading.Po # am--include-marker
+include src/$(DEPDIR)/fonts.Po # am--include-marker
+include src/$(DEPDIR)/gfx_util.Po # am--include-marker
+include src/$(DEPDIR)/main.Po # am--include-marker
+
+$(am__depfiles_remade):
+	@$(MKDIR_P) $(@D)
+	@echo '# dummy' >$@-t && $(am__mv) $@-t $@
+
+am--depfiles: $(am__depfiles_remade)
+
+.cpp.o:
+	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
+	$(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
+	$(am__mv) $$depbase.Tpo $$depbase.Po
+#	$(AM_V_CXX)source='$<' object='$@' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXXCOMPILE) -c -o $@ $<
+
+.cpp.obj:
+	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.obj$$||'`;\
+	$(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ `$(CYGPATH_W) '$<'` &&\
+	$(am__mv) $$depbase.Tpo $$depbase.Po
+#	$(AM_V_CXX)source='$<' object='$@' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run 'make' without going through this Makefile.
@@ -664,9 +873,12 @@ distcleancheck: distclean
 	       exit 1; } >&2
 check-am: all-am
 check: check-recursive
-all-am: Makefile config.h
+all-am: Makefile $(PROGRAMS) config.h
 installdirs: installdirs-recursive
 installdirs-am:
+	for dir in "$(DESTDIR)$(bindir)"; do \
+	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
+	done
 install: install-recursive
 install-exec: install-exec-recursive
 install-data: install-data-recursive
@@ -693,19 +905,35 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
+	-rm -f src/$(DEPDIR)/$(am__dirstamp)
+	-rm -f src/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-	-test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
 clean: clean-recursive
 
-clean-am: clean-generic mostlyclean-am
+clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
+		-rm -f src/$(DEPDIR)/AppGfx.Po
+	-rm -f src/$(DEPDIR)/CCardRegion.Po
+	-rm -f src/$(DEPDIR)/CCardStack.Po
+	-rm -f src/$(DEPDIR)/CGame.Po
+	-rm -f src/$(DEPDIR)/CustomMenu.Po
+	-rm -f src/$(DEPDIR)/GameSettings.Po
+	-rm -f src/$(DEPDIR)/HightScoreMgr.Po
+	-rm -f src/$(DEPDIR)/Languages.Po
+	-rm -f src/$(DEPDIR)/MusicManager.Po
+	-rm -f src/$(DEPDIR)/credits.Po
+	-rm -f src/$(DEPDIR)/fading.Po
+	-rm -f src/$(DEPDIR)/fonts.Po
+	-rm -f src/$(DEPDIR)/gfx_util.Po
+	-rm -f src/$(DEPDIR)/main.Po
 	-rm -f Makefile
-distclean-am: clean-am distclean-generic distclean-hdr distclean-tags
+distclean-am: clean-am distclean-compile distclean-generic \
+	distclean-hdr distclean-tags
 
 dvi: dvi-recursive
 
@@ -725,7 +953,7 @@ install-dvi: install-dvi-recursive
 
 install-dvi-am:
 
-install-exec-am:
+install-exec-am: install-binPROGRAMS
 
 install-html: install-html-recursive
 
@@ -750,13 +978,26 @@ installcheck-am:
 maintainer-clean: maintainer-clean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
+		-rm -f src/$(DEPDIR)/AppGfx.Po
+	-rm -f src/$(DEPDIR)/CCardRegion.Po
+	-rm -f src/$(DEPDIR)/CCardStack.Po
+	-rm -f src/$(DEPDIR)/CGame.Po
+	-rm -f src/$(DEPDIR)/CustomMenu.Po
+	-rm -f src/$(DEPDIR)/GameSettings.Po
+	-rm -f src/$(DEPDIR)/HightScoreMgr.Po
+	-rm -f src/$(DEPDIR)/Languages.Po
+	-rm -f src/$(DEPDIR)/MusicManager.Po
+	-rm -f src/$(DEPDIR)/credits.Po
+	-rm -f src/$(DEPDIR)/fading.Po
+	-rm -f src/$(DEPDIR)/fonts.Po
+	-rm -f src/$(DEPDIR)/gfx_util.Po
+	-rm -f src/$(DEPDIR)/main.Po
 	-rm -f Makefile
-maintainer-clean-am: distclean-am maintainer-clean-generic \
-	maintainer-clean-local
+maintainer-clean-am: distclean-am maintainer-clean-generic
 
 mostlyclean: mostlyclean-recursive
 
-mostlyclean-am: mostlyclean-generic
+mostlyclean-am: mostlyclean-compile mostlyclean-generic
 
 pdf: pdf-recursive
 
@@ -766,48 +1007,30 @@ ps: ps-recursive
 
 ps-am:
 
-uninstall-am:
+uninstall-am: uninstall-binPROGRAMS
 
 .MAKE: $(am__recursive_targets) all install-am install-strip
 
 .PHONY: $(am__recursive_targets) CTAGS GTAGS TAGS all all-am \
-	am--refresh check check-am clean clean-cscope clean-generic \
-	cscope cscopelist-am ctags ctags-am dist dist-all dist-bzip2 \
+	am--depfiles am--refresh check check-am clean \
+	clean-binPROGRAMS clean-cscope clean-generic cscope \
+	cscopelist-am ctags ctags-am dist dist-all dist-bzip2 \
 	dist-gzip dist-lzip dist-shar dist-tarZ dist-xz dist-zip \
-	dist-zstd distcheck distclean distclean-generic distclean-hdr \
-	distclean-tags distcleancheck distdir distuninstallcheck dvi \
-	dvi-am html html-am info info-am install install-am \
-	install-data install-data-am install-dvi install-dvi-am \
-	install-exec install-exec-am install-html install-html-am \
-	install-info install-info-am install-man install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs installdirs-am \
-	maintainer-clean maintainer-clean-generic \
-	maintainer-clean-local mostlyclean mostlyclean-generic pdf \
-	pdf-am ps ps-am tags tags-am uninstall uninstall-am
+	dist-zstd distcheck distclean distclean-compile \
+	distclean-generic distclean-hdr distclean-tags distcleancheck \
+	distdir distuninstallcheck dvi dvi-am html html-am info \
+	info-am install install-am install-binPROGRAMS install-data \
+	install-data-am install-dvi install-dvi-am install-exec \
+	install-exec-am install-html install-html-am install-info \
+	install-info-am install-man install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installdirs installdirs-am maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic pdf pdf-am ps ps-am tags tags-am uninstall \
+	uninstall-am uninstall-binPROGRAMS
 
 .PRECIOUS: Makefile
 
-
-maintainer-clean-local:
-	-rm -rf $(RPM_TOPDIR)/BUILD
-	-rm -rf $(RPM_TOPDIR)/RPMS
-	-rm -rf $(RPM_TOPDIR)/SOURCES
-	-rm -rf $(RPM_TOPDIR)/SPECS
-	-rm -rf $(RPM_TOPDIR)/SRPMS
-
-rpm: dist $(PACKAGE).spec
-	$(mkinstalldirs) $(RPM_TOPDIR)/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
-	$(INSTALL_DATA) $(PACKAGE).spec $(RPM_TOPDIR)/SPECS
-	$(INSTALL_DATA) $(PACKAGE)-$(VERSION).tar.gz $(RPM_TOPDIR)/SOURCES
-	rpmbuild -ba $(PACKAGE).spec\
-	--define "_topdir $(RPM_TOPDIR)"\
-	--define "_prefix $(prefix)"\
-	--define "_datadir $(prefix)/share"\
-	--define "_defaultdocdir $(prefix)/share/doc"\
-	--clean
-
-.PHONY: rpm
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

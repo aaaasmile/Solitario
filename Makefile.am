@@ -1,38 +1,55 @@
 ## Process this file with automake to produce Makefile.in
 AUTOMAKE_OPTIONS = foreign
-
-SUBDIRS = src
-
 DIST_SUBDIRS = data
-	
-DATA_PREFIX=data/
 
-MAINTAINERCLEANFILES =\
-	Makefile.in\
-	aclocal.m4\
-	configure\
-	decomp\
-	install-sh\
-	missing\
-	mkinstalldirs\
-	$(PACKAGE)-$(VERSION).tar.gz
+AM_CPPFLAGS = -I/usr/include/SDL2 -D_REENTRANT -I ./libini/include
+AM_CXXFLAGS =\
+	-Wunused\
+	-DDATA_PREFIX=\"$(DATA_PREFIX)\"
 
-maintainer-clean-local:
-	-rm -rf $(RPM_TOPDIR)/BUILD
-	-rm -rf $(RPM_TOPDIR)/RPMS
-	-rm -rf $(RPM_TOPDIR)/SOURCES
-	-rm -rf $(RPM_TOPDIR)/SPECS
-	-rm -rf $(RPM_TOPDIR)/SRPMS
+SUBDIRS = libini
 
-rpm: dist $(PACKAGE).spec
-	$(mkinstalldirs) $(RPM_TOPDIR)/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
-	$(INSTALL_DATA) $(PACKAGE).spec $(RPM_TOPDIR)/SPECS
-	$(INSTALL_DATA) $(PACKAGE)-$(VERSION).tar.gz $(RPM_TOPDIR)/SOURCES
-	rpmbuild -ba $(PACKAGE).spec\
-	--define "_topdir $(RPM_TOPDIR)"\
-	--define "_prefix $(prefix)"\
-	--define "_datadir $(prefix)/share"\
-	--define "_defaultdocdir $(prefix)/share/doc"\
-	--clean
+# Note: specifying output into a different directory
+bin_PROGRAMS = solitario
 
-.PHONY: rpm
+# LDFLAGS are needed?
+#solitario_LDFLAGS = -lSDL2
+
+solitario_LDADD =\
+	-lSDL2_image\
+	-lSDL2_mixer \
+	-lSDL2 \
+	libini/libini.a
+
+solitario_SOURCES = \
+	src/CCardRegion.cpp\
+	src/CCardStack.cpp\
+	src/CGame.cpp\
+	src/HightScoreMgr.cpp\
+	src/MusicManager.cpp\
+	src/CustomMenu.cpp\
+	src/AppGfx.cpp\
+	src/fonts.cpp\
+	src/GameSettings.cpp\
+	src/gfx_util.cpp\
+	src/Languages.cpp\
+	src/main.cpp\
+	src/fading.cpp\
+	src/credits.cpp\
+	src/CCard.h\
+	src/CCardRegion.h\
+	src/CCardStack.h\
+	src/CGame.h\
+	src/HightScoreMgr.h\
+	src/MusicManager.h\
+	src/CustomMenu.h\
+	src/AppGfx.h\
+	src/fonts.h\
+	src/GameSettings.h\
+	src/gfx_util.h\
+	src/Languages.h\
+	src/resource.h\
+	src/StdAfx.h\
+	src/fading.h\
+	src/credits.h\
+	src/win_type_global.h
