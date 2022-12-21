@@ -28,7 +28,7 @@ public:
     CGame();
     ~CGame();
 
-    void Initialize(SDL_Surface *s, SDL_Renderer *r);
+    int Initialize(SDL_Surface *s, SDL_Renderer *r);
     void Clear() { _cardRegionList.clear(); }
     int Size() { return _cardRegionList.size(); }
 
@@ -54,15 +54,13 @@ public:
     CCardRegion *FindDropRegion(int Id, CCardStack stack);
 
     void ZoomCard(int &sx, int &sy, int &dx, int &dy, int width, int height,
-                  SDL_Surface *bg);
+                  SDL_Surface *bg, SDL_Surface *fg);
 
     void DrawStaticScene();
     void DrawBackground(BOOL bIsInit);
 
     CCardRegion *GetBestStack(int x, int y, int width, int height,
                               CCardStack *stack);
-    int InitDeck(SDL_Surface *s);
-    int LoadCardPac();
 
     int DrawCard(int x, int y, int nCdIndex);
     int DrawCard(int x, int y, int nCdIndex, SDL_Surface *s);
@@ -78,8 +76,10 @@ public:
     void SetDeckType(DeckType &Val) { _DeckType.CopyFrom(Val); }
     void ClearSurface();
 
-    void LoadDeckFromPac();
-    void LoadSymbols();
+    int LoadCardPac();
+    int LoadSymbolsForPac();
+    void LoadDeckFromSingleFile();
+    void LoadSymbolsFromSingleFile();
 
     void DrawCardStack(SDL_Surface *s, CCardRegion *pcardRegion);
     void DrawCardStack(rVI vi);
@@ -129,15 +129,15 @@ private:
     int _oldx;
     int _oldy;
 
-    SDL_Surface *_p_srfDeck;
+    SDL_Surface *_p_srfDeck;  // for pac
     SDL_Surface *_p_symbols;
+    DeckType _DeckType;
+    SDL_Surface *_p_CardsSurf[NUM_CARDS_ONDECK];  // for single file
+    SDL_Surface *_p_Symbol[NUM_SYMBOLS];
 
     SDL_Rect _rctSrcBack;
     SDL_Rect _rctSrcCard;
 
-    DeckType _DeckType;
-    SDL_Surface *_p_CardsSurf[NUM_CARDS_ONDECK];
-    SDL_Surface *_p_Symbol[NUM_SYMBOLS];
     std::vector<CCardRegion> _cardRegionList;
 };
 

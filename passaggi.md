@@ -78,3 +78,20 @@ Per avere il goto definition in questo ambiente mi serve il path che setto crean
             ]
 Ho cambiato anche il task per avere la compilazione diretta da Visual con CTRL + SHIFT + B
 Dalla bash arrivo all'editor premendo il tasto CTRL e spostando il mouse sulla linea della bash
+
+
+## Pac card
+Se ti meraviglia il fatto che il codice della versione 1.6 carica i files 
+singoli delle carte, mentre lo zip distributivo uso il pac è dovuto ad un conflitto di versioni. 
+Guardando bene lo zip 1.6 pubblicato per windows esso contiene l'exe nella versione 1.4 
+che carica i pac. Perché? Per il solitario con le carte del tarocco piemontese.
+Quindi anziché fare un nuovo pac con le carte del tarocco piemontese ed avere lo stesso programma che
+carica diversi mazzi sempre in pac, ne ho fatto una nuova versione, la 1.6 che funziona solo con le
+carte singole. Però poi solo con il nuovo mazzo, mentre tutti gli altri mazzi sono
+rimasti in formato pac e quindi alla versione 1.4. 
+Qui rimane il formato pac quello decisivo. 
+
+## Error Handling
+Non vorrei usare il throw del c++ perché non sono un gran fan. Nell'invido
+e tressette l'ho però usato. Qui vorrei usare qualcosa di simile al clang. 
+Un integer come riultato o meglio una struttura con tanto di codice e testo.

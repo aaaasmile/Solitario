@@ -24,6 +24,7 @@ int const CARDBACKLOC = 40 * g_CARDWIDTH;  // modify to allow custom card backs
 
 static const char *lpszBackgroundImgFile = DATA_PREFIX "im001537.jpg";
 static const char *lpszDeckDir = DATA_PREFIX "mazzo/";
+static const char *lpszDataDir = DATA_PREFIX;
 
 CGame::CGame() {
     _p_background = 0;
@@ -36,7 +37,8 @@ CGame::CGame() {
 
 CGame::~CGame() { ClearSurface(); }
 
-void CGame::Initialize(SDL_Surface *s, SDL_Renderer *r) {
+int CGame::Initialize(SDL_Surface *s, SDL_Renderer *r) {
+    int errno;
     _p_screen = s;
     _p_sdlRenderer = r;
     _p_ScreenTexture = SDL_CreateTexture(
@@ -49,13 +51,17 @@ void CGame::Initialize(SDL_Surface *s, SDL_Renderer *r) {
         // TODO error handling
     }
     _p_scene_background = IMG_LoadJPG_RW(srcBack);
-    DrawBackground(TRUE);
-}
 
-int CGame::InitDeck(SDL_Surface *s) {
-    LoadDeckFromPac();
-    LoadSymbols();
-    _p_srfDeck = s;  // TODO move to initialize. Here s is the screen
+    errno = LoadCardPac();
+    if (errno < 0) {
+        return errno;
+    }
+    errno = LoadSymbolsForPac();
+    if (errno < 0) {
+        return errno;
+    }
+
+    DrawBackground(TRUE);
     return 0;
 }
 
@@ -285,14 +291,14 @@ void CGame::DoDrop(CCardRegion *DestRegion) {
         return;  // when no movement
 
     ZoomCard(_dragCard.x, _dragCard.y, vi->x, vi->y, _dragCard.width,
-             _dragCard.height, _p_background);
+             _dragCard.height, _p_background, _p_dragface);
 
     SDL_FreeSurface(_p_dragface);
     _p_dragface = NULL;
 }
 
 void CGame::ZoomCard(int &sx, int &sy, int &dx, int &dy, int w, int h,
-                     SDL_Surface *bg) {
+                     SDL_Surface *bg, SDL_Surface *fg) {
     SDL_Rect rcs;
     SDL_Rect rcd;
     SDL_Rect dest;
@@ -388,13 +394,11 @@ CCardRegion *CGame::GetBestStack(int x, int y, int w, int h,
 }
 
 int CGame::DrawCard(int x, int y, int nCdIndex) {
-    return DrawCard(x, y, nCdIndex, NULL);
+    s = _p_screen;
+    return DrawCard(x, y, nCdIndex, _p_screen);
 }
 
 int CGame::DrawCard(int x, int y, int nCdIndex, SDL_Surface *s) {
-    if (s == NULL)
-        s = _p_srfDeck;
-
     if (nCdIndex < 0)
         nCdIndex = 0;
     if (nCdIndex > NUM_CARDS)
@@ -406,7 +410,7 @@ int CGame::DrawCard(int x, int y, int nCdIndex, SDL_Surface *s) {
 
     _rctSrcCard.x = 0;
     _rctSrcCard.y = 0;
-    _rctSrcCard.w = _p_CardsSurf[nCdIndex]->clip_rect.w;
+    _rctSrcCard.w = _p_CardsSurf[nCdIndex]->clip_rect.w;  // TODO use a funtion
     _rctSrcCard.h = _p_CardsSurf[nCdIndex]->clip_rect.h;
 
     SDL_Rect dest;
@@ -417,9 +421,6 @@ int CGame::DrawCard(int x, int y, int nCdIndex, SDL_Surface *s) {
 }
 
 int CGame::DrawCard(VI vi, SDL_Surface *s) {
-    if (s == NULL)
-        s = _p_srfDeck;
-
     int nCdIndex = vi->Idx;
 
     if (nCdIndex < 0)
@@ -429,7 +430,7 @@ int CGame::DrawCard(VI vi, SDL_Surface *s) {
 
     _rctSrcCard.x = 0;
     _rctSrcCard.y = 0;
-    _rctSrcCard.w = _p_CardsSurf[nCdIndex]->clip_rect.w;
+    _rctSrcCard.w = _p_CardsSurf[nCdIndex]->clip_rect.w;  // TODO use a funtion
     _rctSrcCard.h = _p_CardsSurf[nCdIndex]->clip_rect.h;
 
     SDL_Rect dest;
@@ -442,15 +443,12 @@ int CGame::DrawCard(VI vi, SDL_Surface *s) {
     return SDL_BlitSurface(_p_CardsSurf[nCdIndex], &_rctSrcCard, s, &dest);
 }
 
-int CGame::DrawCardBack(int x, int y) { return DrawCardBack(x, y, NULL); }
+int CGame::DrawCardBack(int x, int y) { return DrawCardBack(x, y, _p_screen); }
 
 int CGame::DrawCardBack(int x, int y, SDL_Surface *s) {
-    if (s == NULL)
-        s = _p_srfDeck;
-
     _rctSrcCard.x = 0;
     _rctSrcCard.y = 0;
-    _rctSrcCard.w = _p_Symbol[0]->clip_rect.w;
+    _rctSrcCard.w = _p_Symbol[0]->clip_rect.w;  // TODO use a funtion
     _rctSrcCard.h = _p_Symbol[0]->clip_rect.h;
 
     SDL_Rect dest;
@@ -461,21 +459,18 @@ int CGame::DrawCardBack(int x, int y, SDL_Surface *s) {
 }
 
 int CGame::DrawSymbol(int x, int y, int nSymbol) {
-    return DrawSymbol(x, y, nSymbol, NULL);
+    return DrawSymbol(x, y, nSymbol, _p_screen);
 }
 
 int CGame::DrawSymbol(int x, int y, int nSymbol, SDL_Surface *s) {
     if (nSymbol < 1)
-        return 0;
+        return -1;  // TODO error handling
     if (nSymbol > 3)
         nSymbol = 3;
 
-    if (s == NULL)
-        s = _p_srfDeck;
-
     _rctSrcCard.x = 0;
     _rctSrcCard.y = 0;
-    _rctSrcCard.w = _p_Symbol[nSymbol]->clip_rect.w;
+    _rctSrcCard.w = _p_Symbol[nSymbol]->clip_rect.w;  // TODO use a funtion
     _rctSrcCard.h = _p_Symbol[nSymbol]->clip_rect.h;
 
     SDL_Rect dest;
@@ -496,19 +491,14 @@ int CGame::AnimateCards() {
     int yspeed;
 
     int GRAVITY = 1;
-    unsigned int MAXY = _p_srfDeck->h;
+    unsigned int MAXY = _p_screen->h;
     float BOUNCE = 0.8f;
-
-    SDL_Texture *pScreenTexture;
-    pScreenTexture = SDL_CreateTexture(_p_sdlRenderer, SDL_PIXELFORMAT_ARGB8888,
-                                       SDL_TEXTUREACCESS_STREAMING,
-                                       _p_srfDeck->w, _p_srfDeck->h);
 
     do {
         rot = rand() % 2;
         id = rand() % 51;
-        x = rand() % _p_srfDeck->w;
-        y = rand() % _p_srfDeck->h / 2;
+        x = rand() % _p_screen->w;
+        y = rand() % _p_screen->h / 2;
 
         if (rot)
             xspeed = -4;
@@ -521,7 +511,7 @@ int CGame::AnimateCards() {
         {
             SDL_PumpEvents();
             if (SDL_GetMouseState(NULL, NULL))
-                return -1;  // stop the animation
+                return 1;  // stop the animation
 
             yspeed = yspeed + GRAVITY;
             x += xspeed;
@@ -532,23 +522,18 @@ int CGame::AnimateCards() {
                 yspeed = int(-yspeed * BOUNCE);
             }
 
-            DrawCard(x, y, id, _p_srfDeck);  // TODO check if this is _p_screen
-
-            SDL_UpdateTexture(pScreenTexture, NULL, _p_srfDeck->pixels,
-                              _p_srfDeck->pitch);
-            SDL_RenderCopy(_p_sdlRenderer, pScreenTexture, NULL, NULL);
-            SDL_RenderPresent(_p_sdlRenderer);
+            DrawCard(x, y, id, _p_screen);
+            UpdateTextureAsFlipScreen();
         }
         // 73 here is CARDWIDTH, but when using CARDWIDTH, it doesn't work
-        while ((x + 73 > 0) && (x < _p_srfDeck->w));
-        //		while((x + CARDWIDTH > 0) && (x < _p_srfDeck->w));
+        while ((x + 73 > 0) && (x < _p_screen->w));
+        //		while((x + CARDWIDTH > 0) && (x < _p_screen->w));
     } while (1);  // or while within specified time
 
-    SDL_DestroyTexture(pScreenTexture);
     return 0;
 }
 
-void CGame::LoadDeckFromPac() {
+void CGame::LoadDeckFromSingleFile() {
     SDL_Surface *Temp;
 
     std::string strTmp;
@@ -595,7 +580,7 @@ void CGame::LoadDeckFromPac() {
     }
 }
 
-void CGame::LoadSymbols() {
+void CGame::LoadSymbolsFromSingleFile() {
     VCT_STRINGS vct_Strings;
     vct_Strings.push_back("dorso.jpg");
     vct_Strings.push_back("fine_1.jpg");
@@ -630,14 +615,14 @@ int CGame::LoadCardPac() {
 
     SDL_RWops *src = SDL_RWFromFile(strFileName.c_str(), "rb");
     SDL_RWread(src, describtion, 100, 1);
-    SDL_RWread(src, &num_anims, 1, 1);
-    w = SDL_ReadLE16(src);  // witdh of the picture (pac of 4 cards)
+    SDL_RWread(src, &num_anims, 1, 1);  // TODO Error handling
+    w = SDL_ReadLE16(src);              // witdh of the picture (pac of 4 cards)
     h = SDL_ReadLE16(src);  // height of the picture (pac of 10 rows of cards)
     frames = SDL_ReadLE16(src);
 
     delays = (Uint16 *)malloc(sizeof(Uint16) * frames);
     if (!delays)
-        return 2;
+        return -1;
 
     for (int i = 0; i < frames; i++) {
         // file format stores delays in 1/100th of second
@@ -653,7 +638,28 @@ int CGame::LoadCardPac() {
 
     g_CARDWIDTH = w / 4;
     g_CARDHEIGHT = h / 10;
+    _p_srfDeck = s;
 
     free(delays);
+    return 0;
+}
+
+int CGame::LoadSymbolsForPac() {
+    std::string strFileSymbName = lpszDataDir;
+    strFileSymbName += _DeckType.GetSymbolFileName();
+
+    _p_symbols = SDL_LoadBMP(strFileSymbName.c_str());
+
+    if (_DeckType.GetSymbolFileName() == "symb_336.bmp") {
+        SDL_SetColorKey(_p_symbols, TRUE,
+                        SDL_MapRGB(_p_symbols->format, 242, 30, 206));
+    } else {
+        SDL_SetColorKey(_p_symbols, TRUE,
+                        SDL_MapRGB(_p_symbols->format, 0, 128, 0));
+    }
+
+    g_SYMBOLWIDTH = _p_symbols->w / 4;
+    g_SYMBOLHEIGHT = _p_symbols->h;
+
     return 0;
 }

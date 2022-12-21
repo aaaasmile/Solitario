@@ -150,8 +150,6 @@ int AppGfx::startGameLoop() {
     _p_SolitarioGfx = new CGame();
 
     _p_SolitarioGfx->SetDeckType(_p_GameSettings->deckTypeVal);
-    _p_SolitarioGfx->InitDeck(_p_Screen);
-
     _p_SolitarioGfx->ClearSurface();
     _p_SolitarioGfx->Clear();
     _p_SolitarioGfx->Initialize(_p_Screen, _p_sdlRenderer);
