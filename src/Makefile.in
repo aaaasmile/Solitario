@@ -105,7 +105,7 @@ am_solitario_OBJECTS = CCardRegion.$(OBJEXT) CCardStack.$(OBJEXT) \
 	GameSettings.$(OBJEXT) gfx_util.$(OBJEXT) Languages.$(OBJEXT) \
 	main.$(OBJEXT) fading.$(OBJEXT) credits.$(OBJEXT)
 solitario_OBJECTS = $(am_solitario_OBJECTS)
-solitario_DEPENDENCIES =
+solitario_DEPENDENCIES = libini/libini.a
 solitario_LINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
 	$(solitario_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
@@ -329,7 +329,8 @@ solitario_LDFLAGS = -lSDL2
 solitario_LDADD = \
 	-lSDL2_image\
 	-lSDL2_mixer \
-	-lSDL2
+	-lSDL2 \
+	libini/libini.a
 
 solitario_SOURCES = \
 	CCardRegion.cpp\

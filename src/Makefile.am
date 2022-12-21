@@ -12,7 +12,8 @@ solitario_LDFLAGS = -lSDL2
 solitario_LDADD =\
 	-lSDL2_image\
 	-lSDL2_mixer \
-	-lSDL2
+	-lSDL2 \
+	libini/libini.a
 
 solitario_SOURCES = \
 	CCardRegion.cpp\
