@@ -37,7 +37,7 @@ int CustomMenu::Run() {
     trect.w = Rect.w;
     trect.h = SDLFONTSIZE;
     LoadBackground();
-    SDL_Surface *surface;  // TODO SDL 2.0
+    SDL_Surface *surface;  // TODO SDL 1.2
     while (bEnd == false) {
         if (bRedraw == true) {
             if (FilenameBackground.size() > 0) {
@@ -62,7 +62,7 @@ int CustomMenu::Run() {
                     Screen, Items[k], TEXTMIXED, TEXTALIGNCENTER, 0,
                     Rect.y + (25 + SDLFONTSIZE) + ((SDLFONTSIZE + 5) * k), 0);
             }
-            // SDL_Flip(Screen); // TODO SDL 2.0
+            // SDL_Flip(Screen); // TODO SDL 1.2
             bRedraw = false;
         }
         if (SDL_WaitEvent(&event) == 1) {

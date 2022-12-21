@@ -76,8 +76,8 @@ void AppGfx::Init() {
     _p_CustomFont = new CustomFont;
     _p_CustomFont->LoadFont(lpszFontFile);
 
-    SDL_SetWindowTitle(_p_Window, _LanguageMgr.GetCStringId(
-                                      LanguageMgr::ID_SOLITARIO));  // SDL 2.0
+    SDL_SetWindowTitle(_p_Window,
+                       _LanguageMgr.GetCStringId(LanguageMgr::ID_SOLITARIO));
 
     // icona trasparente
     SDL_Surface *psIcon = SDL_LoadBMP(lpszIconProgFile);
@@ -85,9 +85,8 @@ void AppGfx::Init() {
         fprintf(stderr, "Icon not found\n");
         exit(1);
     }
-    SDL_SetColorKey(psIcon, TRUE,
-                    SDL_MapRGB(psIcon->format, 0, 128, 0));  // SDL 2.0
-    SDL_SetWindowIcon(_p_Window, psIcon);                    // SDL 2.0
+    SDL_SetColorKey(psIcon, TRUE, SDL_MapRGB(psIcon->format, 0, 128, 0));
+    SDL_SetWindowIcon(_p_Window, psIcon);
 
     // initialize random generator. Pay attention to the different version of
     // srand
@@ -275,7 +274,8 @@ void AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
              (srcReg->Id == CRD_WASTE)) &&
             _p_SolitarioGfx->InitDrag(event.button.x, event.button.y)) {
             _bStartdrag = TRUE;
-            // SDL_WM_GrabInput(SDL_GRAB_ON); // TODO SDL 2.0
+            // SDL_WM_GrabInput(SDL_GRAB_ON); //SDL 1.2
+            SDL_SetRelativeMouseMode(SDL_TRUE);  // SDL 2.0
         }
         // clicked on the pile
         if (srcReg->Id == CRD_PILE) {
@@ -333,7 +333,8 @@ void AppGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
     if (_bStartdrag) {
         _bStartdrag = FALSE;
         _p_SolitarioGfx->DoDrop();
-        // SDL_WM_GrabInput(SDL_GRAB_OFF); // TODO SDL 2.0
+        // SDL_WM_GrabInput(SDL_GRAB_OFF); //SDL 1.2
+        SDL_SetRelativeMouseMode(SDL_FALSE);  // SDL 2.0
     }
     if (_p_SolitarioGfx->Empty(0) && _p_SolitarioGfx->Empty(8)) {
         _p_SolitarioGfx->SetSymbol(0, 1);

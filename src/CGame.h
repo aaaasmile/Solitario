@@ -54,7 +54,7 @@ public:
     CCardRegion *FindDropRegion(int Id, CCardStack stack);
 
     void ZoomCard(int &sx, int &sy, int &dx, int &dy, int width, int height,
-                  SDL_Surface *bg, SDL_Surface *fg);
+                  SDL_Surface *bg);
 
     void DrawStaticScene();
     void DrawBackground(BOOL bIsInit);
@@ -112,11 +112,15 @@ public:
     CCardRegion *GetRegion(int regionNo) { return &_cardRegionList[regionNo]; }
 
 private:
+    void UpdateTextureAsFlipScreen();
+
+private:
     CCardStack _dragStack;
     DRAGCARD _dragCard;
     CCardRegion *_p_sourceRegion;
 
     SDL_Surface *_p_screen;
+    SDL_Texture *_p_ScreenTexture;
     SDL_Surface *_p_background;
     SDL_Surface *_p_dragface;
     SDL_Surface *_p_scene_background;
@@ -137,4 +141,4 @@ private:
     std::vector<CCardRegion> _cardRegionList;
 };
 
-#endif  // CGAME_H
+#endif

@@ -8,7 +8,7 @@
 char const* credit_text[] = {
     "-SOLITARIO", /* '-' at beginning makes highlighted: */
     "",
-    "PART OF THE 'BRISCOLA_NET' PROJECT",
+    "PART OF THE 'CUPERATIVA' PROJECT",
     "",
     "-LEAD PROGRAMMER",
     "Invido.it",
@@ -229,7 +229,11 @@ int credits(SDL_Surface* p_surf_screen, SDL_Surface* pSurfTitle,
                 done = 1;
         }
 
-        // SDL_Flip(p_surf_screen); //TODO SDL 2.0
+        // SDL_Flip(p_surf_screen); //SDL 1.2
+        SDL_UpdateTexture(pScreenTexture, NULL, p_surf_screen->pixels,
+                          p_surf_screen->pitch);  // sdl 2.0
+        SDL_RenderCopy(psdlRenderer, pScreenTexture, NULL, NULL);
+        SDL_RenderPresent(psdlRenderer);
 
         /* Pause (keep frame-rate event) */
 
