@@ -26,7 +26,7 @@ Per le altre librerie sdl:
     sudo apt-get install libsdl2-mixer-dev
 
 così per avere il comando:
-    sdl-config --libs
+    sdl2-config --libs
 ho messo il risultato direttamente nel file makefile.am
 
 ## SDL

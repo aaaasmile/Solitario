@@ -593,7 +593,7 @@ void AppGfx::MainMenu() {
                 break;
             case 3:
                 // CREDITS
-                credits(_p_Screen, _p_Title);
+                credits(_p_Screen, _p_Title, _p_sdlRenderer);
                 break;
 
             case 12:  // HIGH SCORE

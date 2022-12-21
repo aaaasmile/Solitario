@@ -297,6 +297,11 @@ void CGame::DoDrop(CCardRegion *DestRegion) {
     _p_dragface = NULL;
 }
 
+void calcPt(int x0, int y0, int x1, int y1, float t, int &X, int &Y) {
+    X = int(x0 + t * (x1 - x0) + .5);
+    Y = int(y0 + t * (y1 - y0) + .5);
+}
+
 void CGame::ZoomCard(int &sx, int &sy, int &dx, int &dy, int w, int h,
                      SDL_Surface *bg, SDL_Surface *fg) {
     SDL_Rect rcs;
@@ -348,11 +353,6 @@ CCardRegion *CGame::FindDropRegion(int Id, CCardStack stack) {
     return NULL;
 }
 
-void calcPt(int x0, int y0, int x1, int y1, float t, int &X, int &Y) {
-    X = int(x0 + t * (x1 - x0) + .5);
-    Y = int(y0 + t * (y1 - y0) + .5);
-}
-
 void CGame::DrawStaticScene() {
     for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
         SDL_PumpEvents();
@@ -394,7 +394,6 @@ CCardRegion *CGame::GetBestStack(int x, int y, int w, int h,
 }
 
 int CGame::DrawCard(int x, int y, int nCdIndex) {
-    s = _p_screen;
     return DrawCard(x, y, nCdIndex, _p_screen);
 }
 
@@ -534,8 +533,6 @@ int CGame::AnimateCards() {
 }
 
 void CGame::LoadDeckFromSingleFile() {
-    SDL_Surface *Temp;
-
     std::string strTmp;
     std::string strSuffix;
     CHAR buff[128];
@@ -588,7 +585,6 @@ void CGame::LoadSymbolsFromSingleFile() {
     vct_Strings.push_back("fine_3.jpg");
     ASSERT(NUM_SYMBOLS == vct_Strings.size());
 
-    SDL_Surface *Temp = 0;
     for (int i = 0; i < NUM_SYMBOLS; i++) {
         std::string strDir = lpszDeckDir;
         std::string strFileSymbName;
