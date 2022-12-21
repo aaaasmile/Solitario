@@ -97,7 +97,6 @@ Per avere il goto definition in questo ambiente mi serve il path che setto crean
 Ho cambiato anche il task per avere la compilazione diretta da Visual con CTRL + SHIFT + B
 Dalla bash arrivo all'editor premendo il tasto CTRL e spostando il mouse sulla linea della bash
 
-
 ## Pac card
 Se ti meraviglia il fatto che il codice della versione 1.6 carica i files 
 singoli delle carte, mentre lo zip distributivo uso il pac è dovuto ad un conflitto di versioni. 
@@ -113,3 +112,17 @@ Qui rimane il formato pac quello decisivo.
 Non vorrei usare il throw del c++ perché non sono un gran fan. Nell'invido
 e tressette l'ho però usato. Qui vorrei usare qualcosa di simile al clang. 
 Un integer come riultato o meglio una struttura con tanto di codice e testo.
+
+## Sviluppo e Test in WSL2
+Per quanto ne ho capito, in dic 2022 WSL2 sembra già avere un X server.
+Basta provare con Xclock, che una volta installato parte senza altri server.
+Per vedere se funziona un programma SDL2 nella WSL2 basta provare a clonare la
+repository https://github.com/aminosbh/falling-brick-game
+e seguire le istruzioni per compilare ed eseguire il programma. Nel mio caso ha funzionato.
+Per fare il debug del solitario ho invece dovuto aggiungere un lauch.json e 
+nel task.jon ho messo il "Debug Build", che altro non è che il make standard visto
+che aggiunge di default il parametro -g. Basta mettere un Breakpoint in main.cpp e 
+premere F5 e gdb parte subito.
+
+
+
