@@ -1,7 +1,7 @@
 #ifndef CCARDREGION_H
 #define CCARDREGION_H
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 #include "CCardStack.h"
 

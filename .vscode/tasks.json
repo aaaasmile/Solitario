@@ -20,6 +20,15 @@
                 "kind": "build",
                 "isDefault": true
             }
-        }
+        },
+        {
+            "label": "Debug Build",
+            "type": "shell",
+            "command": "make",
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": "$msCompile"
+        },
     ]
 }

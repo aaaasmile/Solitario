@@ -5,7 +5,7 @@
 #pragma warning(disable : 4786)
 #endif
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 #include <string>
 
