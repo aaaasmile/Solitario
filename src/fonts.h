@@ -23,7 +23,7 @@
 class CustomFont {
 public:
     void ClearFont();
-    LPErrInApp LoadFont(std::string filename);
+    LPErrInApp LoadFont(const char *filename);
     void DrawString(SDL_Surface *surface, std::string message,
                     unsigned char textcase, char alignment, int x, int y,
                     unsigned int color);

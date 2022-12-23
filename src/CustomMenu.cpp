@@ -214,10 +214,6 @@ LPErrInApp CustomMenu::drawBitmap(unsigned char alignment, Uint32 color) {
             t.y = (_p_Screen->h - _p_BackgroundBitmap->h) / 2;
             break;
     }
-    // if (_p_BackgroundBitmap->format->palette && _p_Screen->format->palette)
-    //     SDL_SetColors(_p_Screen,
-    //     _p_BackgroundBitmap->format->palette->colors,
-    //                   0, _p_BackgroundBitmap->format->palette->ncolors);
 
     SDL_FillRect(_p_Screen, &_p_Screen->clip_rect, color);
 

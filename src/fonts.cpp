@@ -11,18 +11,18 @@ void CustomFont::ClearFont() {
     }
 }
 
-LPErrInApp CustomFont::LoadFont(std::string filename) {
+LPErrInApp CustomFont::LoadFont(const char* filename) {
     ClearFont();
-    _p_Bitmap = SDL_LoadBMP(filename.c_str());
+    _p_Bitmap = SDL_LoadBMP(filename);
     if (_p_Bitmap == 0) {
-        return ERR_UTIL::ErrorCreate("Font %s not  found\n", filename.c_str());
+        return ERR_UTIL::ErrorCreate("Font %s not  found\n", filename);
     }
     SDL_SetColorKey(_p_Bitmap, TRUE, SDL_MapRGB(_p_Bitmap->format, 0, 0, 0));
     _Filename = filename;
     return NULL;
 }
 
-void CustomFont::DrawString(SDL_Surface *surface, std::string message,
+void CustomFont::DrawString(SDL_Surface* surface, std::string message,
                             unsigned char textcase, char alignment, int x,
                             int y, unsigned int color) {
     unsigned char c;
