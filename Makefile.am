@@ -24,7 +24,7 @@ solitario_LDADD =\
 	libini/libini.a
 
 solitario_SOURCES = \
-	src/CCardRegion.cpp\
+	src/CardRegionGfx.cpp\
 	src/CCardStack.cpp\
 	src/SolitarioGfx.cpp\
 	src/HightScoreMgr.cpp\

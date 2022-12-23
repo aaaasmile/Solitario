@@ -34,19 +34,19 @@ void CCardStack::NewDeck() {
 void CCardStack::Shuffle() { std::random_shuffle(this->begin(), this->end()); }
 void CCardStack::Clear() { this->clear(); }
 void CCardStack::Reverse() { std::reverse(this->begin(), this->end()); }
-bool SortRank(const CCard& l, const CCard& r) { return l.Rank() < r.Rank(); }
+bool SortRank(const CardGfx& l, const CardGfx& r) { return l.Rank() < r.Rank(); }
 void CCardStack::Sort() { std::sort(this->begin(), this->end(), SortRank); }
-void CCardStack::Push(const CCard card) { this->push_back(card); }
+void CCardStack::Push(const CardGfx card) { this->push_back(card); }
 void CCardStack::Push(CCardStack cardstack) {
     for (VI vi = cardstack.begin(); vi != cardstack.end(); ++vi)
         this->push_back(*vi);
 }
 
-CCard CCardStack::Pop() {
+CardGfx CCardStack::Pop() {
     if (Empty())
         return 0;
 
-    CCard card = this->back();
+    CardGfx card = this->back();
     this->pop_back();
 
     return card;
@@ -66,18 +66,18 @@ CCardStack CCardStack::Pop(int items) {
     return cardstack;
 }
 
-CCard CCardStack::RemoveCard(int index) {
+CardGfx CCardStack::RemoveCard(int index) {
     if (this->Empty())
         return 0;
 
     VI vi = this->begin() + index;
-    CCard card = *vi;
+    CardGfx card = *vi;
     this->erase(vi);
 
     return card;
 }
 
-void CCardStack::InsertCard(int index, CCard card) {
+void CCardStack::InsertCard(int index, CardGfx card) {
     VI vi = this->begin() + index;
     this->insert(vi, card);
 }
@@ -94,12 +94,12 @@ int CCardStack::GetClickedCard(int x, int y) {
     return -1;
 }
 
-CCard CCardStack::GetCard(int index) {
+CardGfx CCardStack::GetCard(int index) {
     if (this->Empty())
         return 0;
 
     VI vi = this->begin() + index;
-    CCard card = *vi;
+    CardGfx card = *vi;
 
     return card;
 }

@@ -1,6 +1,6 @@
-#include "CCardRegion.h"
+#include "CardRegionGfx.h"
 
-void CCardRegion::InitCardCoords() {
+void CardRegionGfx::InitCardCoords() {
     if (InternalStack.Empty())
         return;
 
@@ -34,7 +34,7 @@ void CCardRegion::InitCardCoords() {
 |  and 3d stacks... Needs tweaking							|
 |_________________________________________________________*/
 
-bool CCardRegion::PtInStack(int x, int y) {
+bool CardRegionGfx::PtInStack(int x, int y) {
     if (!(Attributes & CRD_VISIBLE))
         return false;
 
@@ -51,14 +51,14 @@ bool CCardRegion::PtInStack(int x, int y) {
         return false;
 }
 
-bool CCardRegion::PtOnTop(int x, int y) {
+bool CardRegionGfx::PtOnTop(int x, int y) {
     if (this->Empty())
         return false;
 
     return InternalStack[InternalStack.Size() - 1].PtInCard(x, y);
 }
 
-int CCardRegion::GetOverlapRatio(int x, int y, int w, int h) {
+int CardRegionGfx::GetOverlapRatio(int x, int y, int w, int h) {
     if (!(Attributes & CRD_DODROP))
         return 0;
 
@@ -145,7 +145,7 @@ int CCardRegion::GetOverlapRatio(int x, int y, int w, int h) {
     return wi * hi;
 }
 
-bool CCardRegion::CanDrop(CCardStack *stack) {
+bool CardRegionGfx::CanDrop(CCardStack *stack) {
     if (InternalStack.Empty() &&
         (!(AcceptMode & CRD_DOKING) && !(AcceptMode & CRD_DOACE)))
         return false;
@@ -253,7 +253,7 @@ bool CCardRegion::CanDrop(CCardStack *stack) {
     return true;
 }
 
-int CCardRegion::GetStackWidth() {
+int CardRegionGfx::GetStackWidth() {
     if (InternalStack.Empty())
         return g_CARDWIDTH;
 
@@ -261,7 +261,7 @@ int CCardRegion::GetStackWidth() {
            InternalStack[0].x;
 }
 
-int CCardRegion::GetStackHeight() {
+int CardRegionGfx::GetStackHeight() {
     if (InternalStack.Empty())
         return g_CARDHEIGHT;
 

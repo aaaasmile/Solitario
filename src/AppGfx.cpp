@@ -277,7 +277,7 @@ void AppGfx::handleGameLoopKeyDownEvent(SDL_Event &event) {
 }
 
 void AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
-    CCardRegion *srcReg;
+    CardRegionGfx *srcReg;
     if (event.button.button == SDL_BUTTON_LEFT) {
         srcReg = _p_SolitarioGfx->OnMouseDown(event.button.x, event.button.y);
         if (srcReg == NULL)
@@ -322,8 +322,8 @@ void AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
         srcReg = _p_SolitarioGfx->OnMouseDown(event.button.x, event.button.y);
         if (srcReg == NULL)
             return;
-        CCardRegion *cr;
-        CCard card = srcReg->GetCard(srcReg->Size() - 1);
+        CardRegionGfx *cr;
+        CardGfx card = srcReg->GetCard(srcReg->Size() - 1);
 
         // clicked on the top of the foundations
         if (((srcReg->Id == CRD_FOUNDATION) || (srcReg->Id == CRD_RESERVE)) &&

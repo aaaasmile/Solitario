@@ -51,10 +51,10 @@ const unsigned int CRD_DOACE =
 const unsigned int CRD_DOKING =
     (1 << 12);  // TRUE:accept only kings				FALSE:don't accept king
 
-class CCardRegion {
+class CardRegionGfx {
 public:
-    CCardRegion(int id, unsigned int attribs, unsigned int amode, int dmode,
-                int symbol, int x, int y, int xoff, int yoff)
+    CardRegionGfx(int id, unsigned int attribs, unsigned int amode, int dmode,
+                  int symbol, int x, int y, int xoff, int yoff)
         : Id(id),
           Attributes(attribs),
           AcceptMode(amode),
@@ -65,8 +65,8 @@ public:
           xOffset(xoff),
           yOffset(yoff) {}
 
-    CCardRegion() {}
-    ~CCardRegion() {}
+    CardRegionGfx() {}
+    ~CardRegionGfx() {}
 
     void SetCardStack(const CCardStack &cs) { InternalStack = cs; }
     CCardStack *GetCardStack() { return &InternalStack; }
@@ -134,21 +134,21 @@ public:
     void Clear() { InternalStack.Clear(); }
     void Reverse() { InternalStack.Reverse(); }
 
-    void Push(CCard card) { InternalStack.Push(card); }
+    void Push(CardGfx card) { InternalStack.Push(card); }
     void Push(CCardStack cs) { InternalStack.Push(cs); }
 
     bool Empty() { return InternalStack.Empty(); }
     int Size() { return InternalStack.Size(); }
 
-    CCard Pop() { return InternalStack.Pop(); }
+    CardGfx Pop() { return InternalStack.Pop(); }
     CCardStack Pop(int items) { return InternalStack.Pop(items); }
 
-    CCard RemoveCard(int index) { return InternalStack.RemoveCard(index); }
+    CardGfx RemoveCard(int index) { return InternalStack.RemoveCard(index); }
 
     int GetClickedCard(int x, int y) {
         return InternalStack.GetClickedCard(x, y);
     }
-    CCard GetCard(int index) { return InternalStack.GetCard(index); }
+    CardGfx GetCard(int index) { return InternalStack.GetCard(index); }
 
     int Id;
     unsigned int Attributes;

@@ -7,9 +7,9 @@
 #include <algorithm>
 #include <vector>
 
-#include "CCard.h"
+#include "CardGfx.h"
 
-class CCardStack : public std::vector<CCard> {
+class CCardStack : public std::vector<CardGfx> {
 public:
     void NewDeck();
     void Shuffle();
@@ -19,17 +19,17 @@ public:
     bool Empty() { return this->empty(); }
     int Size() { return this->size(); }
 
-    void Push(const CCard card);
+    void Push(const CardGfx card);
     void Push(CCardStack cardstack);
 
-    CCard Pop();
+    CardGfx Pop();
     CCardStack Pop(int items);
 
-    CCard RemoveCard(int index);
-    void InsertCard(int index, CCard card);
+    CardGfx RemoveCard(int index);
+    void InsertCard(int index, CardGfx card);
 
     int GetClickedCard(int x, int y);
-    CCard GetCard(int index);
+    CardGfx GetCard(int index);
 
     void SetCardsFaceUp(bool fTrue);
 };

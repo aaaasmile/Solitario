@@ -3,12 +3,12 @@
 
 #include <vector>
 
-#include "CCardRegion.h"
+#include "CardRegionGfx.h"
 #include "GameSettings.h"
 #include "error_info.h"
 #include "win_type_global.h"
 
-typedef std::vector<CCardRegion>::iterator rVI;
+typedef std::vector<CardRegionGfx>::iterator rVI;
 
 struct DRAGCARD {
     int x;
@@ -36,12 +36,12 @@ public:
     void CreateRegion(int id, unsigned int attribs, unsigned int amode,
                       int dmode, int symbol, int x, int y, int xoffset,
                       int yoffset);
-    bool DeleteRegion(CCardRegion *pRegion);
+    bool DeleteRegion(CardRegionGfx *pRegion);
 
     void EmptyStacks();
     void InitAllCoords();
 
-    CCardRegion *OnMouseDown(int x, int y);
+    CardRegionGfx *OnMouseDown(int x, int y);
 
     bool InitDrag(int x, int y);
     bool InitDrag(CCardStack *CargoStack, int x, int y);
@@ -49,10 +49,10 @@ public:
     void DoDrag(int x, int y);
 
     void DoDrop();
-    void DoDrop(CCardRegion *DestRegion);
+    void DoDrop(CardRegionGfx *DestRegion);
 
-    CCardRegion *FindDropRegion(int Id, CCard card);
-    CCardRegion *FindDropRegion(int Id, CCardStack stack);
+    CardRegionGfx *FindDropRegion(int Id, CardGfx card);
+    CardRegionGfx *FindDropRegion(int Id, CCardStack stack);
 
     void ZoomCard(int &sx, int &sy, int &dx, int &dy, int width, int height,
                   SDL_Surface *bg, SDL_Surface *fg);
@@ -60,8 +60,8 @@ public:
     void DrawStaticScene();
     void DrawBackground(BOOL bIsInit);
 
-    CCardRegion *GetBestStack(int x, int y, int width, int height,
-                              CCardStack *stack);
+    CardRegionGfx *GetBestStack(int x, int y, int width, int height,
+                                CCardStack *stack);
 
     int DrawCard(int x, int y, int nCdIndex);
     int DrawCard(int x, int y, int nCdIndex, SDL_Surface *s);
@@ -82,7 +82,7 @@ public:
     void LoadDeckFromSingleFile();
     void LoadSymbolsFromSingleFile();
 
-    void DrawCardStack(SDL_Surface *s, CCardRegion *pcardRegion);
+    void DrawCardStack(SDL_Surface *s, CardRegionGfx *pcardRegion);
     void DrawCardStack(rVI vi);
     void SetSymbol(int regionNo, int symbol) {
         _cardRegionList[regionNo].SetSymbol(symbol);
@@ -90,13 +90,13 @@ public:
     void NewDeck(int regionNo) { _cardRegionList[regionNo].NewDeck(); }
     bool Empty(int regionNo) { return _cardRegionList[regionNo].Empty(); }
     void Shuffle(int regionNo) { _cardRegionList[regionNo].Shuffle(); }
-    void PushInRegion(int regionNo, CCard card) {
+    void PushInRegion(int regionNo, CardGfx card) {
         _cardRegionList[regionNo].Push(card);
     }
     void PushInRegion(int regionNo, CCardStack cs) {
         _cardRegionList[regionNo].Push(cs);
     }
-    CCard PopFromRegion(int regionNo) {
+    CardGfx PopFromRegion(int regionNo) {
         return _cardRegionList[regionNo].Pop();
     }
     CCardStack PopFromRegion(int regionNo, int items) {
@@ -110,7 +110,9 @@ public:
     void InitCardCoords(int regionNo) {
         _cardRegionList[regionNo].InitCardCoords();
     }
-    CCardRegion *GetRegion(int regionNo) { return &_cardRegionList[regionNo]; }
+    CardRegionGfx *GetRegion(int regionNo) {
+        return &_cardRegionList[regionNo];
+    }
 
 private:
     void UpdateTextureAsFlipScreen();
@@ -118,7 +120,7 @@ private:
 private:
     CCardStack _dragStack;
     DRAGCARD _dragCard;
-    CCardRegion *_p_sourceRegion;
+    CardRegionGfx *_p_sourceRegion;
 
     SDL_Surface *_p_screen;
     SDL_Texture *_p_ScreenTexture;
@@ -139,7 +141,7 @@ private:
     SDL_Rect _rctSrcBack;
     SDL_Rect _rctSrcCard;
 
-    std::vector<CCardRegion> _cardRegionList;
+    std::vector<CardRegionGfx> _cardRegionList;
 };
 
 #endif

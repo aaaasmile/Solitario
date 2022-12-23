@@ -74,11 +74,11 @@ LPErrInApp SolitarioGfx::Initialize(SDL_Surface *s, SDL_Renderer *r) {
 }
 
 void SolitarioGfx::DrawCardStack(rVI vi) {
-    CCardRegion *cardRegion = &(*vi);
+    CardRegionGfx *cardRegion = &(*vi);
     DrawCardStack(NULL, cardRegion);
 }
 
-void SolitarioGfx::DrawCardStack(SDL_Surface *s, CCardRegion *pcardRegion) {
+void SolitarioGfx::DrawCardStack(SDL_Surface *s, CardRegionGfx *pcardRegion) {
     if (!(pcardRegion->Attributes & CRD_VISIBLE))
         return;
 
@@ -107,12 +107,12 @@ void SolitarioGfx::ClearSurface() {
 void SolitarioGfx::CreateRegion(int id, unsigned int attribs,
                                 unsigned int amode, int dmode, int symbol,
                                 int x, int y, int xoffset, int yoffset) {
-    CCardRegion *cr = new CCardRegion(id, attribs, amode, dmode, symbol, x, y,
-                                      xoffset, yoffset);
+    CardRegionGfx *cr = new CardRegionGfx(id, attribs, amode, dmode, symbol, x,
+                                          y, xoffset, yoffset);
     _cardRegionList.push_back(*cr);
 }
 
-bool SolitarioGfx::DeleteRegion(CCardRegion *pRegion) {
+bool SolitarioGfx::DeleteRegion(CardRegionGfx *pRegion) {
     for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
         if (&(*vi) == pRegion) {
             _cardRegionList.erase(vi);
@@ -135,7 +135,7 @@ void SolitarioGfx::InitAllCoords() {
     }
 }
 
-CCardRegion *SolitarioGfx::OnMouseDown(int x, int y) {
+CardRegionGfx *SolitarioGfx::OnMouseDown(int x, int y) {
     for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
         if (vi->PtInStack(x, y)) {
             _p_sourceRegion = &(*vi);
@@ -188,9 +188,9 @@ bool SolitarioGfx::InitDrag(CCardStack *CargoStack, int x, int y) {
     DrawBackground(FALSE);
     SDL_BlitSurface(_p_screen, NULL, _p_background, NULL);
 
-    CCardRegion DragRegion(0, _p_sourceRegion->GetAttributes() | CRD_FACEUP, 0,
-                           0, 0, 0, 0, _p_sourceRegion->GetxOffset(),
-                           _p_sourceRegion->GetyOffset());
+    CardRegionGfx DragRegion(0, _p_sourceRegion->GetAttributes() | CRD_FACEUP,
+                             0, 0, 0, 0, 0, _p_sourceRegion->GetxOffset(),
+                             _p_sourceRegion->GetyOffset());
     DragRegion.Push(_dragStack);
 
     _dragCard.x = _dragStack[0].x;
@@ -267,9 +267,9 @@ void SolitarioGfx::DoDrag(int x, int y) {
 
 void SolitarioGfx::DoDrop() { DoDrop(NULL); }
 
-void SolitarioGfx::DoDrop(CCardRegion *DestRegion) {
+void SolitarioGfx::DoDrop(CardRegionGfx *DestRegion) {
     CCardStack *DestStack;
-    CCardRegion *BestRegion;
+    CardRegionGfx *BestRegion;
 
     if (DestRegion != NULL)
         BestRegion = DestRegion;
@@ -347,13 +347,13 @@ void SolitarioGfx::ZoomCard(int &sx, int &sy, int &dx, int &dy, int w, int h,
     DrawStaticScene();
 }
 
-CCardRegion *SolitarioGfx::FindDropRegion(int Id, CCard card) {
+CardRegionGfx *SolitarioGfx::FindDropRegion(int Id, CardGfx card) {
     CCardStack stack;
     stack.Push(card);
     return FindDropRegion(Id, stack);
 }
 
-CCardRegion *SolitarioGfx::FindDropRegion(int Id, CCardStack stack) {
+CardRegionGfx *SolitarioGfx::FindDropRegion(int Id, CCardStack stack) {
     for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
         if ((vi->Id == Id) && vi->CanDrop(&stack))
             return &(*vi);
@@ -382,11 +382,11 @@ void SolitarioGfx::DrawBackground(BOOL bIsInit) {
         DrawCardStack(vi);
 }
 
-CCardRegion *SolitarioGfx::GetBestStack(int x, int y, int w, int h,
-                                        CCardStack *stack) {
+CardRegionGfx *SolitarioGfx::GetBestStack(int x, int y, int w, int h,
+                                          CCardStack *stack) {
     int maxoverlap = 0;
     int percent = 0;
-    CCardRegion *best = 0;
+    CardRegionGfx *best = 0;
 
     for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
         SDL_PumpEvents();
