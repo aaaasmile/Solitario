@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL.h>
 
-#include "CCardStack.h"
+#include "CardStackGfx.h"
 
 // Drag Modes
 const unsigned int CRD_DRAGSTACKS = 1;  // Drag complete stacks
@@ -68,8 +68,8 @@ public:
     CardRegionGfx() {}
     ~CardRegionGfx() {}
 
-    void SetCardStack(const CCardStack &cs) { InternalStack = cs; }
-    CCardStack *GetCardStack() { return &InternalStack; }
+    void SetCardStack(const CardStackGfx &cs) { InternalStack = cs; }
+    CardStackGfx *GetCardStack() { return &InternalStack; }
 
     void SetCoords(int x, int y) {
         XCoord = x;
@@ -118,7 +118,7 @@ public:
     void SetAttributes(unsigned int attr) { Attributes = attr; }
     int GetAttributes() { return Attributes; }
 
-    bool CanDrop(CCardStack *stack);
+    bool CanDrop(CardStackGfx *stack);
 
     void InitCardCoords();
     int GetOverlapRatio(int x, int y, int width, int height);
@@ -135,13 +135,13 @@ public:
     void Reverse() { InternalStack.Reverse(); }
 
     void Push(CardGfx card) { InternalStack.Push(card); }
-    void Push(CCardStack cs) { InternalStack.Push(cs); }
+    void Push(CardStackGfx cs) { InternalStack.Push(cs); }
 
     bool Empty() { return InternalStack.Empty(); }
     int Size() { return InternalStack.Size(); }
 
     CardGfx Pop() { return InternalStack.Pop(); }
-    CCardStack Pop(int items) { return InternalStack.Pop(items); }
+    CardStackGfx Pop(int items) { return InternalStack.Pop(items); }
 
     CardGfx RemoveCard(int index) { return InternalStack.RemoveCard(index); }
 
@@ -152,7 +152,7 @@ public:
 
     int Id;
     unsigned int Attributes;
-    CCardStack InternalStack;
+    CardStackGfx InternalStack;
     int XCoord;
     int YCoord;
     int Symbol;

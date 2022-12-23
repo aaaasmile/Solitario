@@ -147,7 +147,7 @@ CardRegionGfx *SolitarioGfx::OnMouseDown(int x, int y) {
 
 bool SolitarioGfx::InitDrag(int x, int y) { return InitDrag(NULL, x, y); }
 
-bool SolitarioGfx::InitDrag(CCardStack *CargoStack, int x, int y) {
+bool SolitarioGfx::InitDrag(CardStackGfx *CargoStack, int x, int y) {
     if (CargoStack == NULL) {
         if (_p_sourceRegion->Empty())
             return false;
@@ -268,7 +268,7 @@ void SolitarioGfx::DoDrag(int x, int y) {
 void SolitarioGfx::DoDrop() { DoDrop(NULL); }
 
 void SolitarioGfx::DoDrop(CardRegionGfx *DestRegion) {
-    CCardStack *DestStack;
+    CardStackGfx *DestStack;
     CardRegionGfx *BestRegion;
 
     if (DestRegion != NULL)
@@ -348,12 +348,12 @@ void SolitarioGfx::ZoomCard(int &sx, int &sy, int &dx, int &dy, int w, int h,
 }
 
 CardRegionGfx *SolitarioGfx::FindDropRegion(int Id, CardGfx card) {
-    CCardStack stack;
+    CardStackGfx stack;
     stack.Push(card);
     return FindDropRegion(Id, stack);
 }
 
-CardRegionGfx *SolitarioGfx::FindDropRegion(int Id, CCardStack stack) {
+CardRegionGfx *SolitarioGfx::FindDropRegion(int Id, CardStackGfx stack) {
     for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
         if ((vi->Id == Id) && vi->CanDrop(&stack))
             return &(*vi);
@@ -383,7 +383,7 @@ void SolitarioGfx::DrawBackground(BOOL bIsInit) {
 }
 
 CardRegionGfx *SolitarioGfx::GetBestStack(int x, int y, int w, int h,
-                                          CCardStack *stack) {
+                                          CardStackGfx *stack) {
     int maxoverlap = 0;
     int percent = 0;
     CardRegionGfx *best = 0;

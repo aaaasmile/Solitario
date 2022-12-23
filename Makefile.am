@@ -25,7 +25,7 @@ solitario_LDADD =\
 
 solitario_SOURCES = \
 	src/CardRegionGfx.cpp\
-	src/CCardStack.cpp\
+	src/CardStackGfx.cpp\
 	src/SolitarioGfx.cpp\
 	src/HightScoreMgr.cpp\
 	src/MusicManager.cpp\

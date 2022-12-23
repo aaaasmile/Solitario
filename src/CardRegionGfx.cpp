@@ -145,7 +145,7 @@ int CardRegionGfx::GetOverlapRatio(int x, int y, int w, int h) {
     return wi * hi;
 }
 
-bool CardRegionGfx::CanDrop(CCardStack *stack) {
+bool CardRegionGfx::CanDrop(CardStackGfx *stack) {
     if (InternalStack.Empty() &&
         (!(AcceptMode & CRD_DOKING) && !(AcceptMode & CRD_DOACE)))
         return false;

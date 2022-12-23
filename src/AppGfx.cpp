@@ -296,7 +296,7 @@ void AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
         }
         // clicked on the pile
         if (srcReg->Id == CRD_PILE) {
-            CCardStack *cs = new CCardStack;
+            CardStackGfx *cs = new CardStackGfx;
             if (srcReg->Empty() &&
                 !_p_SolitarioGfx->Empty(8))  // Bring back the cards
             {
@@ -330,7 +330,7 @@ void AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
             card.FaceUp() && srcReg->PtOnTop(event.button.x, event.button.y)) {
             cr = _p_SolitarioGfx->FindDropRegion(CRD_WASTE, card);
             if (cr) {
-                CCardStack *cs = new CCardStack;
+                CardStackGfx *cs = new CardStackGfx;
                 *cs = srcReg->Pop(1);
                 _p_SolitarioGfx->InitDrag(cs, -1, -1);
                 _p_SolitarioGfx->DoDrop(cr);

@@ -104,7 +104,7 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
 am_solitario_OBJECTS = src/CardRegionGfx.$(OBJEXT) \
-	src/CCardStack.$(OBJEXT) src/SolitarioGfx.$(OBJEXT) \
+	src/CardStackGfx.$(OBJEXT) src/SolitarioGfx.$(OBJEXT) \
 	src/HightScoreMgr.$(OBJEXT) src/MusicManager.$(OBJEXT) \
 	src/CustomMenu.$(OBJEXT) src/AppGfx.$(OBJEXT) \
 	src/fonts.$(OBJEXT) src/GameSettings.$(OBJEXT) \
@@ -129,7 +129,7 @@ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/src
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = src/$(DEPDIR)/AppGfx.Po \
-	src/$(DEPDIR)/CCardStack.Po src/$(DEPDIR)/CardRegionGfx.Po \
+	src/$(DEPDIR)/CardRegionGfx.Po src/$(DEPDIR)/CardStackGfx.Po \
 	src/$(DEPDIR)/CustomMenu.Po src/$(DEPDIR)/GameSettings.Po \
 	src/$(DEPDIR)/HightScoreMgr.Po src/$(DEPDIR)/Languages.Po \
 	src/$(DEPDIR)/MusicManager.Po src/$(DEPDIR)/SolitarioGfx.Po \
@@ -352,7 +352,7 @@ solitario_LDADD = \
 
 solitario_SOURCES = \
 	src/CardRegionGfx.cpp\
-	src/CCardStack.cpp\
+	src/CardStackGfx.cpp\
 	src/SolitarioGfx.cpp\
 	src/HightScoreMgr.cpp\
 	src/MusicManager.cpp\
@@ -469,7 +469,7 @@ src/$(DEPDIR)/$(am__dirstamp):
 	@: > src/$(DEPDIR)/$(am__dirstamp)
 src/CardRegionGfx.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/CCardStack.$(OBJEXT): src/$(am__dirstamp) \
+src/CardStackGfx.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/SolitarioGfx.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
@@ -508,8 +508,8 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/AppGfx.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/CCardStack.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/CardRegionGfx.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/CardStackGfx.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/CustomMenu.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/GameSettings.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/HightScoreMgr.Po@am__quote@ # am--include-marker
@@ -894,8 +894,8 @@ clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 distclean: distclean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 		-rm -f src/$(DEPDIR)/AppGfx.Po
-	-rm -f src/$(DEPDIR)/CCardStack.Po
 	-rm -f src/$(DEPDIR)/CardRegionGfx.Po
+	-rm -f src/$(DEPDIR)/CardStackGfx.Po
 	-rm -f src/$(DEPDIR)/CustomMenu.Po
 	-rm -f src/$(DEPDIR)/GameSettings.Po
 	-rm -f src/$(DEPDIR)/HightScoreMgr.Po
@@ -956,8 +956,8 @@ maintainer-clean: maintainer-clean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
 		-rm -f src/$(DEPDIR)/AppGfx.Po
-	-rm -f src/$(DEPDIR)/CCardStack.Po
 	-rm -f src/$(DEPDIR)/CardRegionGfx.Po
+	-rm -f src/$(DEPDIR)/CardStackGfx.Po
 	-rm -f src/$(DEPDIR)/CustomMenu.Po
 	-rm -f src/$(DEPDIR)/GameSettings.Po
 	-rm -f src/$(DEPDIR)/HightScoreMgr.Po

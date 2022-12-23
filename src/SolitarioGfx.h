@@ -44,7 +44,7 @@ public:
     CardRegionGfx *OnMouseDown(int x, int y);
 
     bool InitDrag(int x, int y);
-    bool InitDrag(CCardStack *CargoStack, int x, int y);
+    bool InitDrag(CardStackGfx *CargoStack, int x, int y);
 
     void DoDrag(int x, int y);
 
@@ -52,7 +52,7 @@ public:
     void DoDrop(CardRegionGfx *DestRegion);
 
     CardRegionGfx *FindDropRegion(int Id, CardGfx card);
-    CardRegionGfx *FindDropRegion(int Id, CCardStack stack);
+    CardRegionGfx *FindDropRegion(int Id, CardStackGfx stack);
 
     void ZoomCard(int &sx, int &sy, int &dx, int &dy, int width, int height,
                   SDL_Surface *bg, SDL_Surface *fg);
@@ -61,7 +61,7 @@ public:
     void DrawBackground(BOOL bIsInit);
 
     CardRegionGfx *GetBestStack(int x, int y, int width, int height,
-                                CCardStack *stack);
+                                CardStackGfx *stack);
 
     int DrawCard(int x, int y, int nCdIndex);
     int DrawCard(int x, int y, int nCdIndex, SDL_Surface *s);
@@ -93,13 +93,13 @@ public:
     void PushInRegion(int regionNo, CardGfx card) {
         _cardRegionList[regionNo].Push(card);
     }
-    void PushInRegion(int regionNo, CCardStack cs) {
+    void PushInRegion(int regionNo, CardStackGfx cs) {
         _cardRegionList[regionNo].Push(cs);
     }
     CardGfx PopFromRegion(int regionNo) {
         return _cardRegionList[regionNo].Pop();
     }
-    CCardStack PopFromRegion(int regionNo, int items) {
+    CardStackGfx PopFromRegion(int regionNo, int items) {
         return _cardRegionList[regionNo].Pop(items);
     }
     void SetCardFaceUp(int regionNo, bool fTrue, int idx) {
@@ -118,7 +118,7 @@ private:
     void UpdateTextureAsFlipScreen();
 
 private:
-    CCardStack _dragStack;
+    CardStackGfx _dragStack;
     DRAGCARD _dragCard;
     CardRegionGfx *_p_sourceRegion;
 
