@@ -10,10 +10,10 @@
 #include <string>
 
 #include "CustomMenu.h"
+#include "ErrorInfo.h"
 #include "HightScoreMgr.h"
 #include "Languages.h"
 #include "SolitarioGfx.h"
-#include "error_info.h"
 #include "win_type_global.h"
 
 class MusicManager;

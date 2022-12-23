@@ -1,4 +1,4 @@
-#include "fading.h"
+#include "Fading.h"
 
 #include "StdAfx.h"
 

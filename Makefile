@@ -107,10 +107,10 @@ am_solitario_OBJECTS = src/CardRegionGfx.$(OBJEXT) \
 	src/CardStackGfx.$(OBJEXT) src/SolitarioGfx.$(OBJEXT) \
 	src/HightScoreMgr.$(OBJEXT) src/MusicManager.$(OBJEXT) \
 	src/CustomMenu.$(OBJEXT) src/AppGfx.$(OBJEXT) \
-	src/fonts.$(OBJEXT) src/GameSettings.$(OBJEXT) \
-	src/gfx_util.$(OBJEXT) src/Languages.$(OBJEXT) \
-	src/main.$(OBJEXT) src/fading.$(OBJEXT) src/credits.$(OBJEXT) \
-	src/error_info.$(OBJEXT)
+	src/Fonts.$(OBJEXT) src/GameSettings.$(OBJEXT) \
+	src/GfxUtil.$(OBJEXT) src/Languages.$(OBJEXT) \
+	src/main.$(OBJEXT) src/Fading.$(OBJEXT) src/Credits.$(OBJEXT) \
+	src/ErrorInfo.$(OBJEXT)
 solitario_OBJECTS = $(am_solitario_OBJECTS)
 solitario_DEPENDENCIES = libini/libini.a
 AM_V_P = $(am__v_P_$(V))
@@ -130,12 +130,12 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = src/$(DEPDIR)/AppGfx.Po \
 	src/$(DEPDIR)/CardRegionGfx.Po src/$(DEPDIR)/CardStackGfx.Po \
-	src/$(DEPDIR)/CustomMenu.Po src/$(DEPDIR)/GameSettings.Po \
-	src/$(DEPDIR)/HightScoreMgr.Po src/$(DEPDIR)/Languages.Po \
-	src/$(DEPDIR)/MusicManager.Po src/$(DEPDIR)/SolitarioGfx.Po \
-	src/$(DEPDIR)/credits.Po src/$(DEPDIR)/error_info.Po \
-	src/$(DEPDIR)/fading.Po src/$(DEPDIR)/fonts.Po \
-	src/$(DEPDIR)/gfx_util.Po src/$(DEPDIR)/main.Po
+	src/$(DEPDIR)/Credits.Po src/$(DEPDIR)/CustomMenu.Po \
+	src/$(DEPDIR)/ErrorInfo.Po src/$(DEPDIR)/Fading.Po \
+	src/$(DEPDIR)/Fonts.Po src/$(DEPDIR)/GameSettings.Po \
+	src/$(DEPDIR)/GfxUtil.Po src/$(DEPDIR)/HightScoreMgr.Po \
+	src/$(DEPDIR)/Languages.Po src/$(DEPDIR)/MusicManager.Po \
+	src/$(DEPDIR)/SolitarioGfx.Po src/$(DEPDIR)/main.Po
 am__mv = mv -f
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -358,14 +358,14 @@ solitario_SOURCES = \
 	src/MusicManager.cpp\
 	src/CustomMenu.cpp\
 	src/AppGfx.cpp\
-	src/fonts.cpp\
+	src/Fonts.cpp\
 	src/GameSettings.cpp\
-	src/gfx_util.cpp\
+	src/GfxUtil.cpp\
 	src/Languages.cpp\
 	src/main.cpp\
-	src/fading.cpp\
-	src/credits.cpp\
-	src/error_info.cpp
+	src/Fading.cpp\
+	src/Credits.cpp\
+	src/ErrorInfo.cpp
 
 all: all-recursive
 
@@ -481,19 +481,19 @@ src/CustomMenu.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/AppGfx.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/fonts.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/Fonts.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/GameSettings.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/gfx_util.$(OBJEXT): src/$(am__dirstamp) \
+src/GfxUtil.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/Languages.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/main.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
-src/fading.$(OBJEXT): src/$(am__dirstamp) \
+src/Fading.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/credits.$(OBJEXT): src/$(am__dirstamp) \
+src/Credits.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/error_info.$(OBJEXT): src/$(am__dirstamp) \
+src/ErrorInfo.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 
 solitario$(EXEEXT): $(solitario_OBJECTS) $(solitario_DEPENDENCIES) $(EXTRA_solitario_DEPENDENCIES) 
@@ -510,17 +510,17 @@ distclean-compile:
 include src/$(DEPDIR)/AppGfx.Po # am--include-marker
 include src/$(DEPDIR)/CardRegionGfx.Po # am--include-marker
 include src/$(DEPDIR)/CardStackGfx.Po # am--include-marker
+include src/$(DEPDIR)/Credits.Po # am--include-marker
 include src/$(DEPDIR)/CustomMenu.Po # am--include-marker
+include src/$(DEPDIR)/ErrorInfo.Po # am--include-marker
+include src/$(DEPDIR)/Fading.Po # am--include-marker
+include src/$(DEPDIR)/Fonts.Po # am--include-marker
 include src/$(DEPDIR)/GameSettings.Po # am--include-marker
+include src/$(DEPDIR)/GfxUtil.Po # am--include-marker
 include src/$(DEPDIR)/HightScoreMgr.Po # am--include-marker
 include src/$(DEPDIR)/Languages.Po # am--include-marker
 include src/$(DEPDIR)/MusicManager.Po # am--include-marker
 include src/$(DEPDIR)/SolitarioGfx.Po # am--include-marker
-include src/$(DEPDIR)/credits.Po # am--include-marker
-include src/$(DEPDIR)/error_info.Po # am--include-marker
-include src/$(DEPDIR)/fading.Po # am--include-marker
-include src/$(DEPDIR)/fonts.Po # am--include-marker
-include src/$(DEPDIR)/gfx_util.Po # am--include-marker
 include src/$(DEPDIR)/main.Po # am--include-marker
 
 $(am__depfiles_remade):
@@ -896,17 +896,17 @@ distclean: distclean-recursive
 		-rm -f src/$(DEPDIR)/AppGfx.Po
 	-rm -f src/$(DEPDIR)/CardRegionGfx.Po
 	-rm -f src/$(DEPDIR)/CardStackGfx.Po
+	-rm -f src/$(DEPDIR)/Credits.Po
 	-rm -f src/$(DEPDIR)/CustomMenu.Po
+	-rm -f src/$(DEPDIR)/ErrorInfo.Po
+	-rm -f src/$(DEPDIR)/Fading.Po
+	-rm -f src/$(DEPDIR)/Fonts.Po
 	-rm -f src/$(DEPDIR)/GameSettings.Po
+	-rm -f src/$(DEPDIR)/GfxUtil.Po
 	-rm -f src/$(DEPDIR)/HightScoreMgr.Po
 	-rm -f src/$(DEPDIR)/Languages.Po
 	-rm -f src/$(DEPDIR)/MusicManager.Po
 	-rm -f src/$(DEPDIR)/SolitarioGfx.Po
-	-rm -f src/$(DEPDIR)/credits.Po
-	-rm -f src/$(DEPDIR)/error_info.Po
-	-rm -f src/$(DEPDIR)/fading.Po
-	-rm -f src/$(DEPDIR)/fonts.Po
-	-rm -f src/$(DEPDIR)/gfx_util.Po
 	-rm -f src/$(DEPDIR)/main.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
@@ -958,17 +958,17 @@ maintainer-clean: maintainer-clean-recursive
 		-rm -f src/$(DEPDIR)/AppGfx.Po
 	-rm -f src/$(DEPDIR)/CardRegionGfx.Po
 	-rm -f src/$(DEPDIR)/CardStackGfx.Po
+	-rm -f src/$(DEPDIR)/Credits.Po
 	-rm -f src/$(DEPDIR)/CustomMenu.Po
+	-rm -f src/$(DEPDIR)/ErrorInfo.Po
+	-rm -f src/$(DEPDIR)/Fading.Po
+	-rm -f src/$(DEPDIR)/Fonts.Po
 	-rm -f src/$(DEPDIR)/GameSettings.Po
+	-rm -f src/$(DEPDIR)/GfxUtil.Po
 	-rm -f src/$(DEPDIR)/HightScoreMgr.Po
 	-rm -f src/$(DEPDIR)/Languages.Po
 	-rm -f src/$(DEPDIR)/MusicManager.Po
 	-rm -f src/$(DEPDIR)/SolitarioGfx.Po
-	-rm -f src/$(DEPDIR)/credits.Po
-	-rm -f src/$(DEPDIR)/error_info.Po
-	-rm -f src/$(DEPDIR)/fading.Po
-	-rm -f src/$(DEPDIR)/fonts.Po
-	-rm -f src/$(DEPDIR)/gfx_util.Po
 	-rm -f src/$(DEPDIR)/main.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic

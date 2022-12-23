@@ -1,4 +1,4 @@
-#include "gfx_util.h"
+#include "GfxUtil.h"
 
 void GFX_UTIL::ScreenShade(SDL_Surface *surface, SDL_Rect *rect, float opacity,
                            unsigned char r1, unsigned char g1,

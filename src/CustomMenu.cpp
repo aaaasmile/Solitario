@@ -1,6 +1,6 @@
 #include "CustomMenu.h"
 
-#include "gfx_util.h"
+#include "GfxUtil.h"
 
 static const char *lpszFontFile = DATA_PREFIX "images/font.bmp";
 

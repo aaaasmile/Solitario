@@ -1,5 +1,5 @@
-#ifndef CCARDREGION_H
-#define CCARDREGION_H
+#ifndef CARDREGION_GFX__H
+#define CARDREGION_GFX__H
 
 #include <SDL2/SDL.h>
 
@@ -57,13 +57,13 @@ public:
                   int symbol, int x, int y, int xoff, int yoff)
         : Id(id),
           Attributes(attribs),
-          AcceptMode(amode),
-          DragMode(dmode),
+          _acceptMode(amode),
+          _dragMode(dmode),
           Symbol(symbol),
           XCoord(x),
           YCoord(y),
-          xOffset(xoff),
-          yOffset(yoff) {}
+          _xOffset(xoff),
+          _yOffset(yoff) {}
 
     CardRegionGfx() {}
     ~CardRegionGfx() {}
@@ -81,16 +81,16 @@ public:
     }
 
     void SetOffsets(int x, int y) {
-        xOffset = x;
-        yOffset = y;
+        _xOffset = x;
+        _yOffset = y;
     }
     int GetOffsets(int &xoff, int &yoff) {
-        xoff = xOffset;
-        yoff = yOffset;
+        xoff = _xOffset;
+        yoff = _yOffset;
         return 0;
     }
-    int GetxOffset() { return xOffset; }
-    int GetyOffset() { return yOffset; }
+    int GetxOffset() { return _xOffset; }
+    int GetyOffset() { return _yOffset; }
 
     void InitCardFaces() {
         InternalStack.SetCardsFaceUp(Attributes & CRD_FACEUP);
@@ -109,12 +109,12 @@ public:
         return true;
     }
 
-    void SetDragMode(int mode) { DragMode = mode; }
-    int GetDragMode() const { return DragMode; }
+    void SetDragMode(int mode) { _dragMode = mode; }
+    int GetDragMode() const { return _dragMode; }
 
     void SetSymbol(int symbol) { Symbol = symbol; }
 
-    void SetAcceptMode(unsigned int mode) { AcceptMode = mode; }
+    void SetAcceptMode(unsigned int mode) { _acceptMode = mode; }
     void SetAttributes(unsigned int attr) { Attributes = attr; }
     int GetAttributes() { return Attributes; }
 
@@ -158,12 +158,12 @@ public:
     int Symbol;
 
 private:
-    int xOffset;
-    int yOffset;
+    int _xOffset;
+    int _yOffset;
 
-    int DragMode;
+    int _dragMode;
 
-    unsigned int AcceptMode;
+    unsigned int _acceptMode;
 };
 
-#endif  // CCARDREGION_H
+#endif

@@ -3,11 +3,11 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "ErrorInfo.h"
+#include "GfxUtil.h"
 #include "MusicManager.h"
 #include "StdAfx.h"
 #include "config.h"
-#include "error_info.h"
-#include "gfx_util.h"
 #include "win_type_global.h"
 
 #ifdef _WINDOWS
@@ -15,8 +15,8 @@
 #else
 #include "libini.h"
 #endif
-#include "credits.h"
-#include "fading.h"
+#include "Credits.h"
+#include "Fading.h"
 
 #define CRD_PILE 0
 #define CRD_FOUNDATION 1

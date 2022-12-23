@@ -3,7 +3,7 @@
 
 #include "AppGfx.h"
 #include "StdAfx.h"
-#include "error_info.h"
+#include "ErrorInfo.h"
 
 int main(int argc, char* argv[]) {
 #ifdef _WINDOWS

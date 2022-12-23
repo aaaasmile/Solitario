@@ -8,8 +8,8 @@
 #include <SDL2/SDL.h>
 #include <SDL_image.h>
 
-#include "error_info.h"
-#include "fonts.h"
+#include "ErrorInfo.h"
+#include "Fonts.h"
 #include "win_type_global.h"
 
 class CustomMenu {

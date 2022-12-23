@@ -9,7 +9,7 @@
 
 #include <string>
 
-#include "error_info.h"
+#include "ErrorInfo.h"
 
 #define TEXTUPPER 0
 #define TEXTLOWER 1

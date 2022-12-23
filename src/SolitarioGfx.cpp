@@ -4,8 +4,8 @@
 #include <SDL_image.h>
 #include <stdio.h>
 
-#include "fading.h"
-#include "gfx_util.h"
+#include "Fading.h"
+#include "GfxUtil.h"
 #include "win_type_global.h"
 
 // card graphics

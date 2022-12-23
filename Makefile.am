@@ -31,12 +31,12 @@ solitario_SOURCES = \
 	src/MusicManager.cpp\
 	src/CustomMenu.cpp\
 	src/AppGfx.cpp\
-	src/fonts.cpp\
+	src/Fonts.cpp\
 	src/GameSettings.cpp\
-	src/gfx_util.cpp\
+	src/GfxUtil.cpp\
 	src/Languages.cpp\
 	src/main.cpp\
-	src/fading.cpp\
-	src/credits.cpp\
-	src/error_info.cpp
+	src/Fading.cpp\
+	src/Credits.cpp\
+	src/ErrorInfo.cpp
 	

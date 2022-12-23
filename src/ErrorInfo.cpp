@@ -1,4 +1,4 @@
-#include "error_info.h"
+#include "ErrorInfo.h"
 
 LPErrInApp ERR_UTIL::ErrorCreate(const char* errtext) {
     LPErrInApp res = new ErrInApp();

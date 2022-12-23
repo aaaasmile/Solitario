@@ -3,8 +3,8 @@
 #include <SDL2/SDL.h>
 
 #include "GameSettings.h"
+#include "GfxUtil.h"
 #include "StdAfx.h"
-#include "gfx_util.h"
 
 static const char* lpszMusicFile = DATA_PREFIX "watermusic.it";
 
