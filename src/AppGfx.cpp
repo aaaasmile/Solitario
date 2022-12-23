@@ -6,7 +6,6 @@
 #include "ErrorInfo.h"
 #include "GfxUtil.h"
 #include "MusicManager.h"
-#include "StdAfx.h"
 #include "config.h"
 #include "win_type_global.h"
 

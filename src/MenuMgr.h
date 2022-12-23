@@ -1,10 +1,9 @@
-
-#if !defined(AFX_CMENUMGR_H__BE9C3990_5883_489E_943E_3D9832DBC369__INCLUDED_)
-#define AFX_CMENUMGR_H__BE9C3990_5883_489E_943E_3D9832DBC369__INCLUDED_
+#ifndef MENU_MGR__H
+#define MENU_MGR__H
 
 #if _MSC_VER > 1000
 #pragma once
-#endif  // _MSC_VER > 1000
+#endif
 
 #include <SDL2/SDL.h>
 #include <SDL_ttf.h>

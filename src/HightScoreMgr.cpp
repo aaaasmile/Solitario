@@ -1,8 +1,9 @@
 #include "HightScoreMgr.h"
 
+#include <fcntl.h>
+#include <memory.h>
 #include <stdlib.h>
 
-#include "StdAfx.h"
 #ifdef _WINDOWS
 #include <io.h>
 #include <sys/stat.h>
@@ -10,7 +11,6 @@
 #else
 #include <unistd.h>
 #endif
-#include <fcntl.h>
 
 using namespace std;
 

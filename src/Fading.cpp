@@ -1,7 +1,5 @@
 #include "Fading.h"
 
-#include "StdAfx.h"
-
 /* Fades the given surface in or out to the given screen within the given time
  If the image surface is the screen surface (pointer are equal), a copy is made
  first. We must do that because we are overwriting the Screen Surface. */

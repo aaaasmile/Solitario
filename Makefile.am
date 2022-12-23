@@ -38,5 +38,8 @@ solitario_SOURCES = \
 	src/main.cpp\
 	src/Fading.cpp\
 	src/Credits.cpp\
-	src/ErrorInfo.cpp
+	src/ErrorInfo.cpp\
+	src/MenuMgr.cpp\
+	src/CompGfx/cLabelLinkGfx.cpp\
+	src/CompGfx/cLabelGfx.cpp
 	

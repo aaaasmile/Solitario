@@ -1,7 +1,3 @@
-// cMenuMgr.cpp: implementation of the cMenuMgr class.
-//
-//////////////////////////////////////////////////////////////////////
-
 #include "MenuMgr.h"
 
 #include <SDL2/SDL.h>
@@ -12,12 +8,11 @@
 #include <stdlib.h>
 
 #include "AppGfx.h"
+#include "CompGfx/cLabelGfx.h"
+#include "CompGfx/cLabelLinkGfx.h"
 #include "ErrorInfo.h"
 #include "GfxUtil.h"
 #include "Languages.h"
-#include "StdAfx.h"
-#include "cLabelGfx.h"
-#include "cLabelLinkGfx.h"
 #include "win_type_global.h"
 
 static const char* lpszUrlHome = "http://www.invido.it";

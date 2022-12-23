@@ -110,7 +110,9 @@ am_solitario_OBJECTS = src/CardRegionGfx.$(OBJEXT) \
 	src/Fonts.$(OBJEXT) src/GameSettings.$(OBJEXT) \
 	src/GfxUtil.$(OBJEXT) src/Languages.$(OBJEXT) \
 	src/main.$(OBJEXT) src/Fading.$(OBJEXT) src/Credits.$(OBJEXT) \
-	src/ErrorInfo.$(OBJEXT)
+	src/ErrorInfo.$(OBJEXT) src/MenuMgr.$(OBJEXT) \
+	src/CompGfx/cLabelLinkGfx.$(OBJEXT) \
+	src/CompGfx/cLabelGfx.$(OBJEXT)
 solitario_OBJECTS = $(am_solitario_OBJECTS)
 solitario_DEPENDENCIES = libini/libini.a
 AM_V_P = $(am__v_P_@AM_V@)
@@ -134,8 +136,10 @@ am__depfiles_remade = src/$(DEPDIR)/AppGfx.Po \
 	src/$(DEPDIR)/ErrorInfo.Po src/$(DEPDIR)/Fading.Po \
 	src/$(DEPDIR)/Fonts.Po src/$(DEPDIR)/GameSettings.Po \
 	src/$(DEPDIR)/GfxUtil.Po src/$(DEPDIR)/HightScoreMgr.Po \
-	src/$(DEPDIR)/Languages.Po src/$(DEPDIR)/MusicManager.Po \
-	src/$(DEPDIR)/SolitarioGfx.Po src/$(DEPDIR)/main.Po
+	src/$(DEPDIR)/Languages.Po src/$(DEPDIR)/MenuMgr.Po \
+	src/$(DEPDIR)/MusicManager.Po src/$(DEPDIR)/SolitarioGfx.Po \
+	src/$(DEPDIR)/main.Po src/CompGfx/$(DEPDIR)/cLabelGfx.Po \
+	src/CompGfx/$(DEPDIR)/cLabelLinkGfx.Po
 am__mv = mv -f
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -365,7 +369,10 @@ solitario_SOURCES = \
 	src/main.cpp\
 	src/Fading.cpp\
 	src/Credits.cpp\
-	src/ErrorInfo.cpp
+	src/ErrorInfo.cpp\
+	src/MenuMgr.cpp\
+	src/CompGfx/cLabelLinkGfx.cpp\
+	src/CompGfx/cLabelGfx.cpp
 
 all: all-recursive
 
@@ -495,6 +502,18 @@ src/Credits.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/ErrorInfo.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
+src/MenuMgr.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/CompGfx/$(am__dirstamp):
+	@$(MKDIR_P) src/CompGfx
+	@: > src/CompGfx/$(am__dirstamp)
+src/CompGfx/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) src/CompGfx/$(DEPDIR)
+	@: > src/CompGfx/$(DEPDIR)/$(am__dirstamp)
+src/CompGfx/cLabelLinkGfx.$(OBJEXT): src/CompGfx/$(am__dirstamp) \
+	src/CompGfx/$(DEPDIR)/$(am__dirstamp)
+src/CompGfx/cLabelGfx.$(OBJEXT): src/CompGfx/$(am__dirstamp) \
+	src/CompGfx/$(DEPDIR)/$(am__dirstamp)
 
 solitario$(EXEEXT): $(solitario_OBJECTS) $(solitario_DEPENDENCIES) $(EXTRA_solitario_DEPENDENCIES) 
 	@rm -f solitario$(EXEEXT)
@@ -503,6 +522,7 @@ solitario$(EXEEXT): $(solitario_OBJECTS) $(solitario_DEPENDENCIES) $(EXTRA_solit
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 	-rm -f src/*.$(OBJEXT)
+	-rm -f src/CompGfx/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
@@ -519,9 +539,12 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/GfxUtil.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/HightScoreMgr.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/Languages.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/MenuMgr.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/MusicManager.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/SolitarioGfx.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/main.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/CompGfx/$(DEPDIR)/cLabelGfx.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/CompGfx/$(DEPDIR)/cLabelLinkGfx.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -883,6 +906,8 @@ distclean-generic:
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
 	-rm -f src/$(DEPDIR)/$(am__dirstamp)
 	-rm -f src/$(am__dirstamp)
+	-rm -f src/CompGfx/$(DEPDIR)/$(am__dirstamp)
+	-rm -f src/CompGfx/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -905,9 +930,12 @@ distclean: distclean-recursive
 	-rm -f src/$(DEPDIR)/GfxUtil.Po
 	-rm -f src/$(DEPDIR)/HightScoreMgr.Po
 	-rm -f src/$(DEPDIR)/Languages.Po
+	-rm -f src/$(DEPDIR)/MenuMgr.Po
 	-rm -f src/$(DEPDIR)/MusicManager.Po
 	-rm -f src/$(DEPDIR)/SolitarioGfx.Po
 	-rm -f src/$(DEPDIR)/main.Po
+	-rm -f src/CompGfx/$(DEPDIR)/cLabelGfx.Po
+	-rm -f src/CompGfx/$(DEPDIR)/cLabelLinkGfx.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-tags
@@ -967,9 +995,12 @@ maintainer-clean: maintainer-clean-recursive
 	-rm -f src/$(DEPDIR)/GfxUtil.Po
 	-rm -f src/$(DEPDIR)/HightScoreMgr.Po
 	-rm -f src/$(DEPDIR)/Languages.Po
+	-rm -f src/$(DEPDIR)/MenuMgr.Po
 	-rm -f src/$(DEPDIR)/MusicManager.Po
 	-rm -f src/$(DEPDIR)/SolitarioGfx.Po
 	-rm -f src/$(DEPDIR)/main.Po
+	-rm -f src/CompGfx/$(DEPDIR)/cLabelGfx.Po
+	-rm -f src/CompGfx/$(DEPDIR)/cLabelLinkGfx.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

@@ -4,7 +4,6 @@
 
 #include "GameSettings.h"
 #include "GfxUtil.h"
-#include "StdAfx.h"
 
 static const char* lpszMusicFile = DATA_PREFIX "watermusic.it";
 

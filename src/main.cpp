@@ -2,7 +2,6 @@
 #include <stdlib.h>
 
 #include "AppGfx.h"
-#include "StdAfx.h"
 #include "ErrorInfo.h"
 
 int main(int argc, char* argv[]) {

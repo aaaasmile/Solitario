@@ -1,5 +1,5 @@
-#ifndef __ENGINE_APP_H
-#define __ENGINE_APP_H
+#ifndef APPGFX__H
+#define APPGFX__H
 
 #ifdef _WINDOWS
 #pragma warning(disable : 4786)
