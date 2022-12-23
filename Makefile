@@ -104,7 +104,7 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
 am_solitario_OBJECTS = src/CCardRegion.$(OBJEXT) \
-	src/CCardStack.$(OBJEXT) src/CGame.$(OBJEXT) \
+	src/CCardStack.$(OBJEXT) src/SolitarioGfx.$(OBJEXT) \
 	src/HightScoreMgr.$(OBJEXT) src/MusicManager.$(OBJEXT) \
 	src/CustomMenu.$(OBJEXT) src/AppGfx.$(OBJEXT) \
 	src/fonts.$(OBJEXT) src/GameSettings.$(OBJEXT) \
@@ -130,9 +130,9 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = src/$(DEPDIR)/AppGfx.Po \
 	src/$(DEPDIR)/CCardRegion.Po src/$(DEPDIR)/CCardStack.Po \
-	src/$(DEPDIR)/CGame.Po src/$(DEPDIR)/CustomMenu.Po \
-	src/$(DEPDIR)/GameSettings.Po src/$(DEPDIR)/HightScoreMgr.Po \
-	src/$(DEPDIR)/Languages.Po src/$(DEPDIR)/MusicManager.Po \
+	src/$(DEPDIR)/CustomMenu.Po src/$(DEPDIR)/GameSettings.Po \
+	src/$(DEPDIR)/HightScoreMgr.Po src/$(DEPDIR)/Languages.Po \
+	src/$(DEPDIR)/MusicManager.Po src/$(DEPDIR)/SolitarioGfx.Po \
 	src/$(DEPDIR)/credits.Po src/$(DEPDIR)/error_info.Po \
 	src/$(DEPDIR)/fading.Po src/$(DEPDIR)/fonts.Po \
 	src/$(DEPDIR)/gfx_util.Po src/$(DEPDIR)/main.Po
@@ -353,7 +353,7 @@ solitario_LDADD = \
 solitario_SOURCES = \
 	src/CCardRegion.cpp\
 	src/CCardStack.cpp\
-	src/CGame.cpp\
+	src/SolitarioGfx.cpp\
 	src/HightScoreMgr.cpp\
 	src/MusicManager.cpp\
 	src/CustomMenu.cpp\
@@ -471,7 +471,8 @@ src/CCardRegion.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/CCardStack.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/CGame.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/SolitarioGfx.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
 src/HightScoreMgr.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/MusicManager.$(OBJEXT): src/$(am__dirstamp) \
@@ -509,12 +510,12 @@ distclean-compile:
 include src/$(DEPDIR)/AppGfx.Po # am--include-marker
 include src/$(DEPDIR)/CCardRegion.Po # am--include-marker
 include src/$(DEPDIR)/CCardStack.Po # am--include-marker
-include src/$(DEPDIR)/CGame.Po # am--include-marker
 include src/$(DEPDIR)/CustomMenu.Po # am--include-marker
 include src/$(DEPDIR)/GameSettings.Po # am--include-marker
 include src/$(DEPDIR)/HightScoreMgr.Po # am--include-marker
 include src/$(DEPDIR)/Languages.Po # am--include-marker
 include src/$(DEPDIR)/MusicManager.Po # am--include-marker
+include src/$(DEPDIR)/SolitarioGfx.Po # am--include-marker
 include src/$(DEPDIR)/credits.Po # am--include-marker
 include src/$(DEPDIR)/error_info.Po # am--include-marker
 include src/$(DEPDIR)/fading.Po # am--include-marker
@@ -895,12 +896,12 @@ distclean: distclean-recursive
 		-rm -f src/$(DEPDIR)/AppGfx.Po
 	-rm -f src/$(DEPDIR)/CCardRegion.Po
 	-rm -f src/$(DEPDIR)/CCardStack.Po
-	-rm -f src/$(DEPDIR)/CGame.Po
 	-rm -f src/$(DEPDIR)/CustomMenu.Po
 	-rm -f src/$(DEPDIR)/GameSettings.Po
 	-rm -f src/$(DEPDIR)/HightScoreMgr.Po
 	-rm -f src/$(DEPDIR)/Languages.Po
 	-rm -f src/$(DEPDIR)/MusicManager.Po
+	-rm -f src/$(DEPDIR)/SolitarioGfx.Po
 	-rm -f src/$(DEPDIR)/credits.Po
 	-rm -f src/$(DEPDIR)/error_info.Po
 	-rm -f src/$(DEPDIR)/fading.Po
@@ -957,12 +958,12 @@ maintainer-clean: maintainer-clean-recursive
 		-rm -f src/$(DEPDIR)/AppGfx.Po
 	-rm -f src/$(DEPDIR)/CCardRegion.Po
 	-rm -f src/$(DEPDIR)/CCardStack.Po
-	-rm -f src/$(DEPDIR)/CGame.Po
 	-rm -f src/$(DEPDIR)/CustomMenu.Po
 	-rm -f src/$(DEPDIR)/GameSettings.Po
 	-rm -f src/$(DEPDIR)/HightScoreMgr.Po
 	-rm -f src/$(DEPDIR)/Languages.Po
 	-rm -f src/$(DEPDIR)/MusicManager.Po
+	-rm -f src/$(DEPDIR)/SolitarioGfx.Po
 	-rm -f src/$(DEPDIR)/credits.Po
 	-rm -f src/$(DEPDIR)/error_info.Po
 	-rm -f src/$(DEPDIR)/fading.Po

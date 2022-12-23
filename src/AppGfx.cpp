@@ -167,7 +167,7 @@ LPErrInApp AppGfx::startGameLoop() {
     if (_p_SolitarioGfx != NULL) {
         delete _p_SolitarioGfx;
     }
-    _p_SolitarioGfx = new CGame();
+    _p_SolitarioGfx = new SolitarioGfx();
 
     _p_SolitarioGfx->SetDeckType(_p_GameSettings->deckTypeVal);
     _p_SolitarioGfx->ClearSurface();

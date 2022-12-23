@@ -1,7 +1,5 @@
 #include "CCardRegion.h"
 
-#include "CGame.h"
-
 void CCardRegion::InitCardCoords() {
     if (InternalStack.Empty())
         return;

@@ -26,7 +26,7 @@ solitario_LDADD =\
 solitario_SOURCES = \
 	src/CCardRegion.cpp\
 	src/CCardStack.cpp\
-	src/CGame.cpp\
+	src/SolitarioGfx.cpp\
 	src/HightScoreMgr.cpp\
 	src/MusicManager.cpp\
 	src/CustomMenu.cpp\

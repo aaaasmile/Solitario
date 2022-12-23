@@ -1,4 +1,4 @@
-#include "CGame.h"
+#include "SolitarioGfx.h"
 
 #include <SDL_endian.h>
 #include <SDL_image.h>
@@ -21,10 +21,10 @@ int const CARDBACKLOC = 40 * g_CARDWIDTH;  // modify to allow custom card backs
 #define THINKINGS_PER_TICK 1
 
 static const char *lpszBackgroundImgFile = DATA_PREFIX "im001537.jpg";
-static const char *lpszDeckDir = DATA_PREFIX "mazzo/";
+static const char *lpszDeckDir = DATA_PREFIX "mazzi/";
 static const char *lpszDataDir = DATA_PREFIX;
 
-CGame::CGame() {
+SolitarioGfx::SolitarioGfx() {
     _p_background = 0;
     _p_scene_background = 0;
     _p_ScreenTexture = 0;
@@ -33,9 +33,10 @@ CGame::CGame() {
     }
 }
 
-CGame::~CGame() { ClearSurface(); }
+SolitarioGfx::~SolitarioGfx() { ClearSurface(); }
 
-LPErrInApp CGame::Initialize(SDL_Surface *s, SDL_Renderer *r) {
+LPErrInApp SolitarioGfx::Initialize(SDL_Surface *s, SDL_Renderer *r) {
+    TRACE("Initialize Solitario");
     LPErrInApp err;
     _p_screen = s;
     _p_sdlRenderer = r;
@@ -72,12 +73,12 @@ LPErrInApp CGame::Initialize(SDL_Surface *s, SDL_Renderer *r) {
     return 0;
 }
 
-void CGame::DrawCardStack(rVI vi) {
+void SolitarioGfx::DrawCardStack(rVI vi) {
     CCardRegion *cardRegion = &(*vi);
     DrawCardStack(NULL, cardRegion);
 }
 
-void CGame::DrawCardStack(SDL_Surface *s, CCardRegion *pcardRegion) {
+void SolitarioGfx::DrawCardStack(SDL_Surface *s, CCardRegion *pcardRegion) {
     if (!(pcardRegion->Attributes & CRD_VISIBLE))
         return;
 
@@ -92,7 +93,7 @@ void CGame::DrawCardStack(SDL_Surface *s, CCardRegion *pcardRegion) {
     }
 }
 
-void CGame::ClearSurface() {
+void SolitarioGfx::ClearSurface() {
     if (_p_background)
         SDL_FreeSurface(_p_background);
     if (_p_scene_background)
@@ -103,15 +104,15 @@ void CGame::ClearSurface() {
     }
 }
 
-void CGame::CreateRegion(int id, unsigned int attribs, unsigned int amode,
-                         int dmode, int symbol, int x, int y, int xoffset,
-                         int yoffset) {
+void SolitarioGfx::CreateRegion(int id, unsigned int attribs,
+                                unsigned int amode, int dmode, int symbol,
+                                int x, int y, int xoffset, int yoffset) {
     CCardRegion *cr = new CCardRegion(id, attribs, amode, dmode, symbol, x, y,
                                       xoffset, yoffset);
     _cardRegionList.push_back(*cr);
 }
 
-bool CGame::DeleteRegion(CCardRegion *pRegion) {
+bool SolitarioGfx::DeleteRegion(CCardRegion *pRegion) {
     for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
         if (&(*vi) == pRegion) {
             _cardRegionList.erase(vi);
@@ -122,19 +123,19 @@ bool CGame::DeleteRegion(CCardRegion *pRegion) {
     return false;
 }
 
-void CGame::EmptyStacks() {
+void SolitarioGfx::EmptyStacks() {
     for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi)
         vi->Clear();
 }
 
-void CGame::InitAllCoords() {
+void SolitarioGfx::InitAllCoords() {
     for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
         vi->InitCardCoords();
         vi->InitCardFaces();
     }
 }
 
-CCardRegion *CGame::OnMouseDown(int x, int y) {
+CCardRegion *SolitarioGfx::OnMouseDown(int x, int y) {
     for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
         if (vi->PtInStack(x, y)) {
             _p_sourceRegion = &(*vi);
@@ -144,9 +145,9 @@ CCardRegion *CGame::OnMouseDown(int x, int y) {
     return NULL;
 }
 
-bool CGame::InitDrag(int x, int y) { return InitDrag(NULL, x, y); }
+bool SolitarioGfx::InitDrag(int x, int y) { return InitDrag(NULL, x, y); }
 
-bool CGame::InitDrag(CCardStack *CargoStack, int x, int y) {
+bool SolitarioGfx::InitDrag(CCardStack *CargoStack, int x, int y) {
     if (CargoStack == NULL) {
         if (_p_sourceRegion->Empty())
             return false;
@@ -219,14 +220,14 @@ bool CGame::InitDrag(CCardStack *CargoStack, int x, int y) {
     return true;
 }
 
-void CGame::UpdateTextureAsFlipScreen() {
+void SolitarioGfx::UpdateTextureAsFlipScreen() {
     SDL_UpdateTexture(_p_ScreenTexture, NULL, _p_screen->pixels,
                       _p_screen->pitch);
     SDL_RenderCopy(_p_sdlRenderer, _p_ScreenTexture, NULL, NULL);
     SDL_RenderPresent(_p_sdlRenderer);
 }
 
-void CGame::DoDrag(int x, int y) {
+void SolitarioGfx::DoDrag(int x, int y) {
     SDL_Rect rcs;
     SDL_Rect rcd;
 
@@ -264,9 +265,9 @@ void CGame::DoDrag(int x, int y) {
     UpdateTextureAsFlipScreen();
 }
 
-void CGame::DoDrop() { DoDrop(NULL); }
+void SolitarioGfx::DoDrop() { DoDrop(NULL); }
 
-void CGame::DoDrop(CCardRegion *DestRegion) {
+void SolitarioGfx::DoDrop(CCardRegion *DestRegion) {
     CCardStack *DestStack;
     CCardRegion *BestRegion;
 
@@ -309,8 +310,8 @@ void calcPt(int x0, int y0, int x1, int y1, float t, int &X, int &Y) {
     Y = int(y0 + t * (y1 - y0) + .5);
 }
 
-void CGame::ZoomCard(int &sx, int &sy, int &dx, int &dy, int w, int h,
-                     SDL_Surface *bg, SDL_Surface *fg) {
+void SolitarioGfx::ZoomCard(int &sx, int &sy, int &dx, int &dy, int w, int h,
+                            SDL_Surface *bg, SDL_Surface *fg) {
     SDL_Rect rcs;
     SDL_Rect rcd;
     SDL_Rect dest;
@@ -346,13 +347,13 @@ void CGame::ZoomCard(int &sx, int &sy, int &dx, int &dy, int w, int h,
     DrawStaticScene();
 }
 
-CCardRegion *CGame::FindDropRegion(int Id, CCard card) {
+CCardRegion *SolitarioGfx::FindDropRegion(int Id, CCard card) {
     CCardStack stack;
     stack.Push(card);
     return FindDropRegion(Id, stack);
 }
 
-CCardRegion *CGame::FindDropRegion(int Id, CCardStack stack) {
+CCardRegion *SolitarioGfx::FindDropRegion(int Id, CCardStack stack) {
     for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
         if ((vi->Id == Id) && vi->CanDrop(&stack))
             return &(*vi);
@@ -360,7 +361,7 @@ CCardRegion *CGame::FindDropRegion(int Id, CCardStack stack) {
     return NULL;
 }
 
-void CGame::DrawStaticScene() {
+void SolitarioGfx::DrawStaticScene() {
     for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
         SDL_PumpEvents();
         DrawCardStack(vi);
@@ -368,7 +369,7 @@ void CGame::DrawStaticScene() {
     UpdateTextureAsFlipScreen();
 }
 
-void CGame::DrawBackground(BOOL bIsInit) {
+void SolitarioGfx::DrawBackground(BOOL bIsInit) {
     if (_p_scene_background) {
         if (!bIsInit) {
             SDL_BlitSurface(_p_scene_background, NULL, _p_screen, NULL);
@@ -381,8 +382,8 @@ void CGame::DrawBackground(BOOL bIsInit) {
         DrawCardStack(vi);
 }
 
-CCardRegion *CGame::GetBestStack(int x, int y, int w, int h,
-                                 CCardStack *stack) {
+CCardRegion *SolitarioGfx::GetBestStack(int x, int y, int w, int h,
+                                        CCardStack *stack) {
     int maxoverlap = 0;
     int percent = 0;
     CCardRegion *best = 0;
@@ -400,11 +401,11 @@ CCardRegion *CGame::GetBestStack(int x, int y, int w, int h,
     return best;
 }
 
-int CGame::DrawCard(int x, int y, int nCdIndex) {
+int SolitarioGfx::DrawCard(int x, int y, int nCdIndex) {
     return DrawCard(x, y, nCdIndex, _p_screen);
 }
 
-int CGame::DrawCard(int x, int y, int nCdIndex, SDL_Surface *s) {
+int SolitarioGfx::DrawCard(int x, int y, int nCdIndex, SDL_Surface *s) {
     if (nCdIndex < 0)
         nCdIndex = 0;
     if (nCdIndex > NUM_CARDS)
@@ -426,7 +427,7 @@ int CGame::DrawCard(int x, int y, int nCdIndex, SDL_Surface *s) {
     return SDL_BlitSurface(_p_CardsSurf[nCdIndex], &_rctSrcCard, s, &dest);
 }
 
-int CGame::DrawCard(VI vi, SDL_Surface *s) {
+int SolitarioGfx::DrawCard(VI vi, SDL_Surface *s) {
     int nCdIndex = vi->Idx;
 
     if (nCdIndex < 0)
@@ -449,9 +450,11 @@ int CGame::DrawCard(VI vi, SDL_Surface *s) {
     return SDL_BlitSurface(_p_CardsSurf[nCdIndex], &_rctSrcCard, s, &dest);
 }
 
-int CGame::DrawCardBack(int x, int y) { return DrawCardBack(x, y, _p_screen); }
+int SolitarioGfx::DrawCardBack(int x, int y) {
+    return DrawCardBack(x, y, _p_screen);
+}
 
-int CGame::DrawCardBack(int x, int y, SDL_Surface *s) {
+int SolitarioGfx::DrawCardBack(int x, int y, SDL_Surface *s) {
     _rctSrcCard.x = 0;
     _rctSrcCard.y = 0;
     _rctSrcCard.w = _p_Symbol[0]->clip_rect.w;  // TODO use a funtion
@@ -464,11 +467,11 @@ int CGame::DrawCardBack(int x, int y, SDL_Surface *s) {
     return SDL_BlitSurface(_p_Symbol[0], &_rctSrcCard, s, &dest);
 }
 
-int CGame::DrawSymbol(int x, int y, int nSymbol) {
+int SolitarioGfx::DrawSymbol(int x, int y, int nSymbol) {
     return DrawSymbol(x, y, nSymbol, _p_screen);
 }
 
-int CGame::DrawSymbol(int x, int y, int nSymbol, SDL_Surface *s) {
+int SolitarioGfx::DrawSymbol(int x, int y, int nSymbol, SDL_Surface *s) {
     if (nSymbol < 1)
         return -1;  // TODO error handling
     if (nSymbol > 3)
@@ -486,7 +489,7 @@ int CGame::DrawSymbol(int x, int y, int nSymbol, SDL_Surface *s) {
     return SDL_BlitSurface(_p_Symbol[nSymbol], &_rctSrcCard, s, &dest);
 }
 
-int CGame::AnimateCards() {
+int SolitarioGfx::AnimateCards() {
     srand((unsigned)time(NULL));
 
     int rot;
@@ -539,7 +542,7 @@ int CGame::AnimateCards() {
     return 0;
 }
 
-void CGame::LoadDeckFromSingleFile() {
+void SolitarioGfx::LoadDeckFromSingleFile() {
     std::string strTmp;
     std::string strSuffix;
     CHAR buff[128];
@@ -584,7 +587,7 @@ void CGame::LoadDeckFromSingleFile() {
     }
 }
 
-void CGame::LoadSymbolsFromSingleFile() {
+void SolitarioGfx::LoadSymbolsFromSingleFile() {
     VCT_STRINGS vct_Strings;
     vct_Strings.push_back("dorso.jpg");
     vct_Strings.push_back("fine_1.jpg");
@@ -605,7 +608,8 @@ void CGame::LoadSymbolsFromSingleFile() {
     }
 }
 
-LPErrInApp CGame::LoadCardPac() {
+LPErrInApp SolitarioGfx::LoadCardPac() {
+    TRACE("Load card Pac");
     char describtion[100];
     Uint8 num_anims;
     Uint16 w, h;
@@ -654,7 +658,7 @@ LPErrInApp CGame::LoadCardPac() {
     return NULL;
 }
 
-LPErrInApp CGame::LoadSymbolsForPac() {
+LPErrInApp SolitarioGfx::LoadSymbolsForPac() {
     std::string strFileSymbName = lpszDataDir;
     strFileSymbName += _DeckType.GetSymbolFileName();
 

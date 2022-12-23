@@ -1,5 +1,5 @@
-#ifndef CGAME_H
-#define CGAME_H
+#ifndef SOLIATRIO_GFX__H
+#define SOLIATRIO_GFX__H
 
 #include <vector>
 
@@ -22,12 +22,12 @@ const unsigned int CRD_XSYMBOL = 1;
 const unsigned int CRD_OSYMBOL = 2;
 const unsigned int CRD_HSYMBOL = 3;
 
-class CGame {
+class SolitarioGfx {
     enum { NUM_CARDS_ONDECK = 40, NUM_SYMBOLS = 4 };
 
 public:
-    CGame();
-    ~CGame();
+    SolitarioGfx();
+    ~SolitarioGfx();
 
     LPErrInApp Initialize(SDL_Surface *s, SDL_Renderer *r);
     void Clear() { _cardRegionList.clear(); }

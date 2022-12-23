@@ -9,10 +9,10 @@
 
 #include <string>
 
-#include "CGame.h"
 #include "CustomMenu.h"
 #include "HightScoreMgr.h"
 #include "Languages.h"
+#include "SolitarioGfx.h"
 #include "error_info.h"
 #include "win_type_global.h"
 
@@ -60,7 +60,7 @@ private:
 
     CustomFont* _p_CustomFont;
     GameSettings* _p_GameSettings;
-    CGame* _p_SolitarioGfx;
+    SolitarioGfx* _p_SolitarioGfx;
     MusicManager* _p_MusicManager;
     HightScoreMgr _HScoreMgr;
     LanguageMgr _LanguageMgr;
