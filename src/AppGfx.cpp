@@ -149,6 +149,9 @@ LPErrInApp AppGfx::createWindow() {
         return ERR_UTIL::ErrorCreate("Error SDL_CreateRGBSurface: %s\n",
                                      SDL_GetError());
     }
+    if (_p_ScreenTexture != NULL) {
+        SDL_DestroyTexture(_p_ScreenTexture);
+    }
     _p_ScreenTexture =
         SDL_CreateTexture(_p_sdlRenderer, SDL_PIXELFORMAT_ARGB8888,
                           SDL_TEXTUREACCESS_STREAMING, _iScreenW, _iScreenH);
@@ -375,6 +378,9 @@ void AppGfx::terminate() {
         SDL_FreeSurface(_p_Screen);
         _p_Screen = NULL;
     }
+    if (_p_ScreenTexture != NULL) {
+        SDL_DestroyTexture(_p_ScreenTexture);
+    }
     delete _p_MusicManager;
     SDL_Quit();
 }
@@ -509,16 +515,14 @@ LPErrInApp AppGfx::StartMainMenu() {
     signed int result, result2;
     BOOL bEnd = FALSE;
     int menux, menuy, menuw, menuh;
-    string temp;
+    std::string temp;
     LPErrInApp err;
 
     menu = new CustomMenu;
-    err = menu->Initialize();
+    err = menu->Initialize(_p_Screen, _p_sdlRenderer, lpszBackGroundFile);
     if (err != NULL)
         return err;
 
-    menu->SetScreen(_p_Screen);
-    menu->FilenameBackground = lpszBackGroundFile;
     menuw = 445;
     menuh = 150;
     menux = (_p_Screen->w - menuw) / 2;
@@ -737,8 +741,7 @@ void AppGfx::updateScreenTexture() {
 
 LPErrInApp AppGfx::menuSelectDeck() {
     CustomMenu *menuDecks = new CustomMenu;
-    menuDecks->SetScreen(_p_Screen);
-    menuDecks->FilenameBackground = lpszBackGroundFile;
+    menuDecks->Initialize(_p_Screen, _p_sdlRenderer, lpszBackGroundFile);
     int menuMazziw = 445;
     int menuMazzih = 500;
     int menuMazzix = (_p_Screen->w - menuMazziw) / 2;
@@ -905,16 +908,16 @@ void AppGfx::ParseCmdLine(int argc, char *argv[]) {
 }
 
 BOOL AppGfx::parseScreenSize(LPCSTR strInput) {
-    char string[2048];
-    memset(string, 0, 2048);
+    char strBuffer[2048];
+    memset(strBuffer, 0, 2048);
     char seps[] = " ,\t\n";
     char *token;
     VCT_STRINGS vct_String;
     BOOL bRet = FALSE;
 
     int iNumChar = strlen(strInput);
-    strncpy(string, strInput, iNumChar);
-    token = strtok(string, seps);
+    strncpy(strBuffer, strInput, iNumChar);
+    token = strtok(strBuffer, seps);
     while (token != NULL) {
         vct_String.push_back(token);
         token = strtok(NULL, seps);

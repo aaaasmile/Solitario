@@ -14,15 +14,29 @@ CustomMenu::CustomMenu() {
 CustomMenu::~CustomMenu() {
     if (_p_BackgroundBitmap != NULL)
         SDL_FreeSurface(_p_BackgroundBitmap);
+    if (_p_ScreenTexture != NULL) {
+        SDL_DestroyTexture(_p_ScreenTexture);
+    }
     delete _p_Font;
 }
 
-LPErrInApp CustomMenu::Initialize() {
+LPErrInApp CustomMenu::Initialize(SDL_Surface *s, SDL_Renderer *r,
+                                  std::string filenameBackground) {
     _p_Font = new CustomFont;
+    _p_sdlRenderer = r;
+    _p_Screen = s;
+    _filenameBackground = filenameBackground;
+    _p_ScreenTexture = SDL_CreateTexture(
+        r, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, s->w, s->h);
+    if (_p_ScreenTexture == NULL) {
+        return ERR_UTIL::ErrorCreate("Cannot create texture: %s\n",
+                                     SDL_GetError());
+    }
+
     return _p_Font->LoadFont(lpszFontFile);
 }
 
-void CustomMenu::AddItems(string item) { _vctItems.push_back(item); }
+void CustomMenu::AddItems(std::string item) { _vctItems.push_back(item); }
 
 void CustomMenu::ClearItems() { _vctItems.clear(); }
 
@@ -32,7 +46,7 @@ LPErrInApp CustomMenu::Run(int &slectedItem) {
     bool bRedraw = true;
     SDL_Rect trect;
     SDL_Event event;
-    string name, temp;
+    std::string name, temp;
     Uint32 tcolor;
     int counter = 0;
     slectedItem = -1;
@@ -44,12 +58,10 @@ LPErrInApp CustomMenu::Run(int &slectedItem) {
     LPErrInApp err = LoadBackground();
     if (err != NULL)
         return err;
-    SDL_Surface *surface;  // TODO SDL 1.2
     while (bEnd == false) {
         if (bRedraw == true) {
-            if (FilenameBackground.size() > 0) {
-                err = DrawBitmap(3, SDL_MapRGB(_p_Screen->format, 0, 0, 0),
-                                 surface);
+            if (_filenameBackground.size() > 0) {
+                err = drawBitmap(3, SDL_MapRGB(_p_Screen->format, 0, 0, 0));
                 if (err != NULL)
                     return err;
             }
@@ -73,7 +85,7 @@ LPErrInApp CustomMenu::Run(int &slectedItem) {
                     _p_Screen, _vctItems[k], TEXTMIXED, TEXTALIGNCENTER, 0,
                     _rect.y + (25 + SDLFONTSIZE) + ((SDLFONTSIZE + 5) * k), 0);
             }
-            // SDL_Flip(_p_Screen); // TODO SDL 1.2
+            updateScreenTexture();
             bRedraw = false;
         }
         if (SDL_WaitEvent(&event) == 1) {
@@ -121,12 +133,20 @@ LPErrInApp CustomMenu::Run(int &slectedItem) {
     return NULL;
 }
 
-void CustomMenu::SetLabels(string menu, string exit) {
+void CustomMenu::updateScreenTexture() {
+    // SDL 2.0
+    SDL_UpdateTexture(_p_ScreenTexture, NULL, _p_Screen->pixels,
+                      _p_Screen->pitch);
+    SDL_RenderClear(_p_sdlRenderer);
+    SDL_RenderCopy(_p_sdlRenderer, _p_ScreenTexture, NULL, NULL);
+    SDL_RenderPresent(_p_sdlRenderer);
+}
+
+void CustomMenu::SetLabels(std::string menu, std::string exit) {
     _labelMenu = menu;
     _labelExit = exit;
 }
 
-void CustomMenu::SetBitmap(string filename) { FilenameBackground = filename; }
 void CustomMenu::SetArea(int x, int y, int w, int h) {
     _rect.x = x;
     _rect.y = y;
@@ -144,19 +164,18 @@ LPErrInApp CustomMenu::LoadBackground() {
     if (_p_BackgroundBitmap != NULL) {
         SDL_FreeSurface(_p_BackgroundBitmap);
     }
-    if (FilenameBackground.size() > 0) {
+    if (_filenameBackground.size() == 0) {
         return NULL;
     }
 
-    _p_BackgroundBitmap = IMG_Load(FilenameBackground.c_str());
+    _p_BackgroundBitmap = IMG_Load(_filenameBackground.c_str());
     if (_p_BackgroundBitmap == NULL) {
         return ERR_UTIL::ErrorCreate("Error IMG_Load: %s\n", SDL_GetError());
     }
     return NULL;
 }
 
-LPErrInApp CustomMenu::DrawBitmap(unsigned char alignment, Uint32 color,
-                                  SDL_Surface *screen) {
+LPErrInApp CustomMenu::drawBitmap(unsigned char alignment, Uint32 color) {
     if (_p_BackgroundBitmap == NULL) {
         return NULL;  // No background bitmap provided, ignore draw
     }
@@ -164,7 +183,7 @@ LPErrInApp CustomMenu::DrawBitmap(unsigned char alignment, Uint32 color,
 
     // SDL_Surface *screen = SDL_GetVideoSurface();
 
-    if (screen == NULL)
+    if (_p_Screen == NULL)
         return ERR_UTIL::ErrorCreate("Cannot draw bitmap: screen is invalid");
 
     s.w = _p_BackgroundBitmap->w;
@@ -179,30 +198,30 @@ LPErrInApp CustomMenu::DrawBitmap(unsigned char alignment, Uint32 color,
             t.y = 0;
             break;
         case 1:  // CENTER
-            t.x = (screen->w - _p_BackgroundBitmap->w) / 2;
-            t.y = (screen->h - _p_BackgroundBitmap->h) / 2;
+            t.x = (_p_Screen->w - _p_BackgroundBitmap->w) / 2;
+            t.y = (_p_Screen->h - _p_BackgroundBitmap->h) / 2;
             break;
         case 2:  // RIGHT
-            t.x = (screen->w - _p_BackgroundBitmap->w);
-            t.y = (screen->h - _p_BackgroundBitmap->h);
+            t.x = (_p_Screen->w - _p_BackgroundBitmap->w);
+            t.y = (_p_Screen->h - _p_BackgroundBitmap->h);
             break;
         case 3:  // HORIZONTAL CENTER ONLY
-            t.x = (screen->w - _p_BackgroundBitmap->w) / 2;
+            t.x = (_p_Screen->w - _p_BackgroundBitmap->w) / 2;
             t.y = 0;
             break;
         case 4:  // VERTICAL CENTER ONLY
             t.x = 0;
-            t.y = (screen->h - _p_BackgroundBitmap->h) / 2;
+            t.y = (_p_Screen->h - _p_BackgroundBitmap->h) / 2;
             break;
     }
-    //   if (Bitmap->format->palette && screen->format->palette)
-    //     SDL_SetColors(screen, Bitmap->format->palette->colors, 0,
-    //     TODO SDL 1.2 SDL 2.0
-    //                   Bitmap->format->palette->ncolors);
+    // if (_p_BackgroundBitmap->format->palette && _p_Screen->format->palette)
+    //     SDL_SetColors(_p_Screen,
+    //     _p_BackgroundBitmap->format->palette->colors,
+    //                   0, _p_BackgroundBitmap->format->palette->ncolors);
 
-    SDL_FillRect(screen, &screen->clip_rect, color);
+    SDL_FillRect(_p_Screen, &_p_Screen->clip_rect, color);
 
-    while (SDL_BlitSurface(_p_BackgroundBitmap, &s, screen, &t) == -2)
+    while (SDL_BlitSurface(_p_BackgroundBitmap, &s, _p_Screen, &t) == -2)
         SDL_Delay(50);
     return NULL;
 }

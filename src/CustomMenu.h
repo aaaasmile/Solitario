@@ -12,33 +12,31 @@
 #include "fonts.h"
 #include "win_type_global.h"
 
-using namespace std;
-
 class CustomMenu {
 public:
-    string FilenameBackground;
-
     CustomMenu();
     ~CustomMenu();
-    LPErrInApp Initialize();
-    void AddItems(string item);
+    LPErrInApp Initialize(SDL_Surface *s, SDL_Renderer *r,
+                          std::string filenameBackground);
+    void AddItems(std::string item);
     void ClearItems();
-    LPErrInApp DrawBitmap(unsigned char alignment, Uint32 color,
-                          SDL_Surface *screen);
     SDL_Rect *GetArea();
     LPErrInApp LoadBackground();
     LPErrInApp Run(int &slectedItem);
-    void SetLabels(string menu, string exit);
-    void SetBitmap(string filename);
+    void SetLabels(std::string menu, std::string exit);
     void SetArea(int x, int y, int w, int h);
     void SetColors(Uint32 back, Uint32 high);
-    void SetScreen(SDL_Surface *pVal) { _p_Screen = pVal; }
     void SetAlpha(unsigned char alpha);
 
 private:
+    void updateScreenTexture();
+    LPErrInApp drawBitmap(unsigned char alignment, Uint32 color);
+
+private:
+    std::string _filenameBackground;
     SDL_Surface *_p_BackgroundBitmap;
-    string _labelMenu;
-    string _labelExit;
+    std::string _labelMenu;
+    std::string _labelExit;
 
     CustomFont *_p_Font;
 
@@ -50,6 +48,8 @@ private:
     Uint32 _colorBack;
     Uint32 _colorHighlight;
     SDL_Surface *_p_Screen;
+    SDL_Texture *_p_ScreenTexture;
+    SDL_Renderer *_p_sdlRenderer;
 };
 
 #endif

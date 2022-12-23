@@ -253,7 +253,7 @@ CSCOPE = @CSCOPE@
 CTAGS = @CTAGS@
 CXX = @CXX@
 CXXDEPMODE = @CXXDEPMODE@
-CXXFLAGS = @CXXFLAGS@
+CXXFLAGS = -g -O0 -DDEBUG  #debug flags
 CYGPATH_W = @CYGPATH_W@
 DATA_PREFIX = @DATA_PREFIX@
 DEFS = @DEFS@
@@ -335,7 +335,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = foreign
 DIST_SUBDIRS = data
-AM_CPPFLAGS = -I/usr/include/SDL2 -D_REENTRANT -I ./libini/include
+AM_CPPFLAGS = -I/usr/include/SDL2 -D_REENTRANT -I ./libini/include 
 AM_CXXFLAGS = \
 	-Wunused\
 	-DDATA_PREFIX=\"$(DATA_PREFIX)\"

@@ -2,10 +2,12 @@
 AUTOMAKE_OPTIONS = foreign
 DIST_SUBDIRS = data
 
-AM_CPPFLAGS = -I/usr/include/SDL2 -D_REENTRANT -I ./libini/include
+AM_CPPFLAGS = -I/usr/include/SDL2 -D_REENTRANT -I ./libini/include 
 AM_CXXFLAGS =\
 	-Wunused\
 	-DDATA_PREFIX=\"$(DATA_PREFIX)\"
+
+CXXFLAGS = -g -O0 -DDEBUG  #debug flags
 
 SUBDIRS = libini
 

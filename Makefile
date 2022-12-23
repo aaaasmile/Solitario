@@ -253,7 +253,7 @@ CSCOPE = cscope
 CTAGS = ctags
 CXX = g++
 CXXDEPMODE = depmode=gcc3
-CXXFLAGS = -g -O2
+CXXFLAGS = -g -O0 -DDEBUG  #debug flags
 CYGPATH_W = echo
 DATA_PREFIX = data/
 DEFS = -DHAVE_CONFIG_H
@@ -335,7 +335,7 @@ top_builddir = .
 top_srcdir = .
 AUTOMAKE_OPTIONS = foreign
 DIST_SUBDIRS = data
-AM_CPPFLAGS = -I/usr/include/SDL2 -D_REENTRANT -I ./libini/include
+AM_CPPFLAGS = -I/usr/include/SDL2 -D_REENTRANT -I ./libini/include 
 AM_CXXFLAGS = \
 	-Wunused\
 	-DDATA_PREFIX=\"$(DATA_PREFIX)\"
