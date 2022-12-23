@@ -1,5 +1,13 @@
 #include "GfxUtil.h"
 
+SDL_Color GFX_UTIL_COLOR::White = {255, 255, 255, 0};
+SDL_Color GFX_UTIL_COLOR::Gray = {128, 128, 128, 0};
+SDL_Color GFX_UTIL_COLOR::Red = {255, 0, 0, 0};
+SDL_Color GFX_UTIL_COLOR::Green = {0, 255, 0, 0};
+SDL_Color GFX_UTIL_COLOR::Black = {0, 0, 0, 0};
+SDL_Color GFX_UTIL_COLOR::Orange = {255, 200, 0, 0};
+SDL_Color GFX_UTIL_COLOR::Blue = {0, 0, 255, 0};
+
 void GFX_UTIL::ScreenShade(SDL_Surface *surface, SDL_Rect *rect, float opacity,
                            unsigned char r1, unsigned char g1,
                            unsigned char b1) {

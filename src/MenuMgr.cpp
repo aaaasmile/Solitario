@@ -25,7 +25,7 @@ const SDL_Color cMenuMgr::staColor_ombre = {87, 87, 87, 50};
 const SDL_Color cMenuMgr::staColor_black = {0, 0, 0};
 const SDL_Color cMenuMgr::staColor_gray = {128, 128, 128};
 
-cMenuMgr::cMenuMgr(LPMenuDelegator pApp) {
+cMenuMgr::cMenuMgr(fastdelegate::LPMenuDelegator pApp) {
     m_pApp = pApp;
     m_pfont1 = 0;
     m_pfont2 = 0;

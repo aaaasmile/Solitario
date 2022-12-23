@@ -39,6 +39,18 @@ namespace GFX_UTIL {
 
 };
 
+class GFX_UTIL_COLOR {
+public:
+    GFX_UTIL_COLOR() {}
+    static SDL_Color White;
+    static SDL_Color Gray;
+    static SDL_Color Red;
+    static SDL_Color Green;
+    static SDL_Color Black;
+    static SDL_Color Orange;
+    static SDL_Color Blue;
+};
+
 namespace STR_UTIL {
     std::string intToString(int iNumber);
 };

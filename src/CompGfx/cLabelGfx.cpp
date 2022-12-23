@@ -74,7 +74,8 @@ void cLabelGfx::MouseUp(SDL_Event& event) {
             event.motion.y <= m_rctButt.y + m_rctButt.h) {
             // mouse go up inner the button
             // send a click event
-            m_fncbClickEvent(m_iButID);
+            if (m_fncbClickEvent->Click != NULL)
+                m_fncbClickEvent->Click(m_iButID);
         }
     }
 }

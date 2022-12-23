@@ -6,7 +6,7 @@
 namespace fastdelegate {
     typedef struct {
         void (*const SetNextMenu)(int iVal);
-        void (*const LeaveMenu)(int iVal);
+        void (*const LeaveMenu)();
         TTF_Font* (*const GetFontVera)();
         TTF_Font* (*const GetFontAriblk)();
         Languages* (*const GetLanguageMan)();

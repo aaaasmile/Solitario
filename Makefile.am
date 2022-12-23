@@ -20,6 +20,7 @@ bin_PROGRAMS = solitario
 solitario_LDADD =\
 	-lSDL2_image\
 	-lSDL2_mixer \
+	-lSDL2_ttf \
 	-lSDL2 \
 	libini/libini.a
 

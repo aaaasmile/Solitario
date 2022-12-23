@@ -12,7 +12,6 @@
 #include "../FastDelegate.h"
 #include "ErrorInfo.h"
 #include "win_type_global.h"
-using namespace fastdelegate;
 
 class cLabelGfx {
     // use fastdelegate to implement the observer pattern and avoid using the
@@ -42,7 +41,7 @@ public:
     SDL_Rect m_rctButt;
     STRING m_strButText;
     BOOL m_bIsEnabled;
-    CLICKEVENT m_fncbClickEvent;
+    fastdelegate::LPCLICKEVENT m_fncbClickEvent;
 
 private:
     SDL_Renderer* m_psdlRenderer;

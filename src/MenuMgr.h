@@ -27,7 +27,7 @@ public:
     };
     enum { MYIDLABELURL = 0, MYIDLABELVER = 1 };
 
-    cMenuMgr(LPMenuDelegator pApp);
+    cMenuMgr(fastdelegate::LPMenuDelegator pApp);
     virtual ~cMenuMgr();
     LPErrInApp Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer);
     void HandleRootMenu();
@@ -55,7 +55,7 @@ private:
     static const SDL_Color staColor_gray;
 
 private:
-    LPMenuDelegator m_pApp;
+    fastdelegate::LPMenuDelegator m_pApp;
     Languages* m_pLanString;
     TTF_Font* m_pfont1;
     TTF_Font* m_pfont2;
