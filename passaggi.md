@@ -1,11 +1,19 @@
 # Solitario
-Il Solitario è un programma in C++ che usa la libreria SDL 1.2. È stato scritto 
+Il Solitario è un programma in C++ che usava la libreria SDL 1.2. È stato scritto 
 nel lontano 2004 dove ho compilato la versione per Linux e Windows.
 Dopo 17 anni ho messo la repository su github e la compilazione è rimasta indietro.
 Così ho pensato di sviluppare la nuova versione con SDL2, Visual Code e WSL2 come target.
 
+## Build Veloce
+Dopo il clone della repository:
+
+    autoreconf --install
+    ./configure
+    make
+
 ## Compilazione per Ubuntu 22.04.1 LTS
 Per le mie prove ho usato WSL2 su windows con la App Ubuntu 22.04.1 LTS.
+
     uname- r
     5.15.79.1-microsoft-standard-WSL2
 
@@ -16,17 +24,22 @@ https://www.gnu.org/software/automake/manual/automake.html#Modernize-AM_005fINIT
 Cambiato il file config.in in config.ac
 Cambiato diverse macro nel file config.ac
 Poi lanciato il comando:
+
     autoreconf --install
 Se autoconf non è installato si usa:
+
     sudo apt-get install automake
 
 Ho installato sdl con
+
     sudo apt install libsdl2-dev
 Per le altre librerie sdl:
+
     sudo apt-get install libsdl2-image-dev
     sudo apt-get install libsdl2-mixer-dev
 
 così per avere il comando:
+
     sdl2-config --libs
 ho messo il risultato direttamente nel file makefile.am
 
@@ -37,22 +50,25 @@ dalla versione 2.0
 ### Libreria Libini
 Il profilo viene caricato in windows usando il registry. Su Linux uso la libreria
 libini che l'ho ritrovata qui:
-https://sourceforge.net/projects/libini/
+https://sourceforge.net/projects/libini/.
 L'ho integrata direttamente nel codice in quanto non fa parte della distribuzione 
 di ubuntu.
 Il progetto usa libtool che non ho installato nel mio sistema:
-sudo apt-get install libtool
-Però compilo la libini in modo statico e libtool non mi serve in quanto viene usato runlib.
+
+    sudo apt-get install libtool
+Però compilo la _libini_ in modo statico e libtool non mi serve in quanto viene usato runlib.
 In configure.ac metto:
-AC_PROG_RANLIB
-AM_PROG_AR
-Alla fine nella sottodirectory libini ho il file libini.a da linkare staticamente al
+
+    AC_PROG_RANLIB
+    AM_PROG_AR
+Alla fine nella sottodirectory libini ho il file _libini.a_ da linkare staticamente al
 programma principale. Nota che ranlib e ar sono due programmi che servono per 
-creare il file libini.a. Runlib sembra un alias di ar.
+creare il file libini.a. _Runlib_ sembra un alias di _ar_.
 Nota che la libreria nel progetto ha un proprio target e make file.
 Il file libini.a, peró, non viene installato ma semplicemente linkato.
-(concept of a "convenience library", which is an intermediate target that is never itself installed, 
-but contains object code that can be linked into an executable or a larger library. 
+_(concept of a "convenience library", which is an intermediate target that is never itself installed, 
+but contains object code that can be linked into an executable or a larger library_.
+
 => Preso da https://stackoverflow.com/questions/58359548/how-to-write-automake-files-to-recursive-build-subdirectories 
 un link che mi ha fatto creare il file finale e spiegato un po' di automake).
 
@@ -61,15 +77,17 @@ Automake naturalmente evolve e per ogni versione bisogna stare attenti che
 le macro cambiano di ruolo e di argomenti. Quindi bisogna sapere quale versione
 si sta usando e come funzionano le macro.
 Questo è il link che uso (versione 2.71):
-https://www.gnu.org/software/autoconf/manual/autoconf-2.71/html_node/Initializing-configure.html
+https://www.gnu.org/software/autoconf/manual/autoconf-2.71/html_node/Initializing-configure.html.
 Questo per avere i parametri iniziali definiti poi in config.h (Nome, Versione, e-mail, tarball e URL).
 Il file di partenza è configure.ac e sono partito da zero guardando il tutorial.
 Ho messo le macro indispendabili come:
-AC_INIT -> inizializza le info basilari
-AM_INIT_AUTOMAKE -> comincia ad usarle con dei parametri di verbosità e tolleranza
-AC_PROG_CXX -> definisce il compilatore c++
-AC_CONFIG_FILES -> mette la lista dei makefiles che vengono creati a seconda di dove si trovano i sorgenti
-AC_OUTPUT -> Esegue la creazione dei makefiles
+
+    AC_INIT -> inizializza le info basilari
+    AM_INIT_AUTOMAKE -> comincia ad usarle con dei parametri di verbosità e tolleranza
+    AC_PROG_CXX -> definisce il compilatore c++
+    AC_CONFIG_FILES -> mette la lista dei makefiles che vengono creati a seconda di dove si trovano i sorgenti
+    AC_OUTPUT -> Esegue la creazione dei makefiles.
+
 Da qui ho aggiunto una macro per definire la versione (m4_define) e creare un configure.h
 così che le definizioni del modulo siano disponibili anche nel codice (AC_CONFIG_HEADERS)
 e linkare staticamente del codice come libini.
@@ -86,19 +104,23 @@ volevo il risultato in quella directory. Molto più facile è avere il target
 dove risiede il Makefile.
 
 ## Sviluppo in VS Code
-Sono partito dalla versione linux, quindi in WSL lancio code (la liea di comando di VsCode) che mi setta l'ambiente
+Sono partito dalla versione linux, quindi in WSL lancio
+
+    code . 
+(la liea di comando di VsCode) che mi setta l'ambiente
 remoto WSL:Ubuntu-22.04. Il compilatore con automake, configure e make li uso da command line bash.
 Per avere il goto definition in questo ambiente mi serve il path che setto creando un file
-.vsode\c_cpp_properties.json. Tipo:
-    "includePath": [
-                "${workspaceFolder}/src/**",
-                "${workspaceFolder}/src/libini/include",
-                "/usr/include/SDL2"
-            ]
+
+    .vsode\c_cpp_properties.json. Tipo:
+        "includePath": [
+                    "${workspaceFolder}/src/**",
+                    "${workspaceFolder}/src/libini/include",
+                    "/usr/include/SDL2"
+                ]
 Ho cambiato anche il task per avere la compilazione diretta da Visual con CTRL + SHIFT + B
 Dalla bash arrivo all'editor premendo il tasto CTRL e spostando il mouse sulla linea della bash
 
-## Pac card
+## Pac Card
 Se ti meraviglia il fatto che il codice della versione 1.6 carica i files 
 singoli delle carte, mentre lo zip distributivo uso il pac è dovuto ad un conflitto di versioni. 
 Guardando bene lo zip 1.6 pubblicato per windows esso contiene l'exe nella versione 1.4 
@@ -111,11 +133,11 @@ Qui rimane il formato pac quello decisivo.
 
 ## Error Handling
 Non vorrei usare il throw del c++ perché non sono un gran fan. Nell'invido
-e tressette l'ho però usato. Qui vorrei usare qualcosa di simile al clang. 
-Un integer come riultato o meglio una struttura con tanto di codice e testo.
+e Tressette l'ho però usato. Qui vorrei usare qualcosa di simile al clang. 
+Il risultato è la struttura messa in _error_info.h_.
 
 ## Sviluppo e Test in WSL2
-Per quanto ne ho capito, in dic 2022 WSL2 sembra già avere un X server.
+Per quanto ne ho capito, nel dicembre 2022 WSL2 sembra già avere un X server´integrato.
 Basta provare con Xclock, che una volta installato parte senza altri server.
 Per vedere se funziona un programma SDL2 nella WSL2 basta provare a clonare la
 repository https://github.com/aminosbh/falling-brick-game
@@ -124,9 +146,12 @@ Per fare il debug del solitario ho invece dovuto aggiungere un lauch.json e
 nel task.jon ho messo il "Debug Build", che altro non è che il make standard visto
 che aggiunge di default il parametro -g. Basta mettere un Breakpoint in main.cpp e 
 premere F5 e gdb parte subito.
+Sviluppato dentro questo progetto:
 
-### Stato
-Il menu ha ancora bisogno di correzzioni sdl 1.2 -> sdl 2.0
+    igor@MiniToro:~/projects/Solitario$
 
+### TODO
+- Il menu ha ancora bisogno di correzzioni sdl 1.2 -> sdl 2.0
+- Il rendering del gioco non usa le immagini in formato Pac ma quelle singole
 
 
