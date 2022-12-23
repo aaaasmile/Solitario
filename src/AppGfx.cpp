@@ -1,5 +1,6 @@
 #include "AppGfx.h"
 
+#include <SDL_image.h>
 #include <stdlib.h>
 #include <time.h>
 
@@ -510,168 +511,171 @@ void AppGfx::writeProfile() {
 }
 
 LPErrInApp AppGfx::StartMainMenu() {
-    CustomMenu *menu;
-    signed int result, result2;
-    BOOL bEnd = FALSE;
-    int menux, menuy, menuw, menuh;
-    std::string temp;
-    LPErrInApp err;
+    // CustomMenu *menu;
+    // signed int result, result2;
+    // BOOL bEnd = FALSE;
+    // int menux, menuy, menuw, menuh;
+    // std::string temp;
+    // LPErrInApp err;
 
-    menu = new CustomMenu;
-    err = menu->Initialize(_p_Screen, _p_sdlRenderer, lpszBackGroundFile);
-    if (err != NULL)
-        return err;
+    // menu = new CustomMenu;
+    // err = menu->Initialize(_p_Screen, _p_sdlRenderer, lpszBackGroundFile);
+    // if (err != NULL)
+    //     return err;
 
-    menuw = 445;
-    menuh = 150;
-    menux = (_p_Screen->w - menuw) / 2;
-    menuy = (_p_Screen->h - menuh) / 2;
-    menu->SetArea(menux, menuy, menuw, menuh);
-    menu->SetColors(SDL_MapRGBA(_p_Screen->format, 0, 0, 0, 0),
-                    SDL_MapRGBA(_p_Screen->format, 128, 0, 0, 255));
+    // menuw = 445;
+    // menuh = 150;
+    // menux = (_p_Screen->w - menuw) / 2;
+    // menuy = (_p_Screen->h - menuh) / 2;
+    // menu->SetArea(menux, menuy, menuw, menuh);
+    // menu->SetColors(SDL_MapRGBA(_p_Screen->format, 0, 0, 0, 0),
+    //                 SDL_MapRGBA(_p_Screen->format, 128, 0, 0, 255));
 
-    while (bEnd == FALSE) {
-        // SET MAIN MENU ITEMS
-        menu->ClearItems();
-        menu->AddItems(_LanguageMgr.GetStringId(Languages::ID_START));
-        menu->AddItems(_LanguageMgr.GetStringId(Languages::ID_LANGUAGESEL));
-        menu->AddItems(_LanguageMgr.GetStringId(Languages::ID_SOUNDOPT));
-        menu->AddItems(_LanguageMgr.GetStringId(Languages::ID_CREDITS));
-        menu->SetLabels(_LanguageMgr.GetStringId(Languages::ID_MAINMENU),
-                        _LanguageMgr.GetStringId(Languages::ID_EXIT));
+    // while (bEnd == FALSE) {
+    //     // SET MAIN MENU ITEMS
+    //     menu->ClearItems();
+    //     menu->AddItems(_LanguageMgr.GetStringId(Languages::ID_START));
+    //     menu->AddItems(_LanguageMgr.GetStringId(Languages::ID_LANGUAGESEL));
+    //     menu->AddItems(_LanguageMgr.GetStringId(Languages::ID_SOUNDOPT));
+    //     menu->AddItems(_LanguageMgr.GetStringId(Languages::ID_CREDITS));
+    //     menu->SetLabels(_LanguageMgr.GetStringId(Languages::ID_MAINMENU),
+    //                     _LanguageMgr.GetStringId(Languages::ID_EXIT));
 
-        // RUN MENU
-        err = menu->Run(result);
-        if (err != NULL)
-            return err;
-        TRACE("Menu selected %d", result);
-        switch (result) {
-            case 0:
-                // STARTGAME
-                err = startGameLoop();
-                if (err != NULL)
-                    return err;
-                break;
-            case 1:
-                // MENU select a new language
-                menu->ClearItems();
-                menu->SetLabels(
-                    _LanguageMgr.GetStringId(Languages::ID_CHOOSELANGUA),
-                    _LanguageMgr.GetStringId(Languages::ID_BACKMAINMENU));
-                menu->AddItems(
-                    _LanguageMgr.GetStringId(Languages::ID_ITALIANO));
-                menu->AddItems(
-                    _LanguageMgr.GetStringId(Languages::ID_DIALETMN));
-                // menu->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_ENGLISH));
+    //     // RUN MENU
+    //     err = menu->Run(result);
+    //     if (err != NULL)
+    //         return err;
+    //     TRACE("Menu selected %d", result);
+    //     switch (result) {
+    //         case 0:
+    //             // STARTGAME
+    //             err = startGameLoop();
+    //             if (err != NULL)
+    //                 return err;
+    //             break;
+    //         case 1:
+    //             // MENU select a new language
+    //             menu->ClearItems();
+    //             menu->SetLabels(
+    //                 _LanguageMgr.GetStringId(Languages::ID_CHOOSELANGUA),
+    //                 _LanguageMgr.GetStringId(Languages::ID_BACKMAINMENU));
+    //             menu->AddItems(
+    //                 _LanguageMgr.GetStringId(Languages::ID_ITALIANO));
+    //             menu->AddItems(
+    //                 _LanguageMgr.GetStringId(Languages::ID_DIALETMN));
+    //             //
+    //             menu->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_ENGLISH));
 
-                err = menu->Run(result2);  // SHOW LANGUAGE MENU
-                if (err != NULL)
-                    return err;
-                TRACE("Sub Menu selected %d", result2);
-                // cambiare l'ordine del menu, vuol dire cambiare cambiare
-                // l'ordine anche quando si salva il registro e nella
-                // definizione dei linguaggi
-                switch (result2) {
-                    case 0:
-                        // italian
-                        _p_GameSettings->eLanguageCurrent = Languages::LANG_ITA;
+    //             err = menu->Run(result2);  // SHOW LANGUAGE MENU
+    //             if (err != NULL)
+    //                 return err;
+    //             TRACE("Sub Menu selected %d", result2);
+    //             // cambiare l'ordine del menu, vuol dire cambiare cambiare
+    //             // l'ordine anche quando si salva il registro e nella
+    //             // definizione dei linguaggi
+    //             switch (result2) {
+    //                 case 0:
+    //                     // italian
+    //                     _p_GameSettings->eLanguageCurrent =
+    //                     Languages::LANG_ITA;
 
-                        break;
-                    case 1:
-                        // dialect mn
-                        _p_GameSettings->eLanguageCurrent =
-                            Languages::LANG_DIAL_BREDA;
-                        break;
-                    case 2:
-                        // english
-                        _p_GameSettings->eLanguageCurrent = Languages::LANG_ENG;
-                        break;
-                }
-                _LanguageMgr.SetLang(_p_GameSettings->eLanguageCurrent);
-                SDL_SetWindowTitle(_p_Window, _LanguageMgr.GetCStringId(
-                                                  Languages::ID_SOLITARIO));
-                break;
-            case 2:
-                // OPZIONI SUONO MENU
-                menu->ClearItems();
-                menu->SetLabels(
-                    _LanguageMgr.GetStringId(Languages::ID_SOUNDOPT),
-                    _LanguageMgr.GetStringId(Languages::ID_BACKMAINMENU));
-                menu->AddItems(
-                    _LanguageMgr.GetStringId(Languages::ID_ABILITATO));
-                menu->AddItems(
-                    _LanguageMgr.GetStringId(Languages::ID_DISABILITATO));
-                err = menu->Run(result2);
-                if (err != NULL)
-                    return err;
-                TRACE("Sub Menu selected %d", result2);
-                switch (result2) {
-                    case 0:
-                        // sound on
-                        _p_GameSettings->bMusicEnabled = TRUE;
-                        _p_MusicManager->StartMusic();
-                        break;
-                    case 1:
-                        // sound off
-                        _p_GameSettings->bMusicEnabled = FALSE;
-                        _p_MusicManager->StopMusic();
-                        break;
-                }
-                break;
-            case 3:
-                // CREDITS
-                credits(_p_Screen, _p_Title, _p_sdlRenderer);
-                break;
+    //                     break;
+    //                 case 1:
+    //                     // dialect mn
+    //                     _p_GameSettings->eLanguageCurrent =
+    //                         Languages::LANG_DIAL_BREDA;
+    //                     break;
+    //                 case 2:
+    //                     // english
+    //                     _p_GameSettings->eLanguageCurrent =
+    //                     Languages::LANG_ENG; break;
+    //             }
+    //             _LanguageMgr.SetLang(_p_GameSettings->eLanguageCurrent);
+    //             SDL_SetWindowTitle(_p_Window, _LanguageMgr.GetCStringId(
+    //                                               Languages::ID_SOLITARIO));
+    //             break;
+    //         case 2:
+    //             // OPZIONI SUONO MENU
+    //             menu->ClearItems();
+    //             menu->SetLabels(
+    //                 _LanguageMgr.GetStringId(Languages::ID_SOUNDOPT),
+    //                 _LanguageMgr.GetStringId(Languages::ID_BACKMAINMENU));
+    //             menu->AddItems(
+    //                 _LanguageMgr.GetStringId(Languages::ID_ABILITATO));
+    //             menu->AddItems(
+    //                 _LanguageMgr.GetStringId(Languages::ID_DISABILITATO));
+    //             err = menu->Run(result2);
+    //             if (err != NULL)
+    //                 return err;
+    //             TRACE("Sub Menu selected %d", result2);
+    //             switch (result2) {
+    //                 case 0:
+    //                     // sound on
+    //                     _p_GameSettings->bMusicEnabled = TRUE;
+    //                     _p_MusicManager->StartMusic();
+    //                     break;
+    //                 case 1:
+    //                     // sound off
+    //                     _p_GameSettings->bMusicEnabled = FALSE;
+    //                     _p_MusicManager->StopMusic();
+    //                     break;
+    //             }
+    //             break;
+    //         case 3:
+    //             // CREDITS
+    //             credits(_p_Screen, _p_Title, _p_sdlRenderer);
+    //             break;
 
-            case 12:  // HIGH SCORE
-                hightScoreMenu();
-                break;
-            case 122:  // VIDEO RESOLUTION MENU
-                menu->ClearItems();
-                menu->SetLabels(_LanguageMgr.GetStringId(
-                                    Languages::ID_SELECTDISPLAYSETTINGS),
-                                _LanguageMgr.GetStringId(Languages::ID_BACK));
-                menu->AddItems("800x600 x 32bits");
-                menu->AddItems("1024x768 x 32bits");
-                menu->AddItems("Full screen");
-                err = menu->Run(result2);
-                if (err != NULL)
-                    return err;
-                TRACE("Sub Menu selected %d", result2);
-                switch (result2) {
-                    case 0:
-                        _iScreenW = 800;
-                        _iScreenH = 600;
-                        _iBpp = 32;
-                        break;
-                    case 1:
-                        _iScreenW = 1024;
-                        _iScreenH = 768;
-                        _iBpp = 32;
-                        break;
-                    case 2:
-                        _iScreenW = 1024;
-                        _iScreenH = 768;
-                        _iBpp = 32;
-                        _bFullScreen = TRUE;
-                        break;
-                }
-                createWindow();
-                // ADJUST MENU POSITION SINCE SCREEN PROBABLY HAVE CHANGED
-                menux = (_p_Screen->w - menuw) / 2;
-                menu->SetArea(menux, menuy, menuw, menuh);
-                menu->SetColors(SDL_MapRGBA(_p_Screen->format, 0, 0, 0, 0),
-                                SDL_MapRGBA(_p_Screen->format, 128, 0, 0, 255));
-                break;
-            case -1:
-                // EXIT
-                bEnd = TRUE;
-                break;
-            default:
-                break;
-        }
-    }
-    delete menu;
+    //         case 12:  // HIGH SCORE
+    //             hightScoreMenu();
+    //             break;
+    //         case 122:  // VIDEO RESOLUTION MENU
+    //             menu->ClearItems();
+    //             menu->SetLabels(_LanguageMgr.GetStringId(
+    //                                 Languages::ID_SELECTDISPLAYSETTINGS),
+    //                             _LanguageMgr.GetStringId(Languages::ID_BACK));
+    //             menu->AddItems("800x600 x 32bits");
+    //             menu->AddItems("1024x768 x 32bits");
+    //             menu->AddItems("Full screen");
+    //             err = menu->Run(result2);
+    //             if (err != NULL)
+    //                 return err;
+    //             TRACE("Sub Menu selected %d", result2);
+    //             switch (result2) {
+    //                 case 0:
+    //                     _iScreenW = 800;
+    //                     _iScreenH = 600;
+    //                     _iBpp = 32;
+    //                     break;
+    //                 case 1:
+    //                     _iScreenW = 1024;
+    //                     _iScreenH = 768;
+    //                     _iBpp = 32;
+    //                     break;
+    //                 case 2:
+    //                     _iScreenW = 1024;
+    //                     _iScreenH = 768;
+    //                     _iBpp = 32;
+    //                     _bFullScreen = TRUE;
+    //                     break;
+    //             }
+    //             createWindow();
+    //             // ADJUST MENU POSITION SINCE SCREEN PROBABLY HAVE CHANGED
+    //             menux = (_p_Screen->w - menuw) / 2;
+    //             menu->SetArea(menux, menuy, menuw, menuh);
+    //             menu->SetColors(SDL_MapRGBA(_p_Screen->format, 0, 0, 0, 0),
+    //                             SDL_MapRGBA(_p_Screen->format, 128, 0, 0,
+    //                             255));
+    //             break;
+    //         case -1:
+    //             // EXIT
+    //             bEnd = TRUE;
+    //             break;
+    //         default:
+    //             break;
+    //     }
+    // }
+    // delete menu;
     return NULL;
 }
 
@@ -737,98 +741,98 @@ void AppGfx::updateScreenTexture() {
 }
 
 LPErrInApp AppGfx::menuSelectDeck() {
-    CustomMenu *menuDecks = new CustomMenu;
-    menuDecks->Initialize(_p_Screen, _p_sdlRenderer, lpszBackGroundFile);
-    int menuMazziw = 445;
-    int menuMazzih = 500;
-    int menuMazzix = (_p_Screen->w - menuMazziw) / 2;
-    int menuMazziy = _p_Screen->h - menuMazzih - 10;
-    menuDecks->SetArea(menuMazzix, menuMazziy, menuMazziw, menuMazzih);
-    menuDecks->SetColors(SDL_MapRGBA(_p_Screen->format, 0, 0, 0, 0),
-                         SDL_MapRGBA(_p_Screen->format, 128, 0, 0, 255));
+    // CustomMenu *menuDecks = new CustomMenu;
+    // menuDecks->Initialize(_p_Screen, _p_sdlRenderer, lpszBackGroundFile);
+    // int menuMazziw = 445;
+    // int menuMazzih = 500;
+    // int menuMazzix = (_p_Screen->w - menuMazziw) / 2;
+    // int menuMazziy = _p_Screen->h - menuMazzih - 10;
+    // menuDecks->SetArea(menuMazzix, menuMazziy, menuMazziw, menuMazzih);
+    // menuDecks->SetColors(SDL_MapRGBA(_p_Screen->format, 0, 0, 0, 0),
+    //                      SDL_MapRGBA(_p_Screen->format, 128, 0, 0, 255));
 
-    menuDecks->ClearItems();
-    menuDecks->SetLabels(_LanguageMgr.GetStringId(Languages::ID_CHOOSEMAZZO),
-                         _LanguageMgr.GetStringId(Languages::ID_BACKMAINMENU));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_PIACENTINA));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_BERGAMO));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_BOLOGNA));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_GENOVA));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_MILANO));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_NAPOLI));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_PIEMONTE));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_ROMAGNA));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_SARDEGNA));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_SICILIA));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_TOSCANA));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_TRENTO));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_TREVISO));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_TRIESTE));
+    // menuDecks->ClearItems();
+    // menuDecks->SetLabels(_LanguageMgr.GetStringId(Languages::ID_CHOOSEMAZZO),
+    //                      _LanguageMgr.GetStringId(Languages::ID_BACKMAINMENU));
+    // menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_PIACENTINA));
+    // menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_BERGAMO));
+    // menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_BOLOGNA));
+    // menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_GENOVA));
+    // menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_MILANO));
+    // menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_NAPOLI));
+    // menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_PIEMONTE));
+    // menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_ROMAGNA));
+    // menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_SARDEGNA));
+    // menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_SICILIA));
+    // menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_TOSCANA));
+    // menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_TRENTO));
+    // menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_TREVISO));
+    // menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_TRIESTE));
 
-    int result2;
-    LPErrInApp err = menuDecks->Run(result2);
-    if (err != NULL)
-        return err;
-    TRACE("Menu deck selected %d", result2);
-    switch (result2) {
-        case 0:
-            // piacentine
-            _p_GameSettings->deckTypeVal.SetType(DeckType::PIACENTINA);
-            break;
-        case 1:
-            // bergamo
-            _p_GameSettings->deckTypeVal.SetType(DeckType::BERGAMO);
-            break;
-        case 2:
-            // bologna
-            _p_GameSettings->deckTypeVal.SetType(DeckType::BOLOGNA);
-            break;
-        case 3:
-            // genova
-            _p_GameSettings->deckTypeVal.SetType(DeckType::GENOVA);
-            break;
-        case 4:
-            // milano
-            _p_GameSettings->deckTypeVal.SetType(DeckType::MILANO);
-            break;
-        case 5:
-            // napoli
-            _p_GameSettings->deckTypeVal.SetType(DeckType::NAPOLI);
-            break;
-        case 6:
-            // piemonte
-            _p_GameSettings->deckTypeVal.SetType(DeckType::PIEMONTE);
-            break;
-        case 7:
-            // romagna
-            _p_GameSettings->deckTypeVal.SetType(DeckType::ROMAGNA);
-            break;
-        case 8:
-            // sardegna
-            _p_GameSettings->deckTypeVal.SetType(DeckType::SARDEGNA);
-            break;
-        case 9:
-            // toscana
-            _p_GameSettings->deckTypeVal.SetType(DeckType::TOSCANA);
-            break;
-        case 10:
-            // sicilia
-            _p_GameSettings->deckTypeVal.SetType(DeckType::SICILIA);
-            break;
-        case 11:
-            // trento
-            _p_GameSettings->deckTypeVal.SetType(DeckType::TRENTO);
-            break;
-        case 12:
-            // treviso
-            _p_GameSettings->deckTypeVal.SetType(DeckType::TREVISO);
-            break;
-        case 13:
-            // trieste
-            _p_GameSettings->deckTypeVal.SetType(DeckType::TRIESTE);
-            break;
-    }
-    delete menuDecks;
+    // int result2;
+    // LPErrInApp err = menuDecks->Run(result2);
+    // if (err != NULL)
+    //     return err;
+    // TRACE("Menu deck selected %d", result2);
+    // switch (result2) {
+    //     case 0:
+    //         // piacentine
+    //         _p_GameSettings->deckTypeVal.SetType(DeckType::PIACENTINA);
+    //         break;
+    //     case 1:
+    //         // bergamo
+    //         _p_GameSettings->deckTypeVal.SetType(DeckType::BERGAMO);
+    //         break;
+    //     case 2:
+    //         // bologna
+    //         _p_GameSettings->deckTypeVal.SetType(DeckType::BOLOGNA);
+    //         break;
+    //     case 3:
+    //         // genova
+    //         _p_GameSettings->deckTypeVal.SetType(DeckType::GENOVA);
+    //         break;
+    //     case 4:
+    //         // milano
+    //         _p_GameSettings->deckTypeVal.SetType(DeckType::MILANO);
+    //         break;
+    //     case 5:
+    //         // napoli
+    //         _p_GameSettings->deckTypeVal.SetType(DeckType::NAPOLI);
+    //         break;
+    //     case 6:
+    //         // piemonte
+    //         _p_GameSettings->deckTypeVal.SetType(DeckType::PIEMONTE);
+    //         break;
+    //     case 7:
+    //         // romagna
+    //         _p_GameSettings->deckTypeVal.SetType(DeckType::ROMAGNA);
+    //         break;
+    //     case 8:
+    //         // sardegna
+    //         _p_GameSettings->deckTypeVal.SetType(DeckType::SARDEGNA);
+    //         break;
+    //     case 9:
+    //         // toscana
+    //         _p_GameSettings->deckTypeVal.SetType(DeckType::TOSCANA);
+    //         break;
+    //     case 10:
+    //         // sicilia
+    //         _p_GameSettings->deckTypeVal.SetType(DeckType::SICILIA);
+    //         break;
+    //     case 11:
+    //         // trento
+    //         _p_GameSettings->deckTypeVal.SetType(DeckType::TRENTO);
+    //         break;
+    //     case 12:
+    //         // treviso
+    //         _p_GameSettings->deckTypeVal.SetType(DeckType::TREVISO);
+    //         break;
+    //     case 13:
+    //         // trieste
+    //         _p_GameSettings->deckTypeVal.SetType(DeckType::TRIESTE);
+    //         break;
+    // }
+    // delete menuDecks;
     return NULL;
 }
 

@@ -11,6 +11,7 @@
 
 #include "CustomMenu.h"
 #include "ErrorInfo.h"
+#include "Fonts.h"
 #include "GameGfx/SolitarioGfx.h"
 #include "HightScoreMgr.h"
 #include "Languages.h"

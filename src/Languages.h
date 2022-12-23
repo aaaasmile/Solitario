@@ -1,11 +1,8 @@
-// Languages.h
-
 #ifndef __CLANGUAGES__H__
 #define __CLANGUAGES__H__
 
 #include <string>
 
-//! class Languages
 class Languages {
 public:
     enum eLangId {

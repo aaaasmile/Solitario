@@ -7,12 +7,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "AppGfx.h"
 #include "CompGfx/cLabelGfx.h"
 #include "CompGfx/cLabelLinkGfx.h"
 #include "ErrorInfo.h"
 #include "GfxUtil.h"
-#include "Languages.h"
 #include "win_type_global.h"
 
 static const char* lpszUrlHome = "http://www.invido.it";
@@ -27,11 +25,10 @@ const SDL_Color cMenuMgr::staColor_ombre = {87, 87, 87, 50};
 const SDL_Color cMenuMgr::staColor_black = {0, 0, 0};
 const SDL_Color cMenuMgr::staColor_gray = {128, 128, 128};
 
-cMenuMgr::cMenuMgr(AppGfx* pApp, SolitarioGfx* pGfx) {
+cMenuMgr::cMenuMgr(LPMenuDelegator pApp) {
     m_pApp = pApp;
     m_pfont1 = 0;
     m_pfont2 = 0;
-    m_pInvidoGfx = pGfx;
     m_ifocus_valuesM_A = 0;
     m_pLanString = 0;
     m_pMenuBox = 0;
@@ -86,7 +83,8 @@ LPErrInApp cMenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer) {
     rctBt1.y = m_pScreen->h - rctBt1.h - 20;
     rctBt1.x = m_pScreen->w - rctBt1.w - 20;
     m_phomeUrl = new cLabelLinkGfx;
-    m_phomeUrl->m_fncbClickEvent = MakeDelegate(this, &cMenuMgr::LabelClicked);
+    // m_phomeUrl->m_fncbClickEvent = MakeDelegate(this,
+    // &cMenuMgr::LabelClicked); // TODO Delegate
     m_phomeUrl->Init(&rctBt1, m_pScreen, m_pfont3, MYIDLABELURL,
                      m_psdlRenderer);
     m_phomeUrl->SetState(cLabelLinkGfx::INVISIBLE);
@@ -99,8 +97,8 @@ LPErrInApp cMenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer) {
     rctBt1.w = 150;
     rctBt1.y = m_phomeUrl->m_rctButt.y - 20;
     rctBt1.x = m_phomeUrl->m_rctButt.x;
-    m_pLabelVersion->m_fncbClickEvent =
-        MakeDelegate(this, &cMenuMgr::LabelClicked);
+    // m_pLabelVersion->m_fncbClickEvent =
+    // MakeDelegate(this, &cMenuMgr::LabelClicked);  //// TODO Delegate
     m_pLabelVersion->Init(&rctBt1, m_pScreen, m_pfont2, MYIDLABELVER,
                           m_psdlRenderer);
     m_pLabelVersion->SetState(cLabelGfx::INVISIBLE);

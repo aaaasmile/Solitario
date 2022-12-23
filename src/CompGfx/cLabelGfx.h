@@ -17,7 +17,7 @@ using namespace fastdelegate;
 class cLabelGfx {
     // use fastdelegate to implement the observer pattern and avoid using the
     // callback interface on observer
-    typedef FastDelegate1<int> CLICKEVENT;
+    // typedef FastDelegate1<int> CLICKEVENT; // TODO Delegate
 
 public:
     enum eSate { VISIBLE, INVISIBLE, PRESSED };

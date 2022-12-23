@@ -9,9 +9,8 @@
 #include <SDL_ttf.h>
 
 #include "ErrorInfo.h"
+#include "FastDelegate.h"
 
-class AppGfx;
-class SolitarioGfx;
 class Languages;
 class cLabelLinkGfx;
 class cLabelGfx;
@@ -28,7 +27,7 @@ public:
     };
     enum { MYIDLABELURL = 0, MYIDLABELVER = 1 };
 
-    cMenuMgr(AppGfx* pApp, SolitarioGfx* pGfx);
+    cMenuMgr(LPMenuDelegator pApp);
     virtual ~cMenuMgr();
     LPErrInApp Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer);
     void HandleRootMenu();
@@ -56,11 +55,10 @@ private:
     static const SDL_Color staColor_gray;
 
 private:
-    AppGfx* m_pApp;
+    LPMenuDelegator m_pApp;
     Languages* m_pLanString;
     TTF_Font* m_pfont1;
     TTF_Font* m_pfont2;
-    SolitarioGfx* m_pInvidoGfx;
     SDL_Surface* m_pScreen;
     SDL_Renderer* m_psdlRenderer;
     int m_ifocus_valuesM_A;
