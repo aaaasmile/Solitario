@@ -29,7 +29,7 @@ public:
     void SetPlayerName(std::string strVal) {
         _p_GameSettings->strPlayerName = strVal;
     }
-    LanguageMgr* GetLanguageMan() { return &_LanguageMgr; }
+    Languages* GetLanguageMan() { return &_LanguageMgr; }
     void ParseCmdLine(int argc, char* argv[]);
 
 private:
@@ -63,7 +63,7 @@ private:
     SolitarioGfx* _p_SolitarioGfx;
     MusicManager* _p_MusicManager;
     HightScoreMgr _HScoreMgr;
-    LanguageMgr _LanguageMgr;
+    Languages _LanguageMgr;
 
     int _iScreenW;
     int _iScreenH;

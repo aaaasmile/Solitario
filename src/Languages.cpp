@@ -2,7 +2,7 @@
 
 #include <assert.h>
 
-LanguageMgr::LanguageMgr() {
+Languages::Languages() {
     for (int i = 0; i < TOT_STRINGS; i++) {
         for (int j = 0; j < TOT_LANG; j++) {
             _mtxLangString[j][i] = "No TRanslation!";
@@ -160,7 +160,7 @@ LanguageMgr::LanguageMgr() {
     _mtxLangString[LANG_ENG][ID_CREDITS] = "Credits";
 }
 
-std::string LanguageMgr::GetStringId(eStringID eId) {
+std::string Languages::GetStringId(eStringID eId) {
     std::string strRet = "Err trans.";
 
     assert(eId < TOT_STRINGS);
@@ -172,7 +172,7 @@ std::string LanguageMgr::GetStringId(eStringID eId) {
     return strRet;
 }
 
-char* LanguageMgr::GetCStringId(eStringID eId) {
+char* Languages::GetCStringId(eStringID eId) {
     std::string strRet = "Err trans.";
 
     assert(eId < TOT_STRINGS);

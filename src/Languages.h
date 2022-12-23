@@ -5,8 +5,8 @@
 
 #include <string>
 
-//! class LanguageMgr
-class LanguageMgr {
+//! class Languages
+class Languages {
 public:
     enum eLangId {
         LANG_ITA = 0,
@@ -64,7 +64,7 @@ public:
     };
 
 public:
-    LanguageMgr();
+    Languages();
     void SetLang(eLangId eVal) { _eLangid = eVal; }
     std::string GetStringId(eStringID eId);
     char* GetCStringId(eStringID eId);

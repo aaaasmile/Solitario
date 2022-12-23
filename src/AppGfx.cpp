@@ -88,7 +88,7 @@ LPErrInApp AppGfx::Init() {
     }
 
     SDL_SetWindowTitle(_p_Window,
-                       _LanguageMgr.GetCStringId(LanguageMgr::ID_SOLITARIO));
+                       _LanguageMgr.GetCStringId(Languages::ID_SOLITARIO));
 
     // icona trasparente
     SDL_Surface *psIcon = SDL_LoadBMP(lpszIconProgFile);
@@ -452,7 +452,7 @@ LPErrInApp AppGfx::loadProfile() {
         ini_locateKey(pIni, lpszKeyLang);
         ini_readInt(pIni, &iVal);
     }
-    _p_GameSettings->eLanguageCurrent = (LanguageMgr::eLangId)iVal;
+    _p_GameSettings->eLanguageCurrent = (Languages::eLangId)iVal;
     // music
     iVal = FALSE;
     if (pIni) {
@@ -534,12 +534,12 @@ LPErrInApp AppGfx::StartMainMenu() {
     while (bEnd == FALSE) {
         // SET MAIN MENU ITEMS
         menu->ClearItems();
-        menu->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_START));
-        menu->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_LANGUAGESEL));
-        menu->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_SOUNDOPT));
-        menu->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_CREDITS));
-        menu->SetLabels(_LanguageMgr.GetStringId(LanguageMgr::ID_MAINMENU),
-                        _LanguageMgr.GetStringId(LanguageMgr::ID_EXIT));
+        menu->AddItems(_LanguageMgr.GetStringId(Languages::ID_START));
+        menu->AddItems(_LanguageMgr.GetStringId(Languages::ID_LANGUAGESEL));
+        menu->AddItems(_LanguageMgr.GetStringId(Languages::ID_SOUNDOPT));
+        menu->AddItems(_LanguageMgr.GetStringId(Languages::ID_CREDITS));
+        menu->SetLabels(_LanguageMgr.GetStringId(Languages::ID_MAINMENU),
+                        _LanguageMgr.GetStringId(Languages::ID_EXIT));
 
         // RUN MENU
         err = menu->Run(result);
@@ -557,12 +557,12 @@ LPErrInApp AppGfx::StartMainMenu() {
                 // MENU select a new language
                 menu->ClearItems();
                 menu->SetLabels(
-                    _LanguageMgr.GetStringId(LanguageMgr::ID_CHOOSELANGUA),
-                    _LanguageMgr.GetStringId(LanguageMgr::ID_BACKMAINMENU));
+                    _LanguageMgr.GetStringId(Languages::ID_CHOOSELANGUA),
+                    _LanguageMgr.GetStringId(Languages::ID_BACKMAINMENU));
                 menu->AddItems(
-                    _LanguageMgr.GetStringId(LanguageMgr::ID_ITALIANO));
+                    _LanguageMgr.GetStringId(Languages::ID_ITALIANO));
                 menu->AddItems(
-                    _LanguageMgr.GetStringId(LanguageMgr::ID_DIALETMN));
+                    _LanguageMgr.GetStringId(Languages::ID_DIALETMN));
                 // menu->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_ENGLISH));
 
                 err = menu->Run(result2);  // SHOW LANGUAGE MENU
@@ -575,35 +575,33 @@ LPErrInApp AppGfx::StartMainMenu() {
                 switch (result2) {
                     case 0:
                         // italian
-                        _p_GameSettings->eLanguageCurrent =
-                            LanguageMgr::LANG_ITA;
+                        _p_GameSettings->eLanguageCurrent = Languages::LANG_ITA;
 
                         break;
                     case 1:
                         // dialect mn
                         _p_GameSettings->eLanguageCurrent =
-                            LanguageMgr::LANG_DIAL_BREDA;
+                            Languages::LANG_DIAL_BREDA;
                         break;
                     case 2:
                         // english
-                        _p_GameSettings->eLanguageCurrent =
-                            LanguageMgr::LANG_ENG;
+                        _p_GameSettings->eLanguageCurrent = Languages::LANG_ENG;
                         break;
                 }
                 _LanguageMgr.SetLang(_p_GameSettings->eLanguageCurrent);
                 SDL_SetWindowTitle(_p_Window, _LanguageMgr.GetCStringId(
-                                                  LanguageMgr::ID_SOLITARIO));
+                                                  Languages::ID_SOLITARIO));
                 break;
             case 2:
                 // OPZIONI SUONO MENU
                 menu->ClearItems();
                 menu->SetLabels(
-                    _LanguageMgr.GetStringId(LanguageMgr::ID_SOUNDOPT),
-                    _LanguageMgr.GetStringId(LanguageMgr::ID_BACKMAINMENU));
+                    _LanguageMgr.GetStringId(Languages::ID_SOUNDOPT),
+                    _LanguageMgr.GetStringId(Languages::ID_BACKMAINMENU));
                 menu->AddItems(
-                    _LanguageMgr.GetStringId(LanguageMgr::ID_ABILITATO));
+                    _LanguageMgr.GetStringId(Languages::ID_ABILITATO));
                 menu->AddItems(
-                    _LanguageMgr.GetStringId(LanguageMgr::ID_DISABILITATO));
+                    _LanguageMgr.GetStringId(Languages::ID_DISABILITATO));
                 err = menu->Run(result2);
                 if (err != NULL)
                     return err;
@@ -632,8 +630,8 @@ LPErrInApp AppGfx::StartMainMenu() {
             case 122:  // VIDEO RESOLUTION MENU
                 menu->ClearItems();
                 menu->SetLabels(_LanguageMgr.GetStringId(
-                                    LanguageMgr::ID_SELECTDISPLAYSETTINGS),
-                                _LanguageMgr.GetStringId(LanguageMgr::ID_BACK));
+                                    Languages::ID_SELECTDISPLAYSETTINGS),
+                                _LanguageMgr.GetStringId(Languages::ID_BACK));
                 menu->AddItems("800x600 x 32bits");
                 menu->AddItems("1024x768 x 32bits");
                 menu->AddItems("Full screen");
@@ -704,7 +702,7 @@ void AppGfx::hightScoreMenu() {
     ty = (_p_Screen->h - 260) / 2;
 
     _p_CustomFont->DrawString(
-        _p_Screen, _LanguageMgr.GetStringId(LanguageMgr::ID_HISCORE), TEXTMIXED,
+        _p_Screen, _LanguageMgr.GetStringId(Languages::ID_HISCORE), TEXTMIXED,
         TEXTALIGNCENTER, 0, ty - 10 - SDLFONTSIZE * 2, 0);
     _p_CustomFont->DrawString(_p_Screen, "-------------", TEXTMIXED,
                               TEXTALIGNCENTER, 0, ty - 10 - SDLFONTSIZE, 0);
@@ -715,7 +713,7 @@ void AppGfx::hightScoreMenu() {
         _p_CustomFont->DrawString(_p_Screen, temp, TEXTMIXED, TEXTALIGNLEFT,
                                   tx + 5, ty + 10 + (SDLFONTSIZE + 8) * k, 0);
         if (_HScoreMgr.HS_Names[k].size() == 0) {
-            temp = _LanguageMgr.GetStringId(LanguageMgr::ID_ANONIM);
+            temp = _LanguageMgr.GetStringId(Languages::ID_ANONIM);
         } else {
             temp = _HScoreMgr.HS_Names[k];
         }
@@ -724,7 +722,7 @@ void AppGfx::hightScoreMenu() {
                                   ty + 10 + (SDLFONTSIZE + 8) * k, 0);
     }
     _p_CustomFont->DrawString(
-        _p_Screen, _LanguageMgr.GetStringId(LanguageMgr::ID_PUSHBUTTON),
+        _p_Screen, _LanguageMgr.GetStringId(Languages::ID_PUSHBUTTON),
         TEXTMIXED, TEXTALIGNCENTER, 0, ty + 260 + SDLFONTSIZE, 0);
     updateScreenTexture();
     waitKeyLoop();
@@ -751,23 +749,22 @@ LPErrInApp AppGfx::menuSelectDeck() {
                          SDL_MapRGBA(_p_Screen->format, 128, 0, 0, 255));
 
     menuDecks->ClearItems();
-    menuDecks->SetLabels(
-        _LanguageMgr.GetStringId(LanguageMgr::ID_CHOOSEMAZZO),
-        _LanguageMgr.GetStringId(LanguageMgr::ID_BACKMAINMENU));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_PIACENTINA));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_BERGAMO));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_BOLOGNA));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_GENOVA));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_MILANO));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_NAPOLI));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_PIEMONTE));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_ROMAGNA));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_SARDEGNA));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_SICILIA));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_TOSCANA));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_TRENTO));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_TREVISO));
-    menuDecks->AddItems(_LanguageMgr.GetStringId(LanguageMgr::ID_TRIESTE));
+    menuDecks->SetLabels(_LanguageMgr.GetStringId(Languages::ID_CHOOSEMAZZO),
+                         _LanguageMgr.GetStringId(Languages::ID_BACKMAINMENU));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_PIACENTINA));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_BERGAMO));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_BOLOGNA));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_GENOVA));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_MILANO));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_NAPOLI));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_PIEMONTE));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_ROMAGNA));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_SARDEGNA));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_SICILIA));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_TOSCANA));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_TRENTO));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_TREVISO));
+    menuDecks->AddItems(_LanguageMgr.GetStringId(Languages::ID_TRIESTE));
 
     int result2;
     LPErrInApp err = menuDecks->Run(result2);

@@ -56,7 +56,7 @@ public:
     long lIpRemote_3;
     long lIpRemote_4;
     DeckType deckTypeVal;
-    LanguageMgr::eLangId eLanguageCurrent;
+    Languages::eLangId eLanguageCurrent;
     bool bMusicEnabled;
 
 public:
@@ -71,7 +71,7 @@ public:
         lIpRemote_3 = 0;
         lIpRemote_4 = 1;
         deckTypeVal.SetType(DeckType::PIACENTINA);
-        eLanguageCurrent = LanguageMgr::LANG_ITA;
+        eLanguageCurrent = Languages::LANG_ITA;
         bMusicEnabled = false;
     }
 };
