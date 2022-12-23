@@ -9,7 +9,8 @@
 #include <SDL2/SDL.h>
 #include <SDL_ttf.h>
 
-#include "FastDelegate.h"
+#include "../FastDelegate.h"
+#include "ErrorInfo.h"
 #include "win_type_global.h"
 using namespace fastdelegate;
 

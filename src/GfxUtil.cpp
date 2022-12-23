@@ -135,6 +135,59 @@ void inline GFX_UTIL::SetPixel(SDL_Surface *surface, int x, int y,
     }
 }
 
+void GFX_UTIL::DrawString(SDL_Surface *screen, const char *strText, int x,
+                          int y, SDL_Color color, TTF_Font *customfont,
+                          bool isUtf8) {
+    int tx, ty;
+    TTF_SizeText(customfont, strText, &tx, &ty);
+    SDL_Surface *surFont;
+    if (isUtf8) {
+        surFont = TTF_RenderUTF8_Blended(customfont, strText, color);
+    } else {
+        surFont = TTF_RenderText_Blended(customfont, strText, color);
+    }
+    GFX_UTIL::DrawStaticSpriteEx(screen, 0, 0, tx, ty, x, y, surFont);
+    SDL_FreeSurface(surFont);
+}
+
+void GFX_UTIL::DrawStaticSpriteEx(SDL_Surface *screen, int src_x, int src_y,
+                                  int src_dx, int src_dy, int dst_x, int dst_y,
+                                  SDL_Surface *sprite) {
+    SDL_Rect src_rec = {src_x, src_y, src_dx, src_dy};
+    SDL_Rect dst_rec = {dst_x, dst_y, 0, 0};
+    SDL_BlitSurface(sprite, &src_rec, screen, &dst_rec);
+}
+
+void GFX_UTIL::DrawStaticLine(SDL_Surface *screen, int x0, int y0, int x1,
+                              int y1, SDL_Color color) {
+    int d =
+        (int)sqrtf(pow((float)(x1 - x0), 2.0f) + pow((float)(y1 - y0), 2.0f));
+    static int x = 0, y = 0;
+    static int w = screen->w;
+    static int h = screen->h;
+    for (int t = 0; t < d; t++) {
+        x = x0 + (x1 - x0) * t / d;
+        y = y0 + (y1 - y0) * t / d;
+        if ((x >= 0) && (y >= 0) && (x < w) && (y < h)) {
+            GFX_UTIL::SetPixel(
+                screen, x, y,
+                SDL_MapRGBA(screen->format, color.r, color.g, color.b, 255));
+        }
+    }
+}
+
+void GFX_UTIL::DrawRect(SDL_Surface *screen, int x, int y, int dx, int dy,
+                        SDL_Color color) {
+    DrawStaticLine(screen, x, y, dx, y, color);
+    DrawStaticLine(screen, x, y, x, dy, color);
+    DrawStaticLine(screen, dx, y, dx, dy, color);
+    DrawStaticLine(screen, x, dy, dx, dy, color);
+}
+
+void GFX_UTIL::DrawStaticBrokenLine(SDL_Surface *screen, int x0, int y0, int x1,
+                                    int y1, const SDL_Color *color1,
+                                    const SDL_Color *color2, int break_size) {}
+
 std::string STR_UTIL::intToString(int iNumber) {
     std::string temp;
     char buffer[15];

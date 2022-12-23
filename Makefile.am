@@ -24,12 +24,11 @@ solitario_LDADD =\
 	libini/libini.a
 
 solitario_SOURCES = \
-	src/CardRegionGfx.cpp\
-	src/CardStackGfx.cpp\
-	src/SolitarioGfx.cpp\
+	src/GameGfx/CardRegionGfx.cpp\
+	src/GameGfx/CardStackGfx.cpp\
+	src/GameGfx/SolitarioGfx.cpp\
 	src/HightScoreMgr.cpp\
 	src/MusicManager.cpp\
-	src/CustomMenu.cpp\
 	src/AppGfx.cpp\
 	src/Fonts.cpp\
 	src/GameSettings.cpp\

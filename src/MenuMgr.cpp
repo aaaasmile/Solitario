@@ -27,7 +27,7 @@ const SDL_Color cMenuMgr::staColor_ombre = {87, 87, 87, 50};
 const SDL_Color cMenuMgr::staColor_black = {0, 0, 0};
 const SDL_Color cMenuMgr::staColor_gray = {128, 128, 128};
 
-cMenuMgr::cMenuMgr(AppGfx* pApp, cInvidoGfx* pGfx) {
+cMenuMgr::cMenuMgr(AppGfx* pApp, SolitarioGfx* pGfx) {
     m_pApp = pApp;
     m_pfont1 = 0;
     m_pfont2 = 0;
@@ -48,8 +48,7 @@ cMenuMgr::~cMenuMgr() {
     delete m_pLabelVersion;
 }
 
-void cMenuMgr::Init(SDL_Surface* pScreen, SDL_Renderer* pRenderer) {
-    CHAR ErrBuff[Error::BUFDIM];
+LPErrInApp cMenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer) {
     m_pScreen = pScreen;
     m_psdlRenderer = pRenderer;
 
@@ -106,6 +105,8 @@ void cMenuMgr::Init(SDL_Surface* pScreen, SDL_Renderer* pRenderer) {
                           m_psdlRenderer);
     m_pLabelVersion->SetState(cLabelGfx::INVISIBLE);
     m_pLabelVersion->SetWindowText(lpszVersion);
+
+    return NULL;
 }
 
 void cMenuMgr::LabelClicked(int iButID) {}
@@ -166,7 +167,6 @@ void cMenuMgr::drawBackground() {
     m_iSy = m_pScreen->clip_rect.h;
     m_iDeby = m_iSy / 5;
 
-    Uint32 c_bluefg = SDL_MapRGB(m_pScreen->format, 51, 72, 133);
     Uint32 c_redfg = SDL_MapRGB(m_pScreen->format, 153, 202, 51);
 
     // don't invert, because content overwrite header
@@ -209,7 +209,7 @@ void cMenuMgr::HandleRootMenu() {
 
     // Draw title bar
     drawStringSH(
-        m_pLanString->GetStringId(cLanguages::ID_WELCOMETITLEBAR).c_str(),
+        m_pLanString->GetStringId(Languages::ID_WELCOMETITLEBAR).c_str(),
         m_iDebx + 10, m_iDeby + 5, c, m_pfont1);
 
     // Play
@@ -218,7 +218,7 @@ void cMenuMgr::HandleRootMenu() {
     } else {
         c = staColor_on;
     }
-    drawStringSH(m_pLanString->GetStringId(cLanguages::ID_START).c_str(),
+    drawStringSH(m_pLanString->GetStringId(Languages::ID_START).c_str(),
                  m_iDebx + 10, m_iDeby + 50, c, m_pfont1);
     // Options
     if (m_ifocus_valuesM_A != 1) {
@@ -226,7 +226,7 @@ void cMenuMgr::HandleRootMenu() {
     } else {
         c = staColor_on;
     }
-    drawStringSH(m_pLanString->GetStringId(cLanguages::ID_MEN_OPTIONS).c_str(),
+    drawStringSH(m_pLanString->GetStringId(Languages::ID_MEN_OPTIONS).c_str(),
                  m_iDebx + 10, m_iDeby + 90, c, m_pfont1);
     // Credits
     if (m_ifocus_valuesM_A != 2) {
@@ -234,7 +234,7 @@ void cMenuMgr::HandleRootMenu() {
     } else {
         c = staColor_on;
     }
-    drawStringSH(m_pLanString->GetStringId(cLanguages::ID_CREDITS).c_str(),
+    drawStringSH(m_pLanString->GetStringId(Languages::ID_CREDITS).c_str(),
                  m_iDebx + 10, m_iDeby + 130, c, m_pfont1);
 
     // Help
@@ -243,7 +243,7 @@ void cMenuMgr::HandleRootMenu() {
     } else {
         c = staColor_on;
     }
-    drawStringSH(m_pLanString->GetStringId(cLanguages::ID_MN_HELP).c_str(),
+    drawStringSH(m_pLanString->GetStringId(Languages::ID_MN_HELP).c_str(),
                  m_iDebx + 10, m_iDeby + 170, c, m_pfont1);
 
     // Quit
@@ -252,7 +252,7 @@ void cMenuMgr::HandleRootMenu() {
     } else {
         c = staColor_on;
     }
-    drawStringSH(m_pLanString->GetStringId(cLanguages::ID_EXIT).c_str(),
+    drawStringSH(m_pLanString->GetStringId(Languages::ID_EXIT).c_str(),
                  m_iDebx + 10, m_iSy - m_iDeby - 40, c, m_pfont1);
 
     SDL_Event event;

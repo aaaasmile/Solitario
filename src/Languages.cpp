@@ -61,6 +61,11 @@ Languages::Languages() {
     _mtxLangString[LANG_DIAL_BREDA][ID_SICILIA] = "Siciliani";
     _mtxLangString[LANG_DIAL_BREDA][ID_CREDITS] = "Ringrasiament";
 
+    _mtxLangString[LANG_DIAL_BREDA][ID_WELCOMETITLEBAR] =
+        "At capiti giost al Sulitari";
+    _mtxLangString[LANG_DIAL_BREDA][ID_MEN_OPTIONS] = "Upsion";
+    _mtxLangString[LANG_DIAL_BREDA][ID_MN_HELP] = "Ad du na man";
+
     // italiano
     _mtxLangString[LANG_ITA][ID_START] = "Inizia";
     _mtxLangString[LANG_ITA][ID_LANGUAGESEL] = "Lingua";
@@ -109,6 +114,9 @@ Languages::Languages() {
     _mtxLangString[LANG_ITA][ID_TRIESTE] = "Triestine";
     _mtxLangString[LANG_ITA][ID_SICILIA] = "Siciliane";
     _mtxLangString[LANG_ITA][ID_CREDITS] = "Credits";
+    _mtxLangString[LANG_ITA][ID_WELCOMETITLEBAR] = "Benvenuti";
+    _mtxLangString[LANG_ITA][ID_MEN_OPTIONS] = "Opzioni";
+    _mtxLangString[LANG_ITA][ID_MN_HELP] = "Guida";
 
     // English
     _mtxLangString[LANG_ENG][ID_START] = "Start";
@@ -158,6 +166,9 @@ Languages::Languages() {
     _mtxLangString[LANG_ENG][ID_TRIESTE] = "Triestine";
     _mtxLangString[LANG_ENG][ID_SICILIA] = "Siciliane";
     _mtxLangString[LANG_ENG][ID_CREDITS] = "Credits";
+    _mtxLangString[LANG_ENG][ID_WELCOMETITLEBAR] = "";
+    _mtxLangString[LANG_ENG][ID_MEN_OPTIONS] = "";
+    _mtxLangString[LANG_ENG][ID_MN_HELP] = "";
 }
 
 std::string Languages::GetStringId(eStringID eId) {

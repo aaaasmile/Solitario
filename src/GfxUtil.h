@@ -2,6 +2,7 @@
 #define __GFX_UTIL__H
 
 #include <SDL2/SDL.h>
+#include <SDL_ttf.h>
 
 #include <string>
 
@@ -23,6 +24,18 @@ namespace GFX_UTIL {
 
     void ScreenShade(SDL_Surface *surface, SDL_Rect *rect, float opacity,
                      unsigned char r, unsigned char g, unsigned char b);
+    void DrawString(SDL_Surface *screen, const char *strText, int x, int y,
+                    SDL_Color color, TTF_Font *customfont, bool isUtf8);
+    void DrawStaticSpriteEx(SDL_Surface *screen, int src_x, int src_y,
+                            int src_dx, int src_dy, int dst_x, int dst_y,
+                            SDL_Surface *sprite);
+    void DrawStaticLine(SDL_Surface *screen, int x0, int y0, int x1, int y1,
+                        SDL_Color color);
+    void DrawStaticBrokenLine(SDL_Surface *screen, int x0, int y0, int x1,
+                              int y1, const SDL_Color *color1,
+                              const SDL_Color *color2, int break_size);
+    void DrawRect(SDL_Surface *screen, int x, int y, int dx, int dy,
+                  SDL_Color c);
 
 };
 

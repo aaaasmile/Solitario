@@ -8,6 +8,8 @@
 #include <SDL2/SDL.h>
 #include <SDL_ttf.h>
 
+#include "ErrorInfo.h"
+
 class AppGfx;
 class SolitarioGfx;
 class Languages;
@@ -28,7 +30,7 @@ public:
 
     cMenuMgr(AppGfx* pApp, SolitarioGfx* pGfx);
     virtual ~cMenuMgr();
-    void Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer);
+    LPErrInApp Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer);
     void HandleRootMenu();
     void SetBackground(SDL_Surface* pVal) { m_pScene_background = pVal; }
     void LabelClicked(int iButID);

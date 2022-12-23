@@ -103,10 +103,10 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
-am_solitario_OBJECTS = src/CardRegionGfx.$(OBJEXT) \
-	src/CardStackGfx.$(OBJEXT) src/SolitarioGfx.$(OBJEXT) \
-	src/HightScoreMgr.$(OBJEXT) src/MusicManager.$(OBJEXT) \
-	src/CustomMenu.$(OBJEXT) src/AppGfx.$(OBJEXT) \
+am_solitario_OBJECTS = src/GameGfx/CardRegionGfx.$(OBJEXT) \
+	src/GameGfx/CardStackGfx.$(OBJEXT) \
+	src/GameGfx/SolitarioGfx.$(OBJEXT) src/HightScoreMgr.$(OBJEXT) \
+	src/MusicManager.$(OBJEXT) src/AppGfx.$(OBJEXT) \
 	src/Fonts.$(OBJEXT) src/GameSettings.$(OBJEXT) \
 	src/GfxUtil.$(OBJEXT) src/Languages.$(OBJEXT) \
 	src/main.$(OBJEXT) src/Fading.$(OBJEXT) src/Credits.$(OBJEXT) \
@@ -130,16 +130,17 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I. -I$(top_builddir)/src
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = src/$(DEPDIR)/AppGfx.Po \
-	src/$(DEPDIR)/CardRegionGfx.Po src/$(DEPDIR)/CardStackGfx.Po \
-	src/$(DEPDIR)/Credits.Po src/$(DEPDIR)/CustomMenu.Po \
+am__depfiles_remade = src/$(DEPDIR)/AppGfx.Po src/$(DEPDIR)/Credits.Po \
 	src/$(DEPDIR)/ErrorInfo.Po src/$(DEPDIR)/Fading.Po \
 	src/$(DEPDIR)/Fonts.Po src/$(DEPDIR)/GameSettings.Po \
 	src/$(DEPDIR)/GfxUtil.Po src/$(DEPDIR)/HightScoreMgr.Po \
 	src/$(DEPDIR)/Languages.Po src/$(DEPDIR)/MenuMgr.Po \
-	src/$(DEPDIR)/MusicManager.Po src/$(DEPDIR)/SolitarioGfx.Po \
-	src/$(DEPDIR)/main.Po src/CompGfx/$(DEPDIR)/cLabelGfx.Po \
-	src/CompGfx/$(DEPDIR)/cLabelLinkGfx.Po
+	src/$(DEPDIR)/MusicManager.Po src/$(DEPDIR)/main.Po \
+	src/CompGfx/$(DEPDIR)/cLabelGfx.Po \
+	src/CompGfx/$(DEPDIR)/cLabelLinkGfx.Po \
+	src/GameGfx/$(DEPDIR)/CardRegionGfx.Po \
+	src/GameGfx/$(DEPDIR)/CardStackGfx.Po \
+	src/GameGfx/$(DEPDIR)/SolitarioGfx.Po
 am__mv = mv -f
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -355,12 +356,11 @@ solitario_LDADD = \
 	libini/libini.a
 
 solitario_SOURCES = \
-	src/CardRegionGfx.cpp\
-	src/CardStackGfx.cpp\
-	src/SolitarioGfx.cpp\
+	src/GameGfx/CardRegionGfx.cpp\
+	src/GameGfx/CardStackGfx.cpp\
+	src/GameGfx/SolitarioGfx.cpp\
 	src/HightScoreMgr.cpp\
 	src/MusicManager.cpp\
-	src/CustomMenu.cpp\
 	src/AppGfx.cpp\
 	src/Fonts.cpp\
 	src/GameSettings.cpp\
@@ -468,23 +468,27 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+src/GameGfx/$(am__dirstamp):
+	@$(MKDIR_P) src/GameGfx
+	@: > src/GameGfx/$(am__dirstamp)
+src/GameGfx/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) src/GameGfx/$(DEPDIR)
+	@: > src/GameGfx/$(DEPDIR)/$(am__dirstamp)
+src/GameGfx/CardRegionGfx.$(OBJEXT): src/GameGfx/$(am__dirstamp) \
+	src/GameGfx/$(DEPDIR)/$(am__dirstamp)
+src/GameGfx/CardStackGfx.$(OBJEXT): src/GameGfx/$(am__dirstamp) \
+	src/GameGfx/$(DEPDIR)/$(am__dirstamp)
+src/GameGfx/SolitarioGfx.$(OBJEXT): src/GameGfx/$(am__dirstamp) \
+	src/GameGfx/$(DEPDIR)/$(am__dirstamp)
 src/$(am__dirstamp):
 	@$(MKDIR_P) src
 	@: > src/$(am__dirstamp)
 src/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) src/$(DEPDIR)
 	@: > src/$(DEPDIR)/$(am__dirstamp)
-src/CardRegionGfx.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/CardStackGfx.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/SolitarioGfx.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
 src/HightScoreMgr.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/MusicManager.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/CustomMenu.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/AppGfx.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
@@ -523,15 +527,13 @@ mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 	-rm -f src/*.$(OBJEXT)
 	-rm -f src/CompGfx/*.$(OBJEXT)
+	-rm -f src/GameGfx/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
 
 include src/$(DEPDIR)/AppGfx.Po # am--include-marker
-include src/$(DEPDIR)/CardRegionGfx.Po # am--include-marker
-include src/$(DEPDIR)/CardStackGfx.Po # am--include-marker
 include src/$(DEPDIR)/Credits.Po # am--include-marker
-include src/$(DEPDIR)/CustomMenu.Po # am--include-marker
 include src/$(DEPDIR)/ErrorInfo.Po # am--include-marker
 include src/$(DEPDIR)/Fading.Po # am--include-marker
 include src/$(DEPDIR)/Fonts.Po # am--include-marker
@@ -541,10 +543,12 @@ include src/$(DEPDIR)/HightScoreMgr.Po # am--include-marker
 include src/$(DEPDIR)/Languages.Po # am--include-marker
 include src/$(DEPDIR)/MenuMgr.Po # am--include-marker
 include src/$(DEPDIR)/MusicManager.Po # am--include-marker
-include src/$(DEPDIR)/SolitarioGfx.Po # am--include-marker
 include src/$(DEPDIR)/main.Po # am--include-marker
 include src/CompGfx/$(DEPDIR)/cLabelGfx.Po # am--include-marker
 include src/CompGfx/$(DEPDIR)/cLabelLinkGfx.Po # am--include-marker
+include src/GameGfx/$(DEPDIR)/CardRegionGfx.Po # am--include-marker
+include src/GameGfx/$(DEPDIR)/CardStackGfx.Po # am--include-marker
+include src/GameGfx/$(DEPDIR)/SolitarioGfx.Po # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -908,6 +912,8 @@ distclean-generic:
 	-rm -f src/$(am__dirstamp)
 	-rm -f src/CompGfx/$(DEPDIR)/$(am__dirstamp)
 	-rm -f src/CompGfx/$(am__dirstamp)
+	-rm -f src/GameGfx/$(DEPDIR)/$(am__dirstamp)
+	-rm -f src/GameGfx/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -919,10 +925,7 @@ clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 distclean: distclean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 		-rm -f src/$(DEPDIR)/AppGfx.Po
-	-rm -f src/$(DEPDIR)/CardRegionGfx.Po
-	-rm -f src/$(DEPDIR)/CardStackGfx.Po
 	-rm -f src/$(DEPDIR)/Credits.Po
-	-rm -f src/$(DEPDIR)/CustomMenu.Po
 	-rm -f src/$(DEPDIR)/ErrorInfo.Po
 	-rm -f src/$(DEPDIR)/Fading.Po
 	-rm -f src/$(DEPDIR)/Fonts.Po
@@ -932,10 +935,12 @@ distclean: distclean-recursive
 	-rm -f src/$(DEPDIR)/Languages.Po
 	-rm -f src/$(DEPDIR)/MenuMgr.Po
 	-rm -f src/$(DEPDIR)/MusicManager.Po
-	-rm -f src/$(DEPDIR)/SolitarioGfx.Po
 	-rm -f src/$(DEPDIR)/main.Po
 	-rm -f src/CompGfx/$(DEPDIR)/cLabelGfx.Po
 	-rm -f src/CompGfx/$(DEPDIR)/cLabelLinkGfx.Po
+	-rm -f src/GameGfx/$(DEPDIR)/CardRegionGfx.Po
+	-rm -f src/GameGfx/$(DEPDIR)/CardStackGfx.Po
+	-rm -f src/GameGfx/$(DEPDIR)/SolitarioGfx.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-tags
@@ -984,10 +989,7 @@ maintainer-clean: maintainer-clean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
 		-rm -f src/$(DEPDIR)/AppGfx.Po
-	-rm -f src/$(DEPDIR)/CardRegionGfx.Po
-	-rm -f src/$(DEPDIR)/CardStackGfx.Po
 	-rm -f src/$(DEPDIR)/Credits.Po
-	-rm -f src/$(DEPDIR)/CustomMenu.Po
 	-rm -f src/$(DEPDIR)/ErrorInfo.Po
 	-rm -f src/$(DEPDIR)/Fading.Po
 	-rm -f src/$(DEPDIR)/Fonts.Po
@@ -997,10 +999,12 @@ maintainer-clean: maintainer-clean-recursive
 	-rm -f src/$(DEPDIR)/Languages.Po
 	-rm -f src/$(DEPDIR)/MenuMgr.Po
 	-rm -f src/$(DEPDIR)/MusicManager.Po
-	-rm -f src/$(DEPDIR)/SolitarioGfx.Po
 	-rm -f src/$(DEPDIR)/main.Po
 	-rm -f src/CompGfx/$(DEPDIR)/cLabelGfx.Po
 	-rm -f src/CompGfx/$(DEPDIR)/cLabelLinkGfx.Po
+	-rm -f src/GameGfx/$(DEPDIR)/CardRegionGfx.Po
+	-rm -f src/GameGfx/$(DEPDIR)/CardStackGfx.Po
+	-rm -f src/GameGfx/$(DEPDIR)/SolitarioGfx.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

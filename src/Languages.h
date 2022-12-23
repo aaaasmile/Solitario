@@ -60,6 +60,9 @@ public:
         ID_ABILITATO,
         ID_DISABILITATO,
         ID_CREDITS,
+        ID_WELCOMETITLEBAR,
+        ID_MEN_OPTIONS,
+        ID_MN_HELP,
         TOT_STRINGS  // it mus be always on the last place
     };
 

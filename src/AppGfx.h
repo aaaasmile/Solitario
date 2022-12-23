@@ -11,9 +11,9 @@
 
 #include "CustomMenu.h"
 #include "ErrorInfo.h"
+#include "GameGfx/SolitarioGfx.h"
 #include "HightScoreMgr.h"
 #include "Languages.h"
-#include "SolitarioGfx.h"
 #include "win_type_global.h"
 
 class MusicManager;

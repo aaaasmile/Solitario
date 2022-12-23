@@ -10,6 +10,8 @@ typedef struct ErrInApp {
 namespace ERR_UTIL {
     LPErrInApp ErrorCreate(const char* errtext);
     LPErrInApp ErrorCreate(const char* format, const char* errtext);
+    LPErrInApp ErrorCreate(const char* format, const char* errtext,
+                           const char* errtext2);
 };
 
 #endif
