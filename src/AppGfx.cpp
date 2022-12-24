@@ -511,14 +511,15 @@ void AppGfx::writeProfile() {
 #endif
 }
 
+TTF_Font *fncBind_GetFontVera(void *self) {
+    AppGfx *pApp = (AppGfx *)self;
+    return pApp->GetFontVera();
+}
+
 fastdelegate::MenuDelegatorable AppGfx::prep_app() {
-    // TTF_Font *(*const GetFontVera_)() = (&AppGfx::GetFontVera);
-    // (void)GetFontVera_;
-    // static fastdelegate::MenuDelegator const tc = {.GetFontVera = (TTF_Font*
-    // (*const)(void*)(&AppGfx::GetFontVera) }; return
-    // (fastdelegate::MenuDelegator){.tc = &tc, .self = this};
+    // TODO complete interface
     fastdelegate::MenuDelegator const tc = {.GetFontVera =
-                                                (&AppGfx::GetFontVera)};
+                                                (&fncBind_GetFontVera)};
 
     return (fastdelegate::MenuDelegatorable){.tc = &tc, .self = this};
 }
@@ -528,7 +529,6 @@ LPErrInApp AppGfx::MainLoop() {
 
     cMenuMgr *pMenuMgr = new cMenuMgr();
     fastdelegate::MenuDelegatorable del = prep_app();
-    // del.GetFontVera = &AppGfx::GetFontVera;
     pMenuMgr->Initialize(_p_Screen, _p_sdlRenderer, &del);
 
     // // set main menu

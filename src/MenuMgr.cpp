@@ -61,7 +61,7 @@ LPErrInApp cMenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
     m_rctPanel.y = m_iDeby;
 
     m_pfont1 = (m_pApp->tc)->GetFontAriblk();
-    m_pfont2 = (m_pApp->tc)->GetFontVera();
+    m_pfont2 = (m_pApp->tc)->GetFontVera(m_pApp->self);
     m_pLanString = (m_pApp->tc)->GetLanguageMan();
 
     m_pMenuBox = SDL_CreateRGBSurface(SDL_SWSURFACE, m_rctPanel.w, m_rctPanel.h,

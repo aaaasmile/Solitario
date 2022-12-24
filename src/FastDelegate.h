@@ -7,7 +7,7 @@ namespace fastdelegate {
     typedef struct {
         void (*SetNextMenu)(int iVal);
         void (*LeaveMenu)();
-        TTF_Font* (*GetFontVera)();
+        TTF_Font* (*const GetFontVera)(void* self);
         TTF_Font* (*GetFontAriblk)();
         Languages* (*GetLanguageMan)();
     } MenuDelegator, *LPMenuDelegator;
