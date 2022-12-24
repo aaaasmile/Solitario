@@ -517,7 +517,7 @@ TTF_Font *fncBind_GetFontVera(void *self) {
 }
 
 fastdelegate::MenuDelegatorable AppGfx::prep_app() {
-    // TODO complete interface
+    // TODO complete the interface
     fastdelegate::MenuDelegator const tc = {.GetFontVera =
                                                 (&fncBind_GetFontVera)};
 
@@ -529,7 +529,7 @@ LPErrInApp AppGfx::MainLoop() {
 
     cMenuMgr *pMenuMgr = new cMenuMgr();
     fastdelegate::MenuDelegatorable del = prep_app();
-    pMenuMgr->Initialize(_p_Screen, _p_sdlRenderer, &del);
+    pMenuMgr->Initialize(_p_Screen, _p_sdlRenderer, del);
 
     // // set main menu
     // m_Histmenu.push(cMenuMgr::QUITAPP);

@@ -45,7 +45,7 @@ cMenuMgr::~cMenuMgr() {
 }
 
 LPErrInApp cMenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
-                                fastdelegate::LPMenuDelegatorable pApp) {
+                                fastdelegate::MenuDelegatorable& pApp) {
     m_pApp = pApp;
     m_pScreen = pScreen;
     m_psdlRenderer = pRenderer;
@@ -60,9 +60,9 @@ LPErrInApp cMenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
     m_rctPanel.x = m_iDebx;
     m_rctPanel.y = m_iDeby;
 
-    m_pfont1 = (m_pApp->tc)->GetFontAriblk();
-    m_pfont2 = (m_pApp->tc)->GetFontVera(m_pApp->self);
-    m_pLanString = (m_pApp->tc)->GetLanguageMan();
+    m_pfont1 = (m_pApp.tc)->GetFontAriblk();
+    m_pfont2 = (m_pApp.tc)->GetFontVera(m_pApp.self);
+    m_pLanString = (m_pApp.tc)->GetLanguageMan();
 
     m_pMenuBox = SDL_CreateRGBSurface(SDL_SWSURFACE, m_rctPanel.w, m_rctPanel.h,
                                       32, 0, 0, 0, 0);
@@ -257,7 +257,7 @@ void cMenuMgr::HandleRootMenu() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT) {
-            (m_pApp->tc)->LeaveMenu();
+            (m_pApp.tc)->LeaveMenu();
             break;
         }
 
@@ -278,7 +278,7 @@ void cMenuMgr::HandleRootMenu() {
                 rootMenuNext();
             }
             if (event.key.keysym.sym == SDLK_ESCAPE) {
-                (m_pApp->tc)->LeaveMenu();
+                (m_pApp.tc)->LeaveMenu();
             }
         }
         if (event.type == SDL_MOUSEMOTION) {
@@ -322,19 +322,19 @@ void cMenuMgr::HandleRootMenu() {
 void cMenuMgr::rootMenuNext() {
     switch (m_ifocus_valuesM_A) {
         case 0:  // Play
-            (m_pApp->tc)->SetNextMenu(MENU_GAME);
+            (m_pApp.tc)->SetNextMenu(MENU_GAME);
             break;
         case 1:  // Options
-            (m_pApp->tc)->SetNextMenu(MENU_OPTIONS);
+            (m_pApp.tc)->SetNextMenu(MENU_OPTIONS);
             break;
         case 2:  // Credits
-            (m_pApp->tc)->SetNextMenu(MENU_CREDITS);
+            (m_pApp.tc)->SetNextMenu(MENU_CREDITS);
             break;
         case 3:  // Help
-            (m_pApp->tc)->SetNextMenu(MENU_HELP);
+            (m_pApp.tc)->SetNextMenu(MENU_HELP);
             break;
         case 4:  // Quit
-            (m_pApp->tc)->LeaveMenu();
+            (m_pApp.tc)->LeaveMenu();
             break;
     }
 }
