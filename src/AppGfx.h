@@ -12,6 +12,7 @@
 
 #include "CustomMenu.h"
 #include "ErrorInfo.h"
+#include "FastDelegate.h"
 #include "Fonts.h"
 #include "GameGfx/SolitarioGfx.h"
 #include "HightScoreMgr.h"
@@ -56,6 +57,8 @@ private:
     LPErrInApp showHelp();
     LPErrInApp showCredits();
     LPErrInApp showOptionGeneral();
+
+    fastdelegate::MenuDelegator prep_app();
 
 private:
     SDL_Surface* _p_Screen;
