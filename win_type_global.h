@@ -54,7 +54,11 @@
 #endif
 
 #ifndef LPCSTR
-    typedef CONST CHAR *LPCSTR, *PCSTR;
+	#ifdef _WINDOWS //uncertain if windows of just MS-C++
+    		typedef CONST CHAR *LPCSTR, *PCSTR;
+ 	#else
+		typedef const CHAR *LPCSTR, *PCSTR; //GCC
+	#endif
 #endif
 
 #ifndef TRACE
