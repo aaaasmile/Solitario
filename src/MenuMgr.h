@@ -30,7 +30,7 @@ public:
     cMenuMgr();
     virtual ~cMenuMgr();
     LPErrInApp Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
-                          fastdelegate::LPMenuDelegator pApp);
+                          fastdelegate::LPMenuDelegatorable pApp);
     void HandleRootMenu();
     void SetBackground(SDL_Surface* pVal) { m_pScene_background = pVal; }
     void LabelClicked(int iButID);
@@ -56,7 +56,7 @@ private:
     static const SDL_Color staColor_gray;
 
 private:
-    fastdelegate::LPMenuDelegator m_pApp;
+    fastdelegate::LPMenuDelegatorable m_pApp;
     Languages* m_pLanString;
     TTF_Font* m_pfont1;
     TTF_Font* m_pfont2;

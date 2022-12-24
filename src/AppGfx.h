@@ -58,7 +58,7 @@ private:
     LPErrInApp showCredits();
     LPErrInApp showOptionGeneral();
 
-    fastdelegate::MenuDelegator prep_app();
+    fastdelegate::MenuDelegatorable prep_app();
 
 private:
     SDL_Surface* _p_Screen;

@@ -13,9 +13,9 @@ namespace fastdelegate {
     } MenuDelegator, *LPMenuDelegator;
 
     typedef struct {
-        void* self;
         MenuDelegator const* tc;
-    } MenuDelegatorable;
+        void* self;
+    } MenuDelegatorable, *LPMenuDelegatorable;
 
     typedef struct {
         void (*Click)(int iButID);
