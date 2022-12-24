@@ -25,8 +25,7 @@ const SDL_Color cMenuMgr::staColor_ombre = {87, 87, 87, 50};
 const SDL_Color cMenuMgr::staColor_black = {0, 0, 0};
 const SDL_Color cMenuMgr::staColor_gray = {128, 128, 128};
 
-cMenuMgr::cMenuMgr(fastdelegate::LPMenuDelegator pApp) {
-    m_pApp = pApp;
+cMenuMgr::cMenuMgr() {
     m_pfont1 = 0;
     m_pfont2 = 0;
     m_ifocus_valuesM_A = 0;
@@ -45,7 +44,9 @@ cMenuMgr::~cMenuMgr() {
     delete m_pLabelVersion;
 }
 
-LPErrInApp cMenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer) {
+LPErrInApp cMenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
+                                fastdelegate::LPMenuDelegator pApp) {
+    m_pApp = pApp;
     m_pScreen = pScreen;
     m_psdlRenderer = pRenderer;
 

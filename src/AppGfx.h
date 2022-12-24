@@ -6,6 +6,7 @@
 #endif
 
 #include <SDL2/SDL.h>
+#include <SDL_ttf.h>
 
 #include <string>
 
@@ -25,13 +26,15 @@ public:
     ~AppGfx();
 
     LPErrInApp Init();
-    LPErrInApp StartMainMenu();
+    LPErrInApp StartMainMenu();  // TODO becoming obsolete
+    LPErrInApp MainLoop();
     std::string GetPlayerName() { return _p_GameSettings->strPlayerName; }
     void SetPlayerName(std::string strVal) {
         _p_GameSettings->strPlayerName = strVal;
     }
     Languages* GetLanguageMan() { return &_LanguageMgr; }
     void ParseCmdLine(int argc, char* argv[]);
+    TTF_Font* GetFontVera() { return _p_fontVera; }
 
 private:
     int waitKeyLoop();
@@ -50,6 +53,9 @@ private:
     void usage(int err, char* cmd);
     BOOL parseScreenSize(LPCSTR strOpz);
     void updateScreenTexture();
+    LPErrInApp showHelp();
+    LPErrInApp showCredits();
+    LPErrInApp showOptionGeneral();
 
 private:
     SDL_Surface* _p_Screen;
@@ -60,6 +66,7 @@ private:
     SDL_Renderer* _p_sdlRenderer;
 
     CustomFont* _p_CustomFont;
+    TTF_Font* _p_fontVera;
     GameSettings* _p_GameSettings;
     SolitarioGfx* _p_SolitarioGfx;
     MusicManager* _p_MusicManager;

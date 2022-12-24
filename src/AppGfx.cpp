@@ -6,6 +6,7 @@
 
 #include "ErrorInfo.h"
 #include "GfxUtil.h"
+#include "MenuMgr.h"
 #include "MusicManager.h"
 #include "config.h"
 #include "win_type_global.h"
@@ -508,6 +509,73 @@ void AppGfx::writeProfile() {
 
     ini_close(pIni);
 #endif
+}
+
+LPErrInApp AppGfx::MainLoop() {
+    bool bquit = false;
+
+    cMenuMgr *pMenuMgr = new cMenuMgr();
+    fastdelegate::MenuDelegator del = fastdelegate::MenuDelegator{};
+    del.GetFontVera = &AppGfx::GetFontVera;
+    pMenuMgr->Initialize(_p_Screen, _p_sdlRenderer, &del);
+
+    // // set main menu
+    // m_Histmenu.push(cMenuMgr::QUITAPP);
+    // m_Histmenu.push(cMenuMgr::MENU_ROOT);
+
+    // m_pMenuMgr->SetBackground(m_pSlash);
+
+    // while (!bquit && !m_Histmenu.empty()) {
+    //     switch (m_Histmenu.top()) {
+    //         case cMenuMgr::MENU_ROOT:
+    //             if (_p_GameSettings->bMusicEnabled &&
+    //                 !_p_MusicManager->IsPLayingMusic()) {
+    //                 _p_MusicManager->PlayMusic(MusicManager::MUSIC_INIT_SND,
+    //                                            MusicManager::LOOP_ON);
+    //             }
+    //             m_pMenuMgr->HandleRootMenu();
+
+    //             break;
+
+    //         case cMenuMgr::MENU_GAME:
+    //             startGameLoop();
+    //             break;
+
+    //         case cMenuMgr::MENU_HELP:
+    //             showHelp();
+    //             break;
+
+    //         case cMenuMgr::MENU_CREDITS:
+    //             showCredits();
+    //             break;
+
+    //         case cMenuMgr::MENU_OPTIONS:
+    //             showOptionGeneral();
+    //             break;
+
+    //         case cMenuMgr::QUITAPP:
+    //         default:
+    //             bquit = true;
+    //             break;
+    //     }
+
+    //     updateScreenTexture();
+    // }
+}
+
+LPErrInApp AppGfx::showHelp() {
+    // TODO showHelp
+    return NULL;
+}
+
+LPErrInApp AppGfx::showCredits() {
+    credits(_p_Screen, _p_Title, _p_sdlRenderer);
+    return NULL;
+}
+
+LPErrInApp AppGfx::showOptionGeneral() {
+    // TODO showOptionGeneral
+    return NULL;
 }
 
 LPErrInApp AppGfx::StartMainMenu() {

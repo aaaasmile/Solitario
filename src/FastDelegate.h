@@ -5,15 +5,15 @@
 
 namespace fastdelegate {
     typedef struct {
-        void (*const SetNextMenu)(int iVal);
-        void (*const LeaveMenu)();
-        TTF_Font* (*const GetFontVera)();
-        TTF_Font* (*const GetFontAriblk)();
-        Languages* (*const GetLanguageMan)();
+        void (*SetNextMenu)(int iVal);
+        void (*LeaveMenu)();
+        TTF_Font* (*GetFontVera)();
+        TTF_Font* (*GetFontAriblk)();
+        Languages* (*GetLanguageMan)();
     } MenuDelegator, *LPMenuDelegator;
 
     typedef struct {
-        void (*const Click)(int iButID);
+        void (*Click)(int iButID);
     } CLICKEVENT, *LPCLICKEVENT;
 };
 

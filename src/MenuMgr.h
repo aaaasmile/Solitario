@@ -27,9 +27,10 @@ public:
     };
     enum { MYIDLABELURL = 0, MYIDLABELVER = 1 };
 
-    cMenuMgr(fastdelegate::LPMenuDelegator pApp);
+    cMenuMgr();
     virtual ~cMenuMgr();
-    LPErrInApp Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer);
+    LPErrInApp Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
+                          fastdelegate::LPMenuDelegator pApp);
     void HandleRootMenu();
     void SetBackground(SDL_Surface* pVal) { m_pScene_background = pVal; }
     void LabelClicked(int iButID);
