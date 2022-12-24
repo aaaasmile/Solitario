@@ -63,10 +63,13 @@ Il programma utilizza la libreria sdl che si trova su
 http://www.libsdl.org e la libreria drac sviluppata da Rico Roberto Zuñiga
 Fabio Spataro per i package della versione Linux.
 
-
 Librerie usate
 --------------
 SDL, SDL_image, SDL_mixer, libini
+
+Integrated Development Environment
+----------------------------------
+.prj file is compatible with the Ajuta Integrated Development Environment
 
 Licenza
 -------
