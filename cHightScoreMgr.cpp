@@ -33,11 +33,12 @@
 #include <stdlib.h>
 #ifdef _WINDOWS
 	#include <io.h>
-	#include <sys/stat.h>
-    #include <sys/types.h>
 #else
-    #include <unistd.h>
+    	#include <unistd.h>
 #endif
+
+#include <sys/stat.h> //win & linux
+#include <sys/types.h> //win & linux
 #include <fcntl.h>
 
 
