@@ -21,8 +21,11 @@ cLabelLinkGfx::~cLabelLinkGfx() {
     }
 }
 
-void cLabelLinkGfx::Init(SDL_Rect* pRect, SDL_Surface* pScreen, TTF_Font* pFont,
-                         int iButID, SDL_Renderer* psdlRenderer) {
+void cLabelLinkGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
+                               TTF_Font* pFont, int iButID,
+                               SDL_Renderer* psdlRenderer,
+                               ClickCb& fncbClickEvent) {
+    m_fncbClickEvent = fncbClickEvent;
     m_rctButt = *pRect;
     m_psdlRenderer = psdlRenderer;
 
@@ -79,8 +82,8 @@ void cLabelLinkGfx::MouseUp(SDL_Event& event) {
             event.motion.y <= m_rctButt.y + m_rctButt.h) {
             // mouse go up inner the button
             // send a click event
-            if (m_fncbClickEvent->Click != NULL)
-                m_fncbClickEvent->Click(m_iButID);
+            if ((m_fncbClickEvent.tc) != NULL)
+                (m_fncbClickEvent.tc)->Click(m_fncbClickEvent.self, m_iButID);
             if (m_strUrl.length()) {
 #ifdef WIN32
                 ShellExecute(0, "open", m_strUrl.c_str(), 0, 0, SW_SHOWNORMAL);

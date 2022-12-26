@@ -12,14 +12,16 @@
 
 #include "CustomMenu.h"
 #include "ErrorInfo.h"
-#include "FastDelegate.h"
 #include "Fonts.h"
 #include "GameGfx/SolitarioGfx.h"
 #include "HightScoreMgr.h"
 #include "Languages.h"
+#include "Traits.h"
 #include "win_type_global.h"
 
 class MusicManager;
+
+using namespace traits;
 
 class AppGfx {
 public:
@@ -36,6 +38,9 @@ public:
     Languages* GetLanguageMan() { return &_LanguageMgr; }
     void ParseCmdLine(int argc, char* argv[]);
     TTF_Font* GetFontVera() { return _p_fontVera; }
+    TTF_Font* GetFontAriblk() { return _p_fontAriblk; }
+    void LeaveMenu();
+    void SetNextMenu(int iVal);
 
 private:
     int waitKeyLoop();
@@ -58,7 +63,7 @@ private:
     LPErrInApp showCredits();
     LPErrInApp showOptionGeneral();
 
-    fastdelegate::MenuDelegatorable prep_app();
+    MenuDelegator prepMenuDelegator();
 
 private:
     SDL_Surface* _p_Screen;
@@ -70,6 +75,7 @@ private:
 
     CustomFont* _p_CustomFont;
     TTF_Font* _p_fontVera;
+    TTF_Font* _p_fontAriblk;
     GameSettings* _p_GameSettings;
     SolitarioGfx* _p_SolitarioGfx;
     MusicManager* _p_MusicManager;

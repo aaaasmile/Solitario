@@ -44,8 +44,20 @@ cMenuMgr::~cMenuMgr() {
     delete m_pLabelVersion;
 }
 
+// Prepare the Click() trait
+void fncBind_LabelClicked(void* self, int iVal) {
+    cMenuMgr* pApp = (cMenuMgr*)self;
+    pApp->LabelClicked(iVal);
+}
+
+ClickCb cMenuMgr::prepClickCb() {
+    VClickCb const tc = {.Click = (&fncBind_LabelClicked)};
+
+    return (ClickCb){.tc = &tc, .self = this};
+}
+
 LPErrInApp cMenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
-                                fastdelegate::MenuDelegatorable& pApp) {
+                                MenuDelegator& pApp) {
     m_pApp = pApp;
     m_pScreen = pScreen;
     m_psdlRenderer = pRenderer;
@@ -60,9 +72,9 @@ LPErrInApp cMenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
     m_rctPanel.x = m_iDebx;
     m_rctPanel.y = m_iDeby;
 
-    m_pfont1 = (m_pApp.tc)->GetFontAriblk();
+    m_pfont1 = (m_pApp.tc)->GetFontAriblk(m_pApp.self);
     m_pfont2 = (m_pApp.tc)->GetFontVera(m_pApp.self);
-    m_pLanString = (m_pApp.tc)->GetLanguageMan();
+    m_pLanString = (m_pApp.tc)->GetLanguageMan(m_pApp.self);
 
     m_pMenuBox = SDL_CreateRGBSurface(SDL_SWSURFACE, m_rctPanel.w, m_rctPanel.h,
                                       32, 0, 0, 0, 0);
@@ -84,10 +96,9 @@ LPErrInApp cMenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
     rctBt1.y = m_pScreen->h - rctBt1.h - 20;
     rctBt1.x = m_pScreen->w - rctBt1.w - 20;
     m_phomeUrl = new cLabelLinkGfx;
-    // m_phomeUrl->m_fncbClickEvent = MakeDelegate(this,
-    // &cMenuMgr::LabelClicked); // TODO Delegate
-    m_phomeUrl->Init(&rctBt1, m_pScreen, m_pfont3, MYIDLABELURL,
-                     m_psdlRenderer);
+    ClickCb cb = prepClickCb();
+    m_phomeUrl->Initialize(&rctBt1, m_pScreen, m_pfont3, MYIDLABELURL,
+                           m_psdlRenderer, cb);
     m_phomeUrl->SetState(cLabelLinkGfx::INVISIBLE);
     m_phomeUrl->SetUrl(lpszUrlHome);
     m_phomeUrl->SetWindowText(lpszMsgUrl);
@@ -98,10 +109,8 @@ LPErrInApp cMenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
     rctBt1.w = 150;
     rctBt1.y = m_phomeUrl->m_rctButt.y - 20;
     rctBt1.x = m_phomeUrl->m_rctButt.x;
-    // m_pLabelVersion->m_fncbClickEvent =
-    // MakeDelegate(this, &cMenuMgr::LabelClicked);  //// TODO Delegate
-    m_pLabelVersion->Init(&rctBt1, m_pScreen, m_pfont2, MYIDLABELVER,
-                          m_psdlRenderer);
+    m_pLabelVersion->Initialize(&rctBt1, m_pScreen, m_pfont2, MYIDLABELVER,
+                                m_psdlRenderer, cb);
     m_pLabelVersion->SetState(cLabelGfx::INVISIBLE);
     m_pLabelVersion->SetWindowText(lpszVersion);
 
@@ -140,10 +149,8 @@ void cMenuMgr::drawStaticLine(int x0, int y0, int x1, int y1, SDL_Color color) {
 }
 
 void cMenuMgr::setPixel(SDL_Surface* pSurface, int x, int y, SDL_Color color) {
-    // convert color
     Uint32 col = SDL_MapRGB(pSurface->format, color.r, color.g, color.b);
 
-    // determine position
     char* pPosition = (char*)pSurface->pixels;
 
     pPosition += (pSurface->pitch * y);
@@ -257,7 +264,7 @@ void cMenuMgr::HandleRootMenu() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT) {
-            (m_pApp.tc)->LeaveMenu();
+            (m_pApp.tc)->LeaveMenu(m_pApp.self);
             break;
         }
 
@@ -278,7 +285,7 @@ void cMenuMgr::HandleRootMenu() {
                 rootMenuNext();
             }
             if (event.key.keysym.sym == SDLK_ESCAPE) {
-                (m_pApp.tc)->LeaveMenu();
+                (m_pApp.tc)->LeaveMenu(m_pApp.self);
             }
         }
         if (event.type == SDL_MOUSEMOTION) {
@@ -322,19 +329,19 @@ void cMenuMgr::HandleRootMenu() {
 void cMenuMgr::rootMenuNext() {
     switch (m_ifocus_valuesM_A) {
         case 0:  // Play
-            (m_pApp.tc)->SetNextMenu(MENU_GAME);
+            (m_pApp.tc)->SetNextMenu(m_pApp.self, MENU_GAME);
             break;
         case 1:  // Options
-            (m_pApp.tc)->SetNextMenu(MENU_OPTIONS);
+            (m_pApp.tc)->SetNextMenu(m_pApp.self, MENU_OPTIONS);
             break;
         case 2:  // Credits
-            (m_pApp.tc)->SetNextMenu(MENU_CREDITS);
+            (m_pApp.tc)->SetNextMenu(m_pApp.self, MENU_CREDITS);
             break;
         case 3:  // Help
-            (m_pApp.tc)->SetNextMenu(MENU_HELP);
+            (m_pApp.tc)->SetNextMenu(m_pApp.self, MENU_HELP);
             break;
         case 4:  // Quit
-            (m_pApp.tc)->LeaveMenu();
+            (m_pApp.tc)->LeaveMenu(m_pApp.self);
             break;
     }
 }

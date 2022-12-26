@@ -516,20 +516,47 @@ TTF_Font *fncBind_GetFontVera(void *self) {
     return pApp->GetFontVera();
 }
 
-fastdelegate::MenuDelegatorable AppGfx::prep_app() {
-    // TODO complete the interface
-    fastdelegate::MenuDelegator const tc = {.GetFontVera =
-                                                (&fncBind_GetFontVera)};
+TTF_Font *fncBind_GetFontAriblk(void *self) {
+    AppGfx *pApp = (AppGfx *)self;
+    return pApp->GetFontAriblk();
+}
 
-    return (fastdelegate::MenuDelegatorable){.tc = &tc, .self = this};
+Languages *fncBind_GetLanguageMan(void *self) {
+    AppGfx *pApp = (AppGfx *)self;
+    return pApp->GetLanguageMan();
+}
+
+void fncBind_LeaveMenu(void *self) {
+    AppGfx *pApp = (AppGfx *)self;
+    pApp->LeaveMenu();
+}
+
+void fncBind_SetNextMenu(void *self, int iVal) {
+    AppGfx *pApp = (AppGfx *)self;
+    pApp->SetNextMenu(iVal);
+}
+
+MenuDelegator AppGfx::prepMenuDelegator() {
+    VMenuDelegator const tc = {.GetFontVera = (&fncBind_GetFontVera),
+                               .GetFontAriblk = (&fncBind_GetFontAriblk),
+                               .GetLanguageMan = (&fncBind_GetLanguageMan),
+                               .LeaveMenu = (&fncBind_LeaveMenu),
+                               .SetNextMenu = (&fncBind_SetNextMenu)};
+
+    return (MenuDelegator){.tc = &tc, .self = this};
+}
+
+void AppGfx::LeaveMenu() {  // TODO LeaveMenu
+}
+void AppGfx::SetNextMenu(int iVal) {  // TODO SetNextMenu
 }
 
 LPErrInApp AppGfx::MainLoop() {
     bool bquit = false;
 
     cMenuMgr *pMenuMgr = new cMenuMgr();
-    fastdelegate::MenuDelegatorable del = prep_app();
-    pMenuMgr->Initialize(_p_Screen, _p_sdlRenderer, del);
+    MenuDelegator delegator = prepMenuDelegator();
+    pMenuMgr->Initialize(_p_Screen, _p_sdlRenderer, delegator);
 
     // // set main menu
     // m_Histmenu.push(cMenuMgr::QUITAPP);
@@ -599,8 +626,8 @@ LPErrInApp AppGfx::StartMainMenu() {
     // LPErrInApp err;
 
     // menu = new CustomMenu;
-    // err = menu->Initialize(_p_Screen, _p_sdlRenderer, lpszBackGroundFile);
-    // if (err != NULL)
+    // err = menu->Initialize(_p_Screen, _p_sdlRenderer,
+    // lpszBackGroundFile); if (err != NULL)
     //     return err;
 
     // menuw = 445;
@@ -650,7 +677,8 @@ LPErrInApp AppGfx::StartMainMenu() {
     //             if (err != NULL)
     //                 return err;
     //             TRACE("Sub Menu selected %d", result2);
-    //             // cambiare l'ordine del menu, vuol dire cambiare cambiare
+    //             // cambiare l'ordine del menu, vuol dire cambiare
+    //             cambiare
     //             // l'ordine anche quando si salva il registro e nella
     //             // definizione dei linguaggi
     //             switch (result2) {
@@ -671,7 +699,8 @@ LPErrInApp AppGfx::StartMainMenu() {
     //                     Languages::LANG_ENG; break;
     //             }
     //             _LanguageMgr.SetLang(_p_GameSettings->eLanguageCurrent);
-    //             SDL_SetWindowTitle(_p_Window, _LanguageMgr.GetCStringId(
+    //             SDL_SetWindowTitle(_p_Window,
+    //             _LanguageMgr.GetCStringId(
     //                                               Languages::ID_SOLITARIO));
     //             break;
     //         case 2:
@@ -740,12 +769,13 @@ LPErrInApp AppGfx::StartMainMenu() {
     //                     break;
     //             }
     //             createWindow();
-    //             // ADJUST MENU POSITION SINCE SCREEN PROBABLY HAVE CHANGED
-    //             menux = (_p_Screen->w - menuw) / 2;
+    //             // ADJUST MENU POSITION SINCE SCREEN PROBABLY HAVE
+    //             CHANGED menux = (_p_Screen->w - menuw) / 2;
     //             menu->SetArea(menux, menuy, menuw, menuh);
-    //             menu->SetColors(SDL_MapRGBA(_p_Screen->format, 0, 0, 0, 0),
-    //                             SDL_MapRGBA(_p_Screen->format, 128, 0, 0,
-    //                             255));
+    //             menu->SetColors(SDL_MapRGBA(_p_Screen->format, 0, 0,
+    //             0, 0),
+    //                             SDL_MapRGBA(_p_Screen->format, 128,
+    //                             0, 0, 255));
     //             break;
     //         case -1:
     //             // EXIT
@@ -822,14 +852,15 @@ void AppGfx::updateScreenTexture() {
 
 LPErrInApp AppGfx::menuSelectDeck() {
     // CustomMenu *menuDecks = new CustomMenu;
-    // menuDecks->Initialize(_p_Screen, _p_sdlRenderer, lpszBackGroundFile);
-    // int menuMazziw = 445;
-    // int menuMazzih = 500;
+    // menuDecks->Initialize(_p_Screen, _p_sdlRenderer,
+    // lpszBackGroundFile); int menuMazziw = 445; int menuMazzih = 500;
     // int menuMazzix = (_p_Screen->w - menuMazziw) / 2;
     // int menuMazziy = _p_Screen->h - menuMazzih - 10;
-    // menuDecks->SetArea(menuMazzix, menuMazziy, menuMazziw, menuMazzih);
-    // menuDecks->SetColors(SDL_MapRGBA(_p_Screen->format, 0, 0, 0, 0),
-    //                      SDL_MapRGBA(_p_Screen->format, 128, 0, 0, 255));
+    // menuDecks->SetArea(menuMazzix, menuMazziy, menuMazziw,
+    // menuMazzih); menuDecks->SetColors(SDL_MapRGBA(_p_Screen->format,
+    // 0, 0, 0, 0),
+    //                      SDL_MapRGBA(_p_Screen->format, 128, 0, 0,
+    //                      255));
 
     // menuDecks->ClearItems();
     // menuDecks->SetLabels(_LanguageMgr.GetStringId(Languages::ID_CHOOSEMAZZO),
@@ -922,13 +953,16 @@ void AppGfx::ParseCmdLine(int argc, char *argv[]) {
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
             printf(
-                "Solitario versione 1.5 (c) 2004-2022 Invido.it\nFai partire "
+                "Solitario versione 1.5 (c) 2004-2022 Invido.it\nFai "
+                "partire "
                 "il "
                 "solitario con le seguenti opzioni:\n"
                 "--nosound      - to disable sound/music\n"
-                "--fullscreen   - to run in fullscreen, if possible (vs. "
+                "--fullscreen   - to run in fullscreen, if possible "
+                "(vs. "
                 "windowed)\n"
-                "--size x,y Fa partire il programma ad una risoluzione x,y \n");
+                "--size x,y Fa partire il programma ad una risoluzione "
+                "x,y \n");
 
             exit(0);
         } else if (strcmp(argv[i], "--copyright") == 0 ||
@@ -936,15 +970,19 @@ void AppGfx::ParseCmdLine(int argc, char *argv[]) {
             printf(
                 "\n\"Solitario\" version 1.5, Copyright (C) 2004-2022 "
                 "Invido.it\n"
-                "This program is free software; you can redistribute it "
+                "This program is free software; you can redistribute "
+                "it "
                 "and/or\n"
-                "modify it under the terms of the GNU General Public License\n"
+                "modify it under the terms of the GNU General Public "
+                "License\n"
                 "as published by the Free Software Foundation.  See "
                 "COPYING.txt\n"
                 "\n"
-                "This program is distributed in the hope that it will be "
+                "This program is distributed in the hope that it will "
+                "be "
                 "useful,\n"
-                "but WITHOUT ANY WARRANTY; without even the implied warranty "
+                "but WITHOUT ANY WARRANTY; without even the implied "
+                "warranty "
                 "of\n"
                 "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
                 "\n");

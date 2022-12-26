@@ -9,11 +9,13 @@
 #include <SDL_ttf.h>
 
 #include "ErrorInfo.h"
-#include "FastDelegate.h"
+#include "Traits.h"
 
 class Languages;
 class cLabelLinkGfx;
 class cLabelGfx;
+
+using namespace traits;
 
 class cMenuMgr {
 public:
@@ -30,7 +32,7 @@ public:
     cMenuMgr();
     virtual ~cMenuMgr();
     LPErrInApp Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
-                          fastdelegate::MenuDelegatorable& pApp);
+                          MenuDelegator& pApp);
     void HandleRootMenu();
     void SetBackground(SDL_Surface* pVal) { m_pScene_background = pVal; }
     void LabelClicked(int iButID);
@@ -46,6 +48,7 @@ private:
     void setPixel(SDL_Surface* pSurface, int x, int y, SDL_Color color);
     void fillRect(int x0, int y0, int width, int height, Uint32 color);
     void rootMenuNext();
+    ClickCb prepClickCb();
 
 private:
     static const SDL_Color staColor_on;
@@ -56,7 +59,7 @@ private:
     static const SDL_Color staColor_gray;
 
 private:
-    fastdelegate::MenuDelegatorable m_pApp;
+    MenuDelegator m_pApp;
     Languages* m_pLanString;
     TTF_Font* m_pfont1;
     TTF_Font* m_pfont2;

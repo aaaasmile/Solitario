@@ -8,22 +8,21 @@
 #include <SDL2/SDL.h>
 #include <SDL_ttf.h>
 
-#include "FastDelegate.h"
+#include "Traits.h"
 #include "win_type_global.h"
 
-class cLabelLinkGfx {
-    // use fastdelegate to implement the observer pattern and avoid using the
-    // callback interface on observer
-    // typedef FastDelegate1<int> CLICKEVENT; //TODO delegate
+using namespace traits;
 
+class cLabelLinkGfx {
 public:
     enum eSate { VISIBLE, INVISIBLE, PRESSED };
 
     cLabelLinkGfx();
     virtual ~cLabelLinkGfx();
 
-    void Init(SDL_Rect* pRect, SDL_Surface* pScreen, TTF_Font* pFont,
-              int iButID, SDL_Renderer* psdlRenderer);
+    void Initialize(SDL_Rect* pRect, SDL_Surface* pScreen, TTF_Font* pFont,
+                    int iButID, SDL_Renderer* psdlRenderer,
+                    ClickCb& fncbClickEvent);
     void SetWindowText(LPCSTR strCaption) { m_strButText = strCaption; }
     void MouseMove(SDL_Event& event, SDL_Surface* pScreen,
                    SDL_Texture* pScene_background, SDL_Texture* pScreenTexture);
@@ -40,7 +39,7 @@ public:
     SDL_Rect m_rctButt;
     STRING m_strButText;
     BOOL m_bIsEnabled;
-    fastdelegate::LPCLICKEVENT m_fncbClickEvent;
+    ClickCb m_fncbClickEvent;
 
 protected:
     SDL_Surface* m_pSurf_Bar;

@@ -17,8 +17,11 @@ cLabelGfx::~cLabelGfx() {
     }
 }
 
-void cLabelGfx::Init(SDL_Rect* pRect, SDL_Surface* pScreen, TTF_Font* pFont,
-                     int iButID, SDL_Renderer* psdlRenderer) {
+void cLabelGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
+                           TTF_Font* pFont, int iButID,
+                           SDL_Renderer* psdlRenderer,
+                           ClickCb& fncbClickEvent) {
+    m_fncbClickEvent = fncbClickEvent;
     m_rctButt = *pRect;
 
     // black bar surface
@@ -74,8 +77,8 @@ void cLabelGfx::MouseUp(SDL_Event& event) {
             event.motion.y <= m_rctButt.y + m_rctButt.h) {
             // mouse go up inner the button
             // send a click event
-            if (m_fncbClickEvent->Click != NULL)
-                m_fncbClickEvent->Click(m_iButID);
+            if (m_fncbClickEvent.tc != NULL)
+                (m_fncbClickEvent.tc)->Click(m_fncbClickEvent.self, m_iButID);
         }
     }
 }
