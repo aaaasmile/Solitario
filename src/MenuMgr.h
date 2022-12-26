@@ -33,14 +33,14 @@ public:
     virtual ~cMenuMgr();
     LPErrInApp Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
                           MenuDelegator& pApp);
-    void HandleRootMenu();
+    LPErrInApp HandleRootMenu();
     void SetBackground(SDL_Surface* pVal) { _p_Scene_background = pVal; }
     void LabelClicked(int iButID);
 
 private:
     void drawBackground();
-    void drawStringSH(const char* tmp, int x, int y, SDL_Color& color,
-                      TTF_Font* customfont);
+    LPErrInApp drawStringSH(const char* tmp, int x, int y, SDL_Color& color,
+                            TTF_Font* customfont);
     void drawStaticSpriteEx(int src_x, int src_y, int src_dx, int src_dy,
                             int dst_x, int dst_y, SDL_Surface* sprite);
     void drawRect(int x, int y, int dx, int dy, SDL_Color c);

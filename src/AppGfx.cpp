@@ -38,10 +38,13 @@ static const char *lpszKeyDeck = "DeckCurrent";
 static const char *lpszKeyMusic = "Musicenabled";
 #endif
 
-static const char *lpszIconProgFile = DATA_PREFIX "icona_asso.bmp";
+static const char *lpszIconProgFile = DATA_PREFIX "images/icona_asso.bmp";
 static const char *lpszFontFile = DATA_PREFIX "images/font.bmp";
 static const char *lpszTitleFile = DATA_PREFIX "images/title.png";
-static const char *lpszBackGroundFile = DATA_PREFIX "images/im001537.jpg";
+// static const char *lpszBackGroundFile = DATA_PREFIX "images/im001537.jpg";
+static const char *lpszIniFontAriblk = DATA_PREFIX "font/ariblk.ttf";
+static const char *lpszIniFontVera = DATA_PREFIX "font/vera.ttf";
+static const char *lpszImageSplash = DATA_PREFIX "images/im001537.jpg";
 
 AppGfx::AppGfx() {
     _p_Screen = NULL;
@@ -88,6 +91,22 @@ LPErrInApp AppGfx::Init() {
         return err;
     }
 
+    if (TTF_Init() == -1) {
+        return ERR_UTIL::ErrorCreate("Font init error");
+    }
+    std::string strFileFontStatus = lpszIniFontAriblk;
+    _p_fontAriblk = TTF_OpenFont(strFileFontStatus.c_str(), 22);
+    if (_p_fontAriblk == 0) {
+        return ERR_UTIL::ErrorCreate("Unable to load font %s, error: %s\n",
+                                     strFileFontStatus.c_str(), SDL_GetError());
+    }
+    strFileFontStatus = lpszIniFontVera;
+    _p_fontVera = TTF_OpenFont(strFileFontStatus.c_str(), 11);
+    if (_p_fontVera == 0) {
+        return ERR_UTIL::ErrorCreate("Unable to load font %s, error: %s\n",
+                                     strFileFontStatus.c_str(), SDL_GetError());
+    }
+
     SDL_SetWindowTitle(_p_Window,
                        _LanguageMgr.GetCStringId(Languages::ID_SOLITARIO));
 
@@ -110,6 +129,32 @@ LPErrInApp AppGfx::Init() {
     _p_Title = IMG_Load(lpszTitleFile);
     if (_p_Title == 0) {
         return ERR_UTIL::ErrorCreate("Title image not found");
+    }
+    err = loadSplash();
+    if (err != NULL) {
+        return err;
+    }
+
+    drawSplash();
+
+    err = _p_MusicManager->LoadMusicRes();
+    if (err != NULL) {
+        return err;
+    }
+    return NULL;
+}
+
+LPErrInApp AppGfx::loadSplash() {
+    std::string strFileName = lpszImageSplash;
+
+    SDL_RWops *srcBack = SDL_RWFromFile(strFileName.c_str(), "rb");
+    if (srcBack == 0) {
+        return ERR_UTIL::ErrorCreate("Unable to load %s background image\n",
+                                     strFileName.c_str());
+    }
+    _p_Splash = IMG_LoadJPG_RW(srcBack);
+    if (_p_Splash == 0) {
+        return ERR_UTIL::ErrorCreate("Unable to create splash");
     }
     return NULL;
 }
@@ -164,6 +209,9 @@ LPErrInApp AppGfx::createWindow() {
 }
 
 LPErrInApp AppGfx::startGameLoop() {
+    TRACE("Start Game Loop");
+    _p_MusicManager->StopMusic();
+
     LPErrInApp err;
     if (_p_SolitarioGfx != NULL) {
         delete _p_SolitarioGfx;
@@ -239,6 +287,7 @@ LPErrInApp AppGfx::startGameLoop() {
                                        MusicManager::LOOP_ON);
         }
     }
+    LeaveMenu();
     return NULL;
 }
 
@@ -380,10 +429,24 @@ void AppGfx::terminate() {
         SDL_FreeSurface(_p_Screen);
         _p_Screen = NULL;
     }
+    if (_p_Splash) {
+        SDL_FreeSurface(_p_Splash);
+        _p_Splash = NULL;
+    }
+    if (_p_Title) {
+        SDL_FreeSurface(_p_Title);
+        _p_Title = NULL;
+    }
     if (_p_ScreenTexture != NULL) {
         SDL_DestroyTexture(_p_ScreenTexture);
     }
+
     delete _p_MusicManager;
+    delete _p_SolitarioGfx;
+    _p_SolitarioGfx = NULL;
+    _p_MusicManager = NULL;
+
+    SDL_DestroyWindow(_p_Window);
     SDL_Quit();
 }
 
@@ -538,20 +601,20 @@ void fncBind_SetNextMenu(void *self, int iVal) {
 }
 
 MenuDelegator AppGfx::prepMenuDelegator() {
-    VMenuDelegator const tc = {.GetFontVera = (&fncBind_GetFontVera),
-                               .GetFontAriblk = (&fncBind_GetFontAriblk),
-                               .GetLanguageMan = (&fncBind_GetLanguageMan),
-                               .LeaveMenu = (&fncBind_LeaveMenu),
-                               .SetNextMenu = (&fncBind_SetNextMenu)};
+    // Use only static otherwise you loose it
+    static VMenuDelegator const tc = {
+        .GetFontVera = (&fncBind_GetFontVera),
+        .GetFontAriblk = (&fncBind_GetFontAriblk),
+        .GetLanguageMan = (&fncBind_GetLanguageMan),
+        .LeaveMenu = (&fncBind_LeaveMenu),
+        .SetNextMenu = (&fncBind_SetNextMenu)};
 
     return (MenuDelegator){.tc = &tc, .self = this};
 }
 
 void AppGfx::LeaveMenu() {
     drawSplash();
-    m_Histmenu.pop();
-}
-void AppGfx::SetNextMenu(int iVal) {  // TODO SetNextMenu
+    _Histmenu.pop();
 }
 
 void AppGfx::drawSplash() {
@@ -560,6 +623,7 @@ void AppGfx::drawSplash() {
 }
 
 LPErrInApp AppGfx::MainLoop() {
+    LPErrInApp err;
     bool bquit = false;
 
     cMenuMgr *pMenuMgr = new cMenuMgr();
@@ -567,37 +631,47 @@ LPErrInApp AppGfx::MainLoop() {
     pMenuMgr->Initialize(_p_Screen, _p_sdlRenderer, delegator);
 
     // set main menu
-    m_Histmenu.push(cMenuMgr::QUITAPP);
-    m_Histmenu.push(cMenuMgr::MENU_ROOT);
+    _Histmenu.push(cMenuMgr::QUITAPP);
+    _Histmenu.push(cMenuMgr::MENU_ROOT);
 
-    m_pMenuMgr->SetBackground(_p_Splash);
+    pMenuMgr->SetBackground(_p_Splash);
 
-    while (!bquit && !m_Histmenu.empty()) {
-        switch (m_Histmenu.top()) {
+    while (!bquit && !_Histmenu.empty()) {
+        switch (_Histmenu.top()) {
             case cMenuMgr::MENU_ROOT:
                 if (_p_GameSettings->bMusicEnabled &&
                     !_p_MusicManager->IsPLayingMusic()) {
                     _p_MusicManager->PlayMusic(MusicManager::MUSIC_INIT_SND,
                                                MusicManager::LOOP_ON);
                 }
-                m_pMenuMgr->HandleRootMenu();
+                err = pMenuMgr->HandleRootMenu();
+                if (err != NULL)
+                    return err;
 
                 break;
 
             case cMenuMgr::MENU_GAME:
-                startGameLoop();
+                err = startGameLoop();
+                if (err != NULL)
+                    return err;
                 break;
 
             case cMenuMgr::MENU_HELP:
-                showHelp();
+                err = showHelp();
+                if (err != NULL)
+                    return err;
                 break;
 
             case cMenuMgr::MENU_CREDITS:
-                showCredits();
+                err = showCredits();
+                if (err != NULL)
+                    return err;
                 break;
 
             case cMenuMgr::MENU_OPTIONS:
-                showOptionGeneral();
+                err = showOptionGeneral();
+                if (err != NULL)
+                    return err;
                 break;
 
             case cMenuMgr::QUITAPP:
@@ -608,21 +682,25 @@ LPErrInApp AppGfx::MainLoop() {
 
         updateScreenTexture();
     }
+    delete pMenuMgr;
     return NULL;
 }
 
 LPErrInApp AppGfx::showHelp() {
     // TODO showHelp
+    LeaveMenu();
     return NULL;
 }
 
 LPErrInApp AppGfx::showCredits() {
     credits(_p_Screen, _p_Title, _p_sdlRenderer);
+    LeaveMenu();
     return NULL;
 }
 
 LPErrInApp AppGfx::showOptionGeneral() {
     // TODO showOptionGeneral
+    LeaveMenu();
     return NULL;
 }
 

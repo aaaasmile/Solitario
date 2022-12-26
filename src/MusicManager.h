@@ -1,6 +1,7 @@
 #ifndef _MUSICMANAGER__H_
 #define _MUSICMANAGER__H_
 
+#include "ErrorInfo.h"
 #include "SDL_mixer.h"
 #include "win_type_global.h"
 
@@ -16,7 +17,7 @@ public:
     void StopMusic();
     BOOL PlayMusic(int iID, eLoopType eVal);
     BOOL PlayEffect(int iID);
-    void LoadMusicRes();
+    LPErrInApp LoadMusicRes();
     BOOL IsPLayingMusic();
     void SetVolumeMusic(int iVal);
 

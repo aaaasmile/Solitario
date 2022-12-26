@@ -42,7 +42,7 @@ public:
     TTF_Font* GetFontVera() { return _p_fontVera; }
     TTF_Font* GetFontAriblk() { return _p_fontAriblk; }
     void LeaveMenu();
-    void SetNextMenu(int iVal);
+    void SetNextMenu(int iVal) { _Histmenu.push(iVal); }
 
 private:
     int waitKeyLoop();
@@ -67,13 +67,14 @@ private:
 
     MenuDelegator prepMenuDelegator();
     void drawSplash();
+    LPErrInApp loadSplash();
 
 private:
     SDL_Surface* _p_Screen;
     SDL_Surface* _p_Splash;
     SDL_Surface* _p_imgBackground;
-    SDL_Texture* _p_ScreenTexture;
     SDL_Surface* _p_Title;
+    SDL_Texture* _p_ScreenTexture;
     SDL_Window* _p_Window;
     SDL_Renderer* _p_sdlRenderer;
 
@@ -94,8 +95,7 @@ private:
     BOOL _bStartdrag;
     BOOL _bOverride;
 
-    std::stack<int> m_Histmenu;
-    cMenuMgr* m_pMenuMgr;
+    std::stack<int> _Histmenu;
 };
 
 #endif

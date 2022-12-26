@@ -20,7 +20,7 @@ int const CARDBACKLOC = 40 * g_CARDWIDTH;  // modify to allow custom card backs
 #define FRAMETICKS (1000 / FPS)
 #define THINKINGS_PER_TICK 1
 
-static const char *lpszBackgroundImgFile = DATA_PREFIX "im001537.jpg";
+static const char *lpszBackgroundImgFile = DATA_PREFIX "images/im001537.jpg";
 static const char *lpszDeckDir = DATA_PREFIX "mazzi/";
 static const char *lpszDataDir = DATA_PREFIX;
 
@@ -643,9 +643,10 @@ LPErrInApp SolitarioGfx::LoadCardPac() {
 
     SDL_Surface *s;
     s = IMG_LoadPNG_RW(src);
-    if (src == 0) {
-        return ERR_UTIL::ErrorCreate("IMG_LoadPNG_RW on pac file error: %s\n",
-                                     SDL_GetError());
+    if (s == 0) {
+        return ERR_UTIL::ErrorCreate(
+            "IMG_LoadPNG_RW on pac file error (file %s): %s\n",
+            strFileName.c_str(), SDL_GetError());
     }
 
     SDL_SetColorKey(s, TRUE, SDL_MapRGB(s->format, 0, 128, 0));

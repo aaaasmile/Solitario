@@ -17,7 +17,14 @@ MusicManager::MusicManager() {
     }
 }
 
-MusicManager::~MusicManager() {}
+MusicManager::~MusicManager() {
+    for (int i = 0; i < NUM_OF_SOUNDS; i++) {
+        Mix_FreeMusic(m_pMusics[i]);
+    }
+    for (int j = 0; j < NUM_OF_WAV; j++) {
+        Mix_FreeChunk(m_pMusicsWav[j]);
+    }
+}
 
 void MusicManager::Init() {
     if (SDL_Init(SDL_INIT_AUDIO) < 0) {
@@ -42,15 +49,24 @@ void MusicManager::Init() {
     }
 }
 
-void MusicManager::LoadMusicRes() {
+LPErrInApp MusicManager::LoadMusicRes() {
     for (int i = 0; i < NUM_OF_SOUNDS; i++) {
         STRING strFileTmp2 = lpszaSound_filenames[i];
         m_pMusics[i] = Mix_LoadMUS(strFileTmp2.c_str());
+        if (m_pMusics[i] == NULL) {
+            return ERR_UTIL::ErrorCreate("Unable to load %s music resource\n",
+                                         strFileTmp2.c_str());
+        }
     }
 
     for (int j = 0; j < NUM_OF_WAV; j++) {
         m_pMusicsWav[j] = Mix_LoadWAV(lpszaEffects_filenames[j]);
+        if (m_pMusicsWav[j] == NULL) {
+            return ERR_UTIL::ErrorCreate("Unable to load %s wav resource\n",
+                                         lpszaEffects_filenames[j]);
+        }
     }
+    return NULL;
 }
 
 void MusicManager::StopMusic() {

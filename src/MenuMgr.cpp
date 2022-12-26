@@ -51,7 +51,7 @@ void fncBind_LabelClicked(void* self, int iVal) {
 }
 
 ClickCb cMenuMgr::prepClickCb() {
-    VClickCb const tc = {.Click = (&fncBind_LabelClicked)};
+    static VClickCb const tc = {.Click = (&fncBind_LabelClicked)};
 
     return (ClickCb){.tc = &tc, .self = this};
 }
@@ -191,19 +191,29 @@ void cMenuMgr::drawBackground() {
     drawRect(_iDebx, _iDeby, _iSx - _iDebx, _iDeby + 36, staColor_white);
 }
 
-void cMenuMgr::drawStringSH(const char* tmp, int x, int y, SDL_Color& color,
-                            TTF_Font* customfont) {
+LPErrInApp cMenuMgr::drawStringSH(const char* tmp, int x, int y,
+                                  SDL_Color& color, TTF_Font* customfont) {
     int tx, ty;
     TTF_SizeText(customfont, tmp, &tx, &ty);
     SDL_Surface* s = TTF_RenderText_Blended(customfont, tmp, staColor_ombre);
+    if (s == NULL) {
+        return ERR_UTIL::ErrorCreate("Error TTF_RenderText_Blended: %s\n",
+                                     SDL_GetError());
+    }
     drawStaticSpriteEx(0, 0, tx, ty, x + 2, y + 2, s);
     SDL_FreeSurface(s);
     s = TTF_RenderText_Blended(customfont, tmp, color);
+    if (s == NULL) {
+        return ERR_UTIL::ErrorCreate("Error TTF_RenderText_Blended: %s\n",
+                                     SDL_GetError());
+    }
     drawStaticSpriteEx(0, 0, tx, ty, x, y, s);
     SDL_FreeSurface(s);
+    return NULL;
 }
 
-void cMenuMgr::HandleRootMenu() {
+LPErrInApp cMenuMgr::HandleRootMenu() {
+    LPErrInApp err;
     // show the link url label
     _p_homeUrl->SetState(cLabelLinkGfx::VISIBLE);
     _p_LabelVersion->SetState(cLabelGfx::VISIBLE);
@@ -213,9 +223,12 @@ void cMenuMgr::HandleRootMenu() {
     int iNumItemInMenu = 4;
 
     // Draw title bar
-    drawStringSH(
+    err = drawStringSH(
         _p_Languages->GetStringId(Languages::ID_WELCOMETITLEBAR).c_str(),
         _iDebx + 10, _iDeby + 5, c, _p_font1);
+    if (err != NULL) {
+        return err;
+    }
 
     // Play
     if (_ifocus_valuesM_A != 0) {
@@ -223,24 +236,34 @@ void cMenuMgr::HandleRootMenu() {
     } else {
         c = staColor_on;
     }
-    drawStringSH(_p_Languages->GetStringId(Languages::ID_START).c_str(),
-                 _iDebx + 10, _iDeby + 50, c, _p_font1);
+    err = drawStringSH(_p_Languages->GetStringId(Languages::ID_START).c_str(),
+                       _iDebx + 10, _iDeby + 50, c, _p_font1);
+    if (err != NULL) {
+        return err;
+    }
     // Options
     if (_ifocus_valuesM_A != 1) {
         c = staColor_off;
     } else {
         c = staColor_on;
     }
-    drawStringSH(_p_Languages->GetStringId(Languages::ID_MEN_OPTIONS).c_str(),
-                 _iDebx + 10, _iDeby + 90, c, _p_font1);
+    err = drawStringSH(
+        _p_Languages->GetStringId(Languages::ID_MEN_OPTIONS).c_str(),
+        _iDebx + 10, _iDeby + 90, c, _p_font1);
+    if (err != NULL) {
+        return err;
+    }
     // Credits
     if (_ifocus_valuesM_A != 2) {
         c = staColor_off;
     } else {
         c = staColor_on;
     }
-    drawStringSH(_p_Languages->GetStringId(Languages::ID_CREDITS).c_str(),
-                 _iDebx + 10, _iDeby + 130, c, _p_font1);
+    err = drawStringSH(_p_Languages->GetStringId(Languages::ID_CREDITS).c_str(),
+                       _iDebx + 10, _iDeby + 130, c, _p_font1);
+    if (err != NULL) {
+        return err;
+    }
 
     // Help
     if (_ifocus_valuesM_A != 3) {
@@ -248,8 +271,11 @@ void cMenuMgr::HandleRootMenu() {
     } else {
         c = staColor_on;
     }
-    drawStringSH(_p_Languages->GetStringId(Languages::ID_MN_HELP).c_str(),
-                 _iDebx + 10, _iDeby + 170, c, _p_font1);
+    err = drawStringSH(_p_Languages->GetStringId(Languages::ID_MN_HELP).c_str(),
+                       _iDebx + 10, _iDeby + 170, c, _p_font1);
+    if (err != NULL) {
+        return err;
+    }
 
     // Quit
     if (_ifocus_valuesM_A != 4) {
@@ -257,8 +283,11 @@ void cMenuMgr::HandleRootMenu() {
     } else {
         c = staColor_on;
     }
-    drawStringSH(_p_Languages->GetStringId(Languages::ID_EXIT).c_str(),
-                 _iDebx + 10, _iSy - _iDeby - 40, c, _p_font1);
+    err = drawStringSH(_p_Languages->GetStringId(Languages::ID_EXIT).c_str(),
+                       _iDebx + 10, _iSy - _iDeby - 40, c, _p_font1);
+    if (err != NULL) {
+        return err;
+    }
 
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -323,9 +352,11 @@ void cMenuMgr::HandleRootMenu() {
     }
     _p_homeUrl->Draw(_p_Screen);
     _p_LabelVersion->Draw(_p_Screen);
+    return NULL;
 }
 
 void cMenuMgr::rootMenuNext() {
+    TRACE("Menu selected %d", _ifocus_valuesM_A);
     switch (_ifocus_valuesM_A) {
         case 0:  // Play
             (_menuDlgt.tc)->SetNextMenu(_menuDlgt.self, MENU_GAME);
