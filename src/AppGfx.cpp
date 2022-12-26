@@ -41,7 +41,7 @@ static const char *lpszKeyMusic = "Musicenabled";
 static const char *lpszIconProgFile = DATA_PREFIX "icona_asso.bmp";
 static const char *lpszFontFile = DATA_PREFIX "images/font.bmp";
 static const char *lpszTitleFile = DATA_PREFIX "images/title.png";
-static const char *lpszBackGroundFile = DATA_PREFIX "im001537.jpg";
+static const char *lpszBackGroundFile = DATA_PREFIX "images/im001537.jpg";
 
 AppGfx::AppGfx() {
     _p_Screen = NULL;
@@ -235,7 +235,8 @@ LPErrInApp AppGfx::startGameLoop() {
             }
         }
         if (_p_GameSettings->bMusicEnabled) {
-            _p_MusicManager->StartMusic();
+            _p_MusicManager->PlayMusic(MusicManager::MUSIC_GAME_SND,
+                                       MusicManager::LOOP_ON);
         }
     }
     return NULL;
@@ -546,9 +547,16 @@ MenuDelegator AppGfx::prepMenuDelegator() {
     return (MenuDelegator){.tc = &tc, .self = this};
 }
 
-void AppGfx::LeaveMenu() {  // TODO LeaveMenu
+void AppGfx::LeaveMenu() {
+    drawSplash();
+    m_Histmenu.pop();
 }
 void AppGfx::SetNextMenu(int iVal) {  // TODO SetNextMenu
+}
+
+void AppGfx::drawSplash() {
+    SDL_BlitSurface(_p_Splash, NULL, _p_Screen, NULL);
+    updateScreenTexture();
 }
 
 LPErrInApp AppGfx::MainLoop() {
@@ -558,48 +566,49 @@ LPErrInApp AppGfx::MainLoop() {
     MenuDelegator delegator = prepMenuDelegator();
     pMenuMgr->Initialize(_p_Screen, _p_sdlRenderer, delegator);
 
-    // // set main menu
-    // m_Histmenu.push(cMenuMgr::QUITAPP);
-    // m_Histmenu.push(cMenuMgr::MENU_ROOT);
+    // set main menu
+    m_Histmenu.push(cMenuMgr::QUITAPP);
+    m_Histmenu.push(cMenuMgr::MENU_ROOT);
 
-    // m_pMenuMgr->SetBackground(m_pSlash);
+    m_pMenuMgr->SetBackground(_p_Splash);
 
-    // while (!bquit && !m_Histmenu.empty()) {
-    //     switch (m_Histmenu.top()) {
-    //         case cMenuMgr::MENU_ROOT:
-    //             if (_p_GameSettings->bMusicEnabled &&
-    //                 !_p_MusicManager->IsPLayingMusic()) {
-    //                 _p_MusicManager->PlayMusic(MusicManager::MUSIC_INIT_SND,
-    //                                            MusicManager::LOOP_ON);
-    //             }
-    //             m_pMenuMgr->HandleRootMenu();
+    while (!bquit && !m_Histmenu.empty()) {
+        switch (m_Histmenu.top()) {
+            case cMenuMgr::MENU_ROOT:
+                if (_p_GameSettings->bMusicEnabled &&
+                    !_p_MusicManager->IsPLayingMusic()) {
+                    _p_MusicManager->PlayMusic(MusicManager::MUSIC_INIT_SND,
+                                               MusicManager::LOOP_ON);
+                }
+                m_pMenuMgr->HandleRootMenu();
 
-    //             break;
+                break;
 
-    //         case cMenuMgr::MENU_GAME:
-    //             startGameLoop();
-    //             break;
+            case cMenuMgr::MENU_GAME:
+                startGameLoop();
+                break;
 
-    //         case cMenuMgr::MENU_HELP:
-    //             showHelp();
-    //             break;
+            case cMenuMgr::MENU_HELP:
+                showHelp();
+                break;
 
-    //         case cMenuMgr::MENU_CREDITS:
-    //             showCredits();
-    //             break;
+            case cMenuMgr::MENU_CREDITS:
+                showCredits();
+                break;
 
-    //         case cMenuMgr::MENU_OPTIONS:
-    //             showOptionGeneral();
-    //             break;
+            case cMenuMgr::MENU_OPTIONS:
+                showOptionGeneral();
+                break;
 
-    //         case cMenuMgr::QUITAPP:
-    //         default:
-    //             bquit = true;
-    //             break;
-    //     }
+            case cMenuMgr::QUITAPP:
+            default:
+                bquit = true;
+                break;
+        }
 
-    //     updateScreenTexture();
-    // }
+        updateScreenTexture();
+    }
+    return NULL;
 }
 
 LPErrInApp AppGfx::showHelp() {
@@ -618,6 +627,7 @@ LPErrInApp AppGfx::showOptionGeneral() {
 }
 
 LPErrInApp AppGfx::StartMainMenu() {
+    // TODO remove this
     // CustomMenu *menu;
     // signed int result, result2;
     // BOOL bEnd = FALSE;
@@ -953,7 +963,7 @@ void AppGfx::ParseCmdLine(int argc, char *argv[]) {
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
             printf(
-                "Solitario versione 1.5 (c) 2004-2022 Invido.it\nFai "
+                "Solitario versione %s (c) 2004-2022 Invido.it\nFai "
                 "partire "
                 "il "
                 "solitario con le seguenti opzioni:\n"
@@ -962,13 +972,14 @@ void AppGfx::ParseCmdLine(int argc, char *argv[]) {
                 "(vs. "
                 "windowed)\n"
                 "--size x,y Fa partire il programma ad una risoluzione "
-                "x,y \n");
+                "x,y \n",
+                VERSION);
 
             exit(0);
         } else if (strcmp(argv[i], "--copyright") == 0 ||
                    strcmp(argv[i], "-c") == 0) {
             printf(
-                "\n\"Solitario\" version 1.5, Copyright (C) 2004-2022 "
+                "\n\"Solitario\" version %s, Copyright (C) 2004-2022 "
                 "Invido.it\n"
                 "This program is free software; you can redistribute "
                 "it "
@@ -985,7 +996,8 @@ void AppGfx::ParseCmdLine(int argc, char *argv[]) {
                 "warranty "
                 "of\n"
                 "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
-                "\n");
+                "\n",
+                VERSION);
 
             exit(0);
         } else if (strcmp(argv[i], "--usage") == 0 ||
@@ -1001,7 +1013,7 @@ void AppGfx::ParseCmdLine(int argc, char *argv[]) {
             _bOverride = TRUE;
         } else if (strcmp(argv[i], "--version") == 0 ||
                    strcmp(argv[i], "-v") == 0) {
-            printf("Solitario versione 1.5\n");
+            printf("Solitario versione %s\n", VERSION);
             exit(0);
         } else if (strcmp(argv[i], "--size") == 0 ||
                    strcmp(argv[i], "-s") == 0) {

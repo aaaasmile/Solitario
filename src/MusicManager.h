@@ -1,27 +1,29 @@
-// cMusicManager.h: interface for the cMusicManager class.
-#if !defined( \
-    AFX_CMUSICMANAGER_H__166CCA3D_1404_45EE_821B_544A592F0B4F__INCLUDED_)
-#define AFX_CMUSICMANAGER_H__166CCA3D_1404_45EE_821B_544A592F0B4F__INCLUDED_
-
-#if _MSC_VER > 1000
-#pragma once
-#endif  // _MSC_VER > 1000
+#ifndef _MUSICMANAGER__H_
+#define _MUSICMANAGER__H_
 
 #include "SDL_mixer.h"
+#include "win_type_global.h"
 
-//! class cMusicManager
 class MusicManager {
 public:
+    enum { MUSIC_INIT_SND, MUSIC_GAME_SND, NUM_OF_SOUNDS };
+    enum eLoopType { LOOP_ON, LOOP_OFF };
+    enum { NUM_OF_WAV };
     MusicManager();
     virtual ~MusicManager();
 
     void Init();
     void StopMusic();
-    void StartMusic();
+    BOOL PlayMusic(int iID, eLoopType eVal);
+    BOOL PlayEffect(int iID);
+    void LoadMusicRes();
+    BOOL IsPLayingMusic();
+    void SetVolumeMusic(int iVal);
 
 private:
-    //! music player
-    Mix_Music* m_pMusics;
+    Mix_Chunk* m_pMusicsWav[NUM_OF_WAV];
+    Mix_Music* m_pMusics[NUM_OF_SOUNDS];
+    BOOL m_bMusicAvailable;
 };
 
-#endif  // !defined(AFX_CMUSICMANAGER_H__166CCA3D_1404_45EE_821B_544A592F0B4F__INCLUDED_)
+#endif

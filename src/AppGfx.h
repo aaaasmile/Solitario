@@ -8,6 +8,7 @@
 #include <SDL2/SDL.h>
 #include <SDL_ttf.h>
 
+#include <stack>
 #include <string>
 
 #include "CustomMenu.h"
@@ -20,6 +21,7 @@
 #include "win_type_global.h"
 
 class MusicManager;
+class cMenuMgr;
 
 using namespace traits;
 
@@ -64,9 +66,11 @@ private:
     LPErrInApp showOptionGeneral();
 
     MenuDelegator prepMenuDelegator();
+    void drawSplash();
 
 private:
     SDL_Surface* _p_Screen;
+    SDL_Surface* _p_Splash;
     SDL_Surface* _p_imgBackground;
     SDL_Texture* _p_ScreenTexture;
     SDL_Surface* _p_Title;
@@ -89,6 +93,9 @@ private:
     BOOL _bFullScreen;
     BOOL _bStartdrag;
     BOOL _bOverride;
+
+    std::stack<int> m_Histmenu;
+    cMenuMgr* m_pMenuMgr;
 };
 
 #endif
