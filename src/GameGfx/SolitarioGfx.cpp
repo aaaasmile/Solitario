@@ -610,52 +610,48 @@ void SolitarioGfx::LoadSymbolsFromSingleFile() {
 
 LPErrInApp SolitarioGfx::LoadCardPac() {
     TRACE("Load card Pac");
-    char describtion[100];
+    Uint32 timetag;
+    char description[100];
     Uint8 num_anims;
     Uint16 w, h;
     Uint16 frames;
-    Uint16 *delays;
 
     std::string strFileName = lpszDeckDir;
     strFileName += _DeckType.GetResFileName();
 
     SDL_RWops *src = SDL_RWFromFile(strFileName.c_str(), "rb");
     if (src == 0) {
-        return ERR_UTIL::ErrorCreate("SDL_RWFromFile on pac file error: %s\n",
-                                     SDL_GetError());
+        return ERR_UTIL::ErrorCreate(
+            "SDL_RWFromFile on pac file error (file %s): %s\n",
+            strFileName.c_str(), SDL_GetError());
     }
-    SDL_RWread(src, describtion, 100, 1);
+    SDL_RWread(src, description, 100, 1);
+    timetag = SDL_ReadLE32(src);
+    TRACE("Timetag is %d", timetag);
     SDL_RWread(src, &num_anims, 1, 1);
-    w = SDL_ReadLE16(src);  // witdh of the picture (pac of 4 cards)
-    h = SDL_ReadLE16(src);  // height of the picture (pac of 10 rows of cards)
+    // witdh of the picture (pac of 4 cards)
+    w = SDL_ReadLE16(src);
+    // height of the picture (pac of 10 rows of cards)
+    h = SDL_ReadLE16(src);
     frames = SDL_ReadLE16(src);
 
-    delays = (Uint16 *)malloc(sizeof(Uint16) * frames);
-    if (!delays)
-        return ERR_UTIL::ErrorCreate("Malloc failed");
-
     for (int i = 0; i < frames; i++) {
-        // file format stores delays in 1/100th of second
-        // we will convert them to game ticks
-        delays[i] =
-            THINKINGS_PER_TICK * ((10 * SDL_ReadLE16(src)) / FRAMETICKS);
+        SDL_ReadLE16(src);
     }
 
-    SDL_Surface *s;
-    s = IMG_LoadPNG_RW(src);
-    if (s == 0) {
+    _p_srfDeck = IMG_LoadPNG_RW(src);
+    if (!_p_srfDeck) {
         return ERR_UTIL::ErrorCreate(
             "IMG_LoadPNG_RW on pac file error (file %s): %s\n",
             strFileName.c_str(), SDL_GetError());
     }
 
-    SDL_SetColorKey(s, TRUE, SDL_MapRGB(s->format, 0, 128, 0));
+    SDL_SetColorKey(_p_srfDeck, TRUE,
+                    SDL_MapRGB(_p_srfDeck->format, 0, 128, 0));
 
     g_CARDWIDTH = w / 4;
     g_CARDHEIGHT = h / 10;
-    _p_srfDeck = s;
 
-    free(delays);
     return NULL;
 }
 
