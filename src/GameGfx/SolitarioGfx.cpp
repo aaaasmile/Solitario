@@ -22,7 +22,7 @@ int const CARDBACKLOC = 40 * g_CARDWIDTH;  // modify to allow custom card backs
 
 static const char *lpszBackgroundImgFile = DATA_PREFIX "images/im001537.jpg";
 static const char *lpszDeckDir = DATA_PREFIX "mazzi/";
-static const char *lpszDataDir = DATA_PREFIX;
+static const char *lpszSymbDir = DATA_PREFIX "images/";
 
 SolitarioGfx::SolitarioGfx() {
     _p_background = 0;
@@ -656,7 +656,7 @@ LPErrInApp SolitarioGfx::LoadCardPac() {
 }
 
 LPErrInApp SolitarioGfx::LoadSymbolsForPac() {
-    std::string strFileSymbName = lpszDataDir;
+    std::string strFileSymbName = lpszSymbDir;
     strFileSymbName += _DeckType.GetSymbolFileName();
 
     _p_symbols = SDL_LoadBMP(strFileSymbName.c_str());
