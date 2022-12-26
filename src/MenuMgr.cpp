@@ -11,11 +11,11 @@
 #include "CompGfx/cLabelLinkGfx.h"
 #include "ErrorInfo.h"
 #include "GfxUtil.h"
+#include "config.h"
 #include "win_type_global.h"
 
-static const char* lpszUrlHome = "http://www.invido.it";
-static const char* lpszMsgUrl = "Go to www.invido.it";
-static const char* lpszVersion = "Ver 1.7 20221223";
+static const char* lpszMsgUrl = "Go to invido.it";
+static const char* lpszVersion = VERSION "20221223";
 static const char* lpszIniFontVera = "data/font/vera.ttf";
 
 const SDL_Color cMenuMgr::staColor_on = {253, 252, 250};
@@ -26,22 +26,22 @@ const SDL_Color cMenuMgr::staColor_black = {0, 0, 0};
 const SDL_Color cMenuMgr::staColor_gray = {128, 128, 128};
 
 cMenuMgr::cMenuMgr() {
-    m_pfont1 = 0;
-    m_pfont2 = 0;
-    m_ifocus_valuesM_A = 0;
-    m_pLanString = 0;
-    m_pMenuBox = 0;
-    m_pScene_background = 0;
-    m_bMouseInside = FALSE;
+    _p_font1 = 0;
+    _p_font2 = 0;
+    _ifocus_valuesM_A = 0;
+    _p_Languages = 0;
+    _p_MenuBox = 0;
+    _p_Scene_background = 0;
+    _bMouseInside = FALSE;
 }
 
 cMenuMgr::~cMenuMgr() {
-    if (m_pMenuBox) {
-        SDL_FreeSurface(m_pMenuBox);
-        m_pMenuBox = NULL;
+    if (_p_MenuBox) {
+        SDL_FreeSurface(_p_MenuBox);
+        _p_MenuBox = NULL;
     }
-    delete m_phomeUrl;
-    delete m_pLabelVersion;
+    delete _p_homeUrl;
+    delete _p_LabelVersion;
 }
 
 // Prepare the Click() trait
@@ -58,61 +58,61 @@ ClickCb cMenuMgr::prepClickCb() {
 
 LPErrInApp cMenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
                                 MenuDelegator& pApp) {
-    m_pApp = pApp;
-    m_pScreen = pScreen;
-    m_psdlRenderer = pRenderer;
+    _menuDlgt = pApp;
+    _p_Screen = pScreen;
+    _p_sdlRenderer = pRenderer;
 
-    m_iSx = m_pScreen->clip_rect.w;
-    m_iDebx = m_iSx / 6;
-    m_iSy = m_pScreen->clip_rect.h;
-    m_iDeby = m_iSy / 5;
+    _iSx = _p_Screen->clip_rect.w;
+    _iDebx = _iSx / 6;
+    _iSy = _p_Screen->clip_rect.h;
+    _iDeby = _iSy / 5;
 
-    m_rctPanel.w = m_iSx - m_iDebx * 2;
-    m_rctPanel.h = m_iSy - m_iDeby * 2;
-    m_rctPanel.x = m_iDebx;
-    m_rctPanel.y = m_iDeby;
+    _rctPanel.w = _iSx - _iDebx * 2;
+    _rctPanel.h = _iSy - _iDeby * 2;
+    _rctPanel.x = _iDebx;
+    _rctPanel.y = _iDeby;
 
-    m_pfont1 = (m_pApp.tc)->GetFontAriblk(m_pApp.self);
-    m_pfont2 = (m_pApp.tc)->GetFontVera(m_pApp.self);
-    m_pLanString = (m_pApp.tc)->GetLanguageMan(m_pApp.self);
+    _p_font1 = (_menuDlgt.tc)->GetFontAriblk(_menuDlgt.self);
+    _p_font2 = (_menuDlgt.tc)->GetFontVera(_menuDlgt.self);
+    _p_Languages = (_menuDlgt.tc)->GetLanguageMan(_menuDlgt.self);
 
-    m_pMenuBox = SDL_CreateRGBSurface(SDL_SWSURFACE, m_rctPanel.w, m_rctPanel.h,
+    _p_MenuBox = SDL_CreateRGBSurface(SDL_SWSURFACE, _rctPanel.w, _rctPanel.h,
                                       32, 0, 0, 0, 0);
-    SDL_FillRect(m_pMenuBox, NULL,
-                 SDL_MapRGBA(m_pScreen->format, 255, 0, 0, 0));
-    SDL_SetSurfaceBlendMode(m_pMenuBox, SDL_BLENDMODE_BLEND);
-    SDL_SetSurfaceAlphaMod(m_pMenuBox, 127);  // SDL 2.0
+    SDL_FillRect(_p_MenuBox, NULL,
+                 SDL_MapRGBA(_p_Screen->format, 255, 0, 0, 0));
+    SDL_SetSurfaceBlendMode(_p_MenuBox, SDL_BLENDMODE_BLEND);
+    SDL_SetSurfaceAlphaMod(_p_MenuBox, 127);  // SDL 2.0
 
     // link to invido.it
-    m_pfont3 = TTF_OpenFont(lpszIniFontVera, 11);
-    if (m_pfont3 == 0) {
+    _p_font3 = TTF_OpenFont(lpszIniFontVera, 11);
+    if (_p_font3 == 0) {
         return ERR_UTIL::ErrorCreate("Unable to load font %s, error: %s\n",
                                      lpszIniFontVera, SDL_GetError());
     }
-    TTF_SetFontStyle(m_pfont3, TTF_STYLE_UNDERLINE);
+    TTF_SetFontStyle(_p_font3, TTF_STYLE_UNDERLINE);
     SDL_Rect rctBt1;
     rctBt1.h = 28;
     rctBt1.w = 150;
-    rctBt1.y = m_pScreen->h - rctBt1.h - 20;
-    rctBt1.x = m_pScreen->w - rctBt1.w - 20;
-    m_phomeUrl = new cLabelLinkGfx;
+    rctBt1.y = _p_Screen->h - rctBt1.h - 20;
+    rctBt1.x = _p_Screen->w - rctBt1.w - 20;
+    _p_homeUrl = new cLabelLinkGfx;
     ClickCb cb = prepClickCb();
-    m_phomeUrl->Initialize(&rctBt1, m_pScreen, m_pfont3, MYIDLABELURL,
-                           m_psdlRenderer, cb);
-    m_phomeUrl->SetState(cLabelLinkGfx::INVISIBLE);
-    m_phomeUrl->SetUrl(lpszUrlHome);
-    m_phomeUrl->SetWindowText(lpszMsgUrl);
+    _p_homeUrl->Initialize(&rctBt1, _p_Screen, _p_font3, MYIDLABELURL,
+                           _p_sdlRenderer, cb);
+    _p_homeUrl->SetState(cLabelLinkGfx::INVISIBLE);
+    _p_homeUrl->SetUrl(PACKAGE_URL);
+    _p_homeUrl->SetWindowText(lpszMsgUrl);
 
     // label version
-    m_pLabelVersion = new cLabelGfx;
+    _p_LabelVersion = new cLabelGfx;
     rctBt1.h = 28;
     rctBt1.w = 150;
-    rctBt1.y = m_phomeUrl->m_rctButt.y - 20;
-    rctBt1.x = m_phomeUrl->m_rctButt.x;
-    m_pLabelVersion->Initialize(&rctBt1, m_pScreen, m_pfont2, MYIDLABELVER,
-                                m_psdlRenderer, cb);
-    m_pLabelVersion->SetState(cLabelGfx::INVISIBLE);
-    m_pLabelVersion->SetWindowText(lpszVersion);
+    rctBt1.y = _p_homeUrl->m_rctButt.y - 20;
+    rctBt1.x = _p_homeUrl->m_rctButt.x;
+    _p_LabelVersion->Initialize(&rctBt1, _p_Screen, _p_font2, MYIDLABELVER,
+                                _p_sdlRenderer, cb);
+    _p_LabelVersion->SetState(cLabelGfx::INVISIBLE);
+    _p_LabelVersion->SetWindowText(lpszVersion);
 
     return NULL;
 }
@@ -123,7 +123,7 @@ void cMenuMgr::drawStaticSpriteEx(int src_x, int src_y, int src_dx, int src_dy,
                                   int dst_x, int dst_y, SDL_Surface* sprite) {
     SDL_Rect src_rec = {src_x, src_y, src_dx, src_dy};
     SDL_Rect dst_rec = {dst_x, dst_y, 0, 0};
-    SDL_BlitSurface(sprite, &src_rec, m_pScreen, &dst_rec);
+    SDL_BlitSurface(sprite, &src_rec, _p_Screen, &dst_rec);
 }
 
 void cMenuMgr::drawRect(int x, int y, int dx, int dy, SDL_Color c) {
@@ -137,13 +137,13 @@ void cMenuMgr::drawStaticLine(int x0, int y0, int x1, int y1, SDL_Color color) {
     int d =
         (int)sqrtf(pow((float)(x1 - x0), 2.0f) + pow((float)(y1 - y0), 2.0f));
     static int x = 0, y = 0;
-    static int w = m_pScreen->w;
-    static int h = m_pScreen->h;
+    static int w = _p_Screen->w;
+    static int h = _p_Screen->h;
     for (int t = 0; t < d; t++) {
         x = x0 + (x1 - x0) * t / d;
         y = y0 + (y1 - y0) * t / d;
         if ((x >= 0) && (y >= 0) && (x < w) && (y < h)) {
-            setPixel(m_pScreen, x, y, color);
+            setPixel(_p_Screen, x, y, color);
         }
     }
 }
@@ -162,34 +162,33 @@ void cMenuMgr::setPixel(SDL_Surface* pSurface, int x, int y, SDL_Color color) {
 
 void cMenuMgr::fillRect(int x0, int y0, int width, int height, Uint32 color) {
     SDL_Rect rect = {x0, y0, width, height};
-    SDL_FillRect(m_pScreen, &rect, color);
+    SDL_FillRect(_p_Screen, &rect, color);
 }
 
 void cMenuMgr::drawBackground() {
-    SDL_BlitSurface(m_pScene_background, NULL, m_pScreen, NULL);
+    SDL_BlitSurface(_p_Scene_background, NULL, _p_Screen, NULL);
 
-    m_iSx = m_pScreen->clip_rect.w;
-    m_iDebx = m_iSx / 6;
-    m_iSy = m_pScreen->clip_rect.h;
-    m_iDeby = m_iSy / 5;
+    _iSx = _p_Screen->clip_rect.w;
+    _iDebx = _iSx / 6;
+    _iSy = _p_Screen->clip_rect.h;
+    _iDeby = _iSy / 5;
 
-    Uint32 c_redfg = SDL_MapRGB(m_pScreen->format, 153, 202, 51);
+    Uint32 c_redfg = SDL_MapRGB(_p_Screen->format, 153, 202, 51);
 
     // don't invert, because content overwrite header
     // content
-    GFX_UTIL::DrawStaticSpriteEx(m_pScreen, 0, 0, m_rctPanel.w, m_rctPanel.h,
-                                 m_rctPanel.x, m_rctPanel.y, m_pMenuBox);
+    GFX_UTIL::DrawStaticSpriteEx(_p_Screen, 0, 0, _rctPanel.w, _rctPanel.h,
+                                 _rctPanel.x, _rctPanel.y, _p_MenuBox);
 
     // header bar
-    fillRect(m_iDebx, m_iDeby - 2, m_iSx - m_iDebx * 2, 38, c_redfg);
+    fillRect(_iDebx, _iDeby - 2, _iSx - _iDebx * 2, 38, c_redfg);
 
-    drawRect(m_iDebx - 1, m_iDeby - 1, m_iSx - m_iDebx + 1, m_iSy - m_iDeby + 1,
+    drawRect(_iDebx - 1, _iDeby - 1, _iSx - _iDebx + 1, _iSy - _iDeby + 1,
              staColor_gray);
-    drawRect(m_iDebx - 2, m_iDeby - 2, m_iSx - m_iDebx + 2, m_iSy - m_iDeby + 2,
+    drawRect(_iDebx - 2, _iDeby - 2, _iSx - _iDebx + 2, _iSy - _iDeby + 2,
              staColor_black);
-    drawRect(m_iDebx, m_iDeby, m_iSx - m_iDebx, m_iSy - m_iDeby,
-             staColor_white);
-    drawRect(m_iDebx, m_iDeby, m_iSx - m_iDebx, m_iDeby + 36, staColor_white);
+    drawRect(_iDebx, _iDeby, _iSx - _iDebx, _iSy - _iDeby, staColor_white);
+    drawRect(_iDebx, _iDeby, _iSx - _iDebx, _iDeby + 36, staColor_white);
 }
 
 void cMenuMgr::drawStringSH(const char* tmp, int x, int y, SDL_Color& color,
@@ -206,8 +205,8 @@ void cMenuMgr::drawStringSH(const char* tmp, int x, int y, SDL_Color& color,
 
 void cMenuMgr::HandleRootMenu() {
     // show the link url label
-    m_phomeUrl->SetState(cLabelLinkGfx::VISIBLE);
-    m_pLabelVersion->SetState(cLabelGfx::VISIBLE);
+    _p_homeUrl->SetState(cLabelLinkGfx::VISIBLE);
+    _p_LabelVersion->SetState(cLabelGfx::VISIBLE);
 
     SDL_Color c = staColor_white;
     drawBackground();
@@ -215,133 +214,133 @@ void cMenuMgr::HandleRootMenu() {
 
     // Draw title bar
     drawStringSH(
-        m_pLanString->GetStringId(Languages::ID_WELCOMETITLEBAR).c_str(),
-        m_iDebx + 10, m_iDeby + 5, c, m_pfont1);
+        _p_Languages->GetStringId(Languages::ID_WELCOMETITLEBAR).c_str(),
+        _iDebx + 10, _iDeby + 5, c, _p_font1);
 
     // Play
-    if (m_ifocus_valuesM_A != 0) {
+    if (_ifocus_valuesM_A != 0) {
         c = staColor_off;
     } else {
         c = staColor_on;
     }
-    drawStringSH(m_pLanString->GetStringId(Languages::ID_START).c_str(),
-                 m_iDebx + 10, m_iDeby + 50, c, m_pfont1);
+    drawStringSH(_p_Languages->GetStringId(Languages::ID_START).c_str(),
+                 _iDebx + 10, _iDeby + 50, c, _p_font1);
     // Options
-    if (m_ifocus_valuesM_A != 1) {
+    if (_ifocus_valuesM_A != 1) {
         c = staColor_off;
     } else {
         c = staColor_on;
     }
-    drawStringSH(m_pLanString->GetStringId(Languages::ID_MEN_OPTIONS).c_str(),
-                 m_iDebx + 10, m_iDeby + 90, c, m_pfont1);
+    drawStringSH(_p_Languages->GetStringId(Languages::ID_MEN_OPTIONS).c_str(),
+                 _iDebx + 10, _iDeby + 90, c, _p_font1);
     // Credits
-    if (m_ifocus_valuesM_A != 2) {
+    if (_ifocus_valuesM_A != 2) {
         c = staColor_off;
     } else {
         c = staColor_on;
     }
-    drawStringSH(m_pLanString->GetStringId(Languages::ID_CREDITS).c_str(),
-                 m_iDebx + 10, m_iDeby + 130, c, m_pfont1);
+    drawStringSH(_p_Languages->GetStringId(Languages::ID_CREDITS).c_str(),
+                 _iDebx + 10, _iDeby + 130, c, _p_font1);
 
     // Help
-    if (m_ifocus_valuesM_A != 3) {
+    if (_ifocus_valuesM_A != 3) {
         c = staColor_off;
     } else {
         c = staColor_on;
     }
-    drawStringSH(m_pLanString->GetStringId(Languages::ID_MN_HELP).c_str(),
-                 m_iDebx + 10, m_iDeby + 170, c, m_pfont1);
+    drawStringSH(_p_Languages->GetStringId(Languages::ID_MN_HELP).c_str(),
+                 _iDebx + 10, _iDeby + 170, c, _p_font1);
 
     // Quit
-    if (m_ifocus_valuesM_A != 4) {
+    if (_ifocus_valuesM_A != 4) {
         c = staColor_off;
     } else {
         c = staColor_on;
     }
-    drawStringSH(m_pLanString->GetStringId(Languages::ID_EXIT).c_str(),
-                 m_iDebx + 10, m_iSy - m_iDeby - 40, c, m_pfont1);
+    drawStringSH(_p_Languages->GetStringId(Languages::ID_EXIT).c_str(),
+                 _iDebx + 10, _iSy - _iDeby - 40, c, _p_font1);
 
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT) {
-            (m_pApp.tc)->LeaveMenu(m_pApp.self);
+            (_menuDlgt.tc)->LeaveMenu(_menuDlgt.self);
             break;
         }
 
         if (event.type == SDL_KEYDOWN) {
             if (event.key.keysym.sym == SDLK_UP) {
-                m_ifocus_valuesM_A--;
-                if (m_ifocus_valuesM_A < 0) {
-                    m_ifocus_valuesM_A = 0;
+                _ifocus_valuesM_A--;
+                if (_ifocus_valuesM_A < 0) {
+                    _ifocus_valuesM_A = 0;
                 }
             }
             if (event.key.keysym.sym == SDLK_DOWN) {
-                m_ifocus_valuesM_A++;
-                if (m_ifocus_valuesM_A > iNumItemInMenu) {
-                    m_ifocus_valuesM_A = iNumItemInMenu;
+                _ifocus_valuesM_A++;
+                if (_ifocus_valuesM_A > iNumItemInMenu) {
+                    _ifocus_valuesM_A = iNumItemInMenu;
                 }
             }
             if (event.key.keysym.sym == SDLK_RETURN) {
                 rootMenuNext();
             }
             if (event.key.keysym.sym == SDLK_ESCAPE) {
-                (m_pApp.tc)->LeaveMenu(m_pApp.self);
+                (_menuDlgt.tc)->LeaveMenu(_menuDlgt.self);
             }
         }
         if (event.type == SDL_MOUSEMOTION) {
-            if (event.motion.x >= m_rctPanel.x &&
-                event.motion.x <= m_rctPanel.x + m_rctPanel.h &&
-                event.motion.y >= m_rctPanel.y &&
-                event.motion.y <= m_rctPanel.y + m_rctPanel.h) {
+            if (event.motion.x >= _rctPanel.x &&
+                event.motion.x <= _rctPanel.x + _rctPanel.h &&
+                event.motion.y >= _rctPanel.y &&
+                event.motion.y <= _rctPanel.y + _rctPanel.h) {
                 // mouse is inner to the box
-                if (event.motion.y >= m_iDeby + 90 &&
-                    event.motion.y < m_iDeby + 130) {
-                    m_ifocus_valuesM_A = 1;
-                } else if (event.motion.y >= m_iDeby + 130 &&
-                           event.motion.y < m_iDeby + 170) {
-                    m_ifocus_valuesM_A = 2;
-                } else if (event.motion.y < m_iDeby + 90) {
-                    m_ifocus_valuesM_A = 0;
-                } else if (event.motion.y >= m_iDeby + 170 &&
-                           event.motion.y < m_iDeby + 230) {
-                    m_ifocus_valuesM_A = 3;
-                } else if (event.motion.y >= m_iSy - m_iDeby - 40) {
-                    m_ifocus_valuesM_A = 4;
+                if (event.motion.y >= _iDeby + 90 &&
+                    event.motion.y < _iDeby + 130) {
+                    _ifocus_valuesM_A = 1;
+                } else if (event.motion.y >= _iDeby + 130 &&
+                           event.motion.y < _iDeby + 170) {
+                    _ifocus_valuesM_A = 2;
+                } else if (event.motion.y < _iDeby + 90) {
+                    _ifocus_valuesM_A = 0;
+                } else if (event.motion.y >= _iDeby + 170 &&
+                           event.motion.y < _iDeby + 230) {
+                    _ifocus_valuesM_A = 3;
+                } else if (event.motion.y >= _iSy - _iDeby - 40) {
+                    _ifocus_valuesM_A = 4;
                 }
-                m_bMouseInside = TRUE;
+                _bMouseInside = TRUE;
             } else {
                 // mouse outside, no focus
-                m_bMouseInside = FALSE;
+                _bMouseInside = FALSE;
             }
         }
         if (event.type == SDL_MOUSEBUTTONDOWN) {
-            if (m_bMouseInside) {
+            if (_bMouseInside) {
                 rootMenuNext();
             }
         } else if (event.type == SDL_MOUSEBUTTONUP) {
-            m_phomeUrl->MouseUp(event);
+            _p_homeUrl->MouseUp(event);
         }
     }
-    m_phomeUrl->Draw(m_pScreen);
-    m_pLabelVersion->Draw(m_pScreen);
+    _p_homeUrl->Draw(_p_Screen);
+    _p_LabelVersion->Draw(_p_Screen);
 }
 
 void cMenuMgr::rootMenuNext() {
-    switch (m_ifocus_valuesM_A) {
+    switch (_ifocus_valuesM_A) {
         case 0:  // Play
-            (m_pApp.tc)->SetNextMenu(m_pApp.self, MENU_GAME);
+            (_menuDlgt.tc)->SetNextMenu(_menuDlgt.self, MENU_GAME);
             break;
         case 1:  // Options
-            (m_pApp.tc)->SetNextMenu(m_pApp.self, MENU_OPTIONS);
+            (_menuDlgt.tc)->SetNextMenu(_menuDlgt.self, MENU_OPTIONS);
             break;
         case 2:  // Credits
-            (m_pApp.tc)->SetNextMenu(m_pApp.self, MENU_CREDITS);
+            (_menuDlgt.tc)->SetNextMenu(_menuDlgt.self, MENU_CREDITS);
             break;
         case 3:  // Help
-            (m_pApp.tc)->SetNextMenu(m_pApp.self, MENU_HELP);
+            (_menuDlgt.tc)->SetNextMenu(_menuDlgt.self, MENU_HELP);
             break;
         case 4:  // Quit
-            (m_pApp.tc)->LeaveMenu(m_pApp.self);
+            (_menuDlgt.tc)->LeaveMenu(_menuDlgt.self);
             break;
     }
 }

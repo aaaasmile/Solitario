@@ -34,7 +34,7 @@ public:
     LPErrInApp Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
                           MenuDelegator& pApp);
     void HandleRootMenu();
-    void SetBackground(SDL_Surface* pVal) { m_pScene_background = pVal; }
+    void SetBackground(SDL_Surface* pVal) { _p_Scene_background = pVal; }
     void LabelClicked(int iButID);
 
 private:
@@ -59,24 +59,24 @@ private:
     static const SDL_Color staColor_gray;
 
 private:
-    MenuDelegator m_pApp;
-    Languages* m_pLanString;
-    TTF_Font* m_pfont1;
-    TTF_Font* m_pfont2;
-    SDL_Surface* m_pScreen;
-    SDL_Renderer* m_psdlRenderer;
-    int m_ifocus_valuesM_A;
-    int m_iDeby;
-    int m_iDebx;
-    int m_iSx;
-    int m_iSy;
-    SDL_Surface* m_pMenuBox;
-    SDL_Surface* m_pScene_background;
-    SDL_Rect m_rctPanel;
-    cLabelGfx* m_pLabelVersion;
-    cLabelLinkGfx* m_phomeUrl;
-    TTF_Font* m_pfont3;
-    bool m_bMouseInside;
+    MenuDelegator _menuDlgt;
+    Languages* _p_Languages;
+    TTF_Font* _p_font1;
+    TTF_Font* _p_font2;
+    TTF_Font* _p_font3;
+    SDL_Surface* _p_Screen;
+    SDL_Renderer* _p_sdlRenderer;
+    int _ifocus_valuesM_A;
+    int _iDeby;
+    int _iDebx;
+    int _iSx;
+    int _iSy;
+    SDL_Surface* _p_MenuBox;
+    SDL_Surface* _p_Scene_background;
+    SDL_Rect _rctPanel;
+    cLabelGfx* _p_LabelVersion;
+    cLabelLinkGfx* _p_homeUrl;
+    bool _bMouseInside;
 };
 
 #endif
