@@ -36,6 +36,7 @@ public:
     }
 
     eSUIT Suit() const { return _eSuit; }
+    const char* SuitStr();
     int Rank() const { return _iValue; }
 
     bool IsBlack() const { return _eSuit == BASTONI || _eSuit == SPADE; }

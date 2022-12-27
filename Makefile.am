@@ -31,6 +31,7 @@ solitario_SOURCES = \
 	src/HighScoreMgr.cpp\
 	src/MusicManager.cpp\
 	src/AppGfx.cpp\
+	src/CardGfx.cpp\
 	src/Fonts.cpp\
 	src/DeckType.cpp\
 	src/GameSettings.cpp\

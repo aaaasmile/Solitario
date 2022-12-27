@@ -508,6 +508,9 @@ LPErrInApp SolitarioGfx::DrawCard(VI vi, SDL_Surface *s) {
         return ERR_UTIL::ErrorCreate(
             "Error in draw card with Iterator, surface is NULL\n");
     }
+    TRACE("Draw card ix = %d, suit = %s, rank %d", vi->Idx, vi->SuitStr(),
+          vi->Rank());
+
     if (_DeckType.IsPacType()) {
         return DrawCardPac(vi, s);
     }
@@ -527,8 +530,6 @@ LPErrInApp SolitarioGfx::DrawCard(VI vi, SDL_Surface *s) {
     dest.x = vi->x;
     dest.y = vi->y;
 
-    TRACE("Draw card ix = %d, segno = %d, valore %d", vi->Idx, vi->Suit(),
-          vi->Rank());
     if (SDL_BlitSurface(_p_CardsSurf[nCdIndex], &_rctSrcCard, s, &dest) == -1) {
         return ERR_UTIL::ErrorCreate(
             "SDL_BlitSurface in draw card with Iterator error: %s\n",
@@ -557,9 +558,6 @@ LPErrInApp SolitarioGfx::DrawCardPac(VI vi, SDL_Surface *s) {
     SDL_Rect dest;
     dest.x = vi->x;
     dest.y = vi->y;
-
-    TRACE("Draw card ix = %d, segno = %d, valore %d", vi->Idx, vi->Suit(),
-          vi->Rank());
 
     if (SDL_BlitSurface(_p_srfDeck, &srcCard, s, &dest) == -1) {
         return ERR_UTIL::ErrorCreate(

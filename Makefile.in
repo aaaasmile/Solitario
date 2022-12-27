@@ -107,10 +107,10 @@ am_solitario_OBJECTS = src/GameGfx/CardRegionGfx.$(OBJEXT) \
 	src/GameGfx/CardStackGfx.$(OBJEXT) \
 	src/GameGfx/SolitarioGfx.$(OBJEXT) src/HighScoreMgr.$(OBJEXT) \
 	src/MusicManager.$(OBJEXT) src/AppGfx.$(OBJEXT) \
-	src/Fonts.$(OBJEXT) src/DeckType.$(OBJEXT) \
-	src/GameSettings.$(OBJEXT) src/GfxUtil.$(OBJEXT) \
-	src/Languages.$(OBJEXT) src/main.$(OBJEXT) \
-	src/Fading.$(OBJEXT) src/Credits.$(OBJEXT) \
+	src/CardGfx.$(OBJEXT) src/Fonts.$(OBJEXT) \
+	src/DeckType.$(OBJEXT) src/GameSettings.$(OBJEXT) \
+	src/GfxUtil.$(OBJEXT) src/Languages.$(OBJEXT) \
+	src/main.$(OBJEXT) src/Fading.$(OBJEXT) src/Credits.$(OBJEXT) \
 	src/ErrorInfo.$(OBJEXT) src/MenuMgr.$(OBJEXT) \
 	src/CompGfx/cLabelLinkGfx.$(OBJEXT) \
 	src/CompGfx/cLabelGfx.$(OBJEXT)
@@ -131,13 +131,14 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/src
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = src/$(DEPDIR)/AppGfx.Po src/$(DEPDIR)/Credits.Po \
-	src/$(DEPDIR)/DeckType.Po src/$(DEPDIR)/ErrorInfo.Po \
-	src/$(DEPDIR)/Fading.Po src/$(DEPDIR)/Fonts.Po \
-	src/$(DEPDIR)/GameSettings.Po src/$(DEPDIR)/GfxUtil.Po \
-	src/$(DEPDIR)/HighScoreMgr.Po src/$(DEPDIR)/Languages.Po \
-	src/$(DEPDIR)/MenuMgr.Po src/$(DEPDIR)/MusicManager.Po \
-	src/$(DEPDIR)/main.Po src/CompGfx/$(DEPDIR)/cLabelGfx.Po \
+am__depfiles_remade = src/$(DEPDIR)/AppGfx.Po src/$(DEPDIR)/CardGfx.Po \
+	src/$(DEPDIR)/Credits.Po src/$(DEPDIR)/DeckType.Po \
+	src/$(DEPDIR)/ErrorInfo.Po src/$(DEPDIR)/Fading.Po \
+	src/$(DEPDIR)/Fonts.Po src/$(DEPDIR)/GameSettings.Po \
+	src/$(DEPDIR)/GfxUtil.Po src/$(DEPDIR)/HighScoreMgr.Po \
+	src/$(DEPDIR)/Languages.Po src/$(DEPDIR)/MenuMgr.Po \
+	src/$(DEPDIR)/MusicManager.Po src/$(DEPDIR)/main.Po \
+	src/CompGfx/$(DEPDIR)/cLabelGfx.Po \
 	src/CompGfx/$(DEPDIR)/cLabelLinkGfx.Po \
 	src/GameGfx/$(DEPDIR)/CardRegionGfx.Po \
 	src/GameGfx/$(DEPDIR)/CardStackGfx.Po \
@@ -364,6 +365,7 @@ solitario_SOURCES = \
 	src/HighScoreMgr.cpp\
 	src/MusicManager.cpp\
 	src/AppGfx.cpp\
+	src/CardGfx.cpp\
 	src/Fonts.cpp\
 	src/DeckType.cpp\
 	src/GameSettings.cpp\
@@ -495,6 +497,8 @@ src/MusicManager.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/AppGfx.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
+src/CardGfx.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
 src/Fonts.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/DeckType.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
@@ -538,6 +542,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/AppGfx.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/CardGfx.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/Credits.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/DeckType.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/ErrorInfo.Po@am__quote@ # am--include-marker
@@ -931,6 +936,7 @@ clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 distclean: distclean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 		-rm -f src/$(DEPDIR)/AppGfx.Po
+	-rm -f src/$(DEPDIR)/CardGfx.Po
 	-rm -f src/$(DEPDIR)/Credits.Po
 	-rm -f src/$(DEPDIR)/DeckType.Po
 	-rm -f src/$(DEPDIR)/ErrorInfo.Po
@@ -996,6 +1002,7 @@ maintainer-clean: maintainer-clean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
 		-rm -f src/$(DEPDIR)/AppGfx.Po
+	-rm -f src/$(DEPDIR)/CardGfx.Po
 	-rm -f src/$(DEPDIR)/Credits.Po
 	-rm -f src/$(DEPDIR)/DeckType.Po
 	-rm -f src/$(DEPDIR)/ErrorInfo.Po

@@ -41,15 +41,14 @@ static const char *lpszKeyMusic = "Musicenabled";
 static const char *lpszIconProgFile = DATA_PREFIX "images/icona_asso.bmp";
 static const char *lpszFontFile = DATA_PREFIX "images/font.bmp";
 static const char *lpszTitleFile = DATA_PREFIX "images/title.png";
-// static const char *lpszBackGroundFile = DATA_PREFIX "images/im001537.jpg";
 static const char *lpszIniFontAriblk = DATA_PREFIX "font/ariblk.ttf";
 static const char *lpszIniFontVera = DATA_PREFIX "font/vera.ttf";
 static const char *lpszImageSplash = DATA_PREFIX "images/im001537.jpg";
 
 AppGfx::AppGfx() {
     _p_Screen = NULL;
-    _iScreenW = 1024;  // 640;
-    _iScreenH = 768;   // 480;
+    _iScreenW = 1024;
+    _iScreenH = 768;
     _iBpp = 0;
     _p_imgBackground = NULL;
     _p_CustomFont = NULL;
@@ -110,7 +109,6 @@ LPErrInApp AppGfx::Init() {
     SDL_SetWindowTitle(_p_Window,
                        _LanguageMgr.GetCStringId(Languages::ID_SOLITARIO));
 
-    // icona trasparente
     SDL_Surface *psIcon = SDL_LoadBMP(lpszIconProgFile);
     if (psIcon == 0) {
         return ERR_UTIL::ErrorCreate("Icon not found");
@@ -255,9 +253,8 @@ LPErrInApp AppGfx::startGameLoop() {
     _p_SolitarioGfx->DrawStaticScene();
 
     SDL_Event event;
-    int done = 0;
 
-    while (done == 0) {
+    while (1) {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT:
@@ -266,7 +263,7 @@ LPErrInApp AppGfx::startGameLoop() {
 
                 case SDL_KEYDOWN:
                     if (event.key.keysym.sym == SDLK_ESCAPE) {
-                        done = 1;
+                        return NULL;
                     }
                     err = handleGameLoopKeyDownEvent(event);
                     if (err != NULL)
@@ -694,6 +691,7 @@ LPErrInApp AppGfx::MainLoop() {
                 err = startGameLoop();
                 if (err != NULL)
                     return err;
+                LeaveMenu();
                 break;
 
             case MenuMgr::MENU_HELP:
