@@ -50,11 +50,11 @@ private:
     LPErrInApp createWindow();
     void terminate();
     void hightScoreMenu();
-    void newGame();
-    void handleGameLoopKeyDownEvent(SDL_Event& event);
+    LPErrInApp newGame();
+    LPErrInApp handleGameLoopKeyDownEvent(SDL_Event& event);
     void handleGameLoopMouseDownEvent(SDL_Event& event);
     void handleGameLoopMouseMoveEvent(SDL_Event& event);
-    void handleGameLoopMouseUpEvent(SDL_Event& event);
+    LPErrInApp handleGameLoopMouseUpEvent(SDL_Event& event);
     LPErrInApp menuSelectDeck();
     LPErrInApp loadProfile();
     void writeProfile();

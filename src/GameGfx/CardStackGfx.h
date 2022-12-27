@@ -8,10 +8,11 @@
 #include <vector>
 
 #include "CardGfx.h"
+#include "ErrorInfo.h"
 
 class CardStackGfx : public std::vector<CardGfx> {
 public:
-    void NewDeck();
+    LPErrInApp NewDeck();
     void Shuffle();
     void Clear();
     void Sort();

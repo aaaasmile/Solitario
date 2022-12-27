@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 
 #include "CardStackGfx.h"
+#include "ErrorInfo.h"
 
 // Drag Modes
 const unsigned int CRD_DRAGSTACKS = 1;  // Drag complete stacks
@@ -129,7 +130,7 @@ public:
     int GetStackWidth();
     int GetStackHeight();
 
-    void NewDeck() { InternalStack.NewDeck(); }
+    LPErrInApp NewDeck() { return InternalStack.NewDeck(); }
     void Shuffle() { InternalStack.Shuffle(); }
     void Clear() { InternalStack.Clear(); }
     void Reverse() { InternalStack.Reverse(); }

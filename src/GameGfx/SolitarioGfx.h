@@ -88,7 +88,9 @@ public:
     void SetSymbol(int regionNo, int symbol) {
         _cardRegionList[regionNo].SetSymbol(symbol);
     }
-    void NewDeck(int regionNo) { _cardRegionList[regionNo].NewDeck(); }
+    LPErrInApp NewDeck(int regionNo) {
+        return _cardRegionList[regionNo].NewDeck();
+    }
     bool Empty(int regionNo) { return _cardRegionList[regionNo].Empty(); }
     void Shuffle(int regionNo) { _cardRegionList[regionNo].Shuffle(); }
     void PushInRegion(int regionNo, CardGfx card) {

@@ -97,9 +97,8 @@ void cLabelLinkGfx::Draw(SDL_Surface* pScreen) {
     if (m_eState != INVISIBLE) {
         if (m_bIsEnabled) {
             // begin stuff mouse
-            Uint8 state;
             int mx, my;
-            state = SDL_GetMouseState(&mx, &my);
+            SDL_GetMouseState(&mx, &my);
             if (mx >= m_rctButt.x && mx <= m_rctButt.x + m_rctButt.w &&
                 my >= m_rctButt.y && my <= m_rctButt.y + m_rctButt.h) {
                 // mouse on button

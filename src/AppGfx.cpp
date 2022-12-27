@@ -249,7 +249,9 @@ LPErrInApp AppGfx::startGameLoop() {
             CRD_DRAGTOP, CRD_HSYMBOL, (g_CARDWIDTH * (i - 1)) + (i * 17), 10, 0,
             0);
 
-    newGame();
+    err = newGame();
+    if (err != NULL)
+        return err;
     _p_SolitarioGfx->DrawStaticScene();
 
     SDL_Event event;
@@ -260,13 +262,15 @@ LPErrInApp AppGfx::startGameLoop() {
             switch (event.type) {
                 case SDL_QUIT:
                     fade(_p_Screen, _p_Screen, 1, 1, _p_sdlRenderer);
-                    return 0;
+                    return NULL;
 
                 case SDL_KEYDOWN:
                     if (event.key.keysym.sym == SDLK_ESCAPE) {
                         done = 1;
                     }
-                    handleGameLoopKeyDownEvent(event);
+                    err = handleGameLoopKeyDownEvent(event);
+                    if (err != NULL)
+                        return err;
                     break;
 
                 case SDL_MOUSEBUTTONDOWN:
@@ -278,7 +282,9 @@ LPErrInApp AppGfx::startGameLoop() {
                     break;
 
                 case SDL_MOUSEBUTTONUP:
-                    handleGameLoopMouseUpEvent(event);
+                    err = handleGameLoopMouseUpEvent(event);
+                    if (err != NULL)
+                        return err;
                     break;
             }
         }
@@ -291,12 +297,16 @@ LPErrInApp AppGfx::startGameLoop() {
     return NULL;
 }
 
-void AppGfx::newGame() {
+LPErrInApp AppGfx::newGame() {
+    LPErrInApp err;
     _p_SolitarioGfx->SetSymbol(0, CRD_OSYMBOL);
 
     _p_SolitarioGfx->EmptyStacks();
 
-    _p_SolitarioGfx->NewDeck(0);
+    err = _p_SolitarioGfx->NewDeck(0);
+    if (err != NULL) {
+        return err;
+    }
     _p_SolitarioGfx->Shuffle(0);
 
     // deal
@@ -311,11 +321,16 @@ void AppGfx::newGame() {
         _p_SolitarioGfx->SetCardFaceUp(i, TRUE,
                                        _p_SolitarioGfx->RegionSize(i) - 1);
     }
+    return NULL;
 }
 
-void AppGfx::handleGameLoopKeyDownEvent(SDL_Event &event) {
+LPErrInApp AppGfx::handleGameLoopKeyDownEvent(SDL_Event &event) {
+    LPErrInApp err;
     if (event.key.keysym.sym == SDLK_n) {
-        newGame();
+        err = newGame();
+        if (err != NULL) {
+            return err;
+        }
         _p_SolitarioGfx->DrawBackground(FALSE);
         _p_SolitarioGfx->DrawStaticScene();
     }
@@ -325,6 +340,7 @@ void AppGfx::handleGameLoopKeyDownEvent(SDL_Event &event) {
     if (event.key.keysym.sym == SDLK_r) {
         _p_SolitarioGfx->DrawStaticScene();
     }
+    return NULL;
 }
 
 void AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
@@ -395,11 +411,12 @@ void AppGfx::handleGameLoopMouseMoveEvent(SDL_Event &event) {
         _p_SolitarioGfx->DoDrag(event.motion.x, event.motion.y);
 }
 
-void AppGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
+LPErrInApp AppGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
+    LPErrInApp err;
     if (_bStartdrag) {
         _bStartdrag = FALSE;
         _p_SolitarioGfx->DoDrop();
-        SDL_SetRelativeMouseMode(SDL_FALSE);  // SDL 2.0
+        SDL_SetRelativeMouseMode(SDL_FALSE);
     }
     if (_p_SolitarioGfx->Empty(0) && _p_SolitarioGfx->Empty(8)) {
         _p_SolitarioGfx->SetSymbol(0, 1);
@@ -411,9 +428,13 @@ void AppGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
         (_p_SolitarioGfx[11].Size() == 10) &&
         (_p_SolitarioGfx[12].Size() == 10)) {
         _p_SolitarioGfx->AnimateCards();
-        newGame();
+        err = newGame();
+        if (err != NULL) {
+            return err;
+        }
         _p_SolitarioGfx->DrawStaticScene();
     }
+    return NULL;
 }
 
 void AppGfx::terminate() {

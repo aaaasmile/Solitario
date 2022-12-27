@@ -47,11 +47,6 @@ typedef unsigned char BYTE;
 typedef std::string STRING;
 #endif
 
-#ifndef ASSERT
-#include <assert.h>
-#define ASSERT(f) assert(f);
-#endif
-
 #ifndef LPCSTR
 typedef CONST CHAR *LPCSTR, *PCSTR;
 #endif

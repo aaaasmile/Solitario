@@ -20,15 +20,20 @@ int g_PointsSolitario[] = {
     /*Asso*/ 1, /*Due*/ 2,   /*Tre*/ 3,   /*Quattro*/ 4, /*cinque*/ 5,
     /*Sei*/ 6,  /*Sette*/ 7, /*Fante*/ 8, /*Cavallo*/ 9, /*Re*/ 10};
 
-void CardStackGfx::NewDeck() {
+LPErrInApp CardStackGfx::NewDeck() {
+    LPErrInApp err;
     this->clear();
     this->resize(NUM_CARDS);
 
     int Id = 0;
     for (VI vi = this->begin(); vi != this->end(); ++vi) {
-        vi->SetIdx(Id);
+        err = vi->SetIdx(Id);
+        if (err != NULL) {
+            return err;
+        }
         Id++;
     }
+    return NULL;
 }
 
 void CardStackGfx::Shuffle() {

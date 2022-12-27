@@ -1,7 +1,5 @@
 #include "GameSettings.h"
 
-#include <assert.h>
-
 GameSettings* g_p_GameSettings;
 
 GameSettings* GAMESET::GetSettings() {
@@ -11,7 +9,7 @@ GameSettings* GAMESET::GetSettings() {
     return g_p_GameSettings;
 }
 
-void DeckType::SetType(eDeckType eType) {
+LPErrInApp DeckType::SetType(eDeckType eType) {
     _eType = eType;
     switch (eType) {
         case PIACENTINA:
@@ -85,8 +83,10 @@ void DeckType::SetType(eDeckType eType) {
             _strSymbolFileName = "symb_320.bmp";
             break;
         default:
-            assert(0);
+            return ERR_UTIL::ErrorCreate("Error deck type %d not supported",
+                                         eType);
     }
+    return NULL;
 }
 
 void DeckType::CopyFrom(DeckType& Val) {

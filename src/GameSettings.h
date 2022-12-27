@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include "ErrorInfo.h"
 #include "Languages.h"
 
 class DeckType {
@@ -28,7 +29,7 @@ public:
     DeckType() {}
 
 public:
-    void SetType(eDeckType eType);
+    LPErrInApp SetType(eDeckType eType);
     std::string GetDeckName() { return _strDeckName; }
     std::string GetResFileName() { return _strResFileName; }
     std::string GetSymbolFileName() { return _strSymbolFileName; }

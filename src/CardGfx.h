@@ -1,9 +1,9 @@
 #ifndef CARDGFX__H
 #define CARDGFX__H
 
-#include <assert.h>
-
 #include <vector>
+
+#include "ErrorInfo.h"
 
 // if will be using custom cards then these should be initialized outside
 extern unsigned int g_CARDWIDTH;
@@ -45,8 +45,12 @@ public:
     bool FaceDown() const { return !_fFaceUp; }
 
     void SetFaceUp(bool fTrue) { _fFaceUp = fTrue; }
-    void SetIdx(int nIdx) {
-        assert(nIdx < NUM_CARDS && nIdx >= 0);
+    LPErrInApp SetIdx(int nIdx) {
+        if (nIdx >= NUM_CARDS || nIdx < 0) {
+            return ERR_UTIL::ErrorCreate("Error SetIdx %d is out of range",
+                                         nIdx);
+        }
+
         Idx = nIdx;
         _iValue = g_PointsSolitario[nIdx];
         if (Idx >= 0 && Idx <= 9)
@@ -59,6 +63,8 @@ public:
             _eSuit = SPADE;
         else
             _eSuit = UNDEF;
+
+        return NULL;
     }
 
     void SetCardLoc(int lx, int ly) {
