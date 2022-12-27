@@ -17,7 +17,7 @@ class cLabelGfx;
 
 using namespace traits;
 
-class cMenuMgr {
+class MenuMgr {
 public:
     enum {
         MENU_ROOT,
@@ -29,8 +29,8 @@ public:
     };
     enum { MYIDLABELURL = 0, MYIDLABELVER = 1 };
 
-    cMenuMgr();
-    virtual ~cMenuMgr();
+    MenuMgr();
+    virtual ~MenuMgr();
     LPErrInApp Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
                           MenuDelegator& pApp);
     LPErrInApp HandleRootMenu();

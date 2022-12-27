@@ -20,7 +20,7 @@
 #include "win_type_global.h"
 
 class MusicManager;
-class cMenuMgr;
+class MenuMgr;
 
 using namespace traits;
 

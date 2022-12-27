@@ -18,14 +18,14 @@ static const char* lpszMsgUrl = "Go to invido.it";
 static const char* lpszVersion = VERSION "20221223";
 static const char* lpszIniFontVera = "data/font/vera.ttf";
 
-const SDL_Color cMenuMgr::staColor_on = {253, 252, 250};
-const SDL_Color cMenuMgr::staColor_off = {128, 128, 128};
-const SDL_Color cMenuMgr::staColor_white = {255, 255, 255};
-const SDL_Color cMenuMgr::staColor_ombre = {87, 87, 87, 50};
-const SDL_Color cMenuMgr::staColor_black = {0, 0, 0};
-const SDL_Color cMenuMgr::staColor_gray = {128, 128, 128};
+const SDL_Color MenuMgr::staColor_on = {253, 252, 250};
+const SDL_Color MenuMgr::staColor_off = {128, 128, 128};
+const SDL_Color MenuMgr::staColor_white = {255, 255, 255};
+const SDL_Color MenuMgr::staColor_ombre = {87, 87, 87, 50};
+const SDL_Color MenuMgr::staColor_black = {0, 0, 0};
+const SDL_Color MenuMgr::staColor_gray = {128, 128, 128};
 
-cMenuMgr::cMenuMgr() {
+MenuMgr::MenuMgr() {
     _p_font1 = 0;
     _p_font2 = 0;
     _ifocus_valuesM_A = 0;
@@ -35,7 +35,7 @@ cMenuMgr::cMenuMgr() {
     _bMouseInside = FALSE;
 }
 
-cMenuMgr::~cMenuMgr() {
+MenuMgr::~MenuMgr() {
     if (_p_MenuBox) {
         SDL_FreeSurface(_p_MenuBox);
         _p_MenuBox = NULL;
@@ -46,17 +46,17 @@ cMenuMgr::~cMenuMgr() {
 
 // Prepare the Click() trait
 void fncBind_LabelClicked(void* self, int iVal) {
-    cMenuMgr* pApp = (cMenuMgr*)self;
+    MenuMgr* pApp = (MenuMgr*)self;
     pApp->LabelClicked(iVal);
 }
 
-ClickCb cMenuMgr::prepClickCb() {
+ClickCb MenuMgr::prepClickCb() {
     static VClickCb const tc = {.Click = (&fncBind_LabelClicked)};
 
     return (ClickCb){.tc = &tc, .self = this};
 }
 
-LPErrInApp cMenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
+LPErrInApp MenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
                                 MenuDelegator& pApp) {
     _menuDlgt = pApp;
     _p_Screen = pScreen;
@@ -117,23 +117,23 @@ LPErrInApp cMenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
     return NULL;
 }
 
-void cMenuMgr::LabelClicked(int iButID) {}
+void MenuMgr::LabelClicked(int iButID) {}
 
-void cMenuMgr::drawStaticSpriteEx(int src_x, int src_y, int src_dx, int src_dy,
+void MenuMgr::drawStaticSpriteEx(int src_x, int src_y, int src_dx, int src_dy,
                                   int dst_x, int dst_y, SDL_Surface* sprite) {
     SDL_Rect src_rec = {src_x, src_y, src_dx, src_dy};
     SDL_Rect dst_rec = {dst_x, dst_y, 0, 0};
     SDL_BlitSurface(sprite, &src_rec, _p_Screen, &dst_rec);
 }
 
-void cMenuMgr::drawRect(int x, int y, int dx, int dy, SDL_Color c) {
+void MenuMgr::drawRect(int x, int y, int dx, int dy, SDL_Color c) {
     drawStaticLine(x, y, dx, y, c);
     drawStaticLine(x, y, x, dy, c);
     drawStaticLine(dx, y, dx, dy, c);
     drawStaticLine(x, dy, dx, dy, c);
 }
 
-void cMenuMgr::drawStaticLine(int x0, int y0, int x1, int y1, SDL_Color color) {
+void MenuMgr::drawStaticLine(int x0, int y0, int x1, int y1, SDL_Color color) {
     int d =
         (int)sqrtf(pow((float)(x1 - x0), 2.0f) + pow((float)(y1 - y0), 2.0f));
     static int x = 0, y = 0;
@@ -148,7 +148,7 @@ void cMenuMgr::drawStaticLine(int x0, int y0, int x1, int y1, SDL_Color color) {
     }
 }
 
-void cMenuMgr::setPixel(SDL_Surface* pSurface, int x, int y, SDL_Color color) {
+void MenuMgr::setPixel(SDL_Surface* pSurface, int x, int y, SDL_Color color) {
     Uint32 col = SDL_MapRGB(pSurface->format, color.r, color.g, color.b);
 
     char* pPosition = (char*)pSurface->pixels;
@@ -160,12 +160,12 @@ void cMenuMgr::setPixel(SDL_Surface* pSurface, int x, int y, SDL_Color color) {
     memcpy(pPosition, &col, pSurface->format->BytesPerPixel);
 }
 
-void cMenuMgr::fillRect(int x0, int y0, int width, int height, Uint32 color) {
+void MenuMgr::fillRect(int x0, int y0, int width, int height, Uint32 color) {
     SDL_Rect rect = {x0, y0, width, height};
     SDL_FillRect(_p_Screen, &rect, color);
 }
 
-void cMenuMgr::drawBackground() {
+void MenuMgr::drawBackground() {
     SDL_BlitSurface(_p_Scene_background, NULL, _p_Screen, NULL);
 
     _iSx = _p_Screen->clip_rect.w;
@@ -191,7 +191,7 @@ void cMenuMgr::drawBackground() {
     drawRect(_iDebx, _iDeby, _iSx - _iDebx, _iDeby + 36, staColor_white);
 }
 
-LPErrInApp cMenuMgr::drawStringSH(const char* tmp, int x, int y,
+LPErrInApp MenuMgr::drawStringSH(const char* tmp, int x, int y,
                                   SDL_Color& color, TTF_Font* customfont) {
     int tx, ty;
     TTF_SizeText(customfont, tmp, &tx, &ty);
@@ -212,7 +212,7 @@ LPErrInApp cMenuMgr::drawStringSH(const char* tmp, int x, int y,
     return NULL;
 }
 
-LPErrInApp cMenuMgr::HandleRootMenu() {
+LPErrInApp MenuMgr::HandleRootMenu() {
     LPErrInApp err;
     // show the link url label
     _p_homeUrl->SetState(cLabelLinkGfx::VISIBLE);
@@ -355,7 +355,7 @@ LPErrInApp cMenuMgr::HandleRootMenu() {
     return NULL;
 }
 
-void cMenuMgr::rootMenuNext() {
+void MenuMgr::rootMenuNext() {
     TRACE("Menu selected %d", _ifocus_valuesM_A);
     switch (_ifocus_valuesM_A) {
         case 0:  // Play

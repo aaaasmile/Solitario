@@ -647,19 +647,19 @@ LPErrInApp AppGfx::MainLoop() {
     LPErrInApp err;
     bool bquit = false;
 
-    cMenuMgr *pMenuMgr = new cMenuMgr();
+    MenuMgr *pMenuMgr = new MenuMgr();
     MenuDelegator delegator = prepMenuDelegator();
     pMenuMgr->Initialize(_p_Screen, _p_sdlRenderer, delegator);
 
     // set main menu
-    _Histmenu.push(cMenuMgr::QUITAPP);
-    _Histmenu.push(cMenuMgr::MENU_ROOT);
+    _Histmenu.push(MenuMgr::QUITAPP);
+    _Histmenu.push(MenuMgr::MENU_ROOT);
 
     pMenuMgr->SetBackground(_p_Splash);
 
     while (!bquit && !_Histmenu.empty()) {
         switch (_Histmenu.top()) {
-            case cMenuMgr::MENU_ROOT:
+            case MenuMgr::MENU_ROOT:
                 if (_p_GameSettings->bMusicEnabled &&
                     !_p_MusicManager->IsPLayingMusic()) {
                     _p_MusicManager->PlayMusic(MusicManager::MUSIC_INIT_SND,
@@ -671,31 +671,31 @@ LPErrInApp AppGfx::MainLoop() {
 
                 break;
 
-            case cMenuMgr::MENU_GAME:
+            case MenuMgr::MENU_GAME:
                 err = startGameLoop();
                 if (err != NULL)
                     return err;
                 break;
 
-            case cMenuMgr::MENU_HELP:
+            case MenuMgr::MENU_HELP:
                 err = showHelp();
                 if (err != NULL)
                     return err;
                 break;
 
-            case cMenuMgr::MENU_CREDITS:
+            case MenuMgr::MENU_CREDITS:
                 err = showCredits();
                 if (err != NULL)
                     return err;
                 break;
 
-            case cMenuMgr::MENU_OPTIONS:
+            case MenuMgr::MENU_OPTIONS:
                 err = showOptionGeneral();
                 if (err != NULL)
                     return err;
                 break;
 
-            case cMenuMgr::QUITAPP:
+            case MenuMgr::QUITAPP:
             default:
                 bquit = true;
                 break;
