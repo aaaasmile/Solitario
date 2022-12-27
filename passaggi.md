@@ -151,7 +151,8 @@ Sviluppato dentro questo progetto:
     igor@MiniToro:~/projects/Solitario$
 
 ### TODO
-- Il menu ha ancora bisogno di correzzioni sdl 1.2 -> sdl 2.0
-- Il rendering del gioco non usa le immagini in formato Pac ma quelle singole
+- Il drag parte da x,y = 0,0
+- Il menu ha ancora bisogno di correzzioni sdl 1.2 -> sdl 2.0 [DONE]
+- Il rendering del gioco non usa le immagini in formato Pac ma quelle singole [DONE]
 
 

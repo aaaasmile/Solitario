@@ -509,8 +509,8 @@ LPErrInApp SolitarioGfx::DrawCard(VI vi, SDL_Surface *s) {
         return ERR_UTIL::ErrorCreate(
             "Error in draw card with Iterator, surface is NULL\n");
     }
-    TRACE("Draw card ix = %d, suit = %s, rank %d", vi->Idx, vi->SuitStr(),
-          vi->Rank());
+    TRACE("Draw card ix = %d, suit = %s, rank %d, x,y %d,%d", vi->Idx,
+          vi->SuitStr(), vi->Rank(), vi->x, vi->y);
 
     if (_DeckType.IsPacType()) {
         return DrawCardPac(vi, s);
