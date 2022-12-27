@@ -1,6 +1,5 @@
-#if !defined( \
-    AFX_CHIGHTSCOREMGR_H__6D4D1807_CD5D_4D2F_AB63_A5A94EE9CD50__INCLUDED_)
-#define AFX_CHIGHTSCOREMGR_H__6D4D1807_CD5D_4D2F_AB63_A5A94EE9CD50__INCLUDED_
+#ifndef _HIGHTSCORE_H__
+#define _HIGHTSCORE_H__
 
 #if _MSC_VER > 1000
 #pragma once
@@ -8,16 +7,18 @@
 
 #include <string>
 
+#include "ErrorInfo.h"
+
 class HightScoreMgr {
 public:
     HightScoreMgr();
     virtual ~HightScoreMgr();
     void Load();
-    void Save();
+    LPErrInApp Save();
 
 public:
     std::string HS_Names[10];
     unsigned int HS_Scores[10];
 };
 
-#endif  // !defined(AFX_CHIGHTSCOREMGR_H__6D4D1807_CD5D_4D2F_AB63_A5A94EE9CD50__INCLUDED_)
+#endif

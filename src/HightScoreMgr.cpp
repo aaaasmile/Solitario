@@ -18,7 +18,7 @@ HightScoreMgr::HightScoreMgr() {}
 
 HightScoreMgr::~HightScoreMgr() {}
 
-void HightScoreMgr::Save() {
+LPErrInApp HightScoreMgr::Save() {
     int f;
     char buffer[16];
     unsigned int score, k, nb;
@@ -32,10 +32,17 @@ void HightScoreMgr::Save() {
             memset(buffer, 0, 16);
             memcpy(buffer, HS_Names[k].c_str(), 15);
             nb = write(f, &score, 4);
+            if (nb == -1) {
+                return ERR_UTIL::ErrorCreate("Error in write for score");
+            }
             nb = write(f, buffer, 15);
+            if (nb == -1) {
+                return ERR_UTIL::ErrorCreate("Error in write for buffer");
+            }
         }
         close(f);
     }
+    return NULL;
 }
 
 void HightScoreMgr::Load() {
