@@ -53,7 +53,6 @@ private:
     void handleGameLoopMouseDownEvent(SDL_Event& event);
     void handleGameLoopMouseMoveEvent(SDL_Event& event);
     LPErrInApp handleGameLoopMouseUpEvent(SDL_Event& event);
-    LPErrInApp menuSelectDeck();
     LPErrInApp loadProfile();
     void writeProfile();
     void usage(int err, char* cmd);
