@@ -274,7 +274,9 @@ LPErrInApp AppGfx::startGameLoop() {
                     break;
 
                 case SDL_MOUSEBUTTONDOWN:
-                    handleGameLoopMouseDownEvent(event);
+                    err = handleGameLoopMouseDownEvent(event);
+                    if (err != NULL)
+                        return err;
                     break;
 
                 case SDL_MOUSEMOTION:
@@ -343,21 +345,28 @@ LPErrInApp AppGfx::handleGameLoopKeyDownEvent(SDL_Event &event) {
     return NULL;
 }
 
-void AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
+LPErrInApp AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
+    LPErrInApp err;
     CardRegionGfx *srcReg;
+    bool isInitDrag = false;
     if (event.button.button == SDL_BUTTON_LEFT) {
         srcReg = _p_SolitarioGfx->OnMouseDown(event.button.x, event.button.y);
         if (srcReg == NULL)
-            return;
+            return NULL;
         // clicked on the top of the foundations
         if ((srcReg->Id == CRD_FOUNDATION) &&
             srcReg->PtOnTop(event.button.x, event.button.y)) {
             srcReg->SetCardFaceUp(TRUE, srcReg->Size() - 1);
         }
         // clicked on the foundations, reserve, wastes for dragging
+        err = _p_SolitarioGfx->InitDrag(event.button.x, event.button.y,
+                                        isInitDrag);
+        if (err != NULL) {
+            return err;
+        }
         if (((srcReg->Id == CRD_FOUNDATION) || (srcReg->Id == CRD_RESERVE) ||
              (srcReg->Id == CRD_WASTE)) &&
-            _p_SolitarioGfx->InitDrag(event.button.x, event.button.y)) {
+            isInitDrag) {
             _bStartdrag = TRUE;
             SDL_SetRelativeMouseMode(SDL_TRUE);  // SDL 2.0
         }
@@ -370,7 +379,10 @@ void AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
                 *cs = _p_SolitarioGfx->PopFromRegion(
                     8, _p_SolitarioGfx->RegionSize(8));
                 cs->SetCardsFaceUp(FALSE);
-                _p_SolitarioGfx->InitDrag(cs, -1, -1);
+                err = _p_SolitarioGfx->InitDrag(cs, -1, -1, isInitDrag);
+                if (err != NULL) {
+                    return err;
+                }
                 _p_SolitarioGfx->DoDrop(_p_SolitarioGfx->GetRegion(0));
                 _p_SolitarioGfx->Reverse(0);
                 _p_SolitarioGfx->InitCardCoords(0);
@@ -378,7 +390,10 @@ void AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
                                             _p_SolitarioGfx->Empty(8))) {
                 *cs = _p_SolitarioGfx->PopFromRegion(0, 1);
                 cs->SetCardsFaceUp(TRUE);
-                _p_SolitarioGfx->InitDrag(cs, -1, -1);
+                err = _p_SolitarioGfx->InitDrag(cs, -1, -1, isInitDrag);
+                if (err != NULL) {
+                    return err;
+                }
                 _p_SolitarioGfx->DoDrop(_p_SolitarioGfx->GetRegion(8));
             }
         }
@@ -388,7 +403,7 @@ void AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
     if (event.button.button == SDL_BUTTON_RIGHT) {
         srcReg = _p_SolitarioGfx->OnMouseDown(event.button.x, event.button.y);
         if (srcReg == NULL)
-            return;
+            return NULL;
         CardRegionGfx *cr;
         CardGfx card = srcReg->GetCard(srcReg->Size() - 1);
 
@@ -399,11 +414,15 @@ void AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
             if (cr) {
                 CardStackGfx *cs = new CardStackGfx;
                 *cs = srcReg->Pop(1);
-                _p_SolitarioGfx->InitDrag(cs, -1, -1);
+                err = _p_SolitarioGfx->InitDrag(cs, -1, -1, isInitDrag);
+                if (err != NULL) {
+                    return err;
+                }
                 _p_SolitarioGfx->DoDrop(cr);
             }
         }
     }
+    return NULL;
 }
 
 void AppGfx::handleGameLoopMouseMoveEvent(SDL_Event &event) {
@@ -855,7 +874,6 @@ void AppGfx::ParseCmdLine(int argc, char *argv[]) {
                     fprintf(stderr, "Parametri non corretti: %s\n",
                             argv[i + 1]);
                     usage(1, argv[0]);
-                    exit(1);
                 }
                 i++;
             }
@@ -892,10 +910,10 @@ BOOL AppGfx::parseScreenSize(LPCSTR strInput) {
     return bRet;
 }
 
-void AppGfx::usage(int err, char *cmd) {
+void AppGfx::usage(int errOut, char *cmd) {
     FILE *f;
 
-    if (err == 0)
+    if (errOut == 0)
         f = stdout;
     else
         f = stderr;
@@ -906,5 +924,5 @@ void AppGfx::usage(int err, char *cmd) {
             "\n",
             cmd, cmd);
 
-    exit(err);
+    exit(errOut);
 }

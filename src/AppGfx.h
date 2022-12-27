@@ -50,12 +50,12 @@ private:
     void hightScoreMenu();
     LPErrInApp newGame();
     LPErrInApp handleGameLoopKeyDownEvent(SDL_Event& event);
-    void handleGameLoopMouseDownEvent(SDL_Event& event);
+    LPErrInApp handleGameLoopMouseDownEvent(SDL_Event& event);
     void handleGameLoopMouseMoveEvent(SDL_Event& event);
     LPErrInApp handleGameLoopMouseUpEvent(SDL_Event& event);
     LPErrInApp loadProfile();
     void writeProfile();
-    void usage(int err, char* cmd);
+    void usage(int errOut, char* cmd);
     BOOL parseScreenSize(LPCSTR strOpz);
     void updateScreenTexture();
     LPErrInApp showHelp();

@@ -150,16 +150,22 @@ CardRegionGfx *SolitarioGfx::OnMouseDown(int x, int y) {
     return NULL;
 }
 
-bool SolitarioGfx::InitDrag(int x, int y) { return InitDrag(NULL, x, y); }
+LPErrInApp SolitarioGfx::InitDrag(int x, int y, bool &isInitDrag) {
+    return InitDrag(NULL, x, y, isInitDrag);
+}
 
-bool SolitarioGfx::InitDrag(CardStackGfx *CargoStack, int x, int y) {
+LPErrInApp SolitarioGfx::InitDrag(CardStackGfx *CargoStack, int x, int y,
+                                  bool &isInitDrag) {
+    isInitDrag = false;
+    LPErrInApp err;
     if (CargoStack == NULL) {
         if (_p_sourceRegion->Empty())
-            return false;
+            return NULL;
 
         int idx = _p_sourceRegion->GetClickedCard(x, y);
-        if (idx == -1)
-            return false;  // no card found
+        if (idx == -1) {
+            return NULL;  // no card found
+        }
 
         switch (_p_sourceRegion->GetDragMode()) {
             case CRD_DRAGCARDS:
@@ -170,7 +176,7 @@ bool SolitarioGfx::InitDrag(CardStackGfx *CargoStack, int x, int y) {
                 if (_p_sourceRegion->Size() - 1 == idx)
                     _dragStack.Push(_p_sourceRegion->Pop());
                 else
-                    return false;
+                    return NULL;
                 break;
 
             case CRD_DRAGFACEUP:
@@ -178,7 +184,7 @@ bool SolitarioGfx::InitDrag(CardStackGfx *CargoStack, int x, int y) {
                     _dragStack.Push(
                         _p_sourceRegion->Pop(_p_sourceRegion->Size() - idx));
                 else
-                    return false;
+                    return NULL;
                 break;
 
             default:
@@ -190,7 +196,10 @@ bool SolitarioGfx::InitDrag(CardStackGfx *CargoStack, int x, int y) {
 
     _p_sourceRegion->InitCardCoords();
 
-    DrawBackground(FALSE);
+    err = DrawBackground(FALSE);
+    if (err != NULL) {
+        return err;
+    }
     SDL_BlitSurface(_p_screen, NULL, _p_background, NULL);
 
     CardRegionGfx DragRegion(0, _p_sourceRegion->GetAttributes() | CRD_FACEUP,
@@ -213,16 +222,22 @@ bool SolitarioGfx::InitDrag(CardStackGfx *CargoStack, int x, int y) {
     SDL_SetColorKey(_p_dragface, TRUE,
                     SDL_MapRGB(_p_dragface->format, 0, 255, 0));
 
-    DrawCardStack(_p_screen, &DragRegion);
+    err = DrawCardStack(_p_screen, &DragRegion);
+    if (err != NULL) {
+        return err;
+    }
     DragRegion.InitCardCoords();
-    DrawCardStack(_p_dragface, &DragRegion);
+    err = DrawCardStack(_p_dragface, &DragRegion);
+    if (err != NULL) {
+        return err;
+    }
 
     _oldx = x;
     _oldy = y;
 
     UpdateTextureAsFlipScreen();
-
-    return true;
+    isInitDrag = true;
+    return NULL;
 }
 
 void SolitarioGfx::UpdateTextureAsFlipScreen() {
@@ -374,7 +389,8 @@ void SolitarioGfx::DrawStaticScene() {
     UpdateTextureAsFlipScreen();
 }
 
-void SolitarioGfx::DrawBackground(BOOL bIsInit) {
+LPErrInApp SolitarioGfx::DrawBackground(BOOL bIsInit) {
+    LPErrInApp err;
     if (_p_scene_background) {
         if (!bIsInit) {
             SDL_BlitSurface(_p_scene_background, NULL, _p_screen, NULL);
@@ -383,8 +399,13 @@ void SolitarioGfx::DrawBackground(BOOL bIsInit) {
         }
     }
 
-    for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi)
-        DrawCardStack(vi);
+    for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
+        err = DrawCardStack(vi);
+        if (err != NULL) {
+            return NULL;
+        }
+    }
+    return NULL;
 }
 
 CardRegionGfx *SolitarioGfx::GetBestStack(int x, int y, int w, int h,
@@ -557,7 +578,8 @@ int SolitarioGfx::AnimateCards() {
             DrawCard(x, y, id, _p_screen);
             UpdateTextureAsFlipScreen();
         }
-        // 73 here is CARDWIDTH, but when using CARDWIDTH, it doesn't work
+        // 73 here is CARDWIDTH, but when using CARDWIDTH, it doesn't
+        // work
         while ((x + 73 > 0) && (x < _p_screen->w));
         //		while((x + CARDWIDTH > 0) && (x < _p_screen->w));
     } while (1);  // or while within specified time
@@ -598,13 +620,15 @@ LPErrInApp SolitarioGfx::LoadDeckFromSingleFile() {
 
             if (srcBack == NULL) {
                 return ERR_UTIL::ErrorCreate(
-                    "SDL_RWFromFile in LoadDeckFromSingleFile error: %s\n",
+                    "SDL_RWFromFile in LoadDeckFromSingleFile error: "
+                    "%s\n",
                     SDL_GetError());
             }
             _p_CardsSurf[i + k * 10] = IMG_LoadJPG_RW(srcBack);
             if (_p_CardsSurf[i + k * 10] == NULL) {
                 return ERR_UTIL::ErrorCreate(
-                    "IMG_LoadJPG_RW in LoadDeckFromSingleFile error: %s\n",
+                    "IMG_LoadJPG_RW in LoadDeckFromSingleFile error: "
+                    "%s\n",
                     SDL_GetError());
             }
         }
@@ -634,13 +658,15 @@ LPErrInApp SolitarioGfx::LoadSymbolsFromSingleFile() {
         SDL_RWops *srcBack = SDL_RWFromFile(strFileSymbName.c_str(), "rb");
         if (!srcBack) {
             return ERR_UTIL::ErrorCreate(
-                "SDL_RWFromFile in LoadSymbolsFromSingleFile error: %s\n",
+                "SDL_RWFromFile in LoadSymbolsFromSingleFile error: "
+                "%s\n",
                 SDL_GetError());
         }
         _p_Symbol[i] = IMG_LoadJPG_RW(srcBack);
         if (_p_Symbol[i] == NULL) {
             return ERR_UTIL::ErrorCreate(
-                "IMG_LoadJPG_RW in LoadSymbolsFromSingleFile error: %s\n",
+                "IMG_LoadJPG_RW in LoadSymbolsFromSingleFile error: "
+                "%s\n",
                 SDL_GetError());
         }
     }

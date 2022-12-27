@@ -43,8 +43,9 @@ public:
 
     CardRegionGfx *OnMouseDown(int x, int y);
 
-    bool InitDrag(int x, int y);
-    bool InitDrag(CardStackGfx *CargoStack, int x, int y);
+    LPErrInApp InitDrag(int x, int y, bool &isInitDrag);
+    LPErrInApp InitDrag(CardStackGfx *CargoStack, int x, int y,
+                        bool &isInitDrag);
 
     void DoDrag(int x, int y);
 
@@ -58,7 +59,7 @@ public:
                   SDL_Surface *bg, SDL_Surface *fg);
 
     void DrawStaticScene();
-    void DrawBackground(BOOL bIsInit);
+    LPErrInApp DrawBackground(BOOL bIsInit);
 
     CardRegionGfx *GetBestStack(int x, int y, int width, int height,
                                 CardStackGfx *stack);
