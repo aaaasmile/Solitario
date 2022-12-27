@@ -297,9 +297,9 @@ LPErrInApp AppGfx::startGameLoop() {
 }
 
 LPErrInApp AppGfx::newGame() {
+    TRACE("New Game");
     LPErrInApp err;
     _p_SolitarioGfx->SetSymbol(0, CRD_OSYMBOL);
-
     _p_SolitarioGfx->EmptyStacks();
 
     err = _p_SolitarioGfx->NewDeck(0);
@@ -311,7 +311,8 @@ LPErrInApp AppGfx::newGame() {
     // deal
     int i;
     for (i = 1; i <= 7; i++) {
-        _p_SolitarioGfx->PushInRegion(i, _p_SolitarioGfx->PopFromRegion(0));
+        _p_SolitarioGfx->PushStackInRegion(
+            i, _p_SolitarioGfx->PopStackFromRegion(0, i));
     }
 
     _p_SolitarioGfx->InitAllCoords();
@@ -373,7 +374,7 @@ LPErrInApp AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
             if (srcReg->Empty() &&
                 !_p_SolitarioGfx->Empty(8))  // Bring back the cards
             {
-                *cs = _p_SolitarioGfx->PopFromRegion(
+                *cs = _p_SolitarioGfx->PopStackFromRegion(
                     8, _p_SolitarioGfx->RegionSize(8));
                 cs->SetCardsFaceUp(FALSE);
                 err = _p_SolitarioGfx->InitDrag(cs, -1, -1, isInitDrag);
@@ -385,7 +386,7 @@ LPErrInApp AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
                 _p_SolitarioGfx->InitCardCoords(0);
             } else if (!srcReg->Empty() && (!_p_SolitarioGfx->Empty(8) ||
                                             _p_SolitarioGfx->Empty(8))) {
-                *cs = _p_SolitarioGfx->PopFromRegion(0, 1);
+                *cs = _p_SolitarioGfx->PopStackFromRegion(0, 1);
                 cs->SetCardsFaceUp(TRUE);
                 err = _p_SolitarioGfx->InitDrag(cs, -1, -1, isInitDrag);
                 if (err != NULL) {
@@ -410,7 +411,7 @@ LPErrInApp AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
             cr = _p_SolitarioGfx->FindDropRegion(CRD_WASTE, card);
             if (cr) {
                 CardStackGfx *cs = new CardStackGfx;
-                *cs = srcReg->Pop(1);
+                *cs = srcReg->PopStack(1);
                 err = _p_SolitarioGfx->InitDrag(cs, -1, -1, isInitDrag);
                 if (err != NULL) {
                     return err;

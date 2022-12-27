@@ -45,13 +45,13 @@ bool SortRank(const CardGfx& l, const CardGfx& r) {
     return l.Rank() < r.Rank();
 }
 void CardStackGfx::Sort() { std::sort(this->begin(), this->end(), SortRank); }
-void CardStackGfx::Push(const CardGfx card) { this->push_back(card); }
-void CardStackGfx::Push(CardStackGfx cardstack) {
+void CardStackGfx::PushCard(const CardGfx card) { this->push_back(card); }
+void CardStackGfx::PushStack(CardStackGfx cardstack) {
     for (VI vi = cardstack.begin(); vi != cardstack.end(); ++vi)
         this->push_back(*vi);
 }
 
-CardGfx CardStackGfx::Pop() {
+CardGfx CardStackGfx::PopCard() {
     if (Empty())
         return 0;
 
@@ -61,14 +61,14 @@ CardGfx CardStackGfx::Pop() {
     return card;
 }
 
-CardStackGfx CardStackGfx::Pop(int items) {
+CardStackGfx CardStackGfx::PopStack(int items) {
     if (items > Size())
         items = Size();
 
     CardStackGfx cardstack;
 
     while (items > 0) {
-        cardstack.Push(this->Pop());
+        cardstack.PushCard(this->PopCard());
         items--;
     }
     cardstack.Reverse();

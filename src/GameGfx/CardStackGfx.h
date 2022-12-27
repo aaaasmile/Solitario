@@ -20,11 +20,11 @@ public:
     bool Empty() { return this->empty(); }
     int Size() { return this->size(); }
 
-    void Push(const CardGfx card);
-    void Push(CardStackGfx cardstack);
+    void PushCard(const CardGfx card);
+    void PushStack(CardStackGfx cardstack);
 
-    CardGfx Pop();
-    CardStackGfx Pop(int items);
+    CardGfx PopCard();
+    CardStackGfx PopStack(int items);
 
     CardGfx RemoveCard(int index);
     void InsertCard(int index, CardGfx card);

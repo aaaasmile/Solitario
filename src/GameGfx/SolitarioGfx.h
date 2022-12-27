@@ -98,17 +98,17 @@ public:
     }
     bool Empty(int regionNo) { return _cardRegionList[regionNo].Empty(); }
     void Shuffle(int regionNo) { _cardRegionList[regionNo].Shuffle(); }
-    void PushInRegion(int regionNo, CardGfx card) {
+    void PushCardInRegion(int regionNo, CardGfx card) {
         _cardRegionList[regionNo].Push(card);
     }
-    void PushInRegion(int regionNo, CardStackGfx cs) {
+    void PushStackInRegion(int regionNo, CardStackGfx cs) {
         _cardRegionList[regionNo].Push(cs);
     }
-    CardGfx PopFromRegion(int regionNo) {
-        return _cardRegionList[regionNo].Pop();
+    CardGfx PopCardFromRegion(int regionNo) {
+        return _cardRegionList[regionNo].PopCard();
     }
-    CardStackGfx PopFromRegion(int regionNo, int items) {
-        return _cardRegionList[regionNo].Pop(items);
+    CardStackGfx PopStackFromRegion(int regionNo, int items) {
+        return _cardRegionList[regionNo].PopStack(items);
     }
     void SetCardFaceUp(int regionNo, bool fTrue, int idx) {
         _cardRegionList[regionNo].SetCardFaceUp(fTrue, idx);

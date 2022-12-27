@@ -135,14 +135,14 @@ public:
     void Clear() { InternalStack.Clear(); }
     void Reverse() { InternalStack.Reverse(); }
 
-    void Push(CardGfx card) { InternalStack.Push(card); }
-    void Push(CardStackGfx cs) { InternalStack.Push(cs); }
+    void Push(CardGfx card) { InternalStack.PushCard(card); }
+    void Push(CardStackGfx cs) { InternalStack.PushStack(cs); }
 
     bool Empty() { return InternalStack.Empty(); }
     int Size() { return InternalStack.Size(); }
 
-    CardGfx Pop() { return InternalStack.Pop(); }
-    CardStackGfx Pop(int items) { return InternalStack.Pop(items); }
+    CardGfx PopCard() { return InternalStack.PopCard(); }
+    CardStackGfx PopStack(int items) { return InternalStack.PopStack(items); }
 
     CardGfx RemoveCard(int index) { return InternalStack.RemoveCard(index); }
 

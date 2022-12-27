@@ -26,6 +26,7 @@ static const char *lpszSymbDir = DATA_PREFIX "images/";
 
 SolitarioGfx::SolitarioGfx() {
     _p_background = 0;
+    _p_dragface = 0;
     _p_scene_background = 0;
     _p_ScreenTexture = 0;
     for (int i = 0; i < NUM_CARDS_ONDECK; i++) {
@@ -180,30 +181,30 @@ LPErrInApp SolitarioGfx::InitDrag(CardStackGfx *CargoStack, int x, int y,
 
         switch (_p_sourceRegion->GetDragMode()) {
             case CRD_DRAGCARDS:
-                _dragStack.Push(_p_sourceRegion->RemoveCard(idx));
+                _dragStack.PushCard(_p_sourceRegion->RemoveCard(idx));
                 break;
 
             case CRD_DRAGTOP:
                 if (_p_sourceRegion->Size() - 1 == idx)
-                    _dragStack.Push(_p_sourceRegion->Pop());
+                    _dragStack.PushCard(_p_sourceRegion->PopCard());
                 else
                     return NULL;
                 break;
 
             case CRD_DRAGFACEUP:
                 if (_p_sourceRegion->CardFaceUp(idx))
-                    _dragStack.Push(
-                        _p_sourceRegion->Pop(_p_sourceRegion->Size() - idx));
+                    _dragStack.PushStack(_p_sourceRegion->PopStack(
+                        _p_sourceRegion->Size() - idx));
                 else
                     return NULL;
                 break;
 
             default:
-                _dragStack.Push(
-                    _p_sourceRegion->Pop(_p_sourceRegion->Size() - idx));
+                _dragStack.PushStack(
+                    _p_sourceRegion->PopStack(_p_sourceRegion->Size() - idx));
         }
     } else
-        _dragStack.Push(*CargoStack);
+        _dragStack.PushStack(*CargoStack);
 
     _p_sourceRegion->InitCardCoords();
 
@@ -311,7 +312,7 @@ void SolitarioGfx::DoDrop(CardRegionGfx *DestRegion) {
         BestRegion = _p_sourceRegion;
 
     DestStack = BestRegion->GetCardStack();
-    DestStack->Push(_dragStack);
+    DestStack->PushStack(_dragStack);
     BestRegion->InitCardCoords();
 
     VI vi;
@@ -380,7 +381,7 @@ void SolitarioGfx::ZoomCard(int &sx, int &sy, int &dx, int &dy, int w, int h,
 
 CardRegionGfx *SolitarioGfx::FindDropRegion(int Id, CardGfx card) {
     CardStackGfx stack;
-    stack.Push(card);
+    stack.PushCard(card);
     return FindDropRegion(Id, stack);
 }
 
