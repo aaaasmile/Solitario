@@ -14,7 +14,7 @@
 #include "ErrorInfo.h"
 #include "Fonts.h"
 #include "GameGfx/SolitarioGfx.h"
-#include "HightScoreMgr.h"
+#include "HighScoreMgr.h"
 #include "Languages.h"
 #include "Traits.h"
 #include "win_type_global.h"
@@ -81,7 +81,7 @@ private:
     GameSettings* _p_GameSettings;
     SolitarioGfx* _p_SolitarioGfx;
     MusicManager* _p_MusicManager;
-    HightScoreMgr _HScoreMgr;
+    HighscoreMgr _HScoreMgr;
     Languages _LanguageMgr;
 
     int _iScreenW;

@@ -9,10 +9,10 @@
 
 #include "ErrorInfo.h"
 
-class HightScoreMgr {
+class HighscoreMgr {
 public:
-    HightScoreMgr();
-    virtual ~HightScoreMgr();
+    HighscoreMgr();
+    virtual ~HighscoreMgr();
     void Load();
     LPErrInApp Save();
 

@@ -1,4 +1,4 @@
-#include "HightScoreMgr.h"
+#include "HighScoreMgr.h"
 
 #include <fcntl.h>
 #include <memory.h>
@@ -14,11 +14,11 @@
 
 using namespace std;
 
-HightScoreMgr::HightScoreMgr() {}
+HighscoreMgr::HighscoreMgr() {}
 
-HightScoreMgr::~HightScoreMgr() {}
+HighscoreMgr::~HighscoreMgr() {}
 
-LPErrInApp HightScoreMgr::Save() {
+LPErrInApp HighscoreMgr::Save() {
     int f;
     char buffer[16];
     unsigned int score, k, nb;
@@ -45,7 +45,7 @@ LPErrInApp HightScoreMgr::Save() {
     return NULL;
 }
 
-void HightScoreMgr::Load() {
+void HighscoreMgr::Load() {
     int f;
     char buffer[16];
     unsigned int score, k;

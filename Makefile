@@ -105,7 +105,7 @@ PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
 am_solitario_OBJECTS = src/GameGfx/CardRegionGfx.$(OBJEXT) \
 	src/GameGfx/CardStackGfx.$(OBJEXT) \
-	src/GameGfx/SolitarioGfx.$(OBJEXT) src/HightScoreMgr.$(OBJEXT) \
+	src/GameGfx/SolitarioGfx.$(OBJEXT) src/HighScoreMgr.$(OBJEXT) \
 	src/MusicManager.$(OBJEXT) src/AppGfx.$(OBJEXT) \
 	src/Fonts.$(OBJEXT) src/GameSettings.$(OBJEXT) \
 	src/GfxUtil.$(OBJEXT) src/Languages.$(OBJEXT) \
@@ -133,7 +133,7 @@ am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = src/$(DEPDIR)/AppGfx.Po src/$(DEPDIR)/Credits.Po \
 	src/$(DEPDIR)/ErrorInfo.Po src/$(DEPDIR)/Fading.Po \
 	src/$(DEPDIR)/Fonts.Po src/$(DEPDIR)/GameSettings.Po \
-	src/$(DEPDIR)/GfxUtil.Po src/$(DEPDIR)/HightScoreMgr.Po \
+	src/$(DEPDIR)/GfxUtil.Po src/$(DEPDIR)/HighScoreMgr.Po \
 	src/$(DEPDIR)/Languages.Po src/$(DEPDIR)/MenuMgr.Po \
 	src/$(DEPDIR)/MusicManager.Po src/$(DEPDIR)/main.Po \
 	src/CompGfx/$(DEPDIR)/cLabelGfx.Po \
@@ -360,7 +360,7 @@ solitario_SOURCES = \
 	src/GameGfx/CardRegionGfx.cpp\
 	src/GameGfx/CardStackGfx.cpp\
 	src/GameGfx/SolitarioGfx.cpp\
-	src/HightScoreMgr.cpp\
+	src/HighScoreMgr.cpp\
 	src/MusicManager.cpp\
 	src/AppGfx.cpp\
 	src/Fonts.cpp\
@@ -487,7 +487,7 @@ src/$(am__dirstamp):
 src/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) src/$(DEPDIR)
 	@: > src/$(DEPDIR)/$(am__dirstamp)
-src/HightScoreMgr.$(OBJEXT): src/$(am__dirstamp) \
+src/HighScoreMgr.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/MusicManager.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
@@ -540,7 +540,7 @@ include src/$(DEPDIR)/Fading.Po # am--include-marker
 include src/$(DEPDIR)/Fonts.Po # am--include-marker
 include src/$(DEPDIR)/GameSettings.Po # am--include-marker
 include src/$(DEPDIR)/GfxUtil.Po # am--include-marker
-include src/$(DEPDIR)/HightScoreMgr.Po # am--include-marker
+include src/$(DEPDIR)/HighScoreMgr.Po # am--include-marker
 include src/$(DEPDIR)/Languages.Po # am--include-marker
 include src/$(DEPDIR)/MenuMgr.Po # am--include-marker
 include src/$(DEPDIR)/MusicManager.Po # am--include-marker
@@ -932,7 +932,7 @@ distclean: distclean-recursive
 	-rm -f src/$(DEPDIR)/Fonts.Po
 	-rm -f src/$(DEPDIR)/GameSettings.Po
 	-rm -f src/$(DEPDIR)/GfxUtil.Po
-	-rm -f src/$(DEPDIR)/HightScoreMgr.Po
+	-rm -f src/$(DEPDIR)/HighScoreMgr.Po
 	-rm -f src/$(DEPDIR)/Languages.Po
 	-rm -f src/$(DEPDIR)/MenuMgr.Po
 	-rm -f src/$(DEPDIR)/MusicManager.Po
@@ -996,7 +996,7 @@ maintainer-clean: maintainer-clean-recursive
 	-rm -f src/$(DEPDIR)/Fonts.Po
 	-rm -f src/$(DEPDIR)/GameSettings.Po
 	-rm -f src/$(DEPDIR)/GfxUtil.Po
-	-rm -f src/$(DEPDIR)/HightScoreMgr.Po
+	-rm -f src/$(DEPDIR)/HighScoreMgr.Po
 	-rm -f src/$(DEPDIR)/Languages.Po
 	-rm -f src/$(DEPDIR)/MenuMgr.Po
 	-rm -f src/$(DEPDIR)/MusicManager.Po
