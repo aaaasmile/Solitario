@@ -96,6 +96,7 @@ LPErrInApp DeckType::SetType(eDeckType eType) {
 
 void DeckType::CopyFrom(DeckType& Val) {
     _eType = Val.GetType();
+    _ePacType = Val.GetPacType();
     _strDeckName = Val.GetDeckName();
     _strResFileName = Val.GetResFileName();
     _strSymbolFileName = Val.GetSymbolFileName();

@@ -59,18 +59,29 @@ LPErrInApp SolitarioGfx::Initialize(SDL_Surface *s, SDL_Renderer *r) {
         return ERR_UTIL::ErrorCreate("Cannot create scene background: %s\n",
                                      SDL_GetError());
     }
-
-    err = LoadCardPac();
-    if (err != NULL) {
-        return err;
+    if (_DeckType.IsPacType()) {
+        TRACE("Deck Pac stuff");
+        err = LoadCardPac();
+        if (err != NULL) {
+            return err;
+        }
+        err = LoadSymbolsForPac();
+        if (err != NULL) {
+            return err;
+        }
+    } else {
+        TRACE("Single deck file stuff");
+        err = LoadDeckFromSingleFile();
+        if (err != NULL) {
+            return err;
+        }
+        err = LoadSymbolsFromSingleFile();
+        if (err != NULL) {
+            return err;
+        }
     }
-    err = LoadSymbolsForPac();
-    if (err != NULL) {
-        return err;
-    }
 
-    DrawBackground(TRUE);
-    return 0;
+    return DrawBackground(TRUE);
 }
 
 LPErrInApp SolitarioGfx::DrawCardStack(rVI vi) {
@@ -436,6 +447,9 @@ LPErrInApp SolitarioGfx::DrawCard(int x, int y, int nCdIndex, SDL_Surface *s) {
         return ERR_UTIL::ErrorCreate(
             "Draw a card on NULL surface. This is wrong");
     }
+    if (_DeckType.IsPacType()) {
+        return DrawCardPac(x, y, nCdIndex, s);
+    }
     if (nCdIndex < 0)
         nCdIndex = 0;
     if (nCdIndex > NUM_CARDS)
@@ -443,11 +457,11 @@ LPErrInApp SolitarioGfx::DrawCard(int x, int y, int nCdIndex, SDL_Surface *s) {
 
     int iSegnoIx = nCdIndex / 10;
     int iCartaIx = nCdIndex % 10;
-    TRACE("Segno %d, carta: %d", iSegnoIx, iCartaIx);
+    TRACE("Suit %d, card: %d", iSegnoIx, iCartaIx);
 
     _rctSrcCard.x = 0;
     _rctSrcCard.y = 0;
-    _rctSrcCard.w = _p_CardsSurf[nCdIndex]->clip_rect.w;  // TODO use a funtion
+    _rctSrcCard.w = _p_CardsSurf[nCdIndex]->clip_rect.w;
     _rctSrcCard.h = _p_CardsSurf[nCdIndex]->clip_rect.h;
 
     SDL_Rect dest;
@@ -456,6 +470,35 @@ LPErrInApp SolitarioGfx::DrawCard(int x, int y, int nCdIndex, SDL_Surface *s) {
     if (SDL_BlitSurface(_p_CardsSurf[nCdIndex], &_rctSrcCard, s, &dest) == -1) {
         return ERR_UTIL::ErrorCreate("SDL_BlitSurface in draw card error: %s\n",
                                      SDL_GetError());
+    }
+    return NULL;
+}
+
+LPErrInApp SolitarioGfx::DrawCardPac(int x, int y, int nCdIndex,
+                                     SDL_Surface *s) {
+    if (nCdIndex < 0)
+        nCdIndex = 0;
+    if (nCdIndex > NUM_CARDS)
+        nCdIndex = NUM_CARDS - 1;
+
+    int iSegnoIx = nCdIndex / 10;
+    int iCartaIx = nCdIndex % 10;
+    TRACE("Suit %d, card: %d", iSegnoIx, iCartaIx);
+
+    SDL_Rect srcCard;
+    srcCard.x = iSegnoIx * g_CARDWIDTH;
+    srcCard.y = iCartaIx * g_CARDHEIGHT;
+    srcCard.w = g_CARDWIDTH;
+    srcCard.h = g_CARDHEIGHT;
+
+    SDL_Rect dest;
+    dest.x = x;
+    dest.y = y;
+
+    if (SDL_BlitSurface(_p_srfDeck, &srcCard, s, &dest) == -1) {
+        return ERR_UTIL::ErrorCreate(
+            "SDL_BlitSurface in DrawCardPac with Iterator error: %s\n",
+            SDL_GetError());
     }
     return NULL;
 }
@@ -484,7 +527,7 @@ LPErrInApp SolitarioGfx::DrawCard(VI vi, SDL_Surface *s) {
     dest.x = vi->x;
     dest.y = vi->y;
 
-    TRACE("Draw card ix = %d, segno = %d, valore %d \n", vi->Idx, vi->Suit(),
+    TRACE("Draw card ix = %d, segno = %d, valore %d", vi->Idx, vi->Suit(),
           vi->Rank());
     if (SDL_BlitSurface(_p_CardsSurf[nCdIndex], &_rctSrcCard, s, &dest) == -1) {
         return ERR_UTIL::ErrorCreate(
@@ -504,21 +547,21 @@ LPErrInApp SolitarioGfx::DrawCardPac(VI vi, SDL_Surface *s) {
 
     int iSegnoIx = nCdIndex / 10;
     int iCartaIx = nCdIndex % 10;
-    SDL_Rect SrcCard;
+    SDL_Rect srcCard;
 
-    SrcCard.x = iSegnoIx * g_CARDWIDTH;
-    SrcCard.y = iCartaIx * g_CARDHEIGHT;
-    SrcCard.w = g_CARDWIDTH;
-    SrcCard.h = g_CARDHEIGHT;
+    srcCard.x = iSegnoIx * g_CARDWIDTH;
+    srcCard.y = iCartaIx * g_CARDHEIGHT;
+    srcCard.w = g_CARDWIDTH;
+    srcCard.h = g_CARDHEIGHT;
 
     SDL_Rect dest;
     dest.x = vi->x;
     dest.y = vi->y;
 
-    TRACE("Draw card ix = %d, segno = %d, valore %d \n", vi->Idx, vi->Suit(),
+    TRACE("Draw card ix = %d, segno = %d, valore %d", vi->Idx, vi->Suit(),
           vi->Rank());
 
-    if (SDL_BlitSurface(_p_srfDeck, &SrcCard, s, &dest) == -1) {
+    if (SDL_BlitSurface(_p_srfDeck, &srcCard, s, &dest) == -1) {
         return ERR_UTIL::ErrorCreate(
             "SDL_BlitSurface in DrawCardPac with Iterator error: %s\n",
             SDL_GetError());
@@ -531,9 +574,18 @@ LPErrInApp SolitarioGfx::DrawCardBack(int x, int y) {
 }
 
 LPErrInApp SolitarioGfx::DrawCardBack(int x, int y, SDL_Surface *s) {
+    if (s == NULL) {
+        return ERR_UTIL::ErrorCreate(
+            "Error in DrawCardBack, surface is NULL\n");
+    }
+
+    if (_DeckType.IsPacType()) {
+        return DrawCardBackPac(x, y, s);
+    }
+
     _rctSrcCard.x = 0;
     _rctSrcCard.y = 0;
-    _rctSrcCard.w = _p_Symbol[0]->clip_rect.w;  // TODO use a funtion
+    _rctSrcCard.w = _p_Symbol[0]->clip_rect.w;
     _rctSrcCard.h = _p_Symbol[0]->clip_rect.h;
 
     SDL_Rect dest;
@@ -543,6 +595,24 @@ LPErrInApp SolitarioGfx::DrawCardBack(int x, int y, SDL_Surface *s) {
         return ERR_UTIL::ErrorCreate(
             "SDL_BlitSurface in DrawCardBack error: %s\n", SDL_GetError());
     }
+    return NULL;
+}
+
+LPErrInApp SolitarioGfx::DrawCardBackPac(int x, int y, SDL_Surface *s) {
+    SDL_Rect dest, srcBack;
+    dest.x = x;
+    dest.y = y;
+
+    srcBack.x = 0;
+    srcBack.y = 0;
+    srcBack.w = g_SYMBOLWIDTH;
+    srcBack.h = g_SYMBOLHEIGHT;
+
+    if (SDL_BlitSurface(_p_symbols, &srcBack, s, &dest) == -1) {
+        return ERR_UTIL::ErrorCreate(
+            "SDL_BlitSurface in DrawCardBackPac error: %s\n", SDL_GetError());
+    }
+
     return NULL;
 }
 
@@ -557,9 +627,13 @@ LPErrInApp SolitarioGfx::DrawSymbol(int x, int y, int nSymbol, SDL_Surface *s) {
     if (nSymbol > 3)
         nSymbol = 3;
 
+    if (_DeckType.IsPacType()) {
+        return DrawSymbolPac(x, y, nSymbol, s);
+    }
+
     _rctSrcCard.x = 0;
     _rctSrcCard.y = 0;
-    _rctSrcCard.w = _p_Symbol[nSymbol]->clip_rect.w;  // TODO use a funtion
+    _rctSrcCard.w = _p_Symbol[nSymbol]->clip_rect.w;
     _rctSrcCard.h = _p_Symbol[nSymbol]->clip_rect.h;
 
     SDL_Rect dest;
@@ -569,6 +643,26 @@ LPErrInApp SolitarioGfx::DrawSymbol(int x, int y, int nSymbol, SDL_Surface *s) {
         return ERR_UTIL::ErrorCreate(
             "SDL_BlitSurface in DrawSymbol error: %s\n", SDL_GetError());
     }
+    return NULL;
+}
+
+LPErrInApp SolitarioGfx::DrawSymbolPac(int x, int y, int nSymbol,
+                                       SDL_Surface *s) {
+    SDL_Rect srcCard;
+    srcCard.x = nSymbol * g_SYMBOLWIDTH;
+    srcCard.y = 0;
+    srcCard.w = g_SYMBOLWIDTH;
+    srcCard.h = g_SYMBOLHEIGHT;
+
+    SDL_Rect dest;
+    dest.x = x;
+    dest.y = y;
+
+    if (SDL_BlitSurface(_p_symbols, &srcCard, s, &dest) == -1) {
+        return ERR_UTIL::ErrorCreate(
+            "SDL_BlitSurface in DrawSymbolPac error: %s\n", SDL_GetError());
+    }
+
     return NULL;
 }
 

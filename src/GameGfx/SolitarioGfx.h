@@ -69,14 +69,17 @@ public:
 
     LPErrInApp DrawCard(int x, int y, int nCdIndex);
     LPErrInApp DrawCard(int x, int y, int nCdIndex, SDL_Surface *s);
+    LPErrInApp DrawCardPac(int x, int y, int nCdIndex, SDL_Surface *s);
     LPErrInApp DrawCard(VI vi, SDL_Surface *s);
     LPErrInApp DrawCardPac(VI vi, SDL_Surface *s);
 
     LPErrInApp DrawCardBack(int x, int y);
     LPErrInApp DrawCardBack(int x, int y, SDL_Surface *s);
+    LPErrInApp DrawCardBackPac(int x, int y, SDL_Surface *s);
 
     LPErrInApp DrawSymbol(int x, int y, int nSymbol);
     LPErrInApp DrawSymbol(int x, int y, int nSymbol, SDL_Surface *s);
+    LPErrInApp DrawSymbolPac(int x, int y, int nSymbol, SDL_Surface *s);
 
     int AnimateCards();
     void SetDeckType(DeckType &Val) { _DeckType.CopyFrom(Val); }
@@ -143,7 +146,6 @@ private:
     SDL_Surface *_p_CardsSurf[NUM_CARDS_ONDECK];  // for single file
     SDL_Surface *_p_Symbol[NUM_SYMBOLS];
 
-    SDL_Rect _rctSrcBack;
     SDL_Rect _rctSrcCard;
 
     std::vector<CardRegionGfx> _cardRegionList;

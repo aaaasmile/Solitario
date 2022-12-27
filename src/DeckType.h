@@ -32,6 +32,7 @@ public:
     std::string GetResFileName() { return _strResFileName; }
     std::string GetSymbolFileName() { return _strSymbolFileName; }
     eDeckType GetType() { return _eType; }
+    ePacType GetPacType() { return _ePacType; }
     bool IsPacType() { return _ePacType == PacTypePac; }
     void CopyFrom(DeckType& Val);
     void SetTypeIndex(int iVal);
