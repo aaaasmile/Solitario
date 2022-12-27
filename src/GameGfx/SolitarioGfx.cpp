@@ -73,24 +73,30 @@ LPErrInApp SolitarioGfx::Initialize(SDL_Surface *s, SDL_Renderer *r) {
     return 0;
 }
 
-void SolitarioGfx::DrawCardStack(rVI vi) {
+LPErrInApp SolitarioGfx::DrawCardStack(rVI vi) {
     CardRegionGfx *cardRegion = &(*vi);
-    DrawCardStack(NULL, cardRegion);
+    return DrawCardStack(_p_screen, cardRegion);
 }
 
-void SolitarioGfx::DrawCardStack(SDL_Surface *s, CardRegionGfx *pcardRegion) {
+LPErrInApp SolitarioGfx::DrawCardStack(SDL_Surface *s,
+                                       CardRegionGfx *pcardRegion) {
+    LPErrInApp err;
     if (!(pcardRegion->Attributes & CRD_VISIBLE))
-        return;
+        return NULL;
 
     DrawSymbol(pcardRegion->XCoord, pcardRegion->YCoord, pcardRegion->Symbol);
     for (VI vi = pcardRegion->InternalStack.begin();
          vi != pcardRegion->InternalStack.end(); ++vi) {
         if (vi->FaceUp()) {
-            DrawCard(vi, s);
+            err = DrawCard(vi, s);
         } else {
-            DrawCardBack(vi->x, vi->y, s);
+            err = DrawCardBack(vi->x, vi->y, s);
+        }
+        if (err != NULL) {
+            return err;
         }
     }
+    return NULL;
 }
 
 void SolitarioGfx::ClearSurface() {
@@ -119,7 +125,6 @@ bool SolitarioGfx::DeleteRegion(CardRegionGfx *pRegion) {
             return true;
         }
     }
-
     return false;
 }
 
@@ -401,11 +406,15 @@ CardRegionGfx *SolitarioGfx::GetBestStack(int x, int y, int w, int h,
     return best;
 }
 
-int SolitarioGfx::DrawCard(int x, int y, int nCdIndex) {
+LPErrInApp SolitarioGfx::DrawCard(int x, int y, int nCdIndex) {
     return DrawCard(x, y, nCdIndex, _p_screen);
 }
 
-int SolitarioGfx::DrawCard(int x, int y, int nCdIndex, SDL_Surface *s) {
+LPErrInApp SolitarioGfx::DrawCard(int x, int y, int nCdIndex, SDL_Surface *s) {
+    if (s == NULL) {
+        return ERR_UTIL::ErrorCreate(
+            "Draw a card on NULL surface. This is wrong");
+    }
     if (nCdIndex < 0)
         nCdIndex = 0;
     if (nCdIndex > NUM_CARDS)
@@ -423,11 +432,14 @@ int SolitarioGfx::DrawCard(int x, int y, int nCdIndex, SDL_Surface *s) {
     SDL_Rect dest;
     dest.x = x;
     dest.y = y;
-
-    return SDL_BlitSurface(_p_CardsSurf[nCdIndex], &_rctSrcCard, s, &dest);
+    if (SDL_BlitSurface(_p_CardsSurf[nCdIndex], &_rctSrcCard, s, &dest) == -1) {
+        return ERR_UTIL::ErrorCreate("SDL_BlitSurface in draw card error: %s\n",
+                                     SDL_GetError());
+    }
+    return NULL;
 }
 
-int SolitarioGfx::DrawCard(VI vi, SDL_Surface *s) {
+LPErrInApp SolitarioGfx::DrawCard(VI vi, SDL_Surface *s) {
     int nCdIndex = vi->Idx;
 
     if (nCdIndex < 0)
@@ -446,15 +458,19 @@ int SolitarioGfx::DrawCard(VI vi, SDL_Surface *s) {
 
     TRACE("Draw card ix = %d, segno = %d, valore %d \n", vi->Idx, vi->Suit(),
           vi->Rank());
-
-    return SDL_BlitSurface(_p_CardsSurf[nCdIndex], &_rctSrcCard, s, &dest);
+    if (SDL_BlitSurface(_p_CardsSurf[nCdIndex], &_rctSrcCard, s, &dest) == -1) {
+        return ERR_UTIL::ErrorCreate(
+            "SDL_BlitSurface in draw card with Iterator error: %s\n",
+            SDL_GetError());
+    }
+    return NULL;
 }
 
-int SolitarioGfx::DrawCardBack(int x, int y) {
+LPErrInApp SolitarioGfx::DrawCardBack(int x, int y) {
     return DrawCardBack(x, y, _p_screen);
 }
 
-int SolitarioGfx::DrawCardBack(int x, int y, SDL_Surface *s) {
+LPErrInApp SolitarioGfx::DrawCardBack(int x, int y, SDL_Surface *s) {
     _rctSrcCard.x = 0;
     _rctSrcCard.y = 0;
     _rctSrcCard.w = _p_Symbol[0]->clip_rect.w;  // TODO use a funtion
@@ -463,17 +479,21 @@ int SolitarioGfx::DrawCardBack(int x, int y, SDL_Surface *s) {
     SDL_Rect dest;
     dest.x = x;
     dest.y = y;
-
-    return SDL_BlitSurface(_p_Symbol[0], &_rctSrcCard, s, &dest);
+    if (SDL_BlitSurface(_p_Symbol[0], &_rctSrcCard, s, &dest) == -1) {
+        return ERR_UTIL::ErrorCreate(
+            "SDL_BlitSurface in DrawCardBack error: %s\n", SDL_GetError());
+    }
+    return NULL;
 }
 
-int SolitarioGfx::DrawSymbol(int x, int y, int nSymbol) {
+LPErrInApp SolitarioGfx::DrawSymbol(int x, int y, int nSymbol) {
     return DrawSymbol(x, y, nSymbol, _p_screen);
 }
 
-int SolitarioGfx::DrawSymbol(int x, int y, int nSymbol, SDL_Surface *s) {
-    if (nSymbol < 1)
-        return -1;  // TODO error handling
+LPErrInApp SolitarioGfx::DrawSymbol(int x, int y, int nSymbol, SDL_Surface *s) {
+    if (nSymbol < 1) {
+        return ERR_UTIL::ErrorCreate("Symbol index %d out of range", nSymbol);
+    }
     if (nSymbol > 3)
         nSymbol = 3;
 
@@ -485,8 +505,11 @@ int SolitarioGfx::DrawSymbol(int x, int y, int nSymbol, SDL_Surface *s) {
     SDL_Rect dest;
     dest.x = x;
     dest.y = y;
-
-    return SDL_BlitSurface(_p_Symbol[nSymbol], &_rctSrcCard, s, &dest);
+    if (SDL_BlitSurface(_p_Symbol[nSymbol], &_rctSrcCard, s, &dest) == -1) {
+        return ERR_UTIL::ErrorCreate(
+            "SDL_BlitSurface in DrawSymbol error: %s\n", SDL_GetError());
+    }
+    return NULL;
 }
 
 int SolitarioGfx::AnimateCards() {
@@ -542,7 +565,7 @@ int SolitarioGfx::AnimateCards() {
     return 0;
 }
 
-void SolitarioGfx::LoadDeckFromSingleFile() {
+LPErrInApp SolitarioGfx::LoadDeckFromSingleFile() {
     std::string strTmp;
     std::string strSuffix;
     CHAR buff[128];
@@ -573,39 +596,55 @@ void SolitarioGfx::LoadDeckFromSingleFile() {
             std::string strComplete = strFileName + strTmp;
             SDL_RWops *srcBack = SDL_RWFromFile(strComplete.c_str(), "rb");
 
-            if (srcBack) {
-                _p_CardsSurf[i + k * 10] = IMG_LoadJPG_RW(srcBack);
-            } else {
-                ASSERT(0);  // TODO use error handling
+            if (srcBack == NULL) {
+                return ERR_UTIL::ErrorCreate(
+                    "SDL_RWFromFile in LoadDeckFromSingleFile error: %s\n",
+                    SDL_GetError());
+            }
+            _p_CardsSurf[i + k * 10] = IMG_LoadJPG_RW(srcBack);
+            if (_p_CardsSurf[i + k * 10] == NULL) {
+                return ERR_UTIL::ErrorCreate(
+                    "IMG_LoadJPG_RW in LoadDeckFromSingleFile error: %s\n",
+                    SDL_GetError());
             }
         }
     }
+    g_CARDWIDTH = _p_CardsSurf[0]->clip_rect.w;
+    g_CARDHEIGHT = _p_CardsSurf[0]->clip_rect.h;
 
-    if (_p_CardsSurf[0]) {
-        g_CARDWIDTH = _p_CardsSurf[0]->clip_rect.w;
-        g_CARDHEIGHT = _p_CardsSurf[0]->clip_rect.h;
-    }
+    return NULL;
 }
 
-void SolitarioGfx::LoadSymbolsFromSingleFile() {
+LPErrInApp SolitarioGfx::LoadSymbolsFromSingleFile() {
     VCT_STRINGS vct_Strings;
     vct_Strings.push_back("dorso.jpg");
     vct_Strings.push_back("fine_1.jpg");
     vct_Strings.push_back("fine_2.jpg");
     vct_Strings.push_back("fine_3.jpg");
-    ASSERT(NUM_SYMBOLS == vct_Strings.size());
+
+    if (NUM_SYMBOLS != vct_Strings.size()) {
+        return ERR_UTIL::ErrorCreate(
+            "Error: NUM_SYMBOLS is not the symbol vector size\n");
+    }
 
     for (int i = 0; i < NUM_SYMBOLS; i++) {
         std::string strDir = lpszDeckDir;
         std::string strFileSymbName;
         strFileSymbName = lpszDeckDir + vct_Strings[i];
         SDL_RWops *srcBack = SDL_RWFromFile(strFileSymbName.c_str(), "rb");
-        if (srcBack) {
-            _p_Symbol[i] = IMG_LoadJPG_RW(srcBack);
-        } else {
-            ASSERT(0);
+        if (!srcBack) {
+            return ERR_UTIL::ErrorCreate(
+                "SDL_RWFromFile in LoadSymbolsFromSingleFile error: %s\n",
+                SDL_GetError());
+        }
+        _p_Symbol[i] = IMG_LoadJPG_RW(srcBack);
+        if (_p_Symbol[i] == NULL) {
+            return ERR_UTIL::ErrorCreate(
+                "IMG_LoadJPG_RW in LoadSymbolsFromSingleFile error: %s\n",
+                SDL_GetError());
         }
     }
+    return NULL;
 }
 
 LPErrInApp SolitarioGfx::LoadCardPac() {

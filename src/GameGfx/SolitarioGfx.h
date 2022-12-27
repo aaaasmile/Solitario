@@ -63,15 +63,18 @@ public:
     CardRegionGfx *GetBestStack(int x, int y, int width, int height,
                                 CardStackGfx *stack);
 
-    int DrawCard(int x, int y, int nCdIndex);
-    int DrawCard(int x, int y, int nCdIndex, SDL_Surface *s);
-    int DrawCard(VI vi, SDL_Surface *s);
+    LPErrInApp DrawCardStack(SDL_Surface *s, CardRegionGfx *pcardRegion);
+    LPErrInApp DrawCardStack(rVI vi);
 
-    int DrawCardBack(int x, int y);
-    int DrawCardBack(int x, int y, SDL_Surface *s);
+    LPErrInApp DrawCard(int x, int y, int nCdIndex);
+    LPErrInApp DrawCard(int x, int y, int nCdIndex, SDL_Surface *s);
+    LPErrInApp DrawCard(VI vi, SDL_Surface *s);
 
-    int DrawSymbol(int x, int y, int nSymbol);
-    int DrawSymbol(int x, int y, int nSymbol, SDL_Surface *s);
+    LPErrInApp DrawCardBack(int x, int y);
+    LPErrInApp DrawCardBack(int x, int y, SDL_Surface *s);
+
+    LPErrInApp DrawSymbol(int x, int y, int nSymbol);
+    LPErrInApp DrawSymbol(int x, int y, int nSymbol, SDL_Surface *s);
 
     int AnimateCards();
     void SetDeckType(DeckType &Val) { _DeckType.CopyFrom(Val); }
@@ -79,11 +82,9 @@ public:
 
     LPErrInApp LoadCardPac();
     LPErrInApp LoadSymbolsForPac();
-    void LoadDeckFromSingleFile();
-    void LoadSymbolsFromSingleFile();
+    LPErrInApp LoadDeckFromSingleFile();
+    LPErrInApp LoadSymbolsFromSingleFile();
 
-    void DrawCardStack(SDL_Surface *s, CardRegionGfx *pcardRegion);
-    void DrawCardStack(rVI vi);
     void SetSymbol(int regionNo, int symbol) {
         _cardRegionList[regionNo].SetSymbol(symbol);
     }

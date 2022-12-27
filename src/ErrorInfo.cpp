@@ -22,3 +22,11 @@ LPErrInApp ERR_UTIL::ErrorCreate(const char* format, const char* errtext,
     res->ErrorText = buff;
     return res;
 }
+
+LPErrInApp ERR_UTIL::ErrorCreate(const char* format, const int val) {
+    LPErrInApp res = new ErrInApp();
+    char buff[1024];
+    snprintf(buff, sizeof(buff), format, val);
+    res->ErrorText = buff;
+    return res;
+}
