@@ -30,7 +30,6 @@ public:
     ~AppGfx();
 
     LPErrInApp Init();
-    LPErrInApp StartMainMenu();  // TODO becoming obsolete
     LPErrInApp MainLoop();
     std::string GetPlayerName() { return _p_GameSettings->strPlayerName; }
     void SetPlayerName(std::string strVal) {
