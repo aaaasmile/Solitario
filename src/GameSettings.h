@@ -3,47 +3,9 @@
 
 #include <string>
 
+#include "DeckType.h"
 #include "ErrorInfo.h"
 #include "Languages.h"
-
-class DeckType {
-public:
-    enum eDeckType {
-        PIACENTINA = 0,
-        BERGAMO,
-        BOLOGNA,
-        GENOVA,
-        MILANO,
-        NAPOLI,
-        PIEMONTE,
-        ROMAGNA,
-        SARDEGNA,
-        SICILIA,
-        TOSCANA,
-        TRENTO,
-        TREVISO,
-        TRIESTE,
-    };
-
-public:
-    DeckType() {}
-
-public:
-    LPErrInApp SetType(eDeckType eType);
-    std::string GetDeckName() { return _strDeckName; }
-    std::string GetResFileName() { return _strResFileName; }
-    std::string GetSymbolFileName() { return _strSymbolFileName; }
-    eDeckType GetType() { return _eType; }
-    void CopyFrom(DeckType& Val);
-    void SetTypeIndex(int iVal);
-    int GetTypeIndex() { return (int)_eType; }
-
-private:
-    eDeckType _eType;
-    std::string _strDeckName;
-    std::string _strSymbolFileName;
-    std::string _strResFileName;
-};
 
 class GameSettings {
 public:

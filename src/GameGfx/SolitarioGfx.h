@@ -70,6 +70,7 @@ public:
     LPErrInApp DrawCard(int x, int y, int nCdIndex);
     LPErrInApp DrawCard(int x, int y, int nCdIndex, SDL_Surface *s);
     LPErrInApp DrawCard(VI vi, SDL_Surface *s);
+    LPErrInApp DrawCardPac(VI vi, SDL_Surface *s);
 
     LPErrInApp DrawCardBack(int x, int y);
     LPErrInApp DrawCardBack(int x, int y, SDL_Surface *s);

@@ -461,6 +461,13 @@ LPErrInApp SolitarioGfx::DrawCard(int x, int y, int nCdIndex, SDL_Surface *s) {
 }
 
 LPErrInApp SolitarioGfx::DrawCard(VI vi, SDL_Surface *s) {
+    if (s == NULL) {
+        return ERR_UTIL::ErrorCreate(
+            "Error in draw card with Iterator, surface is NULL\n");
+    }
+    if (_DeckType.IsPacType()) {
+        return DrawCardPac(vi, s);
+    }
     int nCdIndex = vi->Idx;
 
     if (nCdIndex < 0)
@@ -470,7 +477,7 @@ LPErrInApp SolitarioGfx::DrawCard(VI vi, SDL_Surface *s) {
 
     _rctSrcCard.x = 0;
     _rctSrcCard.y = 0;
-    _rctSrcCard.w = _p_CardsSurf[nCdIndex]->clip_rect.w;  // TODO use a funtion
+    _rctSrcCard.w = _p_CardsSurf[nCdIndex]->clip_rect.w;
     _rctSrcCard.h = _p_CardsSurf[nCdIndex]->clip_rect.h;
 
     SDL_Rect dest;
@@ -482,6 +489,38 @@ LPErrInApp SolitarioGfx::DrawCard(VI vi, SDL_Surface *s) {
     if (SDL_BlitSurface(_p_CardsSurf[nCdIndex], &_rctSrcCard, s, &dest) == -1) {
         return ERR_UTIL::ErrorCreate(
             "SDL_BlitSurface in draw card with Iterator error: %s\n",
+            SDL_GetError());
+    }
+    return NULL;
+}
+
+LPErrInApp SolitarioGfx::DrawCardPac(VI vi, SDL_Surface *s) {
+    int nCdIndex = vi->Idx;
+
+    if (nCdIndex < 0)
+        nCdIndex = 0;
+    if (nCdIndex > NUM_CARDS)
+        nCdIndex = NUM_CARDS - 1;
+
+    int iSegnoIx = nCdIndex / 10;
+    int iCartaIx = nCdIndex % 10;
+    SDL_Rect SrcCard;
+
+    SrcCard.x = iSegnoIx * g_CARDWIDTH;
+    SrcCard.y = iCartaIx * g_CARDHEIGHT;
+    SrcCard.w = g_CARDWIDTH;
+    SrcCard.h = g_CARDHEIGHT;
+
+    SDL_Rect dest;
+    dest.x = vi->x;
+    dest.y = vi->y;
+
+    TRACE("Draw card ix = %d, segno = %d, valore %d \n", vi->Idx, vi->Suit(),
+          vi->Rank());
+
+    if (SDL_BlitSurface(_p_srfDeck, &SrcCard, s, &dest) == -1) {
+        return ERR_UTIL::ErrorCreate(
+            "SDL_BlitSurface in DrawCardPac with Iterator error: %s\n",
             SDL_GetError());
     }
     return NULL;

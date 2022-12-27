@@ -32,6 +32,7 @@ solitario_SOURCES = \
 	src/MusicManager.cpp\
 	src/AppGfx.cpp\
 	src/Fonts.cpp\
+	src/DeckType.cpp\
 	src/GameSettings.cpp\
 	src/GfxUtil.cpp\
 	src/Languages.cpp\
