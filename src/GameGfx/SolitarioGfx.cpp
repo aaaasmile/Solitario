@@ -394,6 +394,17 @@ CardRegionGfx *SolitarioGfx::FindDropRegion(int Id, CardStackGfx stack) {
 }
 
 void SolitarioGfx::DrawStaticScene() {
+    if (_p_SceneBackground != NULL) {
+        SDL_FillRect(_p_Screen, &_p_Screen->clip_rect,
+                     SDL_MapRGBA(_p_Screen->format, 0, 0, 0, 0));
+        SDL_Rect rctTarget;
+        rctTarget.x = (_p_Screen->w - _p_SceneBackground->w) / 2;
+        rctTarget.y = (_p_Screen->h - _p_SceneBackground->h) / 2;
+        rctTarget.w = _p_SceneBackground->w;
+        rctTarget.h = _p_SceneBackground->h;
+        SDL_BlitSurface(_p_SceneBackground, NULL, _p_Screen, &rctTarget);
+    }
+
     for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
         SDL_PumpEvents();
         DrawCardStack(vi);
@@ -404,6 +415,8 @@ void SolitarioGfx::DrawStaticScene() {
 LPErrInApp SolitarioGfx::DrawBackground(BOOL bIsInit) {
     LPErrInApp err;
     if (_p_SceneBackground != NULL) {
+        SDL_FillRect(_p_Screen, &_p_Screen->clip_rect,
+                     SDL_MapRGBA(_p_Screen->format, 0, 0, 0, 0));
         SDL_Rect rctTarget;
         rctTarget.x = (_p_Screen->w - _p_SceneBackground->w) / 2;
         rctTarget.y = (_p_Screen->h - _p_SceneBackground->h) / 2;

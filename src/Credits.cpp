@@ -22,7 +22,7 @@ char const* credit_text[] = {
     "IL SAN",
     "",
     "",
-    "-GAME ENGINE",
+    "-ORIGINAL GAME ENGINE",
     "RICO ROBERTO ZUNIGA",
     "",
     "",
@@ -30,6 +30,7 @@ char const* credit_text[] = {
     "",
     "-MUSIC",
     "AUTHOR OF WATERMUSIC",
+    "WOLMER AND ITS ACCORDION",
     "",
     "", /* The following blanks cause the screen to scroll to complete blank: */
     "",
