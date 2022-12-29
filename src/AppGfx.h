@@ -15,7 +15,7 @@
 #include "GameGfx/SolitarioGfx.h"
 #include "Languages.h"
 #include "Traits.h"
-#include "win_type_global.h"
+#include "WinTypeGlobal.h"
 
 class MusicManager;
 class MenuMgr;
@@ -33,7 +33,7 @@ public:
     void SetPlayerName(std::string strVal) {
         _p_GameSettings->strPlayerName = strVal;
     }
-    Languages* GetLanguageMan() { return &_LanguageMgr; }
+    Languages* GetLanguageMan() { return &_Languages; }
     void ParseCmdLine(int argc, char* argv[]);
     TTF_Font* GetFontVera() { return _p_fontVera; }
     TTF_Font* GetFontAriblk() { return _p_fontAriblk; }
@@ -45,7 +45,6 @@ private:
     LPErrInApp startGameLoop();
     LPErrInApp createWindow();
     void terminate();
-    void hightScoreMenu();
     LPErrInApp newGame();
     LPErrInApp handleGameLoopKeyDownEvent(SDL_Event& event);
     LPErrInApp handleGameLoopMouseDownEvent(SDL_Event& event);
@@ -61,12 +60,12 @@ private:
     LPErrInApp showOptionGeneral();
 
     MenuDelegator prepMenuDelegator();
-    void drawSplash();
-    LPErrInApp loadSplash();
+    void drawSceneBackground();
+    LPErrInApp loadSceneBackground();
 
 private:
     SDL_Surface* _p_Screen;
-    SDL_Surface* _p_Splash;
+    SDL_Surface* _p_SceneBackground;
     SDL_Surface* _p_Title;
     SDL_Texture* _p_ScreenTexture;
     SDL_Window* _p_Window;
@@ -76,7 +75,7 @@ private:
     GameSettings* _p_GameSettings;
     SolitarioGfx* _p_SolitarioGfx;
     MusicManager* _p_MusicManager;
-    Languages _LanguageMgr;
+    Languages _Languages;
 
     int _iScreenW;
     int _iScreenH;

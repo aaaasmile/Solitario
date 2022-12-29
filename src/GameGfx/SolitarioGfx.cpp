@@ -6,7 +6,7 @@
 
 #include "Fading.h"
 #include "GfxUtil.h"
-#include "win_type_global.h"
+#include "WinTypeGlobal.h"
 
 // card graphics
 unsigned int g_CARDWIDTH = 0;

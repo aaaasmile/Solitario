@@ -9,7 +9,7 @@
 #include "MenuMgr.h"
 #include "MusicManager.h"
 #include "config.h"
-#include "win_type_global.h"
+#include "WinTypeGlobal.h"
 
 #ifdef _WINDOWS
 #include "regkey.h"
@@ -79,7 +79,7 @@ LPErrInApp AppGfx::Init() {
     _p_MusicManager = new MusicManager;
     _p_MusicManager->Init();
 
-    _LanguageMgr.SetLang(_p_GameSettings->eLanguageCurrent);
+    _Languages.SetLang(_p_GameSettings->eLanguageCurrent);
 
     if (TTF_Init() == -1) {
         return ERR_UTIL::ErrorCreate("Font init error");
@@ -98,7 +98,7 @@ LPErrInApp AppGfx::Init() {
     }
 
     SDL_SetWindowTitle(_p_Window,
-                       _LanguageMgr.GetCStringId(Languages::ID_SOLITARIO));
+                       _Languages.GetCStringId(Languages::ID_SOLITARIO));
 
     SDL_Surface *psIcon = SDL_LoadBMP(lpszIconProgFile);
     if (psIcon == 0) {
@@ -119,12 +119,12 @@ LPErrInApp AppGfx::Init() {
     if (_p_Title == 0) {
         return ERR_UTIL::ErrorCreate("Title image not found");
     }
-    err = loadSplash();
+    err = loadSceneBackground();
     if (err != NULL) {
         return err;
     }
 
-    drawSplash();
+    drawSceneBackground();
 
     err = _p_MusicManager->LoadMusicRes();
     if (err != NULL) {
@@ -133,7 +133,7 @@ LPErrInApp AppGfx::Init() {
     return NULL;
 }
 
-LPErrInApp AppGfx::loadSplash() {
+LPErrInApp AppGfx::loadSceneBackground() {
     std::string strFileName = lpszImageSplash;
 
     SDL_RWops *srcBack = SDL_RWFromFile(strFileName.c_str(), "rb");
@@ -141,8 +141,8 @@ LPErrInApp AppGfx::loadSplash() {
         return ERR_UTIL::ErrorCreate("Unable to load %s background image\n",
                                      strFileName.c_str());
     }
-    _p_Splash = IMG_LoadJPG_RW(srcBack);
-    if (_p_Splash == 0) {
+    _p_SceneBackground = IMG_LoadJPG_RW(srcBack);
+    if (_p_SceneBackground == 0) {
         return ERR_UTIL::ErrorCreate("Unable to create splash");
     }
     return NULL;
@@ -453,9 +453,9 @@ void AppGfx::terminate() {
         SDL_FreeSurface(_p_Screen);
         _p_Screen = NULL;
     }
-    if (_p_Splash) {
-        SDL_FreeSurface(_p_Splash);
-        _p_Splash = NULL;
+    if (_p_SceneBackground) {
+        SDL_FreeSurface(_p_SceneBackground);
+        _p_SceneBackground = NULL;
     }
     if (_p_Title) {
         SDL_FreeSurface(_p_Title);
@@ -637,19 +637,21 @@ MenuDelegator AppGfx::prepMenuDelegator() {
 }
 
 void AppGfx::LeaveMenu() {
-    drawSplash();
+    drawSceneBackground();
     _Histmenu.pop();
 }
 
-void AppGfx::drawSplash() {
-    TRACE("Draw splash %dx%d", _p_Splash->w, _p_Splash->h);
+void AppGfx::drawSceneBackground() {
+    TRACE("Draw splash %dx%d", _p_SceneBackground->w, _p_SceneBackground->h);
+    SDL_FillRect(_p_Screen, &_p_Screen->clip_rect,
+                 SDL_MapRGBA(_p_Screen->format, 0, 0, 0, 0));
     SDL_Rect rctTarget;
-    rctTarget.x = (_p_Screen->w - _p_Splash->w) / 2;
-    rctTarget.y = (_p_Screen->h - _p_Splash->h) / 2;
-    rctTarget.w = _p_Splash->w;
-    rctTarget.h = _p_Splash->h;
+    rctTarget.x = (_p_Screen->w - _p_SceneBackground->w) / 2;
+    rctTarget.y = (_p_Screen->h - _p_SceneBackground->h) / 2;
+    rctTarget.w = _p_SceneBackground->w;
+    rctTarget.h = _p_SceneBackground->h;
 
-    SDL_BlitSurface(_p_Splash, NULL, _p_Screen, &rctTarget);
+    SDL_BlitSurface(_p_SceneBackground, NULL, _p_Screen, &rctTarget);
     updateScreenTexture();
 }
 
@@ -665,7 +667,7 @@ LPErrInApp AppGfx::MainLoop() {
     _Histmenu.push(MenuMgr::QUITAPP);
     _Histmenu.push(MenuMgr::MENU_ROOT);
 
-    pMenuMgr->SetBackground(_p_Splash);
+    pMenuMgr->SetBackground(_p_SceneBackground);
 
     while (!bquit && !_Histmenu.empty()) {
         switch (_Histmenu.top()) {

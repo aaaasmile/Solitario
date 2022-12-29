@@ -9,7 +9,7 @@
 #include <SDL_ttf.h>
 
 #include "Traits.h"
-#include "win_type_global.h"
+#include "WinTypeGlobal.h"
 
 using namespace traits;
 

@@ -12,7 +12,7 @@
 #include "ErrorInfo.h"
 #include "GfxUtil.h"
 #include "config.h"
-#include "win_type_global.h"
+#include "WinTypeGlobal.h"
 
 static const char* lpszMsgUrl = "Go to invido.it";
 static const char* lpszVersion = VERSION "20221223";

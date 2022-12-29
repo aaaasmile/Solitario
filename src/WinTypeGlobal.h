@@ -1,5 +1,5 @@
-#ifndef _AIGLOBAL_TYPE_H
-#define _AIGLOBAL_TYPE_H
+#ifndef _WINTYPEGLOBAL__H_
+#define _WINTYPEGLOBAL__H_
 
 #if _MSC_VER > 1000
 #include <StdAfx.h>

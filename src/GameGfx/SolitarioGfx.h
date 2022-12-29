@@ -6,7 +6,7 @@
 #include "CardRegionGfx.h"
 #include "ErrorInfo.h"
 #include "GameSettings.h"
-#include "win_type_global.h"
+#include "WinTypeGlobal.h"
 
 typedef std::vector<CardRegionGfx>::iterator rVI;
 

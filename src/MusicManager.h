@@ -3,7 +3,7 @@
 
 #include "ErrorInfo.h"
 #include "SDL_mixer.h"
-#include "win_type_global.h"
+#include "WinTypeGlobal.h"
 
 class MusicManager {
 public:

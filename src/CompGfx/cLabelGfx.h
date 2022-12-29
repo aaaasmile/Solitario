@@ -11,7 +11,7 @@
 
 #include "../Traits.h"
 #include "ErrorInfo.h"
-#include "win_type_global.h"
+#include "WinTypeGlobal.h"
 
 using namespace traits;
 
