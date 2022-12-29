@@ -97,7 +97,7 @@ DIST_COMMON = $(srcdir)/Makefile.am $(top_srcdir)/configure \
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
-CONFIG_HEADER = $(top_builddir)/src/config.h
+CONFIG_HEADER = $(top_builddir)/src/Config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
@@ -195,7 +195,7 @@ am__define_uniq_tagged_files = \
   unique=`for i in $$list; do \
     if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
   done | $(am__uniquify_input)`
-am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/src/config.h.in \
+am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/src/Config.h.in \
 	AUTHORS COPYING ChangeLog INSTALL NEWS README ar-lib compile \
 	config.guess config.sub depcomp install-sh ltmain.sh missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -413,20 +413,20 @@ $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	$(am__cd) $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
 $(am__aclocal_m4_deps):
 
-src/config.h: src/stamp-h1
+src/Config.h: src/stamp-h1
 	@test -f $@ || rm -f src/stamp-h1
 	@test -f $@ || $(MAKE) $(AM_MAKEFLAGS) src/stamp-h1
 
-src/stamp-h1: $(top_srcdir)/src/config.h.in $(top_builddir)/config.status
+src/stamp-h1: $(top_srcdir)/src/Config.h.in $(top_builddir)/config.status
 	@rm -f src/stamp-h1
-	cd $(top_builddir) && $(SHELL) ./config.status src/config.h
-$(top_srcdir)/src/config.h.in:  $(am__configure_deps) 
+	cd $(top_builddir) && $(SHELL) ./config.status src/Config.h
+$(top_srcdir)/src/Config.h.in:  $(am__configure_deps) 
 	($(am__cd) $(top_srcdir) && $(AUTOHEADER))
 	rm -f src/stamp-h1
 	touch $@
 
 distclean-hdr:
-	-rm -f src/config.h src/stamp-h1
+	-rm -f src/Config.h src/stamp-h1
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \

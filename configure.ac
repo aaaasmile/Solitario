@@ -18,8 +18,8 @@ AC_PROG_CXX
 # static library stuff
 AC_PROG_RANLIB
 AM_PROG_AR
-# generate config.h
-AC_CONFIG_HEADERS([src/config.h])
+# generate Config.h
+AC_CONFIG_HEADERS([src/Config.h])
 #include make file list
 AC_CONFIG_FILES([
   Makefile

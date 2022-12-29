@@ -5180,8 +5180,8 @@ unknown)
   ;;
 esac
 
-# generate config.h
-ac_config_headers="$ac_config_headers src/config.h"
+# generate Config.h
+ac_config_headers="$ac_config_headers src/Config.h"
 
 #include make file list
 ac_config_files="$ac_config_files Makefile libini/Makefile"
@@ -5913,7 +5913,7 @@ for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
-    "src/config.h") CONFIG_HEADERS="$CONFIG_HEADERS src/config.h" ;;
+    "src/Config.h") CONFIG_HEADERS="$CONFIG_HEADERS src/Config.h" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "libini/Makefile") CONFIG_FILES="$CONFIG_FILES libini/Makefile" ;;
 

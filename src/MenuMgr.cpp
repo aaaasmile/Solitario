@@ -9,9 +9,9 @@
 
 #include "CompGfx/cLabelGfx.h"
 #include "CompGfx/cLabelLinkGfx.h"
+#include "Config.h"
 #include "ErrorInfo.h"
 #include "GfxUtil.h"
-#include "config.h"
 #include "WinTypeGlobal.h"
 
 static const char* lpszMsgUrl = "Go to invido.it";

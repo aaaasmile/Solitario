@@ -8,7 +8,7 @@
 #include "GfxUtil.h"
 #include "MenuMgr.h"
 #include "MusicManager.h"
-#include "config.h"
+#include "Config.h"
 #include "WinTypeGlobal.h"
 
 #ifdef _WINDOWS
