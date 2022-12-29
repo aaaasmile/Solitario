@@ -12,9 +12,7 @@
 #include <string>
 
 #include "ErrorInfo.h"
-#include "Fonts.h"
 #include "GameGfx/SolitarioGfx.h"
-#include "HighScoreMgr.h"
 #include "Languages.h"
 #include "Traits.h"
 #include "win_type_global.h"
@@ -78,7 +76,6 @@ private:
     GameSettings* _p_GameSettings;
     SolitarioGfx* _p_SolitarioGfx;
     MusicManager* _p_MusicManager;
-    HighscoreMgr _HScoreMgr;
     Languages _LanguageMgr;
 
     int _iScreenW;

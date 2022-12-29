@@ -28,11 +28,9 @@ solitario_SOURCES = \
 	src/GameGfx/CardRegionGfx.cpp\
 	src/GameGfx/CardStackGfx.cpp\
 	src/GameGfx/SolitarioGfx.cpp\
-	src/HighScoreMgr.cpp\
 	src/MusicManager.cpp\
 	src/AppGfx.cpp\
 	src/CardGfx.cpp\
-	src/Fonts.cpp\
 	src/DeckType.cpp\
 	src/GameSettings.cpp\
 	src/GfxUtil.cpp\

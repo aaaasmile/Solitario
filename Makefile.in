@@ -105,9 +105,8 @@ PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
 am_solitario_OBJECTS = src/GameGfx/CardRegionGfx.$(OBJEXT) \
 	src/GameGfx/CardStackGfx.$(OBJEXT) \
-	src/GameGfx/SolitarioGfx.$(OBJEXT) src/HighScoreMgr.$(OBJEXT) \
-	src/MusicManager.$(OBJEXT) src/AppGfx.$(OBJEXT) \
-	src/CardGfx.$(OBJEXT) src/Fonts.$(OBJEXT) \
+	src/GameGfx/SolitarioGfx.$(OBJEXT) src/MusicManager.$(OBJEXT) \
+	src/AppGfx.$(OBJEXT) src/CardGfx.$(OBJEXT) \
 	src/DeckType.$(OBJEXT) src/GameSettings.$(OBJEXT) \
 	src/GfxUtil.$(OBJEXT) src/Languages.$(OBJEXT) \
 	src/main.$(OBJEXT) src/Fading.$(OBJEXT) src/Credits.$(OBJEXT) \
@@ -134,8 +133,7 @@ am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = src/$(DEPDIR)/AppGfx.Po src/$(DEPDIR)/CardGfx.Po \
 	src/$(DEPDIR)/Credits.Po src/$(DEPDIR)/DeckType.Po \
 	src/$(DEPDIR)/ErrorInfo.Po src/$(DEPDIR)/Fading.Po \
-	src/$(DEPDIR)/Fonts.Po src/$(DEPDIR)/GameSettings.Po \
-	src/$(DEPDIR)/GfxUtil.Po src/$(DEPDIR)/HighScoreMgr.Po \
+	src/$(DEPDIR)/GameSettings.Po src/$(DEPDIR)/GfxUtil.Po \
 	src/$(DEPDIR)/Languages.Po src/$(DEPDIR)/MenuMgr.Po \
 	src/$(DEPDIR)/MusicManager.Po src/$(DEPDIR)/main.Po \
 	src/CompGfx/$(DEPDIR)/cLabelGfx.Po \
@@ -362,11 +360,9 @@ solitario_SOURCES = \
 	src/GameGfx/CardRegionGfx.cpp\
 	src/GameGfx/CardStackGfx.cpp\
 	src/GameGfx/SolitarioGfx.cpp\
-	src/HighScoreMgr.cpp\
 	src/MusicManager.cpp\
 	src/AppGfx.cpp\
 	src/CardGfx.cpp\
-	src/Fonts.cpp\
 	src/DeckType.cpp\
 	src/GameSettings.cpp\
 	src/GfxUtil.cpp\
@@ -491,15 +487,12 @@ src/$(am__dirstamp):
 src/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) src/$(DEPDIR)
 	@: > src/$(DEPDIR)/$(am__dirstamp)
-src/HighScoreMgr.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
 src/MusicManager.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/AppGfx.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/CardGfx.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/Fonts.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/DeckType.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/GameSettings.$(OBJEXT): src/$(am__dirstamp) \
@@ -547,10 +540,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/DeckType.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/ErrorInfo.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/Fading.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/Fonts.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/GameSettings.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/GfxUtil.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/HighScoreMgr.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/Languages.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/MenuMgr.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/MusicManager.Po@am__quote@ # am--include-marker
@@ -941,10 +932,8 @@ distclean: distclean-recursive
 	-rm -f src/$(DEPDIR)/DeckType.Po
 	-rm -f src/$(DEPDIR)/ErrorInfo.Po
 	-rm -f src/$(DEPDIR)/Fading.Po
-	-rm -f src/$(DEPDIR)/Fonts.Po
 	-rm -f src/$(DEPDIR)/GameSettings.Po
 	-rm -f src/$(DEPDIR)/GfxUtil.Po
-	-rm -f src/$(DEPDIR)/HighScoreMgr.Po
 	-rm -f src/$(DEPDIR)/Languages.Po
 	-rm -f src/$(DEPDIR)/MenuMgr.Po
 	-rm -f src/$(DEPDIR)/MusicManager.Po
@@ -1007,10 +996,8 @@ maintainer-clean: maintainer-clean-recursive
 	-rm -f src/$(DEPDIR)/DeckType.Po
 	-rm -f src/$(DEPDIR)/ErrorInfo.Po
 	-rm -f src/$(DEPDIR)/Fading.Po
-	-rm -f src/$(DEPDIR)/Fonts.Po
 	-rm -f src/$(DEPDIR)/GameSettings.Po
 	-rm -f src/$(DEPDIR)/GfxUtil.Po
-	-rm -f src/$(DEPDIR)/HighScoreMgr.Po
 	-rm -f src/$(DEPDIR)/Languages.Po
 	-rm -f src/$(DEPDIR)/MenuMgr.Po
 	-rm -f src/$(DEPDIR)/MusicManager.Po
