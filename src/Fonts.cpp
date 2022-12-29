@@ -25,12 +25,14 @@ LPErrInApp CustomFont::LoadFont(const char* filename) {
 void CustomFont::DrawString(SDL_Surface* surface, std::string message,
                             unsigned char textcase, char alignment, int x,
                             int y, unsigned int color) {
+    SDL_Rect rctTarget;
+    SDL_Rect rctSource;
     unsigned char c;
     int ax;
-    _rSource.w = SDLFONTSIZE;
-    _rSource.h = SDLFONTSIZE;
-    _rTarget.w = SDLFONTSIZE;
-    _rTarget.h = SDLFONTSIZE;
+    rctSource.w = SDLFONTSIZE;
+    rctSource.h = SDLFONTSIZE;
+    rctTarget.w = SDLFONTSIZE;
+    rctTarget.h = SDLFONTSIZE;
 
     switch (alignment) {
         case TEXTALIGNLEFT:
@@ -48,8 +50,8 @@ void CustomFont::DrawString(SDL_Surface* surface, std::string message,
     };
 
     for (unsigned int k = 0; k < message.size(); k++) {
-        _rTarget.y = y;
-        _rTarget.x = x + k * SDLFONTSIZE + ax;
+        rctTarget.y = y;
+        rctTarget.x = x + k * SDLFONTSIZE + ax;
         c = message[k];
         switch (textcase) {
             case TEXTUPPER:
@@ -66,9 +68,9 @@ void CustomFont::DrawString(SDL_Surface* surface, std::string message,
         if (c < 32)
             c = 0;
         if (c != 0) {
-            _rSource.x = SDLFONTSIZE * (c % 16);
-            _rSource.y = SDLFONTSIZE * (c / 16);
-            SDL_BlitSurface(_p_Bitmap, &_rSource, surface, &_rTarget);
+            rctSource.x = SDLFONTSIZE * (c % 16);
+            rctSource.y = SDLFONTSIZE * (c / 16);
+            SDL_BlitSurface(_p_Bitmap, &rctSource, surface, &rctTarget);
         }
     }
 }

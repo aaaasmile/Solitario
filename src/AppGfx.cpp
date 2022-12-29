@@ -39,7 +39,6 @@ static const char *lpszKeyMusic = "Musicenabled";
 #endif
 
 static const char *lpszIconProgFile = DATA_PREFIX "images/icona_asso.bmp";
-static const char *lpszFontFile = DATA_PREFIX "images/font.bmp";
 static const char *lpszTitleFile = DATA_PREFIX "images/title.png";
 static const char *lpszIniFontAriblk = DATA_PREFIX "font/ariblk.ttf";
 static const char *lpszIniFontVera = DATA_PREFIX "font/vera.ttf";
@@ -50,8 +49,6 @@ AppGfx::AppGfx() {
     _iScreenW = 1024;
     _iScreenH = 768;
     _iBpp = 0;
-    _p_imgBackground = NULL;
-    _p_CustomFont = NULL;
     _bStartdrag = FALSE;
     _p_MusicManager = 0;
     _p_Title = 0;
@@ -83,12 +80,6 @@ LPErrInApp AppGfx::Init() {
     _p_MusicManager->Init();
 
     _LanguageMgr.SetLang(_p_GameSettings->eLanguageCurrent);
-
-    _p_CustomFont = new CustomFont;
-    err = _p_CustomFont->LoadFont(lpszFontFile);
-    if (err != NULL) {
-        return err;
-    }
 
     if (TTF_Init() == -1) {
         return ERR_UTIL::ErrorCreate("Font init error");
@@ -458,11 +449,6 @@ void AppGfx::terminate() {
     writeProfile();
     SDL_ShowCursor(SDL_ENABLE);
 
-    if (_p_imgBackground != NULL) {
-        SDL_FreeSurface(_p_imgBackground);
-        _p_imgBackground = NULL;
-    }
-    delete _p_CustomFont;
     if (_p_Screen != NULL) {
         SDL_FreeSurface(_p_Screen);
         _p_Screen = NULL;
@@ -656,7 +642,11 @@ void AppGfx::LeaveMenu() {
 }
 
 void AppGfx::drawSplash() {
-    SDL_BlitSurface(_p_Splash, NULL, _p_Screen, NULL);
+    TRACE("Draw splash");
+    SDL_Rect rctTarget;
+    SDL_Rect rctSource;
+    rctTarget.x = 550;
+    SDL_BlitSurface(_p_Splash, &rctSource, _p_Screen, &rctTarget);
     updateScreenTexture();
 }
 
@@ -757,42 +747,6 @@ int AppGfx::waitKeyLoop() {
             }
         }
     }
-}
-
-void AppGfx::hightScoreMenu() {
-    int tx, ty;
-    std::string temp;
-
-    SDL_FillRect(_p_Screen, &_p_Screen->clip_rect,
-                 SDL_MapRGBA(_p_Screen->format, 0, 0, 0, 0));
-    tx = (_p_Screen->w - 400) / 2;
-    ty = (_p_Screen->h - 260) / 2;
-
-    _p_CustomFont->DrawString(
-        _p_Screen, _LanguageMgr.GetStringId(Languages::ID_HISCORE), TEXTMIXED,
-        TEXTALIGNCENTER, 0, ty - 10 - SDLFONTSIZE * 2, 0);
-    _p_CustomFont->DrawString(_p_Screen, "-------------", TEXTMIXED,
-                              TEXTALIGNCENTER, 0, ty - 10 - SDLFONTSIZE, 0);
-
-    GFX_UTIL::boxRGBA(_p_Screen, tx, ty, tx + 400, ty + 260, 0, 0, 48, 255);
-    for (int k = 0; k < 10; k++) {
-        temp = STR_UTIL::intToString(_HScoreMgr.HS_Scores[k]);
-        _p_CustomFont->DrawString(_p_Screen, temp, TEXTMIXED, TEXTALIGNLEFT,
-                                  tx + 5, ty + 10 + (SDLFONTSIZE + 8) * k, 0);
-        if (_HScoreMgr.HS_Names[k].size() == 0) {
-            temp = _LanguageMgr.GetStringId(Languages::ID_ANONIM);
-        } else {
-            temp = _HScoreMgr.HS_Names[k];
-        }
-        _p_CustomFont->DrawString(_p_Screen, temp, TEXTMIXED, TEXTALIGNLEFT,
-                                  tx + 400 - 15 * SDLFONTSIZE,
-                                  ty + 10 + (SDLFONTSIZE + 8) * k, 0);
-    }
-    _p_CustomFont->DrawString(
-        _p_Screen, _LanguageMgr.GetStringId(Languages::ID_PUSHBUTTON),
-        TEXTMIXED, TEXTALIGNCENTER, 0, ty + 260 + SDLFONTSIZE, 0);
-    updateScreenTexture();
-    waitKeyLoop();
 }
 
 void AppGfx::updateScreenTexture() {

@@ -33,8 +33,6 @@ public:
 private:
     SDL_Surface *_p_Bitmap;
     std::string _Filename;
-    SDL_Rect _rSource;
-    SDL_Rect _rTarget;
 };
 
 #endif

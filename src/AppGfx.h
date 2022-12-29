@@ -69,13 +69,10 @@ private:
 private:
     SDL_Surface* _p_Screen;
     SDL_Surface* _p_Splash;
-    SDL_Surface* _p_imgBackground;
     SDL_Surface* _p_Title;
     SDL_Texture* _p_ScreenTexture;
     SDL_Window* _p_Window;
     SDL_Renderer* _p_sdlRenderer;
-
-    CustomFont* _p_CustomFont;
     TTF_Font* _p_fontVera;
     TTF_Font* _p_fontAriblk;
     GameSettings* _p_GameSettings;
