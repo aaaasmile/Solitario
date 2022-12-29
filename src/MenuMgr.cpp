@@ -57,7 +57,7 @@ ClickCb MenuMgr::prepClickCb() {
 }
 
 LPErrInApp MenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
-                                MenuDelegator& pApp) {
+                               MenuDelegator& pApp) {
     _menuDlgt = pApp;
     _p_Screen = pScreen;
     _p_sdlRenderer = pRenderer;
@@ -120,7 +120,7 @@ LPErrInApp MenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
 void MenuMgr::LabelClicked(int iButID) {}
 
 void MenuMgr::drawStaticSpriteEx(int src_x, int src_y, int src_dx, int src_dy,
-                                  int dst_x, int dst_y, SDL_Surface* sprite) {
+                                 int dst_x, int dst_y, SDL_Surface* sprite) {
     SDL_Rect src_rec = {src_x, src_y, src_dx, src_dy};
     SDL_Rect dst_rec = {dst_x, dst_y, 0, 0};
     SDL_BlitSurface(sprite, &src_rec, _p_Screen, &dst_rec);
@@ -166,7 +166,13 @@ void MenuMgr::fillRect(int x0, int y0, int width, int height, Uint32 color) {
 }
 
 void MenuMgr::drawBackground() {
-    SDL_BlitSurface(_p_Scene_background, NULL, _p_Screen, NULL);
+    SDL_Rect rctTarget;
+    rctTarget.x = (_p_Screen->w - _p_Scene_background->w) / 2;
+    rctTarget.y = (_p_Screen->h - _p_Scene_background->h) / 2;
+    rctTarget.w = _p_Scene_background->w;
+    rctTarget.h = _p_Scene_background->h;
+
+    SDL_BlitSurface(_p_Scene_background, NULL, _p_Screen, &rctTarget);
 
     _iSx = _p_Screen->clip_rect.w;
     _iDebx = _iSx / 6;
@@ -192,7 +198,7 @@ void MenuMgr::drawBackground() {
 }
 
 LPErrInApp MenuMgr::drawStringSH(const char* tmp, int x, int y,
-                                  SDL_Color& color, TTF_Font* customfont) {
+                                 SDL_Color& color, TTF_Font* customfont) {
     int tx, ty;
     TTF_SizeText(customfont, tmp, &tx, &ty);
     SDL_Surface* s = TTF_RenderText_Blended(customfont, tmp, staColor_ombre);

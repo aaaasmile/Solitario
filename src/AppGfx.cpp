@@ -249,7 +249,7 @@ LPErrInApp AppGfx::startGameLoop() {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT:
-                    fade(_p_Screen, _p_Screen, 1, 1, _p_sdlRenderer);
+                    fade(_p_Screen, _p_Screen, 1, 1, _p_sdlRenderer, NULL);
                     return NULL;
 
                 case SDL_KEYDOWN:
@@ -642,11 +642,14 @@ void AppGfx::LeaveMenu() {
 }
 
 void AppGfx::drawSplash() {
-    TRACE("Draw splash");
+    TRACE("Draw splash %dx%d", _p_Splash->w, _p_Splash->h);
     SDL_Rect rctTarget;
-    SDL_Rect rctSource;
-    rctTarget.x = 550;
-    SDL_BlitSurface(_p_Splash, &rctSource, _p_Screen, &rctTarget);
+    rctTarget.x = (_p_Screen->w - _p_Splash->w) / 2;
+    rctTarget.y = (_p_Screen->h - _p_Splash->h) / 2;
+    rctTarget.w = _p_Splash->w;
+    rctTarget.h = _p_Splash->h;
+
+    SDL_BlitSurface(_p_Splash, NULL, _p_Screen, &rctTarget);
     updateScreenTexture();
 }
 

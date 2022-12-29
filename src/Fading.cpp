@@ -4,7 +4,8 @@
  If the image surface is the screen surface (pointer are equal), a copy is made
  first. We must do that because we are overwriting the Screen Surface. */
 void fade(SDL_Surface* p_surf_screen, SDL_Surface* p_surf_img,
-          Uint32 ui_seconds, int b_fade_out, SDL_Renderer* psdlRenderer) {
+          Uint32 ui_seconds, int b_fade_out, SDL_Renderer* psdlRenderer,
+          SDL_Rect* prctTarget) {
     /* Becomes the black surface */
     SDL_Surface* p_surf_black = NULL;
     SDL_Texture* pScreenTexture =
@@ -66,7 +67,7 @@ void fade(SDL_Surface* p_surf_screen, SDL_Surface* p_surf_img,
          * value) */
         while (f_alpha < 255.0) {
             /* Draw the image onto the screen */
-            SDL_BlitSurface(p_surf_img, NULL, p_surf_screen, NULL);
+            SDL_BlitSurface(p_surf_img, NULL, p_surf_screen, prctTarget);
             /* Draw the black surface onto the screen */
             SDL_SetSurfaceAlphaMod(p_surf_black, (Uint8)f_alpha);  // SDL 2.0
 
@@ -87,7 +88,7 @@ void fade(SDL_Surface* p_surf_screen, SDL_Surface* p_surf_img,
         /* Loop until the alpha value exceeds 255 */
         while (f_alpha > 0.0) {
             /* Draw the image onto the screen */
-            SDL_BlitSurface(p_surf_img, NULL, p_surf_screen, NULL);
+            SDL_BlitSurface(p_surf_img, NULL, p_surf_screen, prctTarget);
             /* Draw the black surface onto the screen */
             SDL_SetSurfaceAlphaMod(p_surf_black, (Uint8)f_alpha);  // SDL 2.0
 

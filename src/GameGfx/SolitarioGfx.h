@@ -130,21 +130,21 @@ private:
     DRAGCARD _dragCard;
     CardRegionGfx *_p_sourceRegion;
 
-    SDL_Surface *_p_screen;
+    SDL_Surface *_p_Screen;
     SDL_Texture *_p_ScreenTexture;
-    SDL_Surface *_p_background;
-    SDL_Surface *_p_dragface;
-    SDL_Surface *_p_scene_background;
+    SDL_Surface *_p_Background;
+    SDL_Surface *_p_Dragface;
+    SDL_Surface *_p_SceneBackground;
     SDL_Renderer *_p_sdlRenderer;
 
     int _oldx;
     int _oldy;
 
-    SDL_Surface *_p_srfDeck;  // for pac
-    SDL_Surface *_p_symbols;
+    SDL_Surface *_p_Deck;  // for pac
+    SDL_Surface *_p_Symbols;
     DeckType _DeckType;
     SDL_Surface *_p_CardsSurf[NUM_CARDS_ONDECK];  // for single file
-    SDL_Surface *_p_Symbol[NUM_SYMBOLS];
+    SDL_Surface *_p_SymbolsSurf[NUM_SYMBOLS];
 
     SDL_Rect _rctSrcCard;
 
