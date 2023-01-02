@@ -359,7 +359,8 @@ LPErrInApp AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
              (srcReg->Id == CRD_WASTE)) &&
             isInitDrag) {
             _bStartdrag = TRUE;
-            // SDL_SetRelativeMouseMode(SDL_TRUE);  // SDL 2.0
+            SDL_ShowCursor(SDL_DISABLE);
+            SDL_SetWindowGrab(_p_Window, SDL_TRUE);
         }
         // clicked on the pile
         if (srcReg->Id == CRD_PILE) {
@@ -417,8 +418,9 @@ LPErrInApp AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
 }
 
 void AppGfx::handleGameLoopMouseMoveEvent(SDL_Event &event) {
-    if (event.motion.state == SDL_BUTTON(1) && _bStartdrag)
+    if (event.motion.state == SDL_BUTTON(1) && _bStartdrag) {
         _p_SolitarioGfx->DoDrag(event.motion.x, event.motion.y);
+    }
 }
 
 LPErrInApp AppGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
@@ -426,7 +428,8 @@ LPErrInApp AppGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
     if (_bStartdrag) {
         _bStartdrag = FALSE;
         _p_SolitarioGfx->DoDrop();
-        SDL_SetRelativeMouseMode(SDL_FALSE);
+        SDL_ShowCursor(SDL_ENABLE);
+        SDL_SetWindowGrab(_p_Window, SDL_FALSE);
     }
     if (_p_SolitarioGfx->Empty(0) && _p_SolitarioGfx->Empty(8)) {
         _p_SolitarioGfx->SetSymbol(0, 1);
