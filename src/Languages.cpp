@@ -1,7 +1,5 @@
 #include "Languages.h"
 
-#include <assert.h>
-
 Languages::Languages() {
     for (int i = 0; i < TOT_STRINGS; i++) {
         for (int j = 0; j < TOT_LANG; j++) {
@@ -172,25 +170,17 @@ Languages::Languages() {
 }
 
 std::string Languages::GetStringId(eStringID eId) {
-    std::string strRet = "Err trans.";
-
-    assert(eId < TOT_STRINGS);
-
-    if (eId < TOT_STRINGS) {
-        strRet = _mtxLangString[_eLangid][eId];
+    if (eId < TOT_STRINGS && eId >= 0) {
+        return _mtxLangString[_eLangid][eId];
     }
 
-    return strRet;
+    return "";
 }
 
-char* Languages::GetCStringId(eStringID eId) {
-    std::string strRet = "Err trans.";
-
-    assert(eId < TOT_STRINGS);
-
-    if (eId < TOT_STRINGS) {
-        strRet = _mtxLangString[_eLangid][eId];
+const char* Languages::GetCStringId(eStringID eId) {
+    if (eId < TOT_STRINGS && eId >= 0) {
+        return _mtxLangString[_eLangid][eId].c_str();
+    } else {
+        return "";
     }
-
-    return const_cast<char*>(strRet.c_str());
 }

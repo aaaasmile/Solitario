@@ -67,7 +67,7 @@ public:
     Languages();
     void SetLang(eLangId eVal) { _eLangid = eVal; }
     std::string GetStringId(eStringID eId);
-    char* GetCStringId(eStringID eId);
+    const char* GetCStringId(eStringID eId);
 
 private:
     eLangId _eLangid;

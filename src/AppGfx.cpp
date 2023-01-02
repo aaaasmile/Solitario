@@ -51,7 +51,7 @@ AppGfx::AppGfx() {
     _iBpp = 0;
     _bStartdrag = FALSE;
     _p_MusicManager = 0;
-    _p_Title = 0;
+    _p_CreditTitle = 0;
     _bFullScreen = FALSE;
     _p_GameSettings = GAMESET::GetSettings();
 }
@@ -97,8 +97,8 @@ LPErrInApp AppGfx::Init() {
                                      strFileFontStatus.c_str(), SDL_GetError());
     }
 
-    SDL_SetWindowTitle(_p_Window,
-                       _Languages.GetCStringId(Languages::ID_SOLITARIO));
+    const char *title = _Languages.GetCStringId(Languages::ID_SOLITARIO);
+    SDL_SetWindowTitle(_p_Window, title);
 
     SDL_Surface *psIcon = SDL_LoadBMP(lpszIconProgFile);
     if (psIcon == 0) {
@@ -115,8 +115,8 @@ LPErrInApp AppGfx::Init() {
     srand((unsigned)time(0));
 #endif
 
-    _p_Title = IMG_Load(lpszTitleFile);
-    if (_p_Title == 0) {
+    _p_CreditTitle = IMG_Load(lpszTitleFile);
+    if (_p_CreditTitle == 0) {
         return ERR_UTIL::ErrorCreate("Title image not found");
     }
     err = loadSceneBackground();
@@ -151,10 +151,12 @@ LPErrInApp AppGfx::loadSceneBackground() {
 LPErrInApp AppGfx::createWindow() {
     int flagwin = 0;
     if (_p_Window != NULL) {
+        _p_Window = NULL;
         SDL_DestroyWindow(_p_Window);
     }
-    if (_p_Screen) {
+    if (_p_Screen != NULL) {
         SDL_FreeSurface(_p_Screen);
+        _p_Screen = NULL;
     }
     if (_bFullScreen) {
         flagwin = SDL_WINDOW_FULLSCREEN_DESKTOP;
@@ -457,9 +459,9 @@ void AppGfx::terminate() {
         SDL_FreeSurface(_p_SceneBackground);
         _p_SceneBackground = NULL;
     }
-    if (_p_Title) {
-        SDL_FreeSurface(_p_Title);
-        _p_Title = NULL;
+    if (_p_CreditTitle) {
+        SDL_FreeSurface(_p_CreditTitle);
+        _p_CreditTitle = NULL;
     }
     if (_p_ScreenTexture != NULL) {
         SDL_DestroyTexture(_p_ScreenTexture);
@@ -728,7 +730,7 @@ LPErrInApp AppGfx::showHelp() {
 }
 
 LPErrInApp AppGfx::showCredits() {
-    credits(_p_Screen, _p_Title, _p_sdlRenderer);
+    credits(_p_Screen, _p_CreditTitle, _p_sdlRenderer);
     LeaveMenu();
     return NULL;
 }

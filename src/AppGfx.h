@@ -66,7 +66,7 @@ private:
 private:
     SDL_Surface* _p_Screen;
     SDL_Surface* _p_SceneBackground;
-    SDL_Surface* _p_Title;
+    SDL_Surface* _p_CreditTitle;
     SDL_Texture* _p_ScreenTexture;
     SDL_Window* _p_Window;
     SDL_Renderer* _p_sdlRenderer;
