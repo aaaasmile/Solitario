@@ -257,14 +257,14 @@ int CardRegionGfx::GetStackWidth() {
     if (InternalStack.Empty())
         return g_CARDWIDTH;
 
-    return (InternalStack[InternalStack.Size() - 1].x + g_CARDWIDTH) -
-           InternalStack[0].x;
+    return (InternalStack[InternalStack.Size() - 1].X() + g_CARDWIDTH) -
+           InternalStack[0].X();
 }
 
 int CardRegionGfx::GetStackHeight() {
     if (InternalStack.Empty())
         return g_CARDHEIGHT;
 
-    return (InternalStack[InternalStack.Size() - 1].y + g_CARDHEIGHT) -
-           InternalStack[0].y;
+    return (InternalStack[InternalStack.Size() - 1].Y() + g_CARDHEIGHT) -
+           InternalStack[0].Y();
 }

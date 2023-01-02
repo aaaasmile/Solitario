@@ -102,7 +102,7 @@ LPErrInApp SolitarioGfx::DrawCardStack(SDL_Surface *s,
         if (vi->FaceUp()) {
             err = DrawCard(vi, s);
         } else {
-            err = DrawCardBack(vi->x, vi->y, s);
+            err = DrawCardBack(vi->X(), vi->Y(), s);
         }
         if (err != NULL) {
             return err;
@@ -219,8 +219,8 @@ LPErrInApp SolitarioGfx::InitDrag(CardStackGfx *CargoStack, int x, int y,
                              _p_sourceRegion->GetyOffset());
     DragRegion.Push(_dragStack);
 
-    _dragCard.x = _dragStack[0].x;
-    _dragCard.y = _dragStack[0].y;
+    _dragCard.x = _dragStack[0].X();
+    _dragCard.y = _dragStack[0].Y();
     _dragCard.width = DragRegion.GetStackWidth();
     _dragCard.height = DragRegion.GetStackHeight();
 
@@ -327,28 +327,31 @@ void SolitarioGfx::DoDrop(CardRegionGfx *pDestRegion) {
 
     _dragStack.Clear();
 
-    if (_dragCard.x == vi->x && _dragCard.y == vi->y)
+    if (_dragCard.x == vi->X() && _dragCard.y == vi->Y())
         return;  // when no movement
 
-    ZoomCard(_dragCard.x, _dragCard.y, vi->x, vi->y, _dragCard.width,
-             _dragCard.height, _p_Background, _p_Dragface);
+    zoomCard(_dragCard.x, _dragCard.y, vi, _dragCard.width, _dragCard.height,
+             _p_Background, _p_Dragface);
 
     SDL_FreeSurface(_p_Dragface);
     _p_Dragface = NULL;
 }
 
-void calcPt(int x0, int y0, int x1, int y1, float t, int &X, int &Y) {
-    X = int(x0 + t * (x1 - x0) + .5);
-    Y = int(y0 + t * (y1 - y0) + .5);
+void calcPt(int x0, int y0, int x1, int y1, float t, int &xf, int &yf) {
+    xf = int(x0 + t * (x1 - x0) + .5);
+    yf = int(y0 + t * (y1 - y0) + .5);
 }
 
-void SolitarioGfx::ZoomCard(int &sx, int &sy, int &dx, int &dy, int w, int h,
+void SolitarioGfx::zoomCard(int &sx, int &sy, VI vi, int w, int h,
                             SDL_Surface *bg, SDL_Surface *fg) {
+    TRACE("Zoom card x=%d, y=%d", sx, sy);
     SDL_Rect rcs;
     SDL_Rect rcd;
     SDL_Rect dest;
 
     int px, py;
+    int dx = vi->X();
+    int dy = vi->Y();
     float precision = 0.1f;
 
     for (float i = 0.0; i <= 1.0; i += precision) {
@@ -529,13 +532,13 @@ LPErrInApp SolitarioGfx::DrawCard(VI vi, SDL_Surface *s) {
         return ERR_UTIL::ErrorCreate(
             "Error in draw card with Iterator, surface is NULL\n");
     }
-    TRACE("Draw card ix = %d, suit = %s, rank %d, x,y %d,%d", vi->Idx,
-          vi->SuitStr(), vi->Rank(), vi->x, vi->y);
+    TRACE("Draw card ix = %d, suit = %s, rank %d, x,y %d,%d", vi->Index(),
+          vi->SuitStr(), vi->Rank(), vi->X(), vi->Y());
 
     if (_DeckType.IsPacType()) {
         return DrawCardPac(vi, s);
     }
-    int nCdIndex = vi->Idx;
+    int nCdIndex = vi->Index();
 
     if (nCdIndex < 0)
         nCdIndex = 0;
@@ -548,8 +551,8 @@ LPErrInApp SolitarioGfx::DrawCard(VI vi, SDL_Surface *s) {
     _rctSrcCard.h = _p_CardsSurf[nCdIndex]->clip_rect.h;
 
     SDL_Rect dest;
-    dest.x = vi->x;
-    dest.y = vi->y;
+    dest.x = vi->X();
+    dest.y = vi->Y();
 
     if (SDL_BlitSurface(_p_CardsSurf[nCdIndex], &_rctSrcCard, s, &dest) == -1) {
         return ERR_UTIL::ErrorCreate(
@@ -560,7 +563,7 @@ LPErrInApp SolitarioGfx::DrawCard(VI vi, SDL_Surface *s) {
 }
 
 LPErrInApp SolitarioGfx::DrawCardPac(VI vi, SDL_Surface *s) {
-    int nCdIndex = vi->Idx;
+    int nCdIndex = vi->Index();
 
     if (nCdIndex < 0)
         nCdIndex = 0;
@@ -577,8 +580,8 @@ LPErrInApp SolitarioGfx::DrawCardPac(VI vi, SDL_Surface *s) {
     srcCard.h = g_CARDHEIGHT;
 
     SDL_Rect dest;
-    dest.x = vi->x;
-    dest.y = vi->y;
+    dest.x = vi->X();
+    dest.y = vi->Y();
 
     if (SDL_BlitSurface(_p_Deck, &srcCard, s, &dest) == -1) {
         return ERR_UTIL::ErrorCreate(

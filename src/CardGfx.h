@@ -20,7 +20,7 @@ extern int g_PointsSolitario[];
 class CardGfx {
 public:
     CardGfx() {
-        Idx = NOT_VALID_INDEX;
+        _Idx = NOT_VALID_INDEX;
         _fFaceUp = true;
         _iValue = 0;
         _eSuit = UNDEF;
@@ -29,7 +29,7 @@ public:
         if (index < 0)
             index = 0;
 
-        Idx = index;
+        _Idx = index;
         _fFaceUp = true;
         _iValue = 0;
         _eSuit = UNDEF;
@@ -41,6 +41,9 @@ public:
 
     bool IsBlack() const { return _eSuit == BASTONI || _eSuit == SPADE; }
     bool IsRed() const { return !IsBlack(); }
+    int X() { return _x; }
+    int Y() { return _y; }
+    int Index() { return _Idx; }
 
     bool FaceUp() const { return _fFaceUp; }
     bool FaceDown() const { return !_fFaceUp; }
@@ -52,15 +55,15 @@ public:
                                          nIdx);
         }
 
-        Idx = nIdx;
+        _Idx = nIdx;
         _iValue = g_PointsSolitario[nIdx];
-        if (Idx >= 0 && Idx <= 9)
+        if (_Idx >= 0 && _Idx <= 9)
             _eSuit = BASTONI;
-        else if (Idx > 9 && Idx <= 19)
+        else if (_Idx > 9 && _Idx <= 19)
             _eSuit = COPPE;
-        else if (Idx > 19 && Idx <= 29)
+        else if (_Idx > 19 && _Idx <= 29)
             _eSuit = DENARI;
-        else if (Idx > 29 && Idx <= 39)
+        else if (_Idx > 29 && _Idx <= 39)
             _eSuit = SPADE;
         else
             _eSuit = UNDEF;
@@ -69,26 +72,26 @@ public:
     }
 
     void SetCardLoc(int lx, int ly) {
-        x = lx;
-        y = ly;
+        _x = lx;
+        _y = ly;
     }
 
     bool PtInCard(int lx, int ly) {
-        if (lx >= x && lx <= g_CARDWIDTH + x && ly >= y &&
-            ly <= g_CARDHEIGHT + y)
+        if (lx >= _x && lx <= g_CARDWIDTH + _x && ly >= _y &&
+            ly <= g_CARDHEIGHT + _y)
             return true;
         else
             return false;
     }
 
-    int x;
-    int y;
-    int Idx;
-
 private:
     bool _fFaceUp;
     eSUIT _eSuit;
     int _iValue;
+
+    int _x;
+    int _y;
+    int _Idx;
 };
 
 typedef std::vector<CardGfx>::iterator VI;

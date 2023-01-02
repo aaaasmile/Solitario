@@ -55,9 +55,6 @@ public:
     CardRegionGfx *FindDropRegion(int Id, CardGfx card);
     CardRegionGfx *FindDropRegion(int Id, CardStackGfx stack);
 
-    void ZoomCard(int &sx, int &sy, int &dx, int &dy, int width, int height,
-                  SDL_Surface *bg, SDL_Surface *fg);
-
     void DrawStaticScene();
     LPErrInApp DrawBackground(BOOL bIsInit);
 
@@ -124,6 +121,8 @@ public:
 
 private:
     void UpdateTextureAsFlipScreen();
+    void zoomCard(int &sx, int &sy, VI vi, int width, int height,
+                  SDL_Surface *bg, SDL_Surface *fg);
 
 private:
     CardStackGfx _dragStack;
