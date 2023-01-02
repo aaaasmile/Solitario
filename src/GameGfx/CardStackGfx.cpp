@@ -113,6 +113,6 @@ CardGfx CardStackGfx::GetCard(int index) {
     return card;
 }
 
-void CardStackGfx::SetCardsFaceUp(bool fTrue) {
-    for (VI vi = this->begin(); vi != this->end(); ++vi) vi->SetFaceUp(fTrue);
+void CardStackGfx::SetCardsFaceUp(bool bval) {
+    for (VI vi = this->begin(); vi != this->end(); ++vi) vi->SetFaceUp(bval);
 }

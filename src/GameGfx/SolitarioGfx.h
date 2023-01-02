@@ -120,7 +120,7 @@ public:
     }
 
 private:
-    void UpdateTextureAsFlipScreen();
+    void updateTextureAsFlipScreen();
     void zoomCard(int &sx, int &sy, VI vi, int width, int height,
                   SDL_Surface *bg, SDL_Surface *fg);
 

@@ -247,12 +247,12 @@ LPErrInApp SolitarioGfx::InitDrag(CardStackGfx *CargoStack, int x, int y,
     _oldx = x;
     _oldy = y;
 
-    UpdateTextureAsFlipScreen();
+    updateTextureAsFlipScreen();
     isInitDrag = true;
     return NULL;
 }
 
-void SolitarioGfx::UpdateTextureAsFlipScreen() {
+void SolitarioGfx::updateTextureAsFlipScreen() {
     SDL_UpdateTexture(_p_ScreenTexture, NULL, _p_Screen->pixels,
                       _p_Screen->pitch);
     SDL_RenderCopy(_p_sdlRenderer, _p_ScreenTexture, NULL, NULL);
@@ -260,6 +260,8 @@ void SolitarioGfx::UpdateTextureAsFlipScreen() {
 }
 
 void SolitarioGfx::DoDrag(int x, int y) {
+    TRACE("DoDrag (x=%d, y=%d) => drag_x=%d, drag_y=%d. old_x=%d, old_y=%d", x,
+          y, _dragCard.x, _dragCard.y, _oldx, _oldy);
     SDL_Rect rcs;
     SDL_Rect rcd;
 
@@ -294,7 +296,8 @@ void SolitarioGfx::DoDrag(int x, int y) {
 
     SDL_BlitSurface(_p_Background, &rcs, _p_Screen, &rcd);
     SDL_BlitSurface(_p_Dragface, NULL, _p_Screen, &dest);
-    UpdateTextureAsFlipScreen();
+
+    updateTextureAsFlipScreen();
 }
 
 void SolitarioGfx::DoDrop() { DoDrop(NULL); }
@@ -377,7 +380,7 @@ void SolitarioGfx::zoomCard(int &sx, int &sy, VI vi, int w, int h,
         SDL_BlitSurface(bg, &rcs, _p_Screen, &rcd);
         SDL_BlitSurface(fg, NULL, _p_Screen, &dest);
 
-        UpdateTextureAsFlipScreen();
+        updateTextureAsFlipScreen();
     }
     DrawStaticScene();
 }
@@ -412,7 +415,7 @@ void SolitarioGfx::DrawStaticScene() {
         SDL_PumpEvents();
         DrawCardStack(vi);
     }
-    UpdateTextureAsFlipScreen();
+    updateTextureAsFlipScreen();
 }
 
 LPErrInApp SolitarioGfx::DrawBackground(BOOL bIsInit) {
@@ -732,7 +735,7 @@ int SolitarioGfx::AnimateCards() {
             }
 
             DrawCard(x, y, id, _p_Screen);
-            UpdateTextureAsFlipScreen();
+            updateTextureAsFlipScreen();
         }
         // 73 here is CARDWIDTH, but when using CARDWIDTH, it doesn't
         // work

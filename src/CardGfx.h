@@ -20,8 +20,8 @@ extern int g_PointsSolitario[];
 class CardGfx {
 public:
     CardGfx() {
-        _Idx = NOT_VALID_INDEX;
-        _fFaceUp = true;
+        _idx = NOT_VALID_INDEX;
+        _faceUp = true;
         _iValue = 0;
         _eSuit = UNDEF;
     }
@@ -29,8 +29,8 @@ public:
         if (index < 0)
             index = 0;
 
-        _Idx = index;
-        _fFaceUp = true;
+        _idx = index;
+        _faceUp = true;
         _iValue = 0;
         _eSuit = UNDEF;
     }
@@ -43,27 +43,27 @@ public:
     bool IsRed() const { return !IsBlack(); }
     int X() { return _x; }
     int Y() { return _y; }
-    int Index() { return _Idx; }
+    int Index() { return _idx; }
 
-    bool FaceUp() const { return _fFaceUp; }
-    bool FaceDown() const { return !_fFaceUp; }
+    bool FaceUp() const { return _faceUp; }
+    bool FaceDown() const { return !_faceUp; }
 
-    void SetFaceUp(bool fTrue) { _fFaceUp = fTrue; }
+    void SetFaceUp(bool bval) { _faceUp = bval; }
     LPErrInApp SetIdx(int nIdx) {
         if (nIdx >= NUM_CARDS || nIdx < 0) {
             return ERR_UTIL::ErrorCreate("Error SetIdx %d is out of range",
                                          nIdx);
         }
 
-        _Idx = nIdx;
+        _idx = nIdx;
         _iValue = g_PointsSolitario[nIdx];
-        if (_Idx >= 0 && _Idx <= 9)
+        if (_idx >= 0 && _idx <= 9)
             _eSuit = BASTONI;
-        else if (_Idx > 9 && _Idx <= 19)
+        else if (_idx > 9 && _idx <= 19)
             _eSuit = COPPE;
-        else if (_Idx > 19 && _Idx <= 29)
+        else if (_idx > 19 && _idx <= 29)
             _eSuit = DENARI;
-        else if (_Idx > 29 && _Idx <= 39)
+        else if (_idx > 29 && _idx <= 39)
             _eSuit = SPADE;
         else
             _eSuit = UNDEF;
@@ -85,13 +85,13 @@ public:
     }
 
 private:
-    bool _fFaceUp;
+    bool _faceUp;
     eSUIT _eSuit;
     int _iValue;
 
     int _x;
     int _y;
-    int _Idx;
+    int _idx;
 };
 
 typedef std::vector<CardGfx>::iterator VI;

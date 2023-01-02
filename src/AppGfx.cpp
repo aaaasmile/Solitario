@@ -4,11 +4,11 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "Config.h"
 #include "ErrorInfo.h"
 #include "GfxUtil.h"
 #include "MenuMgr.h"
 #include "MusicManager.h"
-#include "Config.h"
 #include "WinTypeGlobal.h"
 
 #ifdef _WINDOWS
@@ -357,7 +357,7 @@ LPErrInApp AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
              (srcReg->Id == CRD_WASTE)) &&
             isInitDrag) {
             _bStartdrag = TRUE;
-            SDL_SetRelativeMouseMode(SDL_TRUE);  // SDL 2.0
+            // SDL_SetRelativeMouseMode(SDL_TRUE);  // SDL 2.0
         }
         // clicked on the pile
         if (srcReg->Id == CRD_PILE) {
@@ -642,7 +642,8 @@ void AppGfx::LeaveMenu() {
 }
 
 void AppGfx::drawSceneBackground() {
-    TRACE("Draw splash %dx%d", _p_SceneBackground->w, _p_SceneBackground->h);
+    TRACE("drawSceneBackground %dx%d", _p_SceneBackground->w,
+          _p_SceneBackground->h);
     SDL_FillRect(_p_Screen, &_p_Screen->clip_rect,
                  SDL_MapRGBA(_p_Screen->format, 0, 0, 0, 0));
     SDL_Rect rctTarget;
