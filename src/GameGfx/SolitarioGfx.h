@@ -30,8 +30,9 @@ public:
     ~SolitarioGfx();
 
     LPErrInApp Initialize(SDL_Surface *s, SDL_Renderer *r);
-    void Clear() { _cardRegionList.clear(); }
-    int Size() { return _cardRegionList.size(); }
+    void Clear(int regionNo) { _cardRegionList[regionNo].Clear(); }
+    int Size(int regionNo) { return _cardRegionList[regionNo].Size(); }
+    void ClearAll();
 
     void CreateRegion(int id, unsigned int attribs, unsigned int amode,
                       int dmode, int symbol, int x, int y, int xoffset,

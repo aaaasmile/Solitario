@@ -211,7 +211,7 @@ LPErrInApp AppGfx::startGameLoop() {
 
     _p_SolitarioGfx->SetDeckType(_p_GameSettings->deckTypeVal);
     _p_SolitarioGfx->ClearSurface();
-    _p_SolitarioGfx->Clear();
+    _p_SolitarioGfx->ClearAll();
     err = _p_SolitarioGfx->Initialize(_p_Screen, _p_sdlRenderer);
     if (err != NULL)
         return err;
@@ -436,10 +436,9 @@ LPErrInApp AppGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
         _p_SolitarioGfx->DrawStaticScene();
     }
     // victory
-    if ((_p_SolitarioGfx[9].Size() == 10) &&
-        (_p_SolitarioGfx[10].Size() == 10) &&
-        (_p_SolitarioGfx[11].Size() == 10) &&
-        (_p_SolitarioGfx[12].Size() == 10)) {
+    if ((_p_SolitarioGfx->Size(9) == 10) && (_p_SolitarioGfx->Size(10) == 10) &&
+        (_p_SolitarioGfx->Size(11) == 10) &&
+        (_p_SolitarioGfx->Size(12) == 10)) {
         _p_SolitarioGfx->AnimateCards();
         err = newGame();
         if (err != NULL) {

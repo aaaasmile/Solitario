@@ -162,6 +162,13 @@ CardRegionGfx *SolitarioGfx::OnMouseDown(int x, int y) {
     return NULL;
 }
 
+void SolitarioGfx::ClearAll() {
+    for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
+        vi->Clear();
+    }
+    _cardRegionList.clear();
+}
+
 LPErrInApp SolitarioGfx::InitDrag(int x, int y, bool &isInitDrag) {
     return InitDrag(NULL, x, y, isInitDrag);
 }
