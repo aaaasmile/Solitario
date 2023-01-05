@@ -192,18 +192,19 @@ LPErrInApp SolitarioGfx::InitDrag(LPCardStackGfx pCargoStack, int x, int y,
         }
 
         switch (_p_sourceRegion->GetDragMode()) {
-            case CRD_DRAGCARDS:
-                _dragStack.PushCard(_p_sourceRegion->RemoveCard(idx));
+            case CRD_DRAGCARDS: {
+                LPCardGfx pCard = _p_sourceRegion->RemoveCard(idx);
+                _dragStack.PushCard(pCard);
                 break;
-
-            case CRD_DRAGTOP:
+            }
+            case CRD_DRAGTOP: {
                 if (_p_sourceRegion->Size() - 1 == idx)
                     _dragStack.PushCard(_p_sourceRegion->PopCard());
                 else
                     return NULL;
                 break;
-
-            case CRD_DRAGFACEUP:
+            }
+            case CRD_DRAGFACEUP: {
                 if (_p_sourceRegion->CardFaceUp(idx)) {
                     LPCardStackGfx pStack = _p_sourceRegion->PopStack(
                         _p_sourceRegion->Size() - idx);
@@ -212,12 +213,13 @@ LPErrInApp SolitarioGfx::InitDrag(LPCardStackGfx pCargoStack, int x, int y,
                 } else
                     return NULL;
                 break;
-
-            default:
+            }
+            default: {
                 LPCardStackGfx pStack =
                     _p_sourceRegion->PopStack(_p_sourceRegion->Size() - idx);
                 _dragStack.PushStack(pStack);
                 delete pStack;
+            }
         }
     } else
         _dragStack.PushStack(pCargoStack);
