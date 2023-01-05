@@ -22,71 +22,82 @@ int g_PointsSolitario[] = {
 
 LPErrInApp CardStackGfx::NewDeck() {
     LPErrInApp err;
-    this->clear();
-    this->resize(NUM_CARDS);
+    Clear();
 
-    int Id = 0;
-    for (VI vi = this->begin(); vi != this->end(); ++vi) {
-        err = vi->SetIdx(Id);
+    for (size_t i = 0; i < NUM_CARDS; i++) {
+        LPCardGfx pCard = new CardGfx;
+        err = pCard->SetIdx(i);
         if (err != NULL) {
             return err;
         }
-        Id++;
+        this->push_back(pCard);
     }
+
     return NULL;
 }
 
 void CardStackGfx::Shuffle() {
     std::random_shuffle(this->begin(), this->end());
 }
-void CardStackGfx::Clear() { this->clear(); }
+void CardStackGfx::Clear() {
+    for (VI vi = this->begin(); vi != this->end(); ++vi) {
+        LPCardGfx pCard = *vi;
+        delete pCard;
+    }
+    this->clear();
+}
 void CardStackGfx::Reverse() { std::reverse(this->begin(), this->end()); }
-bool SortRank(const CardGfx& l, const CardGfx& r) {
-    return l.Rank() < r.Rank();
+
+bool SortRank(const LPCardGfx& l, const LPCardGfx& r) {
+    return l->Rank() < r->Rank();
 }
 void CardStackGfx::Sort() { std::sort(this->begin(), this->end(), SortRank); }
-void CardStackGfx::PushCard(const CardGfx card) { this->push_back(card); }
-void CardStackGfx::PushStack(CardStackGfx cardstack) {
-    for (VI vi = cardstack.begin(); vi != cardstack.end(); ++vi)
+
+void CardStackGfx::PushCard(const LPCardGfx pCard) { this->push_back(pCard); }
+void CardStackGfx::PushStack(LPCardStackGfx pCardstack) {
+    for (VI vi = pCardstack->begin(); vi != pCardstack->end(); ++vi)
         this->push_back(*vi);
 }
 
-CardGfx CardStackGfx::PopCard() {
+LPCardGfx CardStackGfx::PopCard() {
     if (Empty())
-        return 0;
+        return NULL;
 
-    CardGfx card = this->back();
+    LPCardGfx pCard = this->back();
     this->pop_back();
 
-    return card;
+    return pCard;
 }
 
-CardStackGfx CardStackGfx::PopStack(int items) {
+LPCardStackGfx CardStackGfx::PopStack(int items) {
     if (items > Size())
         items = Size();
 
-    CardStackGfx cardstack;
+    LPCardStackGfx pCardStack = new CardStackGfx;
 
     while (items > 0) {
-        cardstack.PushCard(this->PopCard());
+        LPCardGfx pCard = this->PopCard();
+        pCardStack->PushCard(pCard);
         items--;
     }
-    cardstack.Reverse();
-    return cardstack;
+    if (pCardStack->Size() > 1) {
+        pCardStack->Reverse();
+    }
+    return pCardStack;
 }
 
-CardGfx CardStackGfx::RemoveCard(int index) {
+LPCardGfx CardStackGfx::RemoveCard(int index) {
     if (this->Empty())
-        return 0;
+        return NULL;
 
     VI vi = this->begin() + index;
-    CardGfx card = *vi;
+    LPCardGfx card = *vi;
     this->erase(vi);
 
     return card;
 }
 
-void CardStackGfx::InsertCard(int index, CardGfx card) {
+void CardStackGfx::InsertCard(int index, LPCardGfx card) {
     VI vi = this->begin() + index;
     this->insert(vi, card);
 }
@@ -95,7 +106,8 @@ int CardStackGfx::GetClickedCard(int x, int y) {
     int i = this->Size() - 1;
 
     for (VI vi = this->end() - 1; vi >= this->begin(); --vi) {
-        if (vi->PtInCard(x, y))
+        LPCardGfx pCard = *vi;
+        if (pCard->PtInCard(x, y))
             return i;
         i--;
     }
@@ -103,16 +115,19 @@ int CardStackGfx::GetClickedCard(int x, int y) {
     return -1;
 }
 
-CardGfx CardStackGfx::GetCard(int index) {
+LPCardGfx CardStackGfx::GetCard(int index) {
     if (this->Empty())
-        return 0;
+        return NULL;
 
     VI vi = this->begin() + index;
-    CardGfx card = *vi;
+    LPCardGfx pCard = *vi;
 
-    return card;
+    return pCard;
 }
 
 void CardStackGfx::SetCardsFaceUp(bool bval) {
-    for (VI vi = this->begin(); vi != this->end(); ++vi) vi->SetFaceUp(bval);
+    for (VI vi = this->begin(); vi != this->end(); ++vi) {
+        LPCardGfx pCard = *vi;
+        pCard->SetFaceUp(bval);
+    }
 }

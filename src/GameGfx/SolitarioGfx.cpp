@@ -85,13 +85,12 @@ LPErrInApp SolitarioGfx::Initialize(SDL_Surface *s, SDL_Renderer *r) {
     return DrawBackground(TRUE);
 }
 
-LPErrInApp SolitarioGfx::DrawCardStack(rVI vi) {
-    CardRegionGfx *cardRegion = &(*vi);
-    return DrawCardStack(_p_Screen, cardRegion);
+LPErrInApp SolitarioGfx::DrawCardStack(LPCardRegionGfx pcardRegion) {
+    return DrawCardStack(_p_Screen, pcardRegion);
 }
 
 LPErrInApp SolitarioGfx::DrawCardStack(SDL_Surface *s,
-                                       CardRegionGfx *pcardRegion) {
+                                       LPCardRegionGfx pcardRegion) {
     LPErrInApp err;
     if (!(pcardRegion->Attributes & CRD_VISIBLE))
         return NULL;
@@ -99,10 +98,11 @@ LPErrInApp SolitarioGfx::DrawCardStack(SDL_Surface *s,
     DrawSymbol(pcardRegion->XCoord, pcardRegion->YCoord, pcardRegion->Symbol);
     for (VI vi = pcardRegion->InternalStack.begin();
          vi != pcardRegion->InternalStack.end(); ++vi) {
-        if (vi->FaceUp()) {
-            err = DrawCard(vi, s);
+        LPCardGfx pCard = *vi;
+        if (pCard->FaceUp()) {
+            err = DrawCard(pCard, s);
         } else {
-            err = DrawCardBack(vi->X(), vi->Y(), s);
+            err = DrawCardBack(pCard->X(), pCard->Y(), s);
         }
         if (err != NULL) {
             return err;
@@ -130,10 +130,11 @@ void SolitarioGfx::CreateRegion(int id, unsigned int attribs,
     _cardRegionList.push_back(*cr);
 }
 
-bool SolitarioGfx::DeleteRegion(CardRegionGfx *pRegion) {
-    for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
-        if (&(*vi) == pRegion) {
-            _cardRegionList.erase(vi);
+bool SolitarioGfx::DeleteRegion(LPCardRegionGfx pRegion) {
+    for (regionVI vir = _cardRegionList.begin(); vir != _cardRegionList.end();
+         ++vir) {
+        if (&(*vir) == pRegion) {
+            _cardRegionList.erase(vir);
             return true;
         }
     }
@@ -141,21 +142,24 @@ bool SolitarioGfx::DeleteRegion(CardRegionGfx *pRegion) {
 }
 
 void SolitarioGfx::EmptyStacks() {
-    for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi)
-        vi->Clear();
+    for (regionVI vir = _cardRegionList.begin(); vir != _cardRegionList.end();
+         ++vir)
+        vir->Clear();
 }
 
 void SolitarioGfx::InitAllCoords() {
-    for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
-        vi->InitCardCoords();
-        vi->InitCardFaces();
+    for (regionVI vir = _cardRegionList.begin(); vir != _cardRegionList.end();
+         ++vir) {
+        vir->InitCardCoords();
+        vir->InitCardFaces();
     }
 }
 
 CardRegionGfx *SolitarioGfx::OnMouseDown(int x, int y) {
-    for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
-        if (vi->PtInStack(x, y)) {
-            _p_sourceRegion = &(*vi);
+    for (regionVI vir = _cardRegionList.begin(); vir != _cardRegionList.end();
+         ++vir) {
+        if (vir->PtInStack(x, y)) {
+            _p_sourceRegion = &(*vir);
             return _p_sourceRegion;
         }
     }
@@ -163,8 +167,9 @@ CardRegionGfx *SolitarioGfx::OnMouseDown(int x, int y) {
 }
 
 void SolitarioGfx::ClearAll() {
-    for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
-        vi->Clear();
+    for (regionVI vir = _cardRegionList.begin(); vir != _cardRegionList.end();
+         ++vir) {
+        vir->Clear();
     }
     _cardRegionList.clear();
 }
@@ -173,11 +178,11 @@ LPErrInApp SolitarioGfx::InitDrag(int x, int y, bool &isInitDrag) {
     return InitDrag(NULL, x, y, isInitDrag);
 }
 
-LPErrInApp SolitarioGfx::InitDrag(CardStackGfx *CargoStack, int x, int y,
+LPErrInApp SolitarioGfx::InitDrag(LPCardStackGfx pCargoStack, int x, int y,
                                   bool &isInitDrag) {
     isInitDrag = false;
     LPErrInApp err;
-    if (CargoStack == NULL) {
+    if (pCargoStack == NULL) {
         if (_p_sourceRegion->Empty())
             return NULL;
 
@@ -199,19 +204,23 @@ LPErrInApp SolitarioGfx::InitDrag(CardStackGfx *CargoStack, int x, int y,
                 break;
 
             case CRD_DRAGFACEUP:
-                if (_p_sourceRegion->CardFaceUp(idx))
-                    _dragStack.PushStack(_p_sourceRegion->PopStack(
-                        _p_sourceRegion->Size() - idx));
-                else
+                if (_p_sourceRegion->CardFaceUp(idx)) {
+                    LPCardStackGfx pStack = _p_sourceRegion->PopStack(
+                        _p_sourceRegion->Size() - idx);
+                    _dragStack.PushStack(pStack);
+                    delete pStack;
+                } else
                     return NULL;
                 break;
 
             default:
-                _dragStack.PushStack(
-                    _p_sourceRegion->PopStack(_p_sourceRegion->Size() - idx));
+                LPCardStackGfx pStack =
+                    _p_sourceRegion->PopStack(_p_sourceRegion->Size() - idx);
+                _dragStack.PushStack(pStack);
+                delete pStack;
         }
     } else
-        _dragStack.PushStack(*CargoStack);
+        _dragStack.PushStack(pCargoStack);
 
     _p_sourceRegion->InitCardCoords();
 
@@ -224,10 +233,10 @@ LPErrInApp SolitarioGfx::InitDrag(CardStackGfx *CargoStack, int x, int y,
     CardRegionGfx DragRegion(0, _p_sourceRegion->GetAttributes() | CRD_FACEUP,
                              0, 0, 0, 0, 0, _p_sourceRegion->GetxOffset(),
                              _p_sourceRegion->GetyOffset());
-    DragRegion.Push(_dragStack);
+    DragRegion.PushStack(&_dragStack);
 
-    _dragCard.x = _dragStack[0].X();
-    _dragCard.y = _dragStack[0].Y();
+    _dragCard.x = _dragStack[0]->X();
+    _dragCard.y = _dragStack[0]->Y();
     _dragCard.width = DragRegion.GetStackWidth();
     _dragCard.height = DragRegion.GetStackHeight();
 
@@ -309,9 +318,9 @@ void SolitarioGfx::DoDrag(int x, int y) {
 
 void SolitarioGfx::DoDrop() { DoDrop(NULL); }
 
-void SolitarioGfx::DoDrop(CardRegionGfx *pDestRegion) {
-    CardStackGfx *pDestStack;
-    CardRegionGfx *pBestRegion;
+void SolitarioGfx::DoDrop(LPCardRegionGfx pDestRegion) {
+    LPCardStackGfx pDestStack;
+    LPCardRegionGfx pBestRegion;
 
     if (pDestRegion != NULL)
         pBestRegion = pDestRegion;
@@ -322,7 +331,7 @@ void SolitarioGfx::DoDrop(CardRegionGfx *pDestRegion) {
         pBestRegion = _p_sourceRegion;
 
     pDestStack = pBestRegion->GetCardStack();
-    pDestStack->PushStack(_dragStack);
+    pDestStack->PushStack(&_dragStack);
     pBestRegion->InitCardCoords();
 
     VI vi;
@@ -334,13 +343,14 @@ void SolitarioGfx::DoDrop(CardRegionGfx *pDestRegion) {
         default:  // 1 and 4
             vi = pDestStack->end() - _dragStack.Size();
     }
+    LPCardGfx pCard = *vi;
 
     _dragStack.Clear();
 
-    if (_dragCard.x == vi->X() && _dragCard.y == vi->Y())
+    if (_dragCard.x == pCard->X() && _dragCard.y == pCard->Y())
         return;  // when no movement
 
-    zoomCard(_dragCard.x, _dragCard.y, vi, _dragCard.width, _dragCard.height,
+    zoomCard(_dragCard.x, _dragCard.y, pCard, _dragCard.width, _dragCard.height,
              _p_Background, _p_Dragface);
 
     SDL_FreeSurface(_p_Dragface);
@@ -352,7 +362,7 @@ void calcPt(int x0, int y0, int x1, int y1, float t, int &xf, int &yf) {
     yf = int(y0 + t * (y1 - y0) + .5);
 }
 
-void SolitarioGfx::zoomCard(int &sx, int &sy, VI vi, int w, int h,
+void SolitarioGfx::zoomCard(int &sx, int &sy, LPCardGfx pCard, int w, int h,
                             SDL_Surface *bg, SDL_Surface *fg) {
     TRACE("Zoom card x=%d, y=%d", sx, sy);
     SDL_Rect rcs;
@@ -360,8 +370,8 @@ void SolitarioGfx::zoomCard(int &sx, int &sy, VI vi, int w, int h,
     SDL_Rect dest;
 
     int px, py;
-    int dx = vi->X();
-    int dy = vi->Y();
+    int dx = pCard->X();
+    int dy = pCard->Y();
     float precision = 0.1f;
 
     for (float i = 0.0; i <= 1.0; i += precision) {
@@ -392,16 +402,17 @@ void SolitarioGfx::zoomCard(int &sx, int &sy, VI vi, int w, int h,
     DrawStaticScene();
 }
 
-CardRegionGfx *SolitarioGfx::FindDropRegion(int Id, CardGfx card) {
+LPCardRegionGfx SolitarioGfx::FindDropRegion(int id, LPCardGfx pCard) {
     CardStackGfx stack;
-    stack.PushCard(card);
-    return FindDropRegion(Id, stack);
+    stack.PushCard(pCard);
+    return FindDropRegion(id, &stack);
 }
 
-CardRegionGfx *SolitarioGfx::FindDropRegion(int Id, CardStackGfx stack) {
-    for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
-        if ((vi->Id == Id) && vi->CanDrop(&stack))
-            return &(*vi);
+LPCardRegionGfx SolitarioGfx::FindDropRegion(int id, LPCardStackGfx pStack) {
+    for (regionVI vir = _cardRegionList.begin(); vir != _cardRegionList.end();
+         ++vir) {
+        if ((vir->Id == id) && vir->CanDrop(pStack))
+            return &(*vir);
     }
     return NULL;
 }
@@ -418,9 +429,11 @@ void SolitarioGfx::DrawStaticScene() {
         SDL_BlitSurface(_p_SceneBackground, NULL, _p_Screen, &rctTarget);
     }
 
-    for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
+    for (regionVI vir = _cardRegionList.begin(); vir != _cardRegionList.end();
+         ++vir) {
         SDL_PumpEvents();
-        DrawCardStack(vi);
+        CardRegionGfx cardRegion = *vir;
+        DrawCardStack(&cardRegion);
     }
     updateTextureAsFlipScreen();
 }
@@ -444,8 +457,10 @@ LPErrInApp SolitarioGfx::DrawBackground(BOOL bIsInit) {
         }
     }
 
-    for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
-        err = DrawCardStack(vi);
+    for (regionVI vir = _cardRegionList.begin(); vir != _cardRegionList.end();
+         ++vir) {
+        CardRegionGfx cardRegion = *vir;
+        err = DrawCardStack(&cardRegion);
         if (err != NULL) {
             return NULL;
         }
@@ -453,23 +468,26 @@ LPErrInApp SolitarioGfx::DrawBackground(BOOL bIsInit) {
     return NULL;
 }
 
-CardRegionGfx *SolitarioGfx::GetBestStack(int x, int y, int w, int h,
-                                          CardStackGfx *stack) {
+LPCardRegionGfx SolitarioGfx::GetBestStack(int x, int y, int w, int h,
+                                           LPCardStackGfx pStack) {
     int maxoverlap = 0;
     int percent = 0;
-    CardRegionGfx *best = 0;
+    LPCardRegionGfx pBest = NULL;
 
-    for (rVI vi = _cardRegionList.begin(); vi != _cardRegionList.end(); ++vi) {
+    for (regionVI vir = _cardRegionList.begin(); vir != _cardRegionList.end();
+         ++vir) {
         SDL_PumpEvents();
-        if (vi->CanDrop(stack))
-            percent = vi->GetOverlapRatio(x, y, w, h);
+        if (vir->CanDrop(pStack))
+            percent = vir->GetOverlapRatio(x, y, w, h);
+        else
+            percent = 0;
 
         if (percent > maxoverlap) {
             maxoverlap = percent;
-            best = &(*vi);
+            pBest = &(*vir);
         }
     }
-    return best;
+    return pBest;
 }
 
 LPErrInApp SolitarioGfx::DrawCard(int x, int y, int nCdIndex) {
@@ -537,18 +555,18 @@ LPErrInApp SolitarioGfx::DrawCardPac(int x, int y, int nCdIndex,
     return NULL;
 }
 
-LPErrInApp SolitarioGfx::DrawCard(VI vi, SDL_Surface *s) {
+LPErrInApp SolitarioGfx::DrawCard(LPCardGfx pCard, SDL_Surface *s) {
     if (s == NULL) {
         return ERR_UTIL::ErrorCreate(
             "Error in draw card with Iterator, surface is NULL\n");
     }
-    TRACE("Draw card ix = %d, suit = %s, rank %d, x,y %d,%d", vi->Index(),
-          vi->SuitStr(), vi->Rank(), vi->X(), vi->Y());
+    TRACE("Draw card ix = %d, suit = %s, rank %d, x,y %d,%d", pCard->Index(),
+          pCard->SuitStr(), pCard->Rank(), pCard->X(), pCard->Y());
 
     if (_DeckType.IsPacType()) {
-        return DrawCardPac(vi, s);
+        return DrawCardPac(pCard, s);
     }
-    int nCdIndex = vi->Index();
+    int nCdIndex = pCard->Index();
 
     if (nCdIndex < 0)
         nCdIndex = 0;
@@ -561,8 +579,8 @@ LPErrInApp SolitarioGfx::DrawCard(VI vi, SDL_Surface *s) {
     _rctSrcCard.h = _p_CardsSurf[nCdIndex]->clip_rect.h;
 
     SDL_Rect dest;
-    dest.x = vi->X();
-    dest.y = vi->Y();
+    dest.x = pCard->X();
+    dest.y = pCard->Y();
 
     if (SDL_BlitSurface(_p_CardsSurf[nCdIndex], &_rctSrcCard, s, &dest) == -1) {
         return ERR_UTIL::ErrorCreate(
@@ -572,8 +590,8 @@ LPErrInApp SolitarioGfx::DrawCard(VI vi, SDL_Surface *s) {
     return NULL;
 }
 
-LPErrInApp SolitarioGfx::DrawCardPac(VI vi, SDL_Surface *s) {
-    int nCdIndex = vi->Index();
+LPErrInApp SolitarioGfx::DrawCardPac(LPCardGfx pCard, SDL_Surface *s) {
+    int nCdIndex = pCard->Index();
 
     if (nCdIndex < 0)
         nCdIndex = 0;
@@ -590,8 +608,8 @@ LPErrInApp SolitarioGfx::DrawCardPac(VI vi, SDL_Surface *s) {
     srcCard.h = g_CARDHEIGHT;
 
     SDL_Rect dest;
-    dest.x = vi->X();
-    dest.y = vi->Y();
+    dest.x = pCard->X();
+    dest.y = pCard->Y();
 
     if (SDL_BlitSurface(_p_Deck, &srcCard, s, &dest) == -1) {
         return ERR_UTIL::ErrorCreate(

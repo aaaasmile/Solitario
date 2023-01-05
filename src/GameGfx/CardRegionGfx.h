@@ -69,8 +69,7 @@ public:
     CardRegionGfx() {}
     ~CardRegionGfx() {}
 
-    void SetCardStack(const CardStackGfx &cs) { InternalStack = cs; }
-    CardStackGfx *GetCardStack() { return &InternalStack; }
+    LPCardStackGfx GetCardStack() { return &InternalStack; }
 
     void SetCoords(int x, int y) {
         XCoord = x;
@@ -102,13 +101,10 @@ public:
     bool FaceDown() const { return !(Attributes & CRD_FACEUP); }
     bool CanDrag() const { return Attributes & CRD_DODRAG; }
 
-    void SetCardFaceUp(bool fTrue, int idx) {
-        InternalStack[idx].SetFaceUp(fTrue);
+    void SetCardFaceUp(bool bVal, int idx) {
+        InternalStack[idx]->SetFaceUp(bVal);
     }
-    bool CardFaceUp(int idx) {
-        InternalStack[idx].FaceUp();
-        return true;
-    }
+    bool CardFaceUp(int idx) { return InternalStack[idx]->FaceUp(); }
 
     void SetDragMode(int mode) { _dragMode = mode; }
     int GetDragMode() const { return _dragMode; }
@@ -119,12 +115,12 @@ public:
     void SetAttributes(unsigned int attr) { Attributes = attr; }
     int GetAttributes() { return Attributes; }
 
-    bool CanDrop(CardStackGfx *stack);
+    bool CanDrop(LPCardStackGfx stack);
 
     void InitCardCoords();
     int GetOverlapRatio(int x, int y, int width, int height);
 
-    bool PtInStack(int x, int y);  // Imperfect, needs tweaking
+    bool PtInStack(int x, int y);
     bool PtOnTop(int x, int y);
 
     int GetStackWidth();
@@ -135,21 +131,21 @@ public:
     void Clear() { InternalStack.Clear(); }
     void Reverse() { InternalStack.Reverse(); }
 
-    void Push(CardGfx card) { InternalStack.PushCard(card); }
-    void Push(CardStackGfx cs) { InternalStack.PushStack(cs); }
+    void PushCard(LPCardGfx pCard) { InternalStack.PushCard(pCard); }
+    void PushStack(LPCardStackGfx pStack) { InternalStack.PushStack(pStack); }
 
     bool Empty() { return InternalStack.Empty(); }
     int Size() { return InternalStack.Size(); }
 
-    CardGfx PopCard() { return InternalStack.PopCard(); }
-    CardStackGfx PopStack(int items) { return InternalStack.PopStack(items); }
+    LPCardGfx PopCard() { return InternalStack.PopCard(); }
+    LPCardStackGfx PopStack(int items) { return InternalStack.PopStack(items); }
 
-    CardGfx RemoveCard(int index) { return InternalStack.RemoveCard(index); }
+    LPCardGfx RemoveCard(int index) { return InternalStack.RemoveCard(index); }
 
     int GetClickedCard(int x, int y) {
         return InternalStack.GetClickedCard(x, y);
     }
-    CardGfx GetCard(int index) { return InternalStack.GetCard(index); }
+    LPCardGfx GetCard(int index) { return InternalStack.GetCard(index); }
 
     int Id;
     unsigned int Attributes;
@@ -166,5 +162,7 @@ private:
 
     unsigned int _acceptMode;
 };
+
+typedef CardRegionGfx *LPCardRegionGfx;
 
 #endif

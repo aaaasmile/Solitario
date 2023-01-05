@@ -94,6 +94,7 @@ private:
     int _idx;
 };
 
-typedef std::vector<CardGfx>::iterator VI;
+typedef CardGfx* LPCardGfx;
+typedef std::vector<LPCardGfx>::iterator VI;
 
 #endif

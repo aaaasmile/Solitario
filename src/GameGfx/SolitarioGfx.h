@@ -8,7 +8,7 @@
 #include "GameSettings.h"
 #include "WinTypeGlobal.h"
 
-typedef std::vector<CardRegionGfx>::iterator rVI;
+typedef std::vector<CardRegionGfx>::iterator regionVI;
 
 struct DRAGCARD {
     int x;
@@ -37,39 +37,40 @@ public:
     void CreateRegion(int id, unsigned int attribs, unsigned int amode,
                       int dmode, int symbol, int x, int y, int xoffset,
                       int yoffset);
-    bool DeleteRegion(CardRegionGfx *pRegion);
+    bool DeleteRegion(LPCardRegionGfx pRegion);
 
     void EmptyStacks();
     void InitAllCoords();
 
-    CardRegionGfx *OnMouseDown(int x, int y);
+    LPCardRegionGfx OnMouseDown(int x, int y);
 
     LPErrInApp InitDrag(int x, int y, bool &isInitDrag);
-    LPErrInApp InitDrag(CardStackGfx *CargoStack, int x, int y,
+    LPErrInApp InitDrag(LPCardStackGfx CargoStack, int x, int y,
                         bool &isInitDrag);
 
     void DoDrag(int x, int y);
 
     void DoDrop();
-    void DoDrop(CardRegionGfx *DestRegion);
+    void DoDrop(LPCardRegionGfx pDestRegion);
 
-    CardRegionGfx *FindDropRegion(int Id, CardGfx card);
-    CardRegionGfx *FindDropRegion(int Id, CardStackGfx stack);
+    LPCardRegionGfx FindDropRegion(int Id, LPCardGfx pCard);
+    LPCardRegionGfx FindDropRegion(int Id, LPCardStackGfx pStack);
 
     void DrawStaticScene();
     LPErrInApp DrawBackground(BOOL bIsInit);
 
-    CardRegionGfx *GetBestStack(int x, int y, int width, int height,
-                                CardStackGfx *stack);
+    LPCardRegionGfx GetBestStack(int x, int y, int width, int height,
+                                 LPCardStackGfx stack);
 
-    LPErrInApp DrawCardStack(SDL_Surface *s, CardRegionGfx *pcardRegion);
-    LPErrInApp DrawCardStack(rVI vi);
+    LPErrInApp DrawCardStack(SDL_Surface *s, LPCardRegionGfx pcardRegion);
+    LPErrInApp DrawCardStack(LPCardRegionGfx pcardRegion);
 
     LPErrInApp DrawCard(int x, int y, int nCdIndex);
     LPErrInApp DrawCard(int x, int y, int nCdIndex, SDL_Surface *s);
+    LPErrInApp DrawCard(LPCardGfx pCard, SDL_Surface *s);
+
     LPErrInApp DrawCardPac(int x, int y, int nCdIndex, SDL_Surface *s);
-    LPErrInApp DrawCard(VI vi, SDL_Surface *s);
-    LPErrInApp DrawCardPac(VI vi, SDL_Surface *s);
+    LPErrInApp DrawCardPac(LPCardGfx pCard, SDL_Surface *s);
 
     LPErrInApp DrawCardBack(int x, int y);
     LPErrInApp DrawCardBack(int x, int y, SDL_Surface *s);
@@ -96,39 +97,39 @@ public:
     }
     bool Empty(int regionNo) { return _cardRegionList[regionNo].Empty(); }
     void Shuffle(int regionNo) { _cardRegionList[regionNo].Shuffle(); }
-    void PushCardInRegion(int regionNo, CardGfx card) {
-        _cardRegionList[regionNo].Push(card);
+    void PushCardInRegion(int regionNo, LPCardGfx pCard) {
+        _cardRegionList[regionNo].PushCard(pCard);
     }
-    void PushStackInRegion(int regionNo, CardStackGfx cs) {
-        _cardRegionList[regionNo].Push(cs);
+    void PushStackInRegion(int regionNo, LPCardStackGfx pStack) {
+        _cardRegionList[regionNo].PushStack(pStack);
     }
-    CardGfx PopCardFromRegion(int regionNo) {
+    LPCardGfx PopCardFromRegion(int regionNo) {
         return _cardRegionList[regionNo].PopCard();
     }
-    CardStackGfx PopStackFromRegion(int regionNo, int items) {
+    LPCardStackGfx PopStackFromRegion(int regionNo, int items) {
         return _cardRegionList[regionNo].PopStack(items);
     }
-    void SetCardFaceUp(int regionNo, bool fTrue, int idx) {
-        _cardRegionList[regionNo].SetCardFaceUp(fTrue, idx);
+    void SetCardFaceUp(int regionNo, bool bVal, int idx) {
+        _cardRegionList[regionNo].SetCardFaceUp(bVal, idx);
     }
     int RegionSize(int regionNo) { return _cardRegionList[regionNo].Size(); }
     void Reverse(int regionNo) { _cardRegionList[regionNo].Reverse(); }
     void InitCardCoords(int regionNo) {
         _cardRegionList[regionNo].InitCardCoords();
     }
-    CardRegionGfx *GetRegion(int regionNo) {
+    LPCardRegionGfx GetRegion(int regionNo) {
         return &_cardRegionList[regionNo];
     }
 
 private:
     void updateTextureAsFlipScreen();
-    void zoomCard(int &sx, int &sy, VI vi, int width, int height,
+    void zoomCard(int &sx, int &sy, LPCardGfx pCard, int width, int height,
                   SDL_Surface *bg, SDL_Surface *fg);
 
 private:
     CardStackGfx _dragStack;
     DRAGCARD _dragCard;
-    CardRegionGfx *_p_sourceRegion;
+    LPCardRegionGfx _p_sourceRegion;
 
     SDL_Surface *_p_Screen;
     SDL_Texture *_p_ScreenTexture;

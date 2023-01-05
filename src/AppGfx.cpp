@@ -304,8 +304,9 @@ LPErrInApp AppGfx::newGame() {
     // deal
     int i;
     for (i = 1; i <= 7; i++) {
-        _p_SolitarioGfx->PushStackInRegion(
-            i, _p_SolitarioGfx->PopStackFromRegion(0, i));
+        LPCardStackGfx pStack = _p_SolitarioGfx->PopStackFromRegion(0, i);
+        _p_SolitarioGfx->PushStackInRegion(i, pStack);
+        delete pStack;
     }
 
     _p_SolitarioGfx->InitAllCoords();
@@ -364,29 +365,30 @@ LPErrInApp AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
         }
         // clicked on the pile
         if (srcReg->Id == CRD_PILE) {
-            CardStackGfx *cs = new CardStackGfx;
             if (srcReg->Empty() &&
                 !_p_SolitarioGfx->Empty(8))  // Bring back the cards
             {
-                *cs = _p_SolitarioGfx->PopStackFromRegion(
+                LPCardStackGfx pCardStack = _p_SolitarioGfx->PopStackFromRegion(
                     8, _p_SolitarioGfx->RegionSize(8));
-                cs->SetCardsFaceUp(FALSE);
-                err = _p_SolitarioGfx->InitDrag(cs, -1, -1, isInitDrag);
+                pCardStack->SetCardsFaceUp(FALSE);
+                err = _p_SolitarioGfx->InitDrag(pCardStack, -1, -1, isInitDrag);
                 if (err != NULL) {
                     return err;
                 }
                 _p_SolitarioGfx->DoDrop(_p_SolitarioGfx->GetRegion(0));
                 _p_SolitarioGfx->Reverse(0);
                 _p_SolitarioGfx->InitCardCoords(0);
-            } else if (!srcReg->Empty() && (!_p_SolitarioGfx->Empty(8) ||
-                                            _p_SolitarioGfx->Empty(8))) {
-                *cs = _p_SolitarioGfx->PopStackFromRegion(0, 1);
-                cs->SetCardsFaceUp(TRUE);
-                err = _p_SolitarioGfx->InitDrag(cs, -1, -1, isInitDrag);
+                delete pCardStack;
+            } else if (!srcReg->Empty()) {
+                LPCardStackGfx pCardStack =
+                    _p_SolitarioGfx->PopStackFromRegion(0, 1);
+                pCardStack->SetCardsFaceUp(TRUE);
+                err = _p_SolitarioGfx->InitDrag(pCardStack, -1, -1, isInitDrag);
                 if (err != NULL) {
                     return err;
                 }
                 _p_SolitarioGfx->DoDrop(_p_SolitarioGfx->GetRegion(8));
+                delete pCardStack;
             }
         }
     }
@@ -396,21 +398,22 @@ LPErrInApp AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
         srcReg = _p_SolitarioGfx->OnMouseDown(event.button.x, event.button.y);
         if (srcReg == NULL)
             return NULL;
-        CardRegionGfx *cr;
-        CardGfx card = srcReg->GetCard(srcReg->Size() - 1);
+        LPCardGfx pCard = srcReg->GetCard(srcReg->Size() - 1);
 
         // clicked on the top of the foundations
         if (((srcReg->Id == CRD_FOUNDATION) || (srcReg->Id == CRD_RESERVE)) &&
-            card.FaceUp() && srcReg->PtOnTop(event.button.x, event.button.y)) {
-            cr = _p_SolitarioGfx->FindDropRegion(CRD_WASTE, card);
-            if (cr) {
-                CardStackGfx *cs = new CardStackGfx;
-                *cs = srcReg->PopStack(1);
-                err = _p_SolitarioGfx->InitDrag(cs, -1, -1, isInitDrag);
+            pCard->FaceUp() &&
+            srcReg->PtOnTop(event.button.x, event.button.y)) {
+            LPCardRegionGfx pRegion =
+                _p_SolitarioGfx->FindDropRegion(CRD_WASTE, pCard);
+            if (pRegion != NULL) {
+                LPCardStackGfx pCardStack = srcReg->PopStack(1);
+                err = _p_SolitarioGfx->InitDrag(pCardStack, -1, -1, isInitDrag);
                 if (err != NULL) {
                     return err;
                 }
-                _p_SolitarioGfx->DoDrop(cr);
+                _p_SolitarioGfx->DoDrop(pRegion);
+                delete pCardStack;
             }
         }
     }

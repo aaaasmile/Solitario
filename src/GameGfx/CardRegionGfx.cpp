@@ -10,19 +10,15 @@ void CardRegionGfx::InitCardCoords() {
     int pos = 0;
     int it = 0;
 
-    if (Attributes & CRD_3D) {
-        for (VI vi = InternalStack.begin(); vi != InternalStack.end(); ++vi) {
-            vi->SetCardLoc(x, y);
+    for (VI vi = InternalStack.begin(); vi != InternalStack.end(); ++vi) {
+        LPCardGfx pCard = *vi;
+        pCard->SetCardLoc(x, y);
+        if (Attributes & CRD_3D) {
             if (!((it++) % 4))
                 pos++;
             x = (pos * 2) + XCoord;
             y = pos + YCoord;
-        }
-    }
-
-    else {
-        for (VI vi = InternalStack.begin(); vi != InternalStack.end(); ++vi) {
-            vi->SetCardLoc(x, y);
+        } else {
             x += _xOffset;
             y += _yOffset;
         }
@@ -38,32 +34,32 @@ bool CardRegionGfx::PtInStack(int x, int y) {
     if (!(Attributes & CRD_VISIBLE))
         return false;
 
-    if (Attributes & CRD_3D && !this->Empty())
-        return InternalStack[InternalStack.Size() - 1].PtInCard(x, y);
+    if (Attributes & CRD_3D && !this->Empty()) {
+        LPCardGfx pCard = InternalStack[InternalStack.Size() - 1];
+        return pCard->PtInCard(x, y);
+    }
 
-    int StackWidth = this->GetStackWidth();
-    int StackHeight = this->GetStackHeight();
+    int StackWidth = GetStackWidth();
+    int StackHeight = GetStackHeight();
 
-    if (x >= XCoord && x <= XCoord + StackWidth && y >= YCoord &&
-        y <= YCoord + StackHeight)
-        return true;
-    else
-        return false;
+    return (x >= XCoord && x <= XCoord + StackWidth && y >= YCoord &&
+            y <= YCoord + StackHeight);
 }
 
 bool CardRegionGfx::PtOnTop(int x, int y) {
-    if (this->Empty())
+    if (Empty())
         return false;
 
-    return InternalStack[InternalStack.Size() - 1].PtInCard(x, y);
+    LPCardGfx pCard = InternalStack[InternalStack.Size() - 1];
+    return pCard->PtInCard(x, y);
 }
 
 int CardRegionGfx::GetOverlapRatio(int x, int y, int w, int h) {
     if (!(Attributes & CRD_DODROP))
         return 0;
 
-    int StackWidth = this->GetStackWidth();
-    int StackHeight = this->GetStackHeight();
+    int StackWidth = GetStackWidth();
+    int StackHeight = GetStackHeight();
 
     int wi, hi;
 
@@ -145,30 +141,28 @@ int CardRegionGfx::GetOverlapRatio(int x, int y, int w, int h) {
     return wi * hi;
 }
 
-bool CardRegionGfx::CanDrop(CardStackGfx *stack) {
+bool CardRegionGfx::CanDrop(LPCardStackGfx stack) {
     if (InternalStack.Empty() &&
         (!(_acceptMode & CRD_DOKING) && !(_acceptMode & CRD_DOACE)))
         return false;
 
     VI vi = stack->begin();
+    LPCardGfx pStartCard = *vi;
 
-    // if empty
     if (InternalStack.Empty() && (_acceptMode & CRD_DOKING) &&
-        (vi->Rank() != 10))
+        (pStartCard->Rank() != 10))
         return false;
     else if (InternalStack.Empty() && (_acceptMode & CRD_DOACE) &&
-             (vi->Rank() != 1))
+             (pStartCard->Rank() != 1))
         return false;
     else if (InternalStack.Empty())
         return true;
 
-    VI myvi = InternalStack.end() - 1;
+    VI lastvi = InternalStack.end() - 1;
+    LPCardGfx pLastCard = *lastvi;
 
-    if (myvi->FaceDown())
+    if (pLastCard->FaceDown())
         return false;
-
-    //	printf("vi->Suit() = %i, vi->Rank() = %i, myvi->Suit() = %i,
-    // myvi->Rank() = %i\n",vi->Suit(),vi->Rank(),myvi->Suit(),myvi->Rank());
 
     if (!(Attributes & CRD_DODROP))
         return false;
@@ -177,25 +171,22 @@ bool CardRegionGfx::CanDrop(CardStackGfx *stack) {
         return true;
 
     if ((_acceptMode & CRD_DOSINGLE) && (stack->Size() > 1)) {
-        //		printf("fSingle returned false\n");
         return false;
     }
 
-    if ((_acceptMode & CRD_DOOPCOLOR) && ((myvi->IsBlack() && vi->IsBlack()) ||
-                                          (myvi->IsRed() && vi->IsRed()))) {
-        //		printf("fOpColor returned false\n");
+    if ((_acceptMode & CRD_DOOPCOLOR) &&
+        ((pLastCard->IsBlack() && pLastCard->IsBlack()) ||
+         (pLastCard->IsRed() && pLastCard->IsRed()))) {
         return false;
     }
 
     if (((_acceptMode & CRD_DORED) && !(_acceptMode & CRD_DOBLACK)) &&
-        vi->IsBlack()) {
-        //		printf("fRed && !fBlack returned false\n");
+        pLastCard->IsBlack()) {
         return false;
     }
 
     if ((!(_acceptMode & CRD_DORED) && (_acceptMode & CRD_DOBLACK)) &&
-        vi->IsRed()) {
-        //		printf("!fRed && fBlack returned false\n");
+        pLastCard->IsRed()) {
         return false;
     }
 
@@ -203,50 +194,47 @@ bool CardRegionGfx::CanDrop(CardStackGfx *stack) {
         _acceptMode |= CRD_DOEQUAL;
 
     if (_acceptMode & CRD_DOEQUAL) {
-        //		printf("in fEqual\n");
         if (((_acceptMode & CRD_DOHIGHER) && !(_acceptMode & CRD_DOLOWER)) &&
-            (vi->Rank() < myvi->Rank()))
+            (pStartCard->Rank() < pLastCard->Rank()))
             return false;
         if ((!(_acceptMode & CRD_DOHIGHER) && (_acceptMode & CRD_DOLOWER)) &&
-            (vi->Rank() > myvi->Rank()))
+            (pStartCard->Rank() > pLastCard->Rank()))
             return false;
         if ((!(_acceptMode & CRD_DOHIGHER) && !(_acceptMode & CRD_DOLOWER)) &&
-            (vi->Rank() != myvi->Rank()))
+            (pStartCard->Rank() != pLastCard->Rank()))
             return false;
-        // by 1
+
         if (((_acceptMode & CRD_DOHIGHERBY1) &&
              !(_acceptMode & CRD_DOLOWERBY1)) &&
-            ((vi->Rank() - myvi->Rank()) > 1))
+            ((pStartCard->Rank() - pLastCard->Rank()) > 1))
             return false;
         if ((!(_acceptMode & CRD_DOHIGHERBY1) &&
              (_acceptMode & CRD_DOLOWERBY1)) &&
-            ((vi->Rank() - myvi->Rank()) < -1))
+            ((pStartCard->Rank() - pLastCard->Rank()) < -1))
             return false;
     }
     if (!(_acceptMode & CRD_DOEQUAL)) {
-        //		printf("in !fEqual\n");
         if (((_acceptMode & CRD_DOHIGHER) && !(_acceptMode & CRD_DOLOWER)) &&
-            (vi->Rank() <= myvi->Rank()))
+            (pStartCard->Rank() <= pLastCard->Rank()))
             return false;
         if ((!(_acceptMode & CRD_DOHIGHER) && (_acceptMode & CRD_DOLOWER)) &&
-            (vi->Rank() >= myvi->Rank()))
+            (pStartCard->Rank() >= pLastCard->Rank()))
             return false;
         if ((!(_acceptMode & CRD_DOHIGHER) && !(_acceptMode & CRD_DOLOWER)) &&
-            (vi->Rank() == myvi->Rank()))
+            (pStartCard->Rank() == pLastCard->Rank()))
             return false;
-        // by 1
         if (((_acceptMode & CRD_DOHIGHERBY1) &&
              !(_acceptMode & CRD_DOLOWERBY1)) &&
-            ((vi->Rank() - myvi->Rank()) > 1))
+            ((pStartCard->Rank() - pLastCard->Rank()) > 1))
             return false;
         if ((!(_acceptMode & CRD_DOHIGHERBY1) &&
              (_acceptMode & CRD_DOLOWERBY1)) &&
-            ((vi->Rank() - myvi->Rank()) < -1))
+            ((pStartCard->Rank() - pLastCard->Rank()) < -1))
             return false;
     }
 
-    if ((_acceptMode & CRD_DOSUIT) && (vi->Suit() != myvi->Suit())) {
-        //		printf("fSuit returned false\n");
+    if ((_acceptMode & CRD_DOSUIT) &&
+        (pStartCard->Suit() != pLastCard->Suit())) {
         return false;
     }
 
@@ -256,15 +244,18 @@ bool CardRegionGfx::CanDrop(CardStackGfx *stack) {
 int CardRegionGfx::GetStackWidth() {
     if (InternalStack.Empty())
         return g_CARDWIDTH;
+    LPCardGfx pStartCard = InternalStack[0];
+    LPCardGfx pLastCard = InternalStack[InternalStack.Size() - 1];
 
-    return (InternalStack[InternalStack.Size() - 1].X() + g_CARDWIDTH) -
-           InternalStack[0].X();
+    return pLastCard->X() + g_CARDWIDTH - pStartCard->X();
 }
 
 int CardRegionGfx::GetStackHeight() {
     if (InternalStack.Empty())
         return g_CARDHEIGHT;
 
-    return (InternalStack[InternalStack.Size() - 1].Y() + g_CARDHEIGHT) -
-           InternalStack[0].Y();
+    LPCardGfx pStartCard = InternalStack[0];
+    LPCardGfx pLastCard = InternalStack[InternalStack.Size() - 1];
+
+    return pLastCard->Y() + g_CARDHEIGHT - pStartCard->Y();
 }

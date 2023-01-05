@@ -10,7 +10,7 @@
 #include "CardGfx.h"
 #include "ErrorInfo.h"
 
-class CardStackGfx : public std::vector<CardGfx> {
+class CardStackGfx : public std::vector<LPCardGfx> {
 public:
     LPErrInApp NewDeck();
     void Shuffle();
@@ -20,19 +20,21 @@ public:
     bool Empty() { return this->empty(); }
     int Size() { return this->size(); }
 
-    void PushCard(const CardGfx card);
-    void PushStack(CardStackGfx cardstack);
+    void PushCard(const LPCardGfx pCard);
+    void PushStack(CardStackGfx* pCardstack);
 
-    CardGfx PopCard();
-    CardStackGfx PopStack(int items);
+    LPCardGfx PopCard();
+    CardStackGfx* PopStack(int items);
 
-    CardGfx RemoveCard(int index);
-    void InsertCard(int index, CardGfx card);
+    LPCardGfx RemoveCard(int index);
+    void InsertCard(int index, LPCardGfx pCard);
 
     int GetClickedCard(int x, int y);
-    CardGfx GetCard(int index);
+    LPCardGfx GetCard(int index);
 
     void SetCardsFaceUp(bool fTrue);
 };
+
+typedef CardStackGfx* LPCardStackGfx;
 
 #endif
