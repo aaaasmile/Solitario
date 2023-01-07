@@ -233,7 +233,7 @@ LPErrInApp AppGfx::startGameLoop() {
                 CRD_DOKING,  // accept mode
             CRD_DRAGFACEUP,  // drag mode
             CRD_HSYMBOL,     // symbol
-            (g_CARDWIDTH * (i - 1)) + (i * 17), g_CARDHEIGHT + 40, 0,
+            (g_CardWidth * (i - 1)) + (i * 17), g_CardHeight + 40, 0,
             32);  // x, y, x offset, yoffset
     }
 
@@ -244,7 +244,7 @@ LPErrInApp AppGfx::startGameLoop() {
         CRD_DOALL,                                       // accept mode
         CRD_DRAGTOP,                                     // drag mode
         CRD_NSYMBOL,                                     // symbol
-        g_CARDWIDTH + 65, 10, 0, 0);  // x, y, x offset, yoffset
+        g_CardWidth + 65, 10, 0, 0);  // x, y, x offset, yoffset
 
     // index 9-12 (4 aces place on the top)
     for (i = 4; i <= 7; i++) {
@@ -255,7 +255,7 @@ LPErrInApp AppGfx::startGameLoop() {
                 CRD_DOSUIT,  // Accept mode
             CRD_DRAGTOP,     // drop mode
             CRD_HSYMBOL,     // symbol
-            (g_CARDWIDTH * (i - 1)) + (i * 17), 10, 0,
+            (g_CardWidth * (i - 1)) + (i * 17), 10, 0,
             0);  // x, y, x offset, yoffset
     }
 
@@ -349,7 +349,10 @@ LPErrInApp AppGfx::handleGameLoopKeyDownEvent(SDL_Event &event) {
         _p_SolitarioGfx->DrawStaticScene();
     }
     if (event.key.keysym.sym == SDLK_a) {
-        _p_SolitarioGfx->AnimateCards();
+        err = _p_SolitarioGfx->VictoryAnimation();
+        if (err != NULL) {
+            return err;
+        }
     }
     if (event.key.keysym.sym == SDLK_r) {
         _p_SolitarioGfx->DrawStaticScene();
@@ -467,7 +470,7 @@ LPErrInApp AppGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
         (_p_SolitarioGfx->Size(Ace_Ix2) == 10) &&
         (_p_SolitarioGfx->Size(Ace_Ix3) == 10) &&
         (_p_SolitarioGfx->Size(Ace_Ix4) == 10)) {
-        _p_SolitarioGfx->AnimateCards();
+        _p_SolitarioGfx->VictoryAnimation();
         err = newGame();
         if (err != NULL) {
             return err;

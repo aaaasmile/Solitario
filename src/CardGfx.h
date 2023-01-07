@@ -6,10 +6,10 @@
 #include "ErrorInfo.h"
 
 // if will be using custom cards then these should be initialized outside
-extern unsigned int g_CARDWIDTH;
-extern unsigned int g_CARDHEIGHT;
-extern unsigned int g_SYMBOLWIDTH;
-extern unsigned int g_SYMBOLHEIGHT;
+extern int g_CardWidth;
+extern int g_CardHeight;
+extern int g_SymbolWidth;
+extern int g_SymbolHeight;
 
 enum eSUIT { BASTONI = 0, COPPE = 1, DENARI = 2, SPADE = 3, UNDEF = 4 };
 
@@ -77,8 +77,8 @@ public:
     }
 
     bool PtInCard(int lx, int ly) {
-        if (lx >= _x && lx <= g_CARDWIDTH + _x && ly >= _y &&
-            ly <= g_CARDHEIGHT + _y)
+        if (lx >= _x && lx <= g_CardWidth + _x && ly >= _y &&
+            ly <= g_CardHeight + _y)
             return true;
         else
             return false;

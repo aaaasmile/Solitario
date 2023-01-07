@@ -80,7 +80,7 @@ public:
     LPErrInApp DrawSymbol(int x, int y, int nSymbol, SDL_Surface *s);
     LPErrInApp DrawSymbolPac(int x, int y, int nSymbol, SDL_Surface *s);
 
-    int AnimateCards();
+    LPErrInApp VictoryAnimation();
     void SetDeckType(DeckType &Val) { _DeckType.CopyFrom(Val); }
     void ClearSurface();
 

@@ -9,12 +9,10 @@
 #include "WinTypeGlobal.h"
 
 // card graphics
-unsigned int g_CARDWIDTH = 0;
-unsigned int g_CARDHEIGHT = 0;
-unsigned int g_SYMBOLWIDTH = 84;
-unsigned int g_SYMBOLHEIGHT = 144;
-
-int const CARDBACKLOC = 40 * g_CARDWIDTH;  // modify to allow custom card backs
+int g_CardWidth = 0;
+int g_CardHeight = 0;
+int g_SymbolWidth = 84;
+int g_SymbolHeight = 144;
 
 #define FPS 30
 #define FRAMETICKS (1000 / FPS)
@@ -321,8 +319,8 @@ void SolitarioGfx::DoDrop(LPCardRegionGfx pDestRegion) {
     if (pDestRegion != NULL)
         pBestRegion = pDestRegion;
     else
-        pBestRegion = GetBestStack(_dragCard.x, _dragCard.y, g_CARDWIDTH,
-                                   g_CARDHEIGHT, &_dragStack);
+        pBestRegion = GetBestStack(_dragCard.x, _dragCard.y, g_CardWidth,
+                                   g_CardHeight, &_dragStack);
     if (pBestRegion == NULL)
         pBestRegion = _p_sourceRegion;  // drop go back to the source, no stack
                                         // found to recive the drag
@@ -536,10 +534,10 @@ LPErrInApp SolitarioGfx::DrawCardPac(int x, int y, int nCdIndex,
     TRACE("Suit %d, card: %d", iSegnoIx, iCartaIx);
 
     SDL_Rect srcCard;
-    srcCard.x = iSegnoIx * g_CARDWIDTH;
-    srcCard.y = iCartaIx * g_CARDHEIGHT;
-    srcCard.w = g_CARDWIDTH;
-    srcCard.h = g_CARDHEIGHT;
+    srcCard.x = iSegnoIx * g_CardWidth;
+    srcCard.y = iCartaIx * g_CardHeight;
+    srcCard.w = g_CardWidth;
+    srcCard.h = g_CardHeight;
 
     SDL_Rect dest;
     dest.x = x;
@@ -600,10 +598,10 @@ LPErrInApp SolitarioGfx::DrawCardPac(LPCardGfx pCard, SDL_Surface *s) {
     int iCartaIx = nCdIndex % 10;
     SDL_Rect srcCard;
 
-    srcCard.x = iSegnoIx * g_CARDWIDTH;
-    srcCard.y = iCartaIx * g_CARDHEIGHT;
-    srcCard.w = g_CARDWIDTH;
-    srcCard.h = g_CARDHEIGHT;
+    srcCard.x = iSegnoIx * g_CardWidth;
+    srcCard.y = iCartaIx * g_CardHeight;
+    srcCard.w = g_CardWidth;
+    srcCard.h = g_CardHeight;
 
     SDL_Rect dest;
     dest.x = pCard->X();
@@ -653,8 +651,8 @@ LPErrInApp SolitarioGfx::DrawCardBackPac(int x, int y, SDL_Surface *s) {
 
     srcBack.x = 0;
     srcBack.y = 0;
-    srcBack.w = g_SYMBOLWIDTH;
-    srcBack.h = g_SYMBOLHEIGHT;
+    srcBack.w = g_SymbolWidth;
+    srcBack.h = g_SymbolHeight;
 
     if (SDL_BlitSurface(_p_Symbols, &srcBack, s, &dest) == -1) {
         return ERR_UTIL::ErrorCreate(
@@ -698,10 +696,10 @@ LPErrInApp SolitarioGfx::DrawSymbol(int x, int y, int nSymbol, SDL_Surface *s) {
 LPErrInApp SolitarioGfx::DrawSymbolPac(int x, int y, int nSymbol,
                                        SDL_Surface *s) {
     SDL_Rect srcCard;
-    srcCard.x = nSymbol * g_SYMBOLWIDTH;
+    srcCard.x = nSymbol * g_SymbolWidth;
     srcCard.y = 0;
-    srcCard.w = g_SYMBOLWIDTH;
-    srcCard.h = g_SYMBOLHEIGHT;
+    srcCard.w = g_SymbolWidth;
+    srcCard.h = g_SymbolHeight;
 
     SDL_Rect dest;
     dest.x = x;
@@ -715,9 +713,9 @@ LPErrInApp SolitarioGfx::DrawSymbolPac(int x, int y, int nSymbol,
     return NULL;
 }
 
-int SolitarioGfx::AnimateCards() {
+LPErrInApp SolitarioGfx::VictoryAnimation() {
     srand((unsigned)time(NULL));
-
+    LPErrInApp err;
     int rot;
     int id;
     int x;
@@ -725,13 +723,13 @@ int SolitarioGfx::AnimateCards() {
     int xspeed;
     int yspeed;
 
-    int GRAVITY = 1;
-    unsigned int MAXY = _p_Screen->h;
-    float BOUNCE = 0.8f;
+    int gravity = 1;
+    unsigned int max_y = _p_Screen->h;
+    float bounce = 0.8f;
 
     do {
         rot = rand() % 2;
-        id = rand() % 51;
+        id = rand() % NUM_CARDS;
         x = rand() % _p_Screen->w;
         y = rand() % _p_Screen->h / 2;
 
@@ -742,31 +740,27 @@ int SolitarioGfx::AnimateCards() {
 
         yspeed = 0;
 
-        do  // while card is within the _p_screen
-        {
+        do {
             SDL_PumpEvents();
             if (SDL_GetMouseState(NULL, NULL))
-                return 1;  // stop the animation
+                return NULL;
 
-            yspeed = yspeed + GRAVITY;
+            yspeed = yspeed + gravity;
             x += xspeed;
             y += yspeed;
 
-            if (y + g_CARDHEIGHT > MAXY) {
-                y = MAXY - g_CARDHEIGHT;
-                yspeed = int(-yspeed * BOUNCE);
+            if (y + g_CardHeight > max_y) {
+                y = max_y - g_CardHeight;
+                yspeed = int(-yspeed * bounce);
             }
-
-            DrawCard(x, y, id, _p_Screen);
+            err = DrawCard(x, y, id, _p_Screen);
+            if (err != NULL) {
+                return err;
+            }
             updateTextureAsFlipScreen();
-        }
-        // 73 here is CARDWIDTH, but when using CARDWIDTH, it doesn't
-        // work
-        while ((x + 73 > 0) && (x < _p_Screen->w));
-        //		while((x + CARDWIDTH > 0) && (x < _p_screen->w));
-    } while (1);  // or while within specified time
-
-    return 0;
+        } while ((x + g_CardWidth > 0) && (x < _p_Screen->w));
+    } while (1);
+    return NULL;
 }
 
 LPErrInApp SolitarioGfx::LoadDeckFromSingleFile() {
@@ -815,8 +809,8 @@ LPErrInApp SolitarioGfx::LoadDeckFromSingleFile() {
             }
         }
     }
-    g_CARDWIDTH = _p_CardsSurf[0]->clip_rect.w;
-    g_CARDHEIGHT = _p_CardsSurf[0]->clip_rect.h;
+    g_CardWidth = _p_CardsSurf[0]->clip_rect.w;
+    g_CardHeight = _p_CardsSurf[0]->clip_rect.h;
 
     return NULL;
 }
@@ -895,8 +889,8 @@ LPErrInApp SolitarioGfx::LoadCardPac() {
 
     SDL_SetColorKey(_p_Deck, TRUE, SDL_MapRGB(_p_Deck->format, 0, 128, 0));
 
-    g_CARDWIDTH = w / 4;
-    g_CARDHEIGHT = h / 10;
+    g_CardWidth = w / 4;
+    g_CardHeight = h / 10;
 
     return NULL;
 }
@@ -919,8 +913,8 @@ LPErrInApp SolitarioGfx::LoadSymbolsForPac() {
                         SDL_MapRGB(_p_Symbols->format, 0, 128, 0));
     }
 
-    g_SYMBOLWIDTH = _p_Symbols->w / 4;
-    g_SYMBOLHEIGHT = _p_Symbols->h;
+    g_SymbolWidth = _p_Symbols->w / 4;
+    g_SymbolHeight = _p_Symbols->h;
 
     return NULL;
 }
