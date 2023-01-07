@@ -205,7 +205,7 @@ LPErrInApp SolitarioGfx::InitDrag(LPCardStackGfx pCargoStack, int x, int y,
                 break;
             }
             case CRD_DRAGFACEUP: {
-                if (_p_sourceRegion->CardFaceUp(idx)) {
+                if (_p_sourceRegion->IsCardFaceUp(idx)) {
                     LPCardStackGfx pStack = _p_sourceRegion->PopStack(
                         _p_sourceRegion->Size() - idx);
                     _dragStack.PushStack(pStack);

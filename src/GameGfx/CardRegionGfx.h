@@ -20,6 +20,7 @@ const unsigned int CRD_3D = (1 << 2);      // draw card region as a 3d stack
 const unsigned int CRD_DODRAG = (1 << 3);  // card region can/cannot be dragged
 const unsigned int CRD_DODROP = (1 << 4);  // card region (doesn't)accept drops
 // Accept/Drop flags
+const unsigned int CRD_DONOTHING = 0;
 const unsigned int CRD_DOALL =
     (1 << 0);  // TRUE:accept anything					FALSE:check other flags
 const unsigned int CRD_DOSINGLE = (1 << 1);  // TRUE:accept only single cards
@@ -71,24 +72,6 @@ public:
 
     LPCardStackGfx GetCardStack() { return &InternalStack; }
 
-    void SetCoords(int x, int y) {
-        XCoord = x;
-        YCoord = y;
-    }
-    void GetCoords(int &x, int &y) {
-        x = XCoord;
-        y = YCoord;
-    }
-
-    void SetOffsets(int x, int y) {
-        _xOffset = x;
-        _yOffset = y;
-    }
-    int GetOffsets(int &xoff, int &yoff) {
-        xoff = _xOffset;
-        yoff = _yOffset;
-        return 0;
-    }
     int GetxOffset() { return _xOffset; }
     int GetyOffset() { return _yOffset; }
 
@@ -96,17 +79,11 @@ public:
         InternalStack.SetCardsFaceUp(Attributes & CRD_FACEUP);
     }
 
-    bool IsVisible() { return Attributes & CRD_VISIBLE; }
-    bool FaceUp() const { return Attributes & CRD_FACEUP; }
-    bool FaceDown() const { return !(Attributes & CRD_FACEUP); }
-    bool CanDrag() const { return Attributes & CRD_DODRAG; }
-
     void SetCardFaceUp(bool bVal, int idx) {
         InternalStack[idx]->SetFaceUp(bVal);
     }
-    bool CardFaceUp(int idx) { return InternalStack[idx]->IsFaceUp(); }
+    bool IsCardFaceUp(int idx) { return InternalStack[idx]->IsFaceUp(); }
 
-    void SetDragMode(int mode) { _dragMode = mode; }
     int GetDragMode() const { return _dragMode; }
 
     void SetSymbol(int symbol) { Symbol = symbol; }

@@ -216,29 +216,48 @@ LPErrInApp AppGfx::startGameLoop() {
     if (err != NULL)
         return err;
 
-    // index 0
-    _p_SolitarioGfx->CreateRegion(CRD_PILE, CRD_VISIBLE | CRD_3D, 0, 0,
-                                  CRD_OSYMBOL, 35, 10, 2, 2);
+    // index 0 (deck with face down)
+    _p_SolitarioGfx->CreateRegion(CRD_PILE,              // ID
+                                  CRD_VISIBLE | CRD_3D,  // attributes
+                                  CRD_DONOTHING,         // Accept mode
+                                  CRD_DONOTHING,         // drag mode
+                                  CRD_OSYMBOL,           // symbol
+                                  35, 10, 2, 2);  // x, y, x offset, yoffset
     // index 1-7
     int i;
-    for (i = 1; i <= 7; i++)
+    for (i = 1; i <= 7; i++) {
         _p_SolitarioGfx->CreateRegion(
-            CRD_FOUNDATION, CRD_VISIBLE | CRD_DODRAG | CRD_DODROP,
-            CRD_DOOPCOLOR | CRD_DOLOWER | CRD_DOLOWERBY1 | CRD_DOKING,
-            CRD_DRAGFACEUP, CRD_HSYMBOL, (g_CARDWIDTH * (i - 1)) + (i * 17),
-            g_CARDHEIGHT + 40, 0, 32);
-    // index 8
+            CRD_FOUNDATION,                         // ID
+            CRD_VISIBLE | CRD_DODRAG | CRD_DODROP,  // attributes
+            CRD_DOOPCOLOR | CRD_DOLOWER | CRD_DOLOWERBY1 |
+                CRD_DOKING,  // accept mode
+            CRD_DRAGFACEUP,  // drag mode
+            CRD_HSYMBOL,     // symbol
+            (g_CARDWIDTH * (i - 1)) + (i * 17), g_CARDHEIGHT + 40, 0,
+            32);  // x, y, x offset, yoffset
+    }
+
+    // index 8 (deck face up)
     _p_SolitarioGfx->CreateRegion(
-        CRD_RESERVE, CRD_VISIBLE | CRD_FACEUP | CRD_DODRAG | CRD_3D, CRD_DOALL,
-        CRD_DRAGTOP, CRD_NSYMBOL, g_CARDWIDTH + 65, 10, 0, 0);
-    // index 9-12
-    for (i = 4; i <= 7; i++)
+        CRD_RESERVE,                                     // ID
+        CRD_VISIBLE | CRD_FACEUP | CRD_DODRAG | CRD_3D,  // Attributes
+        CRD_DOALL,                                       // accept mode
+        CRD_DRAGTOP,                                     // drag mode
+        CRD_NSYMBOL,                                     // symbol
+        g_CARDWIDTH + 65, 10, 0, 0);  // x, y, x offset, yoffset
+
+    // index 9-12 (4 aces place on the top)
+    for (i = 4; i <= 7; i++) {
         _p_SolitarioGfx->CreateRegion(
-            CRD_WASTE, CRD_VISIBLE | CRD_3D | CRD_DODRAG | CRD_DODROP,
+            CRD_WASTE,                                       // ID
+            CRD_VISIBLE | CRD_3D | CRD_DODRAG | CRD_DODROP,  // Attributes
             CRD_DOSINGLE | CRD_DOHIGHER | CRD_DOHIGHERBY1 | CRD_DOACE |
-                CRD_DOSUIT,
-            CRD_DRAGTOP, CRD_HSYMBOL, (g_CARDWIDTH * (i - 1)) + (i * 17), 10, 0,
-            0);
+                CRD_DOSUIT,  // Accept mode
+            CRD_DRAGTOP,     // drop mode
+            CRD_HSYMBOL,     // symbol
+            (g_CARDWIDTH * (i - 1)) + (i * 17), 10, 0,
+            0);  // x, y, x offset, yoffset
+    }
 
     err = newGame();
     if (err != NULL)
