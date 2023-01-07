@@ -21,28 +21,8 @@
 #include <string>
 #include <vector>
 
-#ifndef CONST
-#define CONST const
-#endif
-
-#ifndef BOOL
-typedef int BOOL;
-#endif
-
 #ifndef BYTE
 typedef unsigned char BYTE;
-#endif
-
-#ifndef TRUE
-#define TRUE 1 == 1
-#endif
-
-#ifndef FALSE
-#define FALSE 0 == 1
-#endif
-
-#ifndef CHAR
-#define CHAR char
 #endif
 
 #ifndef STRING
@@ -50,12 +30,7 @@ typedef std::string STRING;
 #endif
 
 #ifndef LPCSTR
-typedef CONST CHAR *LPCSTR, *PCSTR;
-#endif
-
-#ifndef LP_FNTHREAD
-//! function pointer for thread proxy casting
-typedef int (*LP_FNTHREAD)(void*);
+typedef const char *LPCSTR, *PCSTR;
 #endif
 
 #ifndef TRACE

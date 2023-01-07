@@ -7,9 +7,8 @@
 #include "ErrorInfo.h"
 
 // Drag Modes
-const unsigned int CRD_DRAGTOP = 3;  // Drag only top of stack
-const unsigned int CRD_DRAGFACEUP =
-    4;  // Variation of 1, but only cards facing up
+const unsigned int CRD_DRAGTOP = 3;     // Drag only top of stack
+const unsigned int CRD_DRAGFACEUP = 4;  // only cards facing up
 
 // Attributes
 const unsigned int CRD_VISIBLE = (1 << 0);  // card region is drawn or not
@@ -20,29 +19,29 @@ const unsigned int CRD_DODROP = (1 << 4);  // card region (doesn't)accept drops
 // Accept/Drop flags
 const unsigned int CRD_DONOTHING = 0;
 const unsigned int CRD_DOALL =
-    (1 << 0);  // TRUE:accept anything					FALSE:check other flags
-const unsigned int CRD_DOSINGLE = (1 << 1);  // TRUE:accept only single cards
-                                             // FALSE:accept any cardstack size
+    (1 << 0);  // true:accept anything					false:check other flags
+const unsigned int CRD_DOSINGLE = (1 << 1);  // true:accept only single cards
+                                             // false:accept any cardstack size
 const unsigned int CRD_DOOPCOLOR =
-    (1 << 2);  // TRUE:accept only opposite colored		FALSE:check next 2 flags
-const unsigned int CRD_DOHIGHER = (1 << 5);  // TRUE:accept higher valued
-                                             // FALSE:don't accept higher valued
-const unsigned int CRD_DOLOWER = (1 << 6);   // TRUE:accept lower valued
-                                             // FALSE:don't accept lower valued
+    (1 << 2);  // true:accept only opposite colored		false:check next 2 flags
+const unsigned int CRD_DOHIGHER = (1 << 5);  // true:accept higher valued
+                                             // false:don't accept higher valued
+const unsigned int CRD_DOLOWER = (1 << 6);   // true:accept lower valued
+                                             // false:don't accept lower valued
 const unsigned int CRD_DOHIGHERBY1 =
-    (1 << 7);  // TRUE:accept 1 rank higher				FALSE:don't accept
+    (1 << 7);  // true:accept 1 rank higher				false:don't accept
                // higher valued
 const unsigned int CRD_DOLOWERBY1 =
-    (1 << 8);  // TRUE:accept 1 rank lower				FALSE:don't accept lower
+    (1 << 8);  // true:accept 1 rank lower				false:don't accept lower
                // valued
 const unsigned int CRD_DOSUIT =
-    (1 << 10);  // TRUE:accept only cards of same suit	FALSE:accept any suit
+    (1 << 10);  // true:accept only cards of same suit	false:accept any suit
 // On empty stacks, used in most solitaire games
 const unsigned int CRD_DOACE =
     (1
-     << 11);  // TRUE:accept only aces					FALSE:don't accept ace
+     << 11);  // true:accept only aces					false:don't accept ace
 const unsigned int CRD_DOKING =
-    (1 << 12);  // TRUE:accept only kings				FALSE:don't accept king
+    (1 << 12);  // true:accept only kings				false:don't accept king
 
 class CardRegionGfx {
 public:
@@ -102,7 +101,7 @@ public:
     void PushCard(LPCardGfx pCard) { InternalStack.PushCard(pCard); }
     void PushStack(LPCardStackGfx pStack) { InternalStack.PushStack(pStack); }
 
-    bool IsEmpty() { return InternalStack.Empty(); }
+    bool IsEmpty() { return InternalStack.IsEmpty(); }
     int Size() { return InternalStack.Size(); }
 
     LPCardGfx PopCard() { return InternalStack.PopCard(); }
@@ -111,7 +110,7 @@ public:
     LPCardGfx RemoveCard(int index) { return InternalStack.RemoveCard(index); }
 
     int GetClickedCard(int x, int y) {
-        return InternalStack.GetClickedCard(x, y);
+        return InternalStack.GetCardWherePointIsInside(x, y);
     }
     LPCardGfx GetCard(int index) { return InternalStack.GetCard(index); }
 

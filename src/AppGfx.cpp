@@ -49,10 +49,10 @@ AppGfx::AppGfx() {
     _iScreenW = 1024;
     _iScreenH = 768;
     _iBpp = 0;
-    _bStartdrag = FALSE;
+    _bStartdrag = false;
     _p_MusicManager = 0;
     _p_CreditTitle = 0;
-    _bFullScreen = FALSE;
+    _bFullScreen = false;
     _p_GameSettings = GAMESET::GetSettings();
 }
 
@@ -104,7 +104,7 @@ LPErrInApp AppGfx::Init() {
     if (psIcon == 0) {
         return ERR_UTIL::ErrorCreate("Icon not found");
     }
-    SDL_SetColorKey(psIcon, TRUE, SDL_MapRGB(psIcon->format, 0, 128, 0));
+    SDL_SetColorKey(psIcon, true, SDL_MapRGB(psIcon->format, 0, 128, 0));
     SDL_SetWindowIcon(_p_Window, psIcon);
 
     // initialize random generator. Pay attention to the different version of
@@ -332,7 +332,7 @@ LPErrInApp AppGfx::newGame() {
     _p_SolitarioGfx->InitAllCoords();
 
     for (i = Found_Ix1; i <= Found_Ix7; i++) {
-        _p_SolitarioGfx->SetCardFaceUp(i, TRUE,
+        _p_SolitarioGfx->SetCardFaceUp(i, true,
                                        _p_SolitarioGfx->RegionSize(i) - 1);
     }
     return NULL;
@@ -345,7 +345,7 @@ LPErrInApp AppGfx::handleGameLoopKeyDownEvent(SDL_Event &event) {
         if (err != NULL) {
             return err;
         }
-        _p_SolitarioGfx->DrawBackground(FALSE);
+        _p_SolitarioGfx->DrawBackground(false);
         _p_SolitarioGfx->DrawStaticScene();
     }
     if (event.key.keysym.sym == SDLK_a) {
@@ -382,7 +382,7 @@ LPErrInApp AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
                 return err;
             }
             if (isInitDrag) {
-                _bStartdrag = TRUE;
+                _bStartdrag = true;
                 SDL_ShowCursor(SDL_DISABLE);
                 SDL_SetWindowGrab(_p_Window, SDL_TRUE);
             }
@@ -407,7 +407,7 @@ LPErrInApp AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
                 // the next card to the deck face up region
                 LPCardStackGfx pCardStack =
                     _p_SolitarioGfx->PopStackFromRegion(DeckPile_Ix, 1);
-                pCardStack->SetCardsFaceUp(TRUE);
+                pCardStack->SetCardsFaceUp(true);
                 err = _p_SolitarioGfx->InitDrag(pCardStack, -1, -1, isInitDrag);
                 if (err != NULL) {
                     return err;
@@ -455,7 +455,7 @@ void AppGfx::handleGameLoopMouseMoveEvent(SDL_Event &event) {
 LPErrInApp AppGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
     LPErrInApp err;
     if (_bStartdrag) {
-        _bStartdrag = FALSE;
+        _bStartdrag = false;
         _p_SolitarioGfx->DoDrop();
         SDL_ShowCursor(SDL_ENABLE);
         SDL_SetWindowGrab(_p_Window, SDL_FALSE);
@@ -542,9 +542,9 @@ LPErrInApp AppGfx::loadProfile() {
         iVal = RegKey.getRegDWordValue(0, strIDS_KEY_MUSICENABLED);
         if (!_bOverride) {
             if (iVal == 0) {
-                _p_GameSettings->bMusicEnabled = FALSE;
+                _p_GameSettings->bMusicEnabled = false;
             } else {
-                _p_GameSettings->bMusicEnabled = TRUE;
+                _p_GameSettings->bMusicEnabled = true;
             }
         }
     } else {
@@ -578,7 +578,7 @@ LPErrInApp AppGfx::loadProfile() {
     }
     _p_GameSettings->eLanguageCurrent = (Languages::eLangId)iVal;
     // music
-    iVal = FALSE;
+    iVal = false;
     if (pIni) {
         ini_locateHeading(pIni, lpszSectAll);
         ini_locateKey(pIni, lpszKeyMusic);
@@ -799,7 +799,7 @@ void AppGfx::updateScreenTexture() {
 }
 
 void AppGfx::ParseCmdLine(int argc, char *argv[]) {
-    _bOverride = FALSE;
+    _bOverride = false;
 
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
@@ -846,12 +846,12 @@ void AppGfx::ParseCmdLine(int argc, char *argv[]) {
             usage(0, argv[0]);
         } else if (strcmp(argv[i], "--fullscreen") == 0 ||
                    strcmp(argv[i], "-f") == 0) {
-            _bFullScreen = TRUE;
+            _bFullScreen = true;
         } else if (strcmp(argv[i], "--nosound") == 0 ||
                    strcmp(argv[i], "--quiet") == 0 ||
                    strcmp(argv[i], "-q") == 0) {
             _p_GameSettings->bMusicEnabled = false;
-            _bOverride = TRUE;
+            _bOverride = true;
         } else if (strcmp(argv[i], "--version") == 0 ||
                    strcmp(argv[i], "-v") == 0) {
             printf("Solitario versione %s\n", VERSION);
@@ -877,13 +877,13 @@ void AppGfx::ParseCmdLine(int argc, char *argv[]) {
     }
 }
 
-BOOL AppGfx::parseScreenSize(LPCSTR strInput) {
+bool AppGfx::parseScreenSize(LPCSTR strInput) {
     char strBuffer[2048];
     memset(strBuffer, 0, 2048);
     char seps[] = " ,\t\n";
     char *token;
     VCT_STRINGS vct_String;
-    BOOL bRet = FALSE;
+    bool bRet = false;
 
     int iNumChar = strlen(strInput);
     strncpy(strBuffer, strInput, iNumChar);
@@ -898,7 +898,7 @@ BOOL AppGfx::parseScreenSize(LPCSTR strInput) {
     if (iNumElemntArr == 2) {
         sscanf((LPCSTR)vct_String[0].c_str(), "%d", &_iScreenW);
         sscanf((LPCSTR)vct_String[1].c_str(), "%d", &_iScreenH);
-        bRet = TRUE;
+        bRet = true;
     }
     return bRet;
 }

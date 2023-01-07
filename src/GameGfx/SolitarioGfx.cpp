@@ -80,7 +80,7 @@ LPErrInApp SolitarioGfx::Initialize(SDL_Surface *s, SDL_Renderer *r) {
         }
     }
 
-    return DrawBackground(TRUE);
+    return DrawBackground(true);
 }
 
 LPErrInApp SolitarioGfx::DrawCardStack(LPCardRegionGfx pcardRegion) {
@@ -217,7 +217,7 @@ LPErrInApp SolitarioGfx::InitDrag(LPCardStackGfx pCargoStack, int x, int y,
 
     _p_sourceRegion->InitCardCoords();
 
-    err = DrawBackground(FALSE);
+    err = DrawBackground(false);
     if (err != NULL) {
         return err;
     }
@@ -240,7 +240,7 @@ LPErrInApp SolitarioGfx::InitDrag(LPCardStackGfx pCargoStack, int x, int y,
     _p_Dragface = SDL_CreateRGBSurface(SDL_SWSURFACE, _dragCard.width,
                                        _dragCard.height, 32, 0, 0, 0, 0);
     SDL_FillRect(_p_Dragface, NULL, SDL_MapRGB(_p_Dragface->format, 0, 255, 0));
-    SDL_SetColorKey(_p_Dragface, TRUE,
+    SDL_SetColorKey(_p_Dragface, true,
                     SDL_MapRGB(_p_Dragface->format, 0, 255, 0));
 
     err = DrawCardStack(_p_Screen, &DragRegion);
@@ -433,7 +433,7 @@ void SolitarioGfx::DrawStaticScene() {
     updateTextureAsFlipScreen();
 }
 
-LPErrInApp SolitarioGfx::DrawBackground(BOOL bIsInit) {
+LPErrInApp SolitarioGfx::DrawBackground(bool bIsInit) {
     LPErrInApp err;
     if (_p_SceneBackground != NULL) {
         SDL_FillRect(_p_Screen, &_p_Screen->clip_rect,
@@ -766,7 +766,7 @@ LPErrInApp SolitarioGfx::VictoryAnimation() {
 LPErrInApp SolitarioGfx::LoadDeckFromSingleFile() {
     std::string strTmp;
     std::string strSuffix;
-    CHAR buff[128];
+    char buff[128];
 
     for (int k = 0; k < 4; k++) {
         std::string strFileName = lpszDeckDir;
@@ -887,7 +887,7 @@ LPErrInApp SolitarioGfx::LoadCardPac() {
             strFileName.c_str(), SDL_GetError());
     }
 
-    SDL_SetColorKey(_p_Deck, TRUE, SDL_MapRGB(_p_Deck->format, 0, 128, 0));
+    SDL_SetColorKey(_p_Deck, true, SDL_MapRGB(_p_Deck->format, 0, 128, 0));
 
     g_CardWidth = w / 4;
     g_CardHeight = h / 10;
@@ -906,10 +906,10 @@ LPErrInApp SolitarioGfx::LoadSymbolsForPac() {
     }
 
     if (_DeckType.GetSymbolFileName() == "symb_336.bmp") {
-        SDL_SetColorKey(_p_Symbols, TRUE,
+        SDL_SetColorKey(_p_Symbols, true,
                         SDL_MapRGB(_p_Symbols->format, 242, 30, 206));
     } else {
-        SDL_SetColorKey(_p_Symbols, TRUE,
+        SDL_SetColorKey(_p_Symbols, true,
                         SDL_MapRGB(_p_Symbols->format, 0, 128, 0));
     }
 

@@ -10,7 +10,7 @@ cLabelLinkGfx::cLabelLinkGfx() {
     m_eState = INVISIBLE;
     m_pFontText = 0;
     m_iButID = 0;
-    m_bIsEnabled = TRUE;
+    m_bIsEnabled = true;
     m_pSurf_Bar = 0;
 }
 

@@ -68,7 +68,7 @@ private:
     LPErrInApp loadProfile();
     void writeProfile();
     void usage(int errOut, char* cmd);
-    BOOL parseScreenSize(LPCSTR strOpz);
+    bool parseScreenSize(LPCSTR strOpz);
     void updateScreenTexture();
     LPErrInApp showHelp();
     LPErrInApp showCredits();
@@ -96,9 +96,9 @@ private:
     int _iScreenH;
     int _iBpp;
 
-    BOOL _bFullScreen;
-    BOOL _bStartdrag;
-    BOOL _bOverride;
+    bool _bFullScreen;
+    bool _bStartdrag;
+    bool _bOverride;
 
     std::stack<int> _Histmenu;
 };

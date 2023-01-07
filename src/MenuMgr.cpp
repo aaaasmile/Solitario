@@ -32,7 +32,7 @@ MenuMgr::MenuMgr() {
     _p_Languages = 0;
     _p_MenuBox = 0;
     _p_Scene_background = 0;
-    _bMouseInside = FALSE;
+    _bMouseInside = false;
 }
 
 MenuMgr::~MenuMgr() {
@@ -342,10 +342,10 @@ LPErrInApp MenuMgr::HandleRootMenu() {
                 } else if (event.motion.y >= _iSy - _iDeby - 40) {
                     _ifocus_valuesM_A = 4;
                 }
-                _bMouseInside = TRUE;
+                _bMouseInside = true;
             } else {
                 // mouse outside, no focus
-                _bMouseInside = FALSE;
+                _bMouseInside = false;
             }
         }
         if (event.type == SDL_MOUSEBUTTONDOWN) {

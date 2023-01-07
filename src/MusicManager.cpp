@@ -11,7 +11,7 @@ MusicManager::MusicManager() {
     for (int i = 0; i < NUM_OF_SOUNDS; i++) {
         m_pMusics[i] = 0;
     }
-    m_bMusicAvailable = FALSE;
+    m_bMusicAvailable = false;
     for (int j = 0; j < NUM_OF_WAV; j++) {
         m_pMusicsWav[j] = 0;
     }
@@ -44,7 +44,7 @@ void MusicManager::Init() {
                     SDL_GetError());
 
         } else {
-            m_bMusicAvailable = TRUE;
+            m_bMusicAvailable = true;
         }
     }
 }
@@ -74,14 +74,14 @@ void MusicManager::StopMusic() {
     Mix_HaltMusic();
 }
 
-BOOL MusicManager::IsPLayingMusic() { return Mix_PlayingMusic(); }
+bool MusicManager::IsPLayingMusic() { return Mix_PlayingMusic(); }
 
-BOOL MusicManager::PlayMusic(int iID, eLoopType eVal) {
+bool MusicManager::PlayMusic(int iID, eLoopType eVal) {
     if (iID < 0 || iID >= NUM_OF_SOUNDS || !m_bMusicAvailable) {
-        return FALSE;
+        return false;
     }
     if (m_pMusics[iID] == 0) {
-        return FALSE;
+        return false;
     }
 
     if (eVal == LOOP_OFF) {
@@ -90,15 +90,15 @@ BOOL MusicManager::PlayMusic(int iID, eLoopType eVal) {
         Mix_PlayMusic(m_pMusics[iID], -1);
     }
 
-    return TRUE;
+    return true;
 }
 
-BOOL MusicManager::PlayEffect(int iID) {
+bool MusicManager::PlayEffect(int iID) {
     if (iID < 0 || iID >= NUM_OF_WAV || !m_bMusicAvailable) {
-        return FALSE;
+        return false;
     }
     Mix_PlayChannel(-1, m_pMusicsWav[iID], 0);
-    return TRUE;
+    return true;
 }
 
 void MusicManager::SetVolumeMusic(int iVal) { Mix_VolumeMusic(iVal); }

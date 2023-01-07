@@ -45,7 +45,6 @@ LPErrInApp CardStackGfx::NewDeck() {
 void CardStackGfx::Shuffle() {
     std::random_shuffle(this->begin(), this->end());
 }
-void CardStackGfx::Clear() { this->clear(); }
 void CardStackGfx::Reverse() { std::reverse(this->begin(), this->end()); }
 
 bool SortRank(const LPCardGfx& l, const LPCardGfx& r) {
@@ -60,7 +59,7 @@ void CardStackGfx::PushStack(LPCardStackGfx pCardstack) {
 }
 
 LPCardGfx CardStackGfx::PopCard() {
-    if (Empty())
+    if (IsEmpty())
         return NULL;
 
     LPCardGfx pCard = this->back();
@@ -87,7 +86,7 @@ LPCardStackGfx CardStackGfx::PopStack(int items) {
 }
 
 LPCardGfx CardStackGfx::RemoveCard(int index) {
-    if (this->Empty())
+    if (this->IsEmpty())
         return NULL;
 
     VI vi = this->begin() + index;
@@ -102,7 +101,7 @@ void CardStackGfx::InsertCard(int index, LPCardGfx card) {
     this->insert(vi, card);
 }
 
-int CardStackGfx::GetClickedCard(int x, int y) {
+int CardStackGfx::GetCardWherePointIsInside(int x, int y) {
     int i = this->Size() - 1;
 
     for (VI vi = this->end() - 1; vi >= this->begin(); --vi) {
@@ -116,7 +115,7 @@ int CardStackGfx::GetClickedCard(int x, int y) {
 }
 
 LPCardGfx CardStackGfx::GetCard(int index) {
-    if (this->Empty())
+    if (this->IsEmpty())
         return NULL;
 
     VI vi = this->begin() + index;

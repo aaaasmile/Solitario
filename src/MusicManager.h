@@ -15,16 +15,16 @@ public:
 
     void Init();
     void StopMusic();
-    BOOL PlayMusic(int iID, eLoopType eVal);
-    BOOL PlayEffect(int iID);
+    bool PlayMusic(int iID, eLoopType eVal);
+    bool PlayEffect(int iID);
     LPErrInApp LoadMusicRes();
-    BOOL IsPLayingMusic();
+    bool IsPLayingMusic();
     void SetVolumeMusic(int iVal);
 
 private:
     Mix_Chunk* m_pMusicsWav[NUM_OF_WAV];
     Mix_Music* m_pMusics[NUM_OF_SOUNDS];
-    BOOL m_bMusicAvailable;
+    bool m_bMusicAvailable;
 };
 
 #endif

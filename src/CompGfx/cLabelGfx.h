@@ -30,7 +30,7 @@ public:
                    SDL_Texture* pScene_background, SDL_Texture* pScreenTexture);
     void MouseUp(SDL_Event& event);
     void Draw(SDL_Surface* pScreen);
-    void EnableWindow(BOOL bVal) { m_bIsEnabled = bVal; }
+    void EnableWindow(bool bVal) { m_bIsEnabled = bVal; }
     void SetState(eSate eVal);
     void Redraw(SDL_Surface* pScreen, SDL_Texture* pScene_background,
                 SDL_Texture* pScreenTexture);
@@ -39,7 +39,7 @@ public:
     eSate m_eState;
     SDL_Rect m_rctButt;
     STRING m_strButText;
-    BOOL m_bIsEnabled;
+    bool m_bIsEnabled;
     ClickCb m_fncbClickEvent;
 
 private:

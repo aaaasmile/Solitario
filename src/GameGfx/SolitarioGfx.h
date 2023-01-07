@@ -57,7 +57,7 @@ public:
     LPCardRegionGfx FindDropRegion(int Id, LPCardStackGfx pStack);
 
     void DrawStaticScene();
-    LPErrInApp DrawBackground(BOOL bIsInit);
+    LPErrInApp DrawBackground(bool bIsInit);
 
     LPCardRegionGfx GetBestStack(int x, int y, int width, int height,
                                  LPCardStackGfx stack);

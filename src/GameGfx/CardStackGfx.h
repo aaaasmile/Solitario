@@ -14,10 +14,10 @@ class CardStackGfx : public std::vector<LPCardGfx> {
 public:
     LPErrInApp NewDeck();
     void Shuffle();
-    void Clear();
+    void Clear() { this->clear(); }
     void Sort();
     void Reverse();
-    bool Empty() { return this->empty(); }
+    bool IsEmpty() { return this->empty(); }
     int Size() { return this->size(); }
 
     void PushCard(const LPCardGfx pCard);
@@ -29,10 +29,10 @@ public:
     LPCardGfx RemoveCard(int index);
     void InsertCard(int index, LPCardGfx pCard);
 
-    int GetClickedCard(int x, int y);
+    int GetCardWherePointIsInside(int x, int y);
     LPCardGfx GetCard(int index);
 
-    void SetCardsFaceUp(bool fTrue);
+    void SetCardsFaceUp(bool bVal);
 };
 
 typedef CardStackGfx* LPCardStackGfx;
