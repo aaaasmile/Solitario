@@ -24,6 +24,21 @@ using namespace traits;
 
 class AppGfx {
 public:
+    enum eRegionIx {
+        DeckPile_Ix = 0,
+        Found_Ix1 = 1,
+        Found_Ix2 = 2,
+        Found_Ix3 = 3,
+        Found_Ix4 = 4,
+        Found_Ix5 = 5,
+        Found_Ix6 = 6,
+        Found_Ix7 = 7,
+        DeckFaceUp = 8,
+        Ace_Ix1 = 9,
+        Ace_Ix2 = 10,
+        Ace_Ix3 = 11,
+        Ace_Ix4 = 12
+    };
     AppGfx();
     ~AppGfx();
 

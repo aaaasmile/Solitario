@@ -19,10 +19,10 @@
 #include "Credits.h"
 #include "Fading.h"
 
-#define CRD_PILE 0
+#define CRD_DECKPILE 0
 #define CRD_FOUNDATION 1
-#define CRD_RESERVE 2
-#define CRD_WASTE 3
+#define CRD_DECK_FACEUP 2
+#define CRD_ACE 3
 
 #ifdef _WINDOWS
 static LPCSTR strIDS_KEY_LASTPATH = "SOFTWARE\\BredaSoft\\Solitario";
@@ -217,7 +217,7 @@ LPErrInApp AppGfx::startGameLoop() {
         return err;
 
     // index 0 (deck with face down)
-    _p_SolitarioGfx->CreateRegion(CRD_PILE,              // ID
+    _p_SolitarioGfx->CreateRegion(CRD_DECKPILE,          // ID
                                   CRD_VISIBLE | CRD_3D,  // attributes
                                   CRD_DONOTHING,         // Accept mode
                                   CRD_DONOTHING,         // drag mode
@@ -239,7 +239,7 @@ LPErrInApp AppGfx::startGameLoop() {
 
     // index 8 (deck face up)
     _p_SolitarioGfx->CreateRegion(
-        CRD_RESERVE,                                     // ID
+        CRD_DECK_FACEUP,                                 // ID
         CRD_VISIBLE | CRD_FACEUP | CRD_DODRAG | CRD_3D,  // Attributes
         CRD_DOALL,                                       // accept mode
         CRD_DRAGTOP,                                     // drag mode
@@ -249,7 +249,7 @@ LPErrInApp AppGfx::startGameLoop() {
     // index 9-12 (4 aces place on the top)
     for (i = 4; i <= 7; i++) {
         _p_SolitarioGfx->CreateRegion(
-            CRD_WASTE,                                       // ID
+            CRD_ACE,                                         // ID
             CRD_VISIBLE | CRD_3D | CRD_DODRAG | CRD_DODROP,  // Attributes
             CRD_DOSINGLE | CRD_DOHIGHER | CRD_DOHIGHERBY1 | CRD_DOACE |
                 CRD_DOSUIT,  // Accept mode
@@ -311,26 +311,27 @@ LPErrInApp AppGfx::startGameLoop() {
 LPErrInApp AppGfx::newGame() {
     TRACE("New Game");
     LPErrInApp err;
-    _p_SolitarioGfx->SetSymbol(0, CRD_OSYMBOL);
+    _p_SolitarioGfx->SetSymbol(DeckPile_Ix, CRD_OSYMBOL);
     _p_SolitarioGfx->EmptyStacks();
 
-    err = _p_SolitarioGfx->NewDeck(0);
+    err = _p_SolitarioGfx->NewDeck(DeckPile_Ix);
     if (err != NULL) {
         return err;
     }
-    _p_SolitarioGfx->Shuffle(0);
+    _p_SolitarioGfx->Shuffle(DeckPile_Ix);
 
     // deal
     int i;
-    for (i = 1; i <= 7; i++) {
-        LPCardStackGfx pStack = _p_SolitarioGfx->PopStackFromRegion(0, i);
+    for (i = Found_Ix1; i <= Found_Ix7; i++) {
+        LPCardStackGfx pStack =
+            _p_SolitarioGfx->PopStackFromRegion(DeckPile_Ix, i);
         _p_SolitarioGfx->PushStackInRegion(i, pStack);
         delete pStack;
     }
 
     _p_SolitarioGfx->InitAllCoords();
 
-    for (i = 1; i <= 7; i++) {
+    for (i = Found_Ix1; i <= Found_Ix7; i++) {
         _p_SolitarioGfx->SetCardFaceUp(i, TRUE,
                                        _p_SolitarioGfx->RegionSize(i) - 1);
     }
@@ -366,12 +367,11 @@ LPErrInApp AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
             return NULL;
         if ((srcReg->Id == CRD_FOUNDATION) &&
             srcReg->PtOnTop(event.button.x, event.button.y)) {
-            // clicked on top foundation
             srcReg->SetCardFaceUp(true, srcReg->Size() - 1);
         }
 
-        if ((srcReg->Id == CRD_FOUNDATION) || (srcReg->Id == CRD_RESERVE) ||
-            (srcReg->Id == CRD_WASTE)) {
+        if ((srcReg->Id == CRD_FOUNDATION) || (srcReg->Id == CRD_DECK_FACEUP) ||
+            (srcReg->Id == CRD_ACE)) {
             // clicked on region that can do dragging
             err = _p_SolitarioGfx->InitDrag(event.button.x, event.button.y,
                                             isInitDrag);
@@ -383,31 +383,33 @@ LPErrInApp AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
                 SDL_ShowCursor(SDL_DISABLE);
                 SDL_SetWindowGrab(_p_Window, SDL_TRUE);
             }
-        } else if (srcReg->Id == CRD_PILE) {
+        } else if (srcReg->Id == CRD_DECKPILE) {
             // clicked on the deck pile
-            if (srcReg->IsEmpty() && !_p_SolitarioGfx->IsRegionEmpty(8)) {
+            if (srcReg->IsEmpty() &&
+                !_p_SolitarioGfx->IsRegionEmpty(DeckFaceUp)) {
                 // Bring back the cards on the deck
                 LPCardStackGfx pCardStack = _p_SolitarioGfx->PopStackFromRegion(
-                    8, _p_SolitarioGfx->RegionSize(8));
+                    DeckFaceUp, _p_SolitarioGfx->RegionSize(DeckFaceUp));
                 pCardStack->SetCardsFaceUp(false);
                 err = _p_SolitarioGfx->InitDrag(pCardStack, -1, -1, isInitDrag);
                 if (err != NULL) {
                     return err;
                 }
-                _p_SolitarioGfx->DoDrop(_p_SolitarioGfx->GetRegion(0));
-                _p_SolitarioGfx->Reverse(0);
-                _p_SolitarioGfx->InitCardCoords(0);
+                _p_SolitarioGfx->DoDrop(
+                    _p_SolitarioGfx->GetRegion(DeckPile_Ix));
+                _p_SolitarioGfx->Reverse(DeckPile_Ix);
+                _p_SolitarioGfx->InitCardCoords(DeckPile_Ix);
                 delete pCardStack;
             } else if (!srcReg->IsEmpty()) {
                 // the next card to the deck face up region
                 LPCardStackGfx pCardStack =
-                    _p_SolitarioGfx->PopStackFromRegion(0, 1);
+                    _p_SolitarioGfx->PopStackFromRegion(DeckPile_Ix, 1);
                 pCardStack->SetCardsFaceUp(TRUE);
                 err = _p_SolitarioGfx->InitDrag(pCardStack, -1, -1, isInitDrag);
                 if (err != NULL) {
                     return err;
                 }
-                _p_SolitarioGfx->DoDrop(_p_SolitarioGfx->GetRegion(8));
+                _p_SolitarioGfx->DoDrop(_p_SolitarioGfx->GetRegion(DeckFaceUp));
                 delete pCardStack;
             } else {
                 TRACE("No more card on the pile deck");
@@ -421,18 +423,19 @@ LPErrInApp AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
         LPCardGfx pCard = srcReg->GetCard(srcReg->Size() - 1);
 
         // clicked on the top of the foundations
-        if (((srcReg->Id == CRD_FOUNDATION) || (srcReg->Id == CRD_RESERVE)) &&
+        if (((srcReg->Id == CRD_FOUNDATION) ||
+             (srcReg->Id == CRD_DECK_FACEUP)) &&
             pCard->IsFaceUp() &&
             srcReg->PtOnTop(event.button.x, event.button.y)) {
-            LPCardRegionGfx pRegion =
-                _p_SolitarioGfx->FindDropRegion(CRD_WASTE, pCard);
-            if (pRegion != NULL) {
+            LPCardRegionGfx pDropRegion =
+                _p_SolitarioGfx->FindDropRegion(CRD_ACE, pCard);
+            if (pDropRegion != NULL) {
                 LPCardStackGfx pCardStack = srcReg->PopStack(1);
                 err = _p_SolitarioGfx->InitDrag(pCardStack, -1, -1, isInitDrag);
                 if (err != NULL) {
                     return err;
                 }
-                _p_SolitarioGfx->DoDrop(pRegion);
+                _p_SolitarioGfx->DoDrop(pDropRegion);
                 delete pCardStack;
             }
         }
@@ -454,15 +457,16 @@ LPErrInApp AppGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
         SDL_ShowCursor(SDL_ENABLE);
         SDL_SetWindowGrab(_p_Window, SDL_FALSE);
     }
-    if (_p_SolitarioGfx->IsRegionEmpty(0) &&
-        _p_SolitarioGfx->IsRegionEmpty(8)) {
-        _p_SolitarioGfx->SetSymbol(0, 1);
+    if (_p_SolitarioGfx->IsRegionEmpty(DeckPile_Ix) &&
+        _p_SolitarioGfx->IsRegionEmpty(DeckFaceUp)) {
+        _p_SolitarioGfx->SetSymbol(DeckPile_Ix, 1);
         _p_SolitarioGfx->DrawStaticScene();
     }
     // victory
-    if ((_p_SolitarioGfx->Size(9) == 10) && (_p_SolitarioGfx->Size(10) == 10) &&
-        (_p_SolitarioGfx->Size(11) == 10) &&
-        (_p_SolitarioGfx->Size(12) == 10)) {
+    if ((_p_SolitarioGfx->Size(Ace_Ix1) == 10) &&
+        (_p_SolitarioGfx->Size(Ace_Ix2) == 10) &&
+        (_p_SolitarioGfx->Size(Ace_Ix3) == 10) &&
+        (_p_SolitarioGfx->Size(Ace_Ix4) == 10)) {
         _p_SolitarioGfx->AnimateCards();
         err = newGame();
         if (err != NULL) {
@@ -784,7 +788,6 @@ int AppGfx::waitKeyLoop() {
 }
 
 void AppGfx::updateScreenTexture() {
-    // SDL 2.0
     SDL_UpdateTexture(_p_ScreenTexture, NULL, _p_Screen->pixels,
                       _p_Screen->pitch);
     SDL_RenderClear(_p_sdlRenderer);
@@ -814,7 +817,7 @@ void AppGfx::ParseCmdLine(int argc, char *argv[]) {
         } else if (strcmp(argv[i], "--copyright") == 0 ||
                    strcmp(argv[i], "-c") == 0) {
             printf(
-                "\n\"Solitario\" version %s, Copyright (C) 2004-2022 "
+                "\n\"Solitario\" version %s, Copyright (C) 2004-2023 "
                 "Invido.it\n"
                 "This program is free software; you can redistribute "
                 "it "

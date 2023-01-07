@@ -190,8 +190,8 @@ LPErrInApp SolitarioGfx::InitDrag(LPCardStackGfx pCargoStack, int x, int y,
         if (idx == -1) {
             return NULL;  // no card found
         }
-
-        switch (_p_sourceRegion->GetDragMode()) {
+        int dm = _p_sourceRegion->GetDragMode();
+        switch (dm) {
             case CRD_DRAGTOP: {
                 if (_p_sourceRegion->Size() - 1 == idx)
                     _dragStack.PushCard(_p_sourceRegion->PopCard());
@@ -210,10 +210,8 @@ LPErrInApp SolitarioGfx::InitDrag(LPCardStackGfx pCargoStack, int x, int y,
                 break;
             }
             default: {
-                LPCardStackGfx pStack =
-                    _p_sourceRegion->PopStack(_p_sourceRegion->Size() - idx);
-                _dragStack.PushStack(pStack);
-                delete pStack;
+                return ERR_UTIL::ErrorCreate(
+                    "InitDrag error: Drag mode %d not supported\n", dm);
             }
         }
     } else
