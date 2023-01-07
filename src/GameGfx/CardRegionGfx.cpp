@@ -182,58 +182,21 @@ bool CardRegionGfx::CanDrop(LPCardStackGfx stack) {
         return false;
     }
 
-    if (((_acceptMode & CRD_DORED) && !(_acceptMode & CRD_DOBLACK)) &&
-        pLastCard->IsBlack()) {
+    if (((_acceptMode & CRD_DOHIGHER) && !(_acceptMode & CRD_DOLOWER)) &&
+        (pStartCard->Rank() <= pLastCard->Rank()))
         return false;
-    }
-
-    if ((!(_acceptMode & CRD_DORED) && (_acceptMode & CRD_DOBLACK)) &&
-        pLastCard->IsRed()) {
+    if ((!(_acceptMode & CRD_DOHIGHER) && (_acceptMode & CRD_DOLOWER)) &&
+        (pStartCard->Rank() >= pLastCard->Rank()))
         return false;
-    }
-
-    if (!(_acceptMode & CRD_DOHIGHER) && !(_acceptMode & CRD_DOLOWER))
-        _acceptMode |= CRD_DOEQUAL;
-
-    if (_acceptMode & CRD_DOEQUAL) {
-        if (((_acceptMode & CRD_DOHIGHER) && !(_acceptMode & CRD_DOLOWER)) &&
-            (pStartCard->Rank() < pLastCard->Rank()))
-            return false;
-        if ((!(_acceptMode & CRD_DOHIGHER) && (_acceptMode & CRD_DOLOWER)) &&
-            (pStartCard->Rank() > pLastCard->Rank()))
-            return false;
-        if ((!(_acceptMode & CRD_DOHIGHER) && !(_acceptMode & CRD_DOLOWER)) &&
-            (pStartCard->Rank() != pLastCard->Rank()))
-            return false;
-
-        if (((_acceptMode & CRD_DOHIGHERBY1) &&
-             !(_acceptMode & CRD_DOLOWERBY1)) &&
-            ((pStartCard->Rank() - pLastCard->Rank()) > 1))
-            return false;
-        if ((!(_acceptMode & CRD_DOHIGHERBY1) &&
-             (_acceptMode & CRD_DOLOWERBY1)) &&
-            ((pStartCard->Rank() - pLastCard->Rank()) < -1))
-            return false;
-    }
-    if (!(_acceptMode & CRD_DOEQUAL)) {
-        if (((_acceptMode & CRD_DOHIGHER) && !(_acceptMode & CRD_DOLOWER)) &&
-            (pStartCard->Rank() <= pLastCard->Rank()))
-            return false;
-        if ((!(_acceptMode & CRD_DOHIGHER) && (_acceptMode & CRD_DOLOWER)) &&
-            (pStartCard->Rank() >= pLastCard->Rank()))
-            return false;
-        if ((!(_acceptMode & CRD_DOHIGHER) && !(_acceptMode & CRD_DOLOWER)) &&
-            (pStartCard->Rank() == pLastCard->Rank()))
-            return false;
-        if (((_acceptMode & CRD_DOHIGHERBY1) &&
-             !(_acceptMode & CRD_DOLOWERBY1)) &&
-            ((pStartCard->Rank() - pLastCard->Rank()) > 1))
-            return false;
-        if ((!(_acceptMode & CRD_DOHIGHERBY1) &&
-             (_acceptMode & CRD_DOLOWERBY1)) &&
-            ((pStartCard->Rank() - pLastCard->Rank()) < -1))
-            return false;
-    }
+    if ((!(_acceptMode & CRD_DOHIGHER) && !(_acceptMode & CRD_DOLOWER)) &&
+        (pStartCard->Rank() == pLastCard->Rank()))
+        return false;
+    if (((_acceptMode & CRD_DOHIGHERBY1) && !(_acceptMode & CRD_DOLOWERBY1)) &&
+        ((pStartCard->Rank() - pLastCard->Rank()) > 1))
+        return false;
+    if ((!(_acceptMode & CRD_DOHIGHERBY1) && (_acceptMode & CRD_DOLOWERBY1)) &&
+        ((pStartCard->Rank() - pLastCard->Rank()) < -1))
+        return false;
 
     if ((_acceptMode & CRD_DOSUIT) &&
         (pStartCard->Suit() != pLastCard->Suit())) {

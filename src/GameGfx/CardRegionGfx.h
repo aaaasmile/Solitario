@@ -27,11 +27,6 @@ const unsigned int CRD_DOSINGLE = (1 << 1);  // TRUE:accept only single cards
                                              // FALSE:accept any cardstack size
 const unsigned int CRD_DOOPCOLOR =
     (1 << 2);  // TRUE:accept only opposite colored		FALSE:check next 2 flags
-const unsigned int CRD_DORED =
-    (1 << 3);  // TRUE:accept reds,						FALSE:accept only blacks
-const unsigned int CRD_DOBLACK =
-    (1 << 4);  // TRUE:accept blacks,					FALSE:accept only reds
-               // if CRD_DORED is true
 const unsigned int CRD_DOHIGHER = (1 << 5);  // TRUE:accept higher valued
                                              // FALSE:don't accept higher valued
 const unsigned int CRD_DOLOWER = (1 << 6);   // TRUE:accept lower valued
@@ -42,8 +37,6 @@ const unsigned int CRD_DOHIGHERBY1 =
 const unsigned int CRD_DOLOWERBY1 =
     (1 << 8);  // TRUE:accept 1 rank lower				FALSE:don't accept lower
                // valued
-const unsigned int CRD_DOEQUAL = (1 << 9);  // TRUE:accept equal valued
-                                            // FALSE:don't accept equal valued
 const unsigned int CRD_DOSUIT =
     (1 << 10);  // TRUE:accept only cards of same suit	FALSE:accept any suit
 // On empty stacks, used in most solitaire games
