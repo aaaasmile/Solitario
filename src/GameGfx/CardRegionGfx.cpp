@@ -145,6 +145,8 @@ bool CardRegionGfx::CanDrop(LPCardStackGfx stack) {
     if (InternalStack.Empty() &&
         (!(_acceptMode & CRD_DOKING) && !(_acceptMode & CRD_DOACE)))
         return false;
+    // LastCard is the destination stack
+    // StartCard is the dragging card that is dropping
 
     VI vi = stack->begin();
     LPCardGfx pStartCard = *vi;
@@ -175,8 +177,8 @@ bool CardRegionGfx::CanDrop(LPCardStackGfx stack) {
     }
 
     if ((_acceptMode & CRD_DOOPCOLOR) &&
-        ((pLastCard->IsBlack() && pLastCard->IsBlack()) ||
-         (pLastCard->IsRed() && pLastCard->IsRed()))) {
+        ((pStartCard->IsBlack() && pLastCard->IsBlack()) ||
+         (pStartCard->IsRed() && pLastCard->IsRed()))) {
         return false;
     }
 

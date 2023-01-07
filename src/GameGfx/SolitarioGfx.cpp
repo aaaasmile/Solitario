@@ -278,8 +278,9 @@ void SolitarioGfx::updateTextureAsFlipScreen() {
 }
 
 void SolitarioGfx::DoDrag(int x, int y) {
-    TRACE("DoDrag (x=%d, y=%d) => drag_x=%d, drag_y=%d. old_x=%d, old_y=%d", x,
-          y, _dragCard.x, _dragCard.y, _oldx, _oldy);
+    // TRACE("DoDrag (x=%d, y=%d) => drag_x=%d, drag_y=%d. old_x=%d, old_y=%d",
+    // x,
+    //       y, _dragCard.x, _dragCard.y, _oldx, _oldy);
     SDL_Rect rcs;
     SDL_Rect rcd;
 
@@ -330,7 +331,8 @@ void SolitarioGfx::DoDrop(LPCardRegionGfx pDestRegion) {
         pBestRegion = GetBestStack(_dragCard.x, _dragCard.y, g_CARDWIDTH,
                                    g_CARDHEIGHT, &_dragStack);
     if (pBestRegion == NULL)
-        pBestRegion = _p_sourceRegion;
+        pBestRegion = _p_sourceRegion;  // drop go back to the source, no stack
+                                        // found to recive the drag
 
     pDestStack = pBestRegion->GetCardStack();
     pDestStack->PushStack(&_dragStack);
@@ -480,7 +482,8 @@ LPCardRegionGfx SolitarioGfx::GetBestStack(int x, int y, int w, int h,
          ++vir) {
         SDL_PumpEvents();
         if (vir->CanDrop(pStack))
-            percent = vir->GetOverlapRatio(x, y, w, h);
+            percent = vir->GetOverlapRatio(x, y, w,
+                                           h);  // stack candidate for dropping
         else
             percent = 0;
 
