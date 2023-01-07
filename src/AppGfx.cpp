@@ -366,7 +366,8 @@ LPErrInApp AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
     CardRegionGfx *srcReg;
     bool isInitDrag = false;
     if (event.button.button == SDL_BUTTON_LEFT) {
-        srcReg = _p_SolitarioGfx->OnMouseDown(event.button.x, event.button.y);
+        srcReg =
+            _p_SolitarioGfx->GetRegionOnPoint(event.button.x, event.button.y);
         if (srcReg == NULL)
             return NULL;
         if ((srcReg->Id == CRD_FOUNDATION) &&
@@ -388,7 +389,6 @@ LPErrInApp AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
                 SDL_SetWindowGrab(_p_Window, SDL_TRUE);
             }
         } else if (srcReg->Id == CRD_DECKPILE) {
-            // clicked on the deck pile
             if (srcReg->IsEmpty() &&
                 !_p_SolitarioGfx->IsRegionEmpty(DeckFaceUp)) {
                 // Bring back the cards on the deck
@@ -405,7 +405,7 @@ LPErrInApp AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
                 _p_SolitarioGfx->InitCardCoords(DeckPile_Ix);
                 delete pCardStack;
             } else if (!srcReg->IsEmpty()) {
-                // the next card to the deck face up region
+                // the next card goes to the deck face up region
                 LPCardStackGfx pCardStack =
                     _p_SolitarioGfx->PopStackFromRegion(DeckPile_Ix, 1);
                 pCardStack->SetCardsFaceUp(true);
@@ -420,13 +420,13 @@ LPErrInApp AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
             }
         }
     } else if (event.button.button == SDL_BUTTON_RIGHT) {
-        // substitute right-click for double-click event
-        srcReg = _p_SolitarioGfx->OnMouseDown(event.button.x, event.button.y);
+        // right-click try to submit the card to the suitable CRD_ACE region
+        srcReg =
+            _p_SolitarioGfx->GetRegionOnPoint(event.button.x, event.button.y);
         if (srcReg == NULL)
             return NULL;
         LPCardGfx pCard = srcReg->GetCard(srcReg->Size() - 1);
 
-        // clicked on the top of the foundations
         if (((srcReg->Id == CRD_FOUNDATION) ||
              (srcReg->Id == CRD_DECK_FACEUP)) &&
             pCard->IsFaceUp() &&

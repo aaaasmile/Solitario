@@ -152,12 +152,12 @@ void SolitarioGfx::InitAllCoords() {
     }
 }
 
-CardRegionGfx *SolitarioGfx::OnMouseDown(int x, int y) {
+LPCardRegionGfx SolitarioGfx::GetRegionOnPoint(int x, int y) {
     for (regionVI vir = _cardRegionList.begin(); vir != _cardRegionList.end();
          ++vir) {
         if (vir->PtInStack(x, y)) {
-            _p_sourceRegion = &(*vir);
-            return _p_sourceRegion;
+            _p_cardRegion = &(*vir);
+            return _p_cardRegion;
         }
     }
     return NULL;
@@ -180,26 +180,26 @@ LPErrInApp SolitarioGfx::InitDrag(LPCardStackGfx pCargoStack, int x, int y,
     isInitDrag = false;
     LPErrInApp err;
     if (pCargoStack == NULL) {
-        if (_p_sourceRegion->IsEmpty())
+        if (_p_cardRegion->IsEmpty())
             return NULL;
 
-        int idx = _p_sourceRegion->GetClickedCard(x, y);
+        int idx = _p_cardRegion->GetClickedCard(x, y);
         if (idx == -1) {
             return NULL;  // no card found
         }
-        int dm = _p_sourceRegion->GetDragMode();
+        int dm = _p_cardRegion->GetDragMode();
         switch (dm) {
             case CRD_DRAGTOP: {
-                if (_p_sourceRegion->Size() - 1 == idx)
-                    _dragStack.PushCard(_p_sourceRegion->PopCard());
+                if (_p_cardRegion->Size() - 1 == idx)
+                    _dragStack.PushCard(_p_cardRegion->PopCard());
                 else
                     return NULL;
                 break;
             }
             case CRD_DRAGFACEUP: {
-                if (_p_sourceRegion->IsCardFaceUp(idx)) {
-                    LPCardStackGfx pStack = _p_sourceRegion->PopStack(
-                        _p_sourceRegion->Size() - idx);
+                if (_p_cardRegion->IsCardFaceUp(idx)) {
+                    LPCardStackGfx pStack =
+                        _p_cardRegion->PopStack(_p_cardRegion->Size() - idx);
                     _dragStack.PushStack(pStack);
                     delete pStack;
                 } else
@@ -214,7 +214,7 @@ LPErrInApp SolitarioGfx::InitDrag(LPCardStackGfx pCargoStack, int x, int y,
     } else
         _dragStack.PushStack(pCargoStack);
 
-    _p_sourceRegion->InitCardCoords();
+    _p_cardRegion->InitCardCoords();
 
     err = DrawBackground(false);
     if (err != NULL) {
@@ -222,9 +222,9 @@ LPErrInApp SolitarioGfx::InitDrag(LPCardStackGfx pCargoStack, int x, int y,
     }
     SDL_BlitSurface(_p_Screen, NULL, _p_Background, NULL);
 
-    CardRegionGfx DragRegion(0, _p_sourceRegion->GetAttributes() | CRD_FACEUP,
-                             0, 0, 0, 0, 0, _p_sourceRegion->GetxOffset(),
-                             _p_sourceRegion->GetyOffset());
+    CardRegionGfx DragRegion(0, _p_cardRegion->GetAttributes() | CRD_FACEUP, 0,
+                             0, 0, 0, 0, _p_cardRegion->GetxOffset(),
+                             _p_cardRegion->GetyOffset());
     DragRegion.PushStack(&_dragStack);
 
     _dragCard.x = _dragStack.First()->X();
@@ -321,15 +321,15 @@ void SolitarioGfx::DoDrop(LPCardRegionGfx pDestRegion) {
         pBestRegion = GetBestStack(_dragCard.x, _dragCard.y, g_CardWidth,
                                    g_CardHeight, &_dragStack);
     if (pBestRegion == NULL)
-        pBestRegion = _p_sourceRegion;  // drop go back to the source, no stack
-                                        // found to recive the drag
+        pBestRegion = _p_cardRegion;  // drop go back to the source, no stack
+                                      // found to recive the drag
 
     pDestStack = pBestRegion->GetCardStack();
     pDestStack->PushStack(&_dragStack);
     pBestRegion->InitCardCoords();
 
     LPCardGfx pCard = NULL;
-    switch (_p_sourceRegion->GetDragMode()) {
+    switch (_p_cardRegion->GetDragMode()) {
         case CRD_DRAGTOP:
             pCard = pDestStack->Last();
             break;
