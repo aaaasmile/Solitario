@@ -459,7 +459,7 @@ LPErrInApp AppGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
     }
     if (_p_SolitarioGfx->IsRegionEmpty(DeckPile_Ix) &&
         _p_SolitarioGfx->IsRegionEmpty(DeckFaceUp)) {
-        _p_SolitarioGfx->SetSymbol(DeckPile_Ix, 1);
+        _p_SolitarioGfx->SetSymbol(DeckPile_Ix, CRD_XSYMBOL);
         _p_SolitarioGfx->DrawStaticScene();
     }
     // victory

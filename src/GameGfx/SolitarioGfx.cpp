@@ -347,8 +347,8 @@ void SolitarioGfx::DoDrop(LPCardRegionGfx pDestRegion) {
     if (_dragCard.x == pCard->X() && _dragCard.y == pCard->Y())
         return;  // when no movement
 
-    zoomCard(_dragCard.x, _dragCard.y, pCard, _dragCard.width, _dragCard.height,
-             _p_Background, _p_Dragface);
+    zoomDropCard(_dragCard.x, _dragCard.y, pCard, _dragCard.width,
+                 _dragCard.height, _p_Background, _p_Dragface);
 
     SDL_FreeSurface(_p_Dragface);
     _p_Dragface = NULL;
@@ -359,8 +359,8 @@ void calcPt(int x0, int y0, int x1, int y1, float t, int &xf, int &yf) {
     yf = int(y0 + t * (y1 - y0) + .5);
 }
 
-void SolitarioGfx::zoomCard(int &sx, int &sy, LPCardGfx pCard, int w, int h,
-                            SDL_Surface *bg, SDL_Surface *fg) {
+void SolitarioGfx::zoomDropCard(int &sx, int &sy, LPCardGfx pCard, int w, int h,
+                                SDL_Surface *bg, SDL_Surface *fg) {
     TRACE("Zoom card x=%d, y=%d", sx, sy);
     SDL_Rect rcs;
     SDL_Rect rcd;

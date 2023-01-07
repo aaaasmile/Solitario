@@ -125,8 +125,8 @@ public:
 
 private:
     void updateTextureAsFlipScreen();
-    void zoomCard(int &sx, int &sy, LPCardGfx pCard, int width, int height,
-                  SDL_Surface *bg, SDL_Surface *fg);
+    void zoomDropCard(int &sx, int &sy, LPCardGfx pCard, int width, int height,
+                      SDL_Surface *bg, SDL_Surface *fg);
 
 private:
     CardStackGfx _dragStack;
