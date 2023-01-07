@@ -24,12 +24,6 @@ int g_PointsSolitario[] = {
 
 LPErrInApp CardStackGfx::NewDeck() {
     LPErrInApp err;
-    TRACE("NewDeck: delete card stack %d", _vct_lpCardGfx.size());
-    for (VI vi = _vct_lpCardGfx.begin(); vi != _vct_lpCardGfx.end(); ++vi) {
-        LPCardGfx pCard = *vi;
-        delete pCard;
-    }
-
     for (size_t i = 0; i < NUM_CARDS; i++) {
         LPCardGfx pCard = new CardGfx;
         err = pCard->SetIdx(i);
@@ -40,6 +34,15 @@ LPErrInApp CardStackGfx::NewDeck() {
     }
 
     return NULL;
+}
+
+void CardStackGfx::CleanUp() {
+    TRACE("NewDeck: delete card stack %d", _vct_lpCardGfx.size());
+    for (VI vi = _vct_lpCardGfx.begin(); vi != _vct_lpCardGfx.end(); ++vi) {
+        LPCardGfx pCard = *vi;
+        delete pCard;
+    }
+    _vct_lpCardGfx.clear();
 }
 
 void CardStackGfx::Shuffle() {

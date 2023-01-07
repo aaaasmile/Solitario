@@ -29,17 +29,15 @@ public:
     SolitarioGfx();
     ~SolitarioGfx();
 
-    LPErrInApp Initialize(SDL_Surface *s, SDL_Renderer *r);
-    void Clear(int regionNo) { _cardRegionList[regionNo].Clear(); }
+    LPErrInApp Initialize(SDL_Surface *s, SDL_Renderer *r, DeckType &dt);
     int Size(int regionNo) { return _cardRegionList[regionNo].Size(); }
-    void ClearAll();
+    void CleanUpRegion();
 
     void CreateRegion(int id, unsigned int attribs, unsigned int amode,
                       int dmode, int symbol, int x, int y, int xoffset,
                       int yoffset);
     bool DeleteRegion(LPCardRegionGfx pRegion);
 
-    void EmptyStacks();
     void InitAllCoords();
 
     LPCardRegionGfx GetRegionOnPoint(int x, int y);
@@ -81,8 +79,6 @@ public:
     LPErrInApp DrawSymbolPac(int x, int y, int nSymbol, SDL_Surface *s);
 
     LPErrInApp VictoryAnimation();
-    void SetDeckType(DeckType &Val) { _DeckType.CopyFrom(Val); }
-    void ClearSurface();
 
     LPErrInApp LoadCardPac();
     LPErrInApp LoadSymbolsForPac();
@@ -127,6 +123,8 @@ private:
     void updateTextureAsFlipScreen();
     void zoomDropCard(int &sx, int &sy, LPCardGfx pCard, int width, int height,
                       SDL_Surface *bg, SDL_Surface *fg);
+    void setDeckType(DeckType &dt) { _DeckType.CopyFrom(dt); }
+    void clearSurface();
 
 private:
     CardStackGfx _dragStack;

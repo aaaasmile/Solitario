@@ -209,10 +209,8 @@ LPErrInApp AppGfx::startGameLoop() {
     }
     _p_SolitarioGfx = new SolitarioGfx();
 
-    _p_SolitarioGfx->SetDeckType(_p_GameSettings->deckTypeVal);
-    _p_SolitarioGfx->ClearSurface();
-    _p_SolitarioGfx->ClearAll();
-    err = _p_SolitarioGfx->Initialize(_p_Screen, _p_sdlRenderer);
+    err = _p_SolitarioGfx->Initialize(_p_Screen, _p_sdlRenderer,
+                                      _p_GameSettings->deckTypeVal);
     if (err != NULL)
         return err;
 
@@ -312,7 +310,7 @@ LPErrInApp AppGfx::newGame() {
     TRACE("New Game");
     LPErrInApp err;
     _p_SolitarioGfx->SetSymbol(DeckPile_Ix, CRD_OSYMBOL);
-    _p_SolitarioGfx->EmptyStacks();
+    _p_SolitarioGfx->CleanUpRegion();
 
     err = _p_SolitarioGfx->NewDeck(DeckPile_Ix);
     if (err != NULL) {

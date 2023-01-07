@@ -15,6 +15,7 @@ public:
     LPErrInApp NewDeck();
     void Shuffle();
     void Clear() { _vct_lpCardGfx.clear(); }
+    void CleanUp();
     void Sort();
     void Reverse();
     bool IsEmpty() { return _vct_lpCardGfx.empty(); }

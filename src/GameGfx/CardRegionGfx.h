@@ -96,6 +96,7 @@ public:
     LPErrInApp NewDeck() { return InternalStack.NewDeck(); }
     void Shuffle() { InternalStack.Shuffle(); }
     void Clear() { InternalStack.Clear(); }
+    void CleanUp() { InternalStack.CleanUp(); }
     void Reverse() { InternalStack.Reverse(); }
 
     void PushCard(LPCardGfx pCard) { InternalStack.PushCard(pCard); }

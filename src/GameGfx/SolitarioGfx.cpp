@@ -32,10 +32,16 @@ SolitarioGfx::SolitarioGfx() {
     }
 }
 
-SolitarioGfx::~SolitarioGfx() { ClearSurface(); }
+SolitarioGfx::~SolitarioGfx() {
+    CleanUpRegion();
+    clearSurface();
+}
 
-LPErrInApp SolitarioGfx::Initialize(SDL_Surface *s, SDL_Renderer *r) {
+LPErrInApp SolitarioGfx::Initialize(SDL_Surface *s, SDL_Renderer *r,
+                                    DeckType &dt) {
     TRACE("Initialize Solitario");
+    setDeckType(dt);
+
     LPErrInApp err;
     _p_Screen = s;
     _p_sdlRenderer = r;
@@ -108,14 +114,20 @@ LPErrInApp SolitarioGfx::DrawCardStack(SDL_Surface *s,
     return NULL;
 }
 
-void SolitarioGfx::ClearSurface() {
-    if (_p_Background)
+void SolitarioGfx::clearSurface() {
+    if (_p_Background != NULL) {
         SDL_FreeSurface(_p_Background);
-    if (_p_SceneBackground)
+        _p_Background = NULL;
+    }
+
+    if (_p_SceneBackground != NULL) {
         SDL_FreeSurface(_p_SceneBackground);
+        _p_SceneBackground = NULL;
+    }
 
     if (_p_ScreenTexture != NULL) {
         SDL_DestroyTexture(_p_ScreenTexture);
+        _p_ScreenTexture = NULL;
     }
 }
 
@@ -138,12 +150,6 @@ bool SolitarioGfx::DeleteRegion(LPCardRegionGfx pRegion) {
     return false;
 }
 
-void SolitarioGfx::EmptyStacks() {
-    for (regionVI vir = _cardRegionList.begin(); vir != _cardRegionList.end();
-         ++vir)
-        vir->Clear();
-}
-
 void SolitarioGfx::InitAllCoords() {
     for (regionVI vir = _cardRegionList.begin(); vir != _cardRegionList.end();
          ++vir) {
@@ -163,12 +169,12 @@ LPCardRegionGfx SolitarioGfx::GetRegionOnPoint(int x, int y) {
     return NULL;
 }
 
-void SolitarioGfx::ClearAll() {
+void SolitarioGfx::CleanUpRegion() {
     for (regionVI vir = _cardRegionList.begin(); vir != _cardRegionList.end();
          ++vir) {
+        vir->CleanUp();
         vir->Clear();
     }
-    _cardRegionList.clear();
 }
 
 LPErrInApp SolitarioGfx::InitDrag(int x, int y, bool &isInitDrag) {
