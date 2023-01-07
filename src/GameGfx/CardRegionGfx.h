@@ -7,9 +7,7 @@
 #include "ErrorInfo.h"
 
 // Drag Modes
-const unsigned int CRD_DRAGSTACKS = 1;  // Drag complete stacks
-const unsigned int CRD_DRAGCARDS = 2;   // Drag individual cards
-const unsigned int CRD_DRAGTOP = 3;     // Drag only top of stack
+const unsigned int CRD_DRAGTOP = 3;  // Drag only top of stack
 const unsigned int CRD_DRAGFACEUP =
     4;  // Variation of 1, but only cards facing up
 
@@ -104,7 +102,7 @@ public:
     void PushCard(LPCardGfx pCard) { InternalStack.PushCard(pCard); }
     void PushStack(LPCardStackGfx pStack) { InternalStack.PushStack(pStack); }
 
-    bool Empty() { return InternalStack.Empty(); }
+    bool IsEmpty() { return InternalStack.Empty(); }
     int Size() { return InternalStack.Size(); }
 
     LPCardGfx PopCard() { return InternalStack.PopCard(); }

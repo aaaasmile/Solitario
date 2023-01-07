@@ -183,7 +183,7 @@ LPErrInApp SolitarioGfx::InitDrag(LPCardStackGfx pCargoStack, int x, int y,
     isInitDrag = false;
     LPErrInApp err;
     if (pCargoStack == NULL) {
-        if (_p_sourceRegion->Empty())
+        if (_p_sourceRegion->IsEmpty())
             return NULL;
 
         int idx = _p_sourceRegion->GetClickedCard(x, y);
@@ -192,11 +192,6 @@ LPErrInApp SolitarioGfx::InitDrag(LPCardStackGfx pCargoStack, int x, int y,
         }
 
         switch (_p_sourceRegion->GetDragMode()) {
-            case CRD_DRAGCARDS: {
-                LPCardGfx pCard = _p_sourceRegion->RemoveCard(idx);
-                _dragStack.PushCard(pCard);
-                break;
-            }
             case CRD_DRAGTOP: {
                 if (_p_sourceRegion->Size() - 1 == idx)
                     _dragStack.PushCard(_p_sourceRegion->PopCard());

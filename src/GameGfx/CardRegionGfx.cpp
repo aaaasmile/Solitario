@@ -34,7 +34,7 @@ bool CardRegionGfx::PtInStack(int x, int y) {
     if (!(Attributes & CRD_VISIBLE))
         return false;
 
-    if (Attributes & CRD_3D && !this->Empty()) {
+    if (Attributes & CRD_3D && !this->IsEmpty()) {
         LPCardGfx pCard = InternalStack[InternalStack.Size() - 1];
         return pCard->PtInCard(x, y);
     }
@@ -47,7 +47,7 @@ bool CardRegionGfx::PtInStack(int x, int y) {
 }
 
 bool CardRegionGfx::PtOnTop(int x, int y) {
-    if (Empty())
+    if (IsEmpty())
         return false;
 
     LPCardGfx pCard = InternalStack[InternalStack.Size() - 1];

@@ -364,32 +364,32 @@ LPErrInApp AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
         srcReg = _p_SolitarioGfx->OnMouseDown(event.button.x, event.button.y);
         if (srcReg == NULL)
             return NULL;
-        // clicked on the top of the foundations
         if ((srcReg->Id == CRD_FOUNDATION) &&
             srcReg->PtOnTop(event.button.x, event.button.y)) {
-            srcReg->SetCardFaceUp(TRUE, srcReg->Size() - 1);
+            // clicked on top foundation
+            srcReg->SetCardFaceUp(true, srcReg->Size() - 1);
         }
-        // clicked on the foundations, reserve, wastes for dragging
-        err = _p_SolitarioGfx->InitDrag(event.button.x, event.button.y,
-                                        isInitDrag);
-        if (err != NULL) {
-            return err;
-        }
-        if (((srcReg->Id == CRD_FOUNDATION) || (srcReg->Id == CRD_RESERVE) ||
-             (srcReg->Id == CRD_WASTE)) &&
-            isInitDrag) {
-            _bStartdrag = TRUE;
-            SDL_ShowCursor(SDL_DISABLE);
-            SDL_SetWindowGrab(_p_Window, SDL_TRUE);
-        }
-        // clicked on the pile
-        if (srcReg->Id == CRD_PILE) {
-            if (srcReg->Empty() &&
-                !_p_SolitarioGfx->Empty(8))  // Bring back the cards
-            {
+
+        if ((srcReg->Id == CRD_FOUNDATION) || (srcReg->Id == CRD_RESERVE) ||
+            (srcReg->Id == CRD_WASTE)) {
+            // clicked on region that can do dragging
+            err = _p_SolitarioGfx->InitDrag(event.button.x, event.button.y,
+                                            isInitDrag);
+            if (err != NULL) {
+                return err;
+            }
+            if (isInitDrag) {
+                _bStartdrag = TRUE;
+                SDL_ShowCursor(SDL_DISABLE);
+                SDL_SetWindowGrab(_p_Window, SDL_TRUE);
+            }
+        } else if (srcReg->Id == CRD_PILE) {
+            // clicked on the deck pile
+            if (srcReg->IsEmpty() && !_p_SolitarioGfx->IsRegionEmpty(8)) {
+                // Bring back the cards on the deck
                 LPCardStackGfx pCardStack = _p_SolitarioGfx->PopStackFromRegion(
                     8, _p_SolitarioGfx->RegionSize(8));
-                pCardStack->SetCardsFaceUp(FALSE);
+                pCardStack->SetCardsFaceUp(false);
                 err = _p_SolitarioGfx->InitDrag(pCardStack, -1, -1, isInitDrag);
                 if (err != NULL) {
                     return err;
@@ -398,7 +398,8 @@ LPErrInApp AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
                 _p_SolitarioGfx->Reverse(0);
                 _p_SolitarioGfx->InitCardCoords(0);
                 delete pCardStack;
-            } else if (!srcReg->Empty()) {
+            } else if (!srcReg->IsEmpty()) {
+                // the next card to the deck face up region
                 LPCardStackGfx pCardStack =
                     _p_SolitarioGfx->PopStackFromRegion(0, 1);
                 pCardStack->SetCardsFaceUp(TRUE);
@@ -408,12 +409,12 @@ LPErrInApp AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
                 }
                 _p_SolitarioGfx->DoDrop(_p_SolitarioGfx->GetRegion(8));
                 delete pCardStack;
+            } else {
+                TRACE("No more card on the pile deck");
             }
         }
-    }
-
-    // substitute right-click for double-click event
-    if (event.button.button == SDL_BUTTON_RIGHT) {
+    } else if (event.button.button == SDL_BUTTON_RIGHT) {
+        // substitute right-click for double-click event
         srcReg = _p_SolitarioGfx->OnMouseDown(event.button.x, event.button.y);
         if (srcReg == NULL)
             return NULL;
@@ -453,7 +454,8 @@ LPErrInApp AppGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
         SDL_ShowCursor(SDL_ENABLE);
         SDL_SetWindowGrab(_p_Window, SDL_FALSE);
     }
-    if (_p_SolitarioGfx->Empty(0) && _p_SolitarioGfx->Empty(8)) {
+    if (_p_SolitarioGfx->IsRegionEmpty(0) &&
+        _p_SolitarioGfx->IsRegionEmpty(8)) {
         _p_SolitarioGfx->SetSymbol(0, 1);
         _p_SolitarioGfx->DrawStaticScene();
     }

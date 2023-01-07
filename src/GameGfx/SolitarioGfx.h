@@ -95,7 +95,9 @@ public:
     LPErrInApp NewDeck(int regionNo) {
         return _cardRegionList[regionNo].NewDeck();
     }
-    bool Empty(int regionNo) { return _cardRegionList[regionNo].Empty(); }
+    bool IsRegionEmpty(int regionNo) {
+        return _cardRegionList[regionNo].IsEmpty();
+    }
     void Shuffle(int regionNo) { _cardRegionList[regionNo].Shuffle(); }
     void PushCardInRegion(int regionNo, LPCardGfx pCard) {
         _cardRegionList[regionNo].PushCard(pCard);
