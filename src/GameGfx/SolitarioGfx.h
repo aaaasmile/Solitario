@@ -40,7 +40,7 @@ public:
 
     void InitAllCoords();
 
-    LPCardRegionGfx GetRegionOnPoint(int x, int y);
+    LPCardRegionGfx SelectRegionOnPoint(int x, int y);
 
     LPErrInApp InitDrag(int x, int y, bool &isInitDrag);
     LPErrInApp InitDrag(LPCardStackGfx CargoStack, int x, int y,
@@ -129,7 +129,7 @@ private:
 private:
     CardStackGfx _dragStack;
     DRAGCARD _dragCard;
-    LPCardRegionGfx _p_cardRegion;
+    LPCardRegionGfx _p_selectedCardRegion;
 
     SDL_Surface *_p_Screen;
     SDL_Texture *_p_ScreenTexture;

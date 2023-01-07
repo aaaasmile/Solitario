@@ -364,8 +364,8 @@ LPErrInApp AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
     CardRegionGfx *srcReg;
     bool isInitDrag = false;
     if (event.button.button == SDL_BUTTON_LEFT) {
-        srcReg =
-            _p_SolitarioGfx->GetRegionOnPoint(event.button.x, event.button.y);
+        srcReg = _p_SolitarioGfx->SelectRegionOnPoint(event.button.x,
+                                                      event.button.y);
         if (srcReg == NULL)
             return NULL;
         if ((srcReg->Id == CRD_FOUNDATION) &&
@@ -419,8 +419,8 @@ LPErrInApp AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
         }
     } else if (event.button.button == SDL_BUTTON_RIGHT) {
         // right-click try to submit the card to the suitable CRD_ACE region
-        srcReg =
-            _p_SolitarioGfx->GetRegionOnPoint(event.button.x, event.button.y);
+        srcReg = _p_SolitarioGfx->SelectRegionOnPoint(event.button.x,
+                                                      event.button.y);
         if (srcReg == NULL)
             return NULL;
         LPCardGfx pCard = srcReg->GetCard(srcReg->Size() - 1);
