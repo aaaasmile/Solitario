@@ -723,8 +723,9 @@ LPErrInApp SolitarioGfx::VictoryAnimation() {
     int gravity = 1;
     unsigned int max_y = _p_Screen->h;
     float bounce = 0.8f;
+    SDL_Event event;
 
-    do {
+    while (1) {
         rot = rand() % 2;
         id = rand() % NUM_CARDS;
         x = rand() % _p_Screen->w;
@@ -738,10 +739,19 @@ LPErrInApp SolitarioGfx::VictoryAnimation() {
         yspeed = 0;
 
         do {
-            SDL_PumpEvents();
-            if (SDL_GetMouseState(NULL, NULL))
-                return NULL;
-
+            while (SDL_PollEvent(&event)) {
+                switch (event.type) {
+                    case SDL_QUIT:
+                        return NULL;
+                    case SDL_KEYDOWN:
+                        if (event.key.keysym.sym == SDLK_ESCAPE) {
+                            return NULL;
+                        }
+                        break;
+                    case SDL_MOUSEBUTTONDOWN:
+                        return NULL;
+                }
+            }
             yspeed = yspeed + gravity;
             x += xspeed;
             y += yspeed;
@@ -756,7 +766,7 @@ LPErrInApp SolitarioGfx::VictoryAnimation() {
             }
             updateTextureAsFlipScreen();
         } while ((x + g_CardWidth > 0) && (x < _p_Screen->w));
-    } while (1);
+    }
     return NULL;
 }
 

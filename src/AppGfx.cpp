@@ -353,6 +353,7 @@ LPErrInApp AppGfx::handleGameLoopKeyDownEvent(SDL_Event &event) {
         if (err != NULL) {
             return err;
         }
+        _p_SolitarioGfx->DrawStaticScene();
     }
     if (event.key.keysym.sym == SDLK_r) {
         _p_SolitarioGfx->DrawStaticScene();
