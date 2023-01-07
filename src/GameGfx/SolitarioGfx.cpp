@@ -94,9 +94,8 @@ LPErrInApp SolitarioGfx::DrawCardStack(SDL_Surface *s,
         return NULL;
 
     DrawSymbol(pcardRegion->XCoord, pcardRegion->YCoord, pcardRegion->Symbol);
-    for (VI vi = pcardRegion->InternalStack.begin();
-         vi != pcardRegion->InternalStack.end(); ++vi) {
-        LPCardGfx pCard = *vi;
+    for (int i = 0; i < pcardRegion->InternalStack.Size(); i++) {
+        LPCardGfx pCard = pcardRegion->InternalStack.Item(i);
         if (pCard->IsFaceUp()) {
             err = DrawCard(pCard, s);
         } else {
@@ -228,8 +227,8 @@ LPErrInApp SolitarioGfx::InitDrag(LPCardStackGfx pCargoStack, int x, int y,
                              _p_sourceRegion->GetyOffset());
     DragRegion.PushStack(&_dragStack);
 
-    _dragCard.x = _dragStack[0]->X();
-    _dragCard.y = _dragStack[0]->Y();
+    _dragCard.x = _dragStack.First()->X();
+    _dragCard.y = _dragStack.First()->Y();
     _dragCard.width = DragRegion.GetStackWidth();
     _dragCard.height = DragRegion.GetStackHeight();
 
@@ -329,16 +328,14 @@ void SolitarioGfx::DoDrop(LPCardRegionGfx pDestRegion) {
     pDestStack->PushStack(&_dragStack);
     pBestRegion->InitCardCoords();
 
-    VI vi;
+    LPCardGfx pCard = NULL;
     switch (_p_sourceRegion->GetDragMode()) {
-        case 2:
-        case 3:
-            vi = pDestStack->end() - 1;
+        case CRD_DRAGTOP:
+            pCard = pDestStack->Last();
             break;
-        default:  // 1 and 4
-            vi = pDestStack->end() - _dragStack.Size();
+        default:
+            pCard = pDestStack->Item(pDestStack->Size() - _dragStack.Size());
     }
-    LPCardGfx pCard = *vi;
 
     _dragStack.Clear();
 

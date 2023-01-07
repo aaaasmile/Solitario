@@ -70,9 +70,9 @@ public:
     }
 
     void SetCardFaceUp(bool bVal, int idx) {
-        InternalStack[idx]->SetFaceUp(bVal);
+        InternalStack.Item(idx)->SetFaceUp(bVal);
     }
-    bool IsCardFaceUp(int idx) { return InternalStack[idx]->IsFaceUp(); }
+    bool IsCardFaceUp(int idx) { return InternalStack.Item(idx)->IsFaceUp(); }
 
     int GetDragMode() const { return _dragMode; }
 

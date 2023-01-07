@@ -10,15 +10,15 @@
 #include "CardGfx.h"
 #include "ErrorInfo.h"
 
-class CardStackGfx : public std::vector<LPCardGfx> {
+class CardStackGfx {
 public:
     LPErrInApp NewDeck();
     void Shuffle();
-    void Clear() { this->clear(); }
+    void Clear() { _vct_lpCardGfx.clear(); }
     void Sort();
     void Reverse();
-    bool IsEmpty() { return this->empty(); }
-    int Size() { return this->size(); }
+    bool IsEmpty() { return _vct_lpCardGfx.empty(); }
+    int Size() { return _vct_lpCardGfx.size(); }
 
     void PushCard(const LPCardGfx pCard);
     void PushStack(CardStackGfx* pCardstack);
@@ -33,6 +33,12 @@ public:
     LPCardGfx GetCard(int index);
 
     void SetCardsFaceUp(bool bVal);
+    LPCardGfx First() { return _vct_lpCardGfx[0]; }
+    LPCardGfx Last() { return _vct_lpCardGfx[_vct_lpCardGfx.size() - 1]; }
+    LPCardGfx Item(int ix) { return _vct_lpCardGfx[ix]; }
+
+private:
+    std::vector<LPCardGfx> _vct_lpCardGfx;
 };
 
 typedef CardStackGfx* LPCardStackGfx;

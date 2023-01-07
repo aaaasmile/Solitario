@@ -10,8 +10,8 @@ void CardRegionGfx::InitCardCoords() {
     int pos = 0;
     int it = 0;
 
-    for (VI vi = InternalStack.begin(); vi != InternalStack.end(); ++vi) {
-        LPCardGfx pCard = *vi;
+    for (int i = 0; i < InternalStack.Size(); i++) {
+        LPCardGfx pCard = InternalStack.Item(i);
         pCard->SetCardLoc(x, y);
         if (Attributes & CRD_3D) {
             if (!((it++) % 4))
@@ -34,9 +34,9 @@ bool CardRegionGfx::PtInStack(int x, int y) {
     if (!(Attributes & CRD_VISIBLE))
         return false;
 
-    if (Attributes & CRD_3D && !this->IsEmpty()) {
-        LPCardGfx pCard = InternalStack[InternalStack.Size() - 1];
-        return pCard->PtInCard(x, y);
+    if (Attributes & CRD_3D && !IsEmpty()) {
+        LPCardGfx pLastCard = InternalStack.Last();
+        return pLastCard->PtInCard(x, y);
     }
 
     int StackWidth = GetStackWidth();
@@ -50,8 +50,8 @@ bool CardRegionGfx::PtOnTop(int x, int y) {
     if (IsEmpty())
         return false;
 
-    LPCardGfx pCard = InternalStack[InternalStack.Size() - 1];
-    return pCard->PtInCard(x, y);
+    LPCardGfx pLastCard = InternalStack.Last();
+    return pLastCard->PtInCard(x, y);
 }
 
 int CardRegionGfx::GetOverlapRatio(int x, int y, int w, int h) {
@@ -147,9 +147,7 @@ bool CardRegionGfx::CanDrop(LPCardStackGfx stack) {
         return false;
     // LastCard is the destination stack
     // StartCard is the dragging card that is dropping
-
-    VI vi = stack->begin();
-    LPCardGfx pStartCard = *vi;
+    LPCardGfx pStartCard = stack->First();
 
     if (InternalStack.IsEmpty() && (_acceptMode & CRD_DOKING) &&
         (pStartCard->Rank() != 10))
@@ -160,8 +158,7 @@ bool CardRegionGfx::CanDrop(LPCardStackGfx stack) {
     else if (InternalStack.IsEmpty())
         return true;
 
-    VI lastvi = InternalStack.end() - 1;
-    LPCardGfx pLastCard = *lastvi;
+    LPCardGfx pLastCard = InternalStack.Last();
 
     if (pLastCard->IsFaceDown())
         return false;
@@ -209,8 +206,8 @@ bool CardRegionGfx::CanDrop(LPCardStackGfx stack) {
 int CardRegionGfx::GetStackWidth() {
     if (InternalStack.IsEmpty())
         return g_CardWidth;
-    LPCardGfx pStartCard = InternalStack[0];
-    LPCardGfx pLastCard = InternalStack[InternalStack.Size() - 1];
+    LPCardGfx pStartCard = InternalStack.First();
+    LPCardGfx pLastCard = InternalStack.Last();
 
     return pLastCard->X() + g_CardWidth - pStartCard->X();
 }
@@ -219,8 +216,8 @@ int CardRegionGfx::GetStackHeight() {
     if (InternalStack.IsEmpty())
         return g_CardHeight;
 
-    LPCardGfx pStartCard = InternalStack[0];
-    LPCardGfx pLastCard = InternalStack[InternalStack.Size() - 1];
+    LPCardGfx pStartCard = InternalStack.First();
+    LPCardGfx pLastCard = InternalStack.Last();
 
     return pLastCard->Y() + g_CardHeight - pStartCard->Y();
 }
