@@ -1,5 +1,7 @@
 #include "CardStackGfx.h"
 
+#include "WinTypeGlobal.h"
+
 int g_PointsBriscola[] = {
     /*Asso*/ 11, /*Due*/ 0,   /*Tre*/ 10,  /*Quattro*/ 0, /*cinque*/ 0,
     /*Sei*/ 0,   /*Sette*/ 0, /*Fante*/ 2, /*Cavallo*/ 3, /*Re*/ 4,
@@ -22,7 +24,11 @@ int g_PointsSolitario[] = {
 
 LPErrInApp CardStackGfx::NewDeck() {
     LPErrInApp err;
-    Clear();
+    TRACE("NewDeck: delete card stack %d", this->size());
+    for (VI vi = this->begin(); vi != this->end(); ++vi) {
+        LPCardGfx pCard = *vi;
+        delete pCard;
+    }
 
     for (size_t i = 0; i < NUM_CARDS; i++) {
         LPCardGfx pCard = new CardGfx;
@@ -39,13 +45,7 @@ LPErrInApp CardStackGfx::NewDeck() {
 void CardStackGfx::Shuffle() {
     std::random_shuffle(this->begin(), this->end());
 }
-void CardStackGfx::Clear() {
-    for (VI vi = this->begin(); vi != this->end(); ++vi) {
-        LPCardGfx pCard = *vi;
-        delete pCard;
-    }
-    this->clear();
-}
+void CardStackGfx::Clear() { this->clear(); }
 void CardStackGfx::Reverse() { std::reverse(this->begin(), this->end()); }
 
 bool SortRank(const LPCardGfx& l, const LPCardGfx& r) {

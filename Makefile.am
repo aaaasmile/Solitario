@@ -35,7 +35,7 @@ solitario_SOURCES = \
 	src/GameSettings.cpp\
 	src/GfxUtil.cpp\
 	src/Languages.cpp\
-	src/main.cpp\
+	src/Main.cpp\
 	src/Fading.cpp\
 	src/Credits.cpp\
 	src/ErrorInfo.cpp\

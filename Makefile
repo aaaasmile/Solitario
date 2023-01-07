@@ -109,7 +109,7 @@ am_solitario_OBJECTS = src/GameGfx/CardRegionGfx.$(OBJEXT) \
 	src/AppGfx.$(OBJEXT) src/CardGfx.$(OBJEXT) \
 	src/DeckType.$(OBJEXT) src/GameSettings.$(OBJEXT) \
 	src/GfxUtil.$(OBJEXT) src/Languages.$(OBJEXT) \
-	src/main.$(OBJEXT) src/Fading.$(OBJEXT) src/Credits.$(OBJEXT) \
+	src/Main.$(OBJEXT) src/Fading.$(OBJEXT) src/Credits.$(OBJEXT) \
 	src/ErrorInfo.$(OBJEXT) src/MenuMgr.$(OBJEXT) \
 	src/CompGfx/cLabelLinkGfx.$(OBJEXT) \
 	src/CompGfx/cLabelGfx.$(OBJEXT)
@@ -134,8 +134,8 @@ am__depfiles_remade = src/$(DEPDIR)/AppGfx.Po src/$(DEPDIR)/CardGfx.Po \
 	src/$(DEPDIR)/Credits.Po src/$(DEPDIR)/DeckType.Po \
 	src/$(DEPDIR)/ErrorInfo.Po src/$(DEPDIR)/Fading.Po \
 	src/$(DEPDIR)/GameSettings.Po src/$(DEPDIR)/GfxUtil.Po \
-	src/$(DEPDIR)/Languages.Po src/$(DEPDIR)/MenuMgr.Po \
-	src/$(DEPDIR)/MusicManager.Po src/$(DEPDIR)/main.Po \
+	src/$(DEPDIR)/Languages.Po src/$(DEPDIR)/Main.Po \
+	src/$(DEPDIR)/MenuMgr.Po src/$(DEPDIR)/MusicManager.Po \
 	src/CompGfx/$(DEPDIR)/cLabelGfx.Po \
 	src/CompGfx/$(DEPDIR)/cLabelLinkGfx.Po \
 	src/GameGfx/$(DEPDIR)/CardRegionGfx.Po \
@@ -367,7 +367,7 @@ solitario_SOURCES = \
 	src/GameSettings.cpp\
 	src/GfxUtil.cpp\
 	src/Languages.cpp\
-	src/main.cpp\
+	src/Main.cpp\
 	src/Fading.cpp\
 	src/Credits.cpp\
 	src/ErrorInfo.cpp\
@@ -501,7 +501,7 @@ src/GfxUtil.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/Languages.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/main.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/Main.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/Fading.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/Credits.$(OBJEXT): src/$(am__dirstamp) \
@@ -543,9 +543,9 @@ include src/$(DEPDIR)/Fading.Po # am--include-marker
 include src/$(DEPDIR)/GameSettings.Po # am--include-marker
 include src/$(DEPDIR)/GfxUtil.Po # am--include-marker
 include src/$(DEPDIR)/Languages.Po # am--include-marker
+include src/$(DEPDIR)/Main.Po # am--include-marker
 include src/$(DEPDIR)/MenuMgr.Po # am--include-marker
 include src/$(DEPDIR)/MusicManager.Po # am--include-marker
-include src/$(DEPDIR)/main.Po # am--include-marker
 include src/CompGfx/$(DEPDIR)/cLabelGfx.Po # am--include-marker
 include src/CompGfx/$(DEPDIR)/cLabelLinkGfx.Po # am--include-marker
 include src/GameGfx/$(DEPDIR)/CardRegionGfx.Po # am--include-marker
@@ -935,9 +935,9 @@ distclean: distclean-recursive
 	-rm -f src/$(DEPDIR)/GameSettings.Po
 	-rm -f src/$(DEPDIR)/GfxUtil.Po
 	-rm -f src/$(DEPDIR)/Languages.Po
+	-rm -f src/$(DEPDIR)/Main.Po
 	-rm -f src/$(DEPDIR)/MenuMgr.Po
 	-rm -f src/$(DEPDIR)/MusicManager.Po
-	-rm -f src/$(DEPDIR)/main.Po
 	-rm -f src/CompGfx/$(DEPDIR)/cLabelGfx.Po
 	-rm -f src/CompGfx/$(DEPDIR)/cLabelLinkGfx.Po
 	-rm -f src/GameGfx/$(DEPDIR)/CardRegionGfx.Po
@@ -999,9 +999,9 @@ maintainer-clean: maintainer-clean-recursive
 	-rm -f src/$(DEPDIR)/GameSettings.Po
 	-rm -f src/$(DEPDIR)/GfxUtil.Po
 	-rm -f src/$(DEPDIR)/Languages.Po
+	-rm -f src/$(DEPDIR)/Main.Po
 	-rm -f src/$(DEPDIR)/MenuMgr.Po
 	-rm -f src/$(DEPDIR)/MusicManager.Po
-	-rm -f src/$(DEPDIR)/main.Po
 	-rm -f src/CompGfx/$(DEPDIR)/cLabelGfx.Po
 	-rm -f src/CompGfx/$(DEPDIR)/cLabelLinkGfx.Po
 	-rm -f src/GameGfx/$(DEPDIR)/CardRegionGfx.Po

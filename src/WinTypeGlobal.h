@@ -15,6 +15,8 @@
 #include <windows.h>
 #endif
 
+#include <stdarg.h>
+
 #include <deque>
 #include <string>
 #include <vector>
