@@ -163,7 +163,7 @@ bool CardRegionGfx::CanDrop(LPCardStackGfx stack) {
     VI lastvi = InternalStack.end() - 1;
     LPCardGfx pLastCard = *lastvi;
 
-    if (pLastCard->FaceDown())
+    if (pLastCard->IsFaceDown())
         return false;
 
     if (!(Attributes & CRD_DODROP))

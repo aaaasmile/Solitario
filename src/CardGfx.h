@@ -45,8 +45,8 @@ public:
     int Y() { return _y; }
     int Index() { return _idx; }
 
-    bool FaceUp() const { return _faceUp; }
-    bool FaceDown() const { return !_faceUp; }
+    bool IsFaceUp() const { return _faceUp; }
+    bool IsFaceDown() const { return !_faceUp; }
 
     void SetFaceUp(bool bval) { _faceUp = bval; }
     LPErrInApp SetIdx(int nIdx) {

@@ -402,7 +402,7 @@ LPErrInApp AppGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
 
         // clicked on the top of the foundations
         if (((srcReg->Id == CRD_FOUNDATION) || (srcReg->Id == CRD_RESERVE)) &&
-            pCard->FaceUp() &&
+            pCard->IsFaceUp() &&
             srcReg->PtOnTop(event.button.x, event.button.y)) {
             LPCardRegionGfx pRegion =
                 _p_SolitarioGfx->FindDropRegion(CRD_WASTE, pCard);

@@ -104,7 +104,7 @@ public:
     void SetCardFaceUp(bool bVal, int idx) {
         InternalStack[idx]->SetFaceUp(bVal);
     }
-    bool CardFaceUp(int idx) { return InternalStack[idx]->FaceUp(); }
+    bool CardFaceUp(int idx) { return InternalStack[idx]->IsFaceUp(); }
 
     void SetDragMode(int mode) { _dragMode = mode; }
     int GetDragMode() const { return _dragMode; }

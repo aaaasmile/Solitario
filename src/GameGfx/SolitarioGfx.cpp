@@ -99,7 +99,7 @@ LPErrInApp SolitarioGfx::DrawCardStack(SDL_Surface *s,
     for (VI vi = pcardRegion->InternalStack.begin();
          vi != pcardRegion->InternalStack.end(); ++vi) {
         LPCardGfx pCard = *vi;
-        if (pCard->FaceUp()) {
+        if (pCard->IsFaceUp()) {
             err = DrawCard(pCard, s);
         } else {
             err = DrawCardBack(pCard->X(), pCard->Y(), s);
