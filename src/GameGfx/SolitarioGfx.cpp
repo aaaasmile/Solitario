@@ -42,6 +42,23 @@ SolitarioGfx::~SolitarioGfx() {
     clearSurface();
 }
 
+void SolitarioGfx::clearSurface() {
+    if (_p_ScreenBackbuffer != NULL) {
+        SDL_FreeSurface(_p_ScreenBackbuffer);
+        _p_ScreenBackbuffer = NULL;
+    }
+
+    if (_p_SceneBackground != NULL) {
+        SDL_FreeSurface(_p_SceneBackground);
+        _p_SceneBackground = NULL;
+    }
+
+    if (_p_ScreenTexture != NULL) {
+        SDL_DestroyTexture(_p_ScreenTexture);
+        _p_ScreenTexture = NULL;
+    }
+}
+
 LPErrInApp SolitarioGfx::Initialize(SDL_Surface *s, SDL_Renderer *r,
                                     SDL_Window *w, DeckType &dt) {
     TRACE("Initialize Solitario");
@@ -95,6 +112,14 @@ LPErrInApp SolitarioGfx::Initialize(SDL_Surface *s, SDL_Renderer *r,
     return DrawInitialScene();
 }
 
+void SolitarioGfx::InitAllCoords() {
+    for (regionVI vir = _cardRegionList.begin(); vir != _cardRegionList.end();
+         ++vir) {
+        vir->InitCardCoords();
+        vir->InitCardFaces();
+    }
+}
+
 LPErrInApp SolitarioGfx::DrawCardStack(LPCardRegionGfx pcardRegion) {
     return DrawCardStack(_p_Screen, pcardRegion);
 }
@@ -120,23 +145,6 @@ LPErrInApp SolitarioGfx::DrawCardStack(SDL_Surface *s,
     return NULL;
 }
 
-void SolitarioGfx::clearSurface() {
-    if (_p_ScreenBackbuffer != NULL) {
-        SDL_FreeSurface(_p_ScreenBackbuffer);
-        _p_ScreenBackbuffer = NULL;
-    }
-
-    if (_p_SceneBackground != NULL) {
-        SDL_FreeSurface(_p_SceneBackground);
-        _p_SceneBackground = NULL;
-    }
-
-    if (_p_ScreenTexture != NULL) {
-        SDL_DestroyTexture(_p_ScreenTexture);
-        _p_ScreenTexture = NULL;
-    }
-}
-
 void SolitarioGfx::CreateRegion(int id, unsigned int attribs,
                                 unsigned int amode, int dmode, int symbol,
                                 int x, int y, int xoffset, int yoffset) {
@@ -154,14 +162,6 @@ bool SolitarioGfx::DeleteRegion(LPCardRegionGfx pRegion) {
         }
     }
     return false;
-}
-
-void SolitarioGfx::InitAllCoords() {
-    for (regionVI vir = _cardRegionList.begin(); vir != _cardRegionList.end();
-         ++vir) {
-        vir->InitCardCoords();
-        vir->InitCardFaces();
-    }
 }
 
 LPCardRegionGfx SolitarioGfx::SelectRegionOnPoint(int x, int y) {
@@ -973,79 +973,89 @@ LPErrInApp SolitarioGfx::handleGameLoopKeyDownEvent(SDL_Event &event) {
 }
 
 LPErrInApp SolitarioGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
+    if (event.button.button == SDL_BUTTON_LEFT) {
+        return handleLeftMouseDown(event);
+    } else if (event.button.button == SDL_BUTTON_RIGHT) {
+        return handleRightMouseDown(event);
+    }
+    return NULL;
+}
+
+LPErrInApp SolitarioGfx::handleLeftMouseDown(SDL_Event &event) {
     LPErrInApp err;
     CardRegionGfx *srcReg;
     bool isInitDrag = false;
-    if (event.button.button == SDL_BUTTON_LEFT) {
-        srcReg = SelectRegionOnPoint(event.button.x, event.button.y);
-        if (srcReg == NULL)
-            return NULL;
-        if ((srcReg->Id == CRD_FOUNDATION) &&
-            srcReg->PtOnTop(event.button.x, event.button.y)) {
-            srcReg->SetCardFaceUp(true, srcReg->Size() - 1);
-        }
+    srcReg = SelectRegionOnPoint(event.button.x, event.button.y);
+    if (srcReg == NULL)
+        return NULL;
+    if ((srcReg->Id == CRD_FOUNDATION) &&
+        srcReg->PtOnTop(event.button.x, event.button.y)) {
+        srcReg->SetCardFaceUp(true, srcReg->Size() - 1);
+    }
 
-        if ((srcReg->Id == CRD_FOUNDATION) || (srcReg->Id == CRD_DECK_FACEUP) ||
-            (srcReg->Id == CRD_ACE)) {
-            // clicked on region that can do dragging
-            err = InitDrag(event.button.x, event.button.y, isInitDrag);
+    if ((srcReg->Id == CRD_FOUNDATION) || (srcReg->Id == CRD_DECK_FACEUP) ||
+        (srcReg->Id == CRD_ACE)) {
+        // clicked on region that can do dragging
+        err = InitDrag(event.button.x, event.button.y, isInitDrag);
+        if (err != NULL) {
+            return err;
+        }
+        if (isInitDrag) {
+            _bStartdrag = true;
+            SDL_ShowCursor(SDL_DISABLE);
+            SDL_SetWindowGrab(_p_Window, SDL_TRUE);
+        }
+    } else if (srcReg->Id == CRD_DECKPILE) {
+        if (srcReg->IsEmpty() && !IsRegionEmpty(DeckFaceUp)) {
+            // Bring back the cards on the deck
+            LPCardStackGfx pCardStack =
+                PopStackFromRegion(DeckFaceUp, RegionSize(DeckFaceUp));
+            pCardStack->SetCardsFaceUp(false);
+            err = InitDrag(pCardStack, -1, -1, isInitDrag);
             if (err != NULL) {
                 return err;
             }
-            if (isInitDrag) {
-                _bStartdrag = true;
-                SDL_ShowCursor(SDL_DISABLE);
-                SDL_SetWindowGrab(_p_Window, SDL_TRUE);
+            DoDrop(GetRegion(DeckPile_Ix));
+            Reverse(DeckPile_Ix);
+            InitCardCoords(DeckPile_Ix);
+            delete pCardStack;
+        } else if (!srcReg->IsEmpty()) {
+            // the next card goes to the deck face up region
+            LPCardStackGfx pCardStack = PopStackFromRegion(DeckPile_Ix, 1);
+            pCardStack->SetCardsFaceUp(true);
+            err = InitDrag(pCardStack, -1, -1, isInitDrag);
+            if (err != NULL) {
+                return err;
             }
-        } else if (srcReg->Id == CRD_DECKPILE) {
-            if (srcReg->IsEmpty() && !IsRegionEmpty(DeckFaceUp)) {
-                // Bring back the cards on the deck
-                LPCardStackGfx pCardStack =
-                    PopStackFromRegion(DeckFaceUp, RegionSize(DeckFaceUp));
-                pCardStack->SetCardsFaceUp(false);
-                err = InitDrag(pCardStack, -1, -1, isInitDrag);
-                if (err != NULL) {
-                    return err;
-                }
-                DoDrop(GetRegion(DeckPile_Ix));
-                Reverse(DeckPile_Ix);
-                InitCardCoords(DeckPile_Ix);
-                delete pCardStack;
-            } else if (!srcReg->IsEmpty()) {
-                // the next card goes to the deck face up region
-                LPCardStackGfx pCardStack = PopStackFromRegion(DeckPile_Ix, 1);
-                pCardStack->SetCardsFaceUp(true);
-                err = InitDrag(pCardStack, -1, -1, isInitDrag);
-                if (err != NULL) {
-                    return err;
-                }
-                DoDrop(GetRegion(DeckFaceUp));
-                delete pCardStack;
-            } else {
-                TRACE("No more card on the pile deck");
-            }
+            DoDrop(GetRegion(DeckFaceUp));
+            delete pCardStack;
+        } else {
+            TRACE("No more card on the pile deck");
         }
-    } else if (event.button.button == SDL_BUTTON_RIGHT) {
-        // right-click try to submit the card to the suitable CRD_ACE region
-        srcReg = SelectRegionOnPoint(event.button.x, event.button.y);
-        if (srcReg == NULL)
-            return NULL;
-        LPCardGfx pCard = srcReg->GetCard(srcReg->Size() - 1);
+    }
+    return NULL;
+}
 
-        if (((srcReg->Id == CRD_FOUNDATION) ||
-             (srcReg->Id == CRD_DECK_FACEUP)) &&
-            pCard->IsFaceUp() &&
-            srcReg->PtOnTop(event.button.x, event.button.y)) {
-            LPCardRegionGfx pDropRegion = FindDropRegion(CRD_ACE, pCard);
-            if (pDropRegion != NULL) {
-                LPCardStackGfx pCardStack = srcReg->PopStack(1);
-                err = InitDrag(pCardStack, -1, -1, isInitDrag);
-                if (err != NULL) {
-                    return err;
-                }
-                DoDrop(pDropRegion);
-                delete pCardStack;
+LPErrInApp SolitarioGfx::handleRightMouseDown(SDL_Event &event) {
+    LPErrInApp err;
+    CardRegionGfx *srcReg;
+    bool isInitDrag = false;
+    srcReg = SelectRegionOnPoint(event.button.x, event.button.y);
+    if (srcReg == NULL)
+        return NULL;
+    LPCardGfx pCard = srcReg->GetCard(srcReg->Size() - 1);
+
+    if (((srcReg->Id == CRD_FOUNDATION) || (srcReg->Id == CRD_DECK_FACEUP)) &&
+        pCard->IsFaceUp() && srcReg->PtOnTop(event.button.x, event.button.y)) {
+        LPCardRegionGfx pDropRegion = FindDropRegion(CRD_ACE, pCard);
+        if (pDropRegion != NULL) {
+            LPCardStackGfx pCardStack = srcReg->PopStack(1);
+            err = InitDrag(pCardStack, -1, -1, isInitDrag);
+            if (err != NULL) {
+                return err;
             }
+            DoDrop(pDropRegion);
+            delete pCardStack;
         }
     }
     return NULL;

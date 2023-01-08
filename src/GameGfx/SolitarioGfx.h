@@ -147,6 +147,8 @@ private:
     LPErrInApp handleGameLoopMouseDownEvent(SDL_Event &event);
     void handleGameLoopMouseMoveEvent(SDL_Event &event);
     LPErrInApp handleGameLoopMouseUpEvent(SDL_Event &event);
+    LPErrInApp handleLeftMouseDown(SDL_Event &event);
+    LPErrInApp handleRightMouseDown(SDL_Event &event);
 
 private:
     CardStackGfx _dragStack;
