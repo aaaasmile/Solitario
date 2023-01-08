@@ -73,7 +73,7 @@ public:
     LPCardRegionGfx FindDropRegion(int Id, LPCardStackGfx pStack);
 
     void DrawStaticScene();
-    LPErrInApp DrawBackground(bool bIsInit);
+    LPErrInApp DrawInitialScene();
 
     LPCardRegionGfx GetBestStack(int x, int y, int width, int height,
                                  LPCardStackGfx stack);
@@ -139,8 +139,7 @@ public:
 
 private:
     void updateTextureAsFlipScreen();
-    void zoomDropCard(int &sx, int &sy, LPCardGfx pCard, int width, int height,
-                      SDL_Surface *bg, SDL_Surface *fg);
+    void zoomDropCard(int &sx, int &sy, LPCardGfx pCard, int width, int height);
     void setDeckType(DeckType &dt) { _DeckType.CopyFrom(dt); }
     void clearSurface();
     LPErrInApp newGame();
@@ -155,8 +154,8 @@ private:
     LPCardRegionGfx _p_selectedCardRegion;
 
     SDL_Surface *_p_Screen;
+    SDL_Surface *_p_ScreenBackbuffer;
     SDL_Texture *_p_ScreenTexture;
-    SDL_Surface *_p_Background;
     SDL_Surface *_p_Dragface;
     SDL_Surface *_p_SceneBackground;
     SDL_Renderer *_p_sdlRenderer;

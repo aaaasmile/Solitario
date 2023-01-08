@@ -28,7 +28,7 @@ static const char *lpszDeckDir = DATA_PREFIX "mazzi/";
 static const char *lpszSymbDir = DATA_PREFIX "images/";
 
 SolitarioGfx::SolitarioGfx() {
-    _p_Background = 0;
+    _p_ScreenBackbuffer = 0;
     _p_Dragface = 0;
     _p_SceneBackground = 0;
     _p_ScreenTexture = 0;
@@ -58,8 +58,8 @@ LPErrInApp SolitarioGfx::Initialize(SDL_Surface *s, SDL_Renderer *r,
                                      SDL_GetError());
     }
 
-    _p_Background = SDL_CreateRGBSurface(SDL_SWSURFACE, _p_Screen->w,
-                                         _p_Screen->h, 32, 0, 0, 0, 0);
+    _p_ScreenBackbuffer = SDL_CreateRGBSurface(SDL_SWSURFACE, _p_Screen->w,
+                                               _p_Screen->h, 32, 0, 0, 0, 0);
     SDL_RWops *srcBack = SDL_RWFromFile(lpszBackgroundImgFile, "rb");
     if (srcBack == 0) {
         return ERR_UTIL::ErrorCreate("Error in SDL_RWFromFile: %s\n",
@@ -92,7 +92,7 @@ LPErrInApp SolitarioGfx::Initialize(SDL_Surface *s, SDL_Renderer *r,
         }
     }
 
-    return DrawBackground(true);
+    return DrawInitialScene();
 }
 
 LPErrInApp SolitarioGfx::DrawCardStack(LPCardRegionGfx pcardRegion) {
@@ -121,9 +121,9 @@ LPErrInApp SolitarioGfx::DrawCardStack(SDL_Surface *s,
 }
 
 void SolitarioGfx::clearSurface() {
-    if (_p_Background != NULL) {
-        SDL_FreeSurface(_p_Background);
-        _p_Background = NULL;
+    if (_p_ScreenBackbuffer != NULL) {
+        SDL_FreeSurface(_p_ScreenBackbuffer);
+        _p_ScreenBackbuffer = NULL;
     }
 
     if (_p_SceneBackground != NULL) {
@@ -228,12 +228,7 @@ LPErrInApp SolitarioGfx::InitDrag(LPCardStackGfx pCargoStack, int x, int y,
 
     _p_selectedCardRegion->InitCardCoords();
 
-    err = DrawBackground(false);
-    if (err != NULL) {
-        return err;
-    }
-    SDL_BlitSurface(_p_Screen, NULL, _p_Background, NULL);
-
+    DrawStaticScene();
     CardRegionGfx DragRegion(
         0, _p_selectedCardRegion->GetAttributes() | CRD_FACEUP, 0, 0, 0, 0, 0,
         _p_selectedCardRegion->GetxOffset(),
@@ -281,9 +276,8 @@ void SolitarioGfx::updateTextureAsFlipScreen() {
 }
 
 void SolitarioGfx::DoDrag(int x, int y) {
-    // TRACE("DoDrag (x=%d, y=%d) => drag_x=%d, drag_y=%d. old_x=%d, old_y=%d",
-    // x,
-    //       y, _dragCard.x, _dragCard.y, _oldx, _oldy);
+    TRACE("DoDrag (x=%d, y=%d) => drag_x=%d, drag_y=%d. old_x=%d, old_y=%d", x,
+          y, _dragCard.x, _dragCard.y, _oldx, _oldy);
     SDL_Rect rcs;
     SDL_Rect rcd;
 
@@ -316,7 +310,7 @@ void SolitarioGfx::DoDrag(int x, int y) {
     dest.x = _dragCard.x;
     dest.y = _dragCard.y;
 
-    SDL_BlitSurface(_p_Background, &rcs, _p_Screen, &rcd);
+    SDL_BlitSurface(_p_ScreenBackbuffer, &rcs, _p_Screen, &rcd);
     SDL_BlitSurface(_p_Dragface, NULL, _p_Screen, &dest);
 
     updateTextureAsFlipScreen();
@@ -356,7 +350,7 @@ void SolitarioGfx::DoDrop(LPCardRegionGfx pDestRegion) {
         return;  // when no movement
 
     zoomDropCard(_dragCard.x, _dragCard.y, pCard, _dragCard.width,
-                 _dragCard.height, _p_Background, _p_Dragface);
+                 _dragCard.height);
 
     SDL_FreeSurface(_p_Dragface);
     _p_Dragface = NULL;
@@ -367,9 +361,9 @@ void calcPt(int x0, int y0, int x1, int y1, float t, int &xf, int &yf) {
     yf = int(y0 + t * (y1 - y0) + .5);
 }
 
-void SolitarioGfx::zoomDropCard(int &sx, int &sy, LPCardGfx pCard, int w, int h,
-                                SDL_Surface *bg, SDL_Surface *fg) {
-    TRACE("Zoom card x=%d, y=%d", sx, sy);
+void SolitarioGfx::zoomDropCard(int &sx, int &sy, LPCardGfx pCard, int w,
+                                int h) {
+    // TRACE("Zoom card x=%d, y=%d", sx, sy);
     SDL_Rect rcs;
     SDL_Rect rcd;
     SDL_Rect dest;
@@ -399,8 +393,8 @@ void SolitarioGfx::zoomDropCard(int &sx, int &sy, LPCardGfx pCard, int w, int h,
         sx = dest.x = px;
         sy = dest.y = py;
 
-        SDL_BlitSurface(bg, &rcs, _p_Screen, &rcd);
-        SDL_BlitSurface(fg, NULL, _p_Screen, &dest);
+        SDL_BlitSurface(_p_ScreenBackbuffer, &rcs, _p_Screen, &rcd);
+        SDL_BlitSurface(_p_Dragface, NULL, _p_Screen, &dest);
 
         updateTextureAsFlipScreen();
     }
@@ -423,16 +417,15 @@ LPCardRegionGfx SolitarioGfx::FindDropRegion(int id, LPCardStackGfx pStack) {
 }
 
 void SolitarioGfx::DrawStaticScene() {
-    if (_p_SceneBackground != NULL) {
-        SDL_FillRect(_p_Screen, &_p_Screen->clip_rect,
-                     SDL_MapRGBA(_p_Screen->format, 0, 0, 0, 0));
-        SDL_Rect rctTarget;
-        rctTarget.x = (_p_Screen->w - _p_SceneBackground->w) / 2;
-        rctTarget.y = (_p_Screen->h - _p_SceneBackground->h) / 2;
-        rctTarget.w = _p_SceneBackground->w;
-        rctTarget.h = _p_SceneBackground->h;
-        SDL_BlitSurface(_p_SceneBackground, NULL, _p_Screen, &rctTarget);
-    }
+    TRACE("Draw static scene");
+    SDL_FillRect(_p_Screen, &_p_Screen->clip_rect,
+                 SDL_MapRGBA(_p_Screen->format, 0, 0, 0, 0));
+    SDL_Rect rctTarget;
+    rctTarget.x = (_p_Screen->w - _p_SceneBackground->w) / 2;
+    rctTarget.y = (_p_Screen->h - _p_SceneBackground->h) / 2;
+    rctTarget.w = _p_SceneBackground->w;
+    rctTarget.h = _p_SceneBackground->h;
+    SDL_BlitSurface(_p_SceneBackground, NULL, _p_Screen, &rctTarget);
 
     for (regionVI vir = _cardRegionList.begin(); vir != _cardRegionList.end();
          ++vir) {
@@ -440,36 +433,26 @@ void SolitarioGfx::DrawStaticScene() {
         CardRegionGfx cardRegion = *vir;
         DrawCardStack(&cardRegion);
     }
+    // it seams here that SDL_BlitSurface copy only the bitmap and not the fill
+    // rect, do it also into the backbuffer
+    SDL_FillRect(_p_ScreenBackbuffer, &_p_ScreenBackbuffer->clip_rect,
+                 SDL_MapRGBA(_p_ScreenBackbuffer->format, 0, 0, 0, 0));
+    SDL_BlitSurface(_p_Screen, NULL, _p_ScreenBackbuffer, NULL);
+
     updateTextureAsFlipScreen();
 }
 
-LPErrInApp SolitarioGfx::DrawBackground(bool bIsInit) {
-    LPErrInApp err;
-    if (_p_SceneBackground != NULL) {
-        SDL_FillRect(_p_Screen, &_p_Screen->clip_rect,
-                     SDL_MapRGBA(_p_Screen->format, 0, 0, 0, 0));
-        SDL_Rect rctTarget;
-        rctTarget.x = (_p_Screen->w - _p_SceneBackground->w) / 2;
-        rctTarget.y = (_p_Screen->h - _p_SceneBackground->h) / 2;
-        rctTarget.w = _p_SceneBackground->w;
-        rctTarget.h = _p_SceneBackground->h;
+LPErrInApp SolitarioGfx::DrawInitialScene() {
+    TRACE("DrawInitialScene");
+    SDL_FillRect(_p_Screen, &_p_Screen->clip_rect,
+                 SDL_MapRGBA(_p_Screen->format, 0, 0, 0, 0));
+    SDL_Rect rctTarget;
+    rctTarget.x = (_p_Screen->w - _p_SceneBackground->w) / 2;
+    rctTarget.y = (_p_Screen->h - _p_SceneBackground->h) / 2;
+    rctTarget.w = _p_SceneBackground->w;
+    rctTarget.h = _p_SceneBackground->h;
 
-        if (!bIsInit) {
-            SDL_BlitSurface(_p_SceneBackground, NULL, _p_Screen, &rctTarget);
-        } else {
-            fade(_p_Screen, _p_SceneBackground, 2, 0, _p_sdlRenderer,
-                 &rctTarget);
-        }
-    }
-
-    for (regionVI vir = _cardRegionList.begin(); vir != _cardRegionList.end();
-         ++vir) {
-        CardRegionGfx cardRegion = *vir;
-        err = DrawCardStack(&cardRegion);
-        if (err != NULL) {
-            return NULL;
-        }
-    }
+    fade(_p_Screen, _p_SceneBackground, 2, 0, _p_sdlRenderer, &rctTarget);
     return NULL;
 }
 
@@ -566,8 +549,8 @@ LPErrInApp SolitarioGfx::DrawCard(LPCardGfx pCard, SDL_Surface *s) {
         return ERR_UTIL::ErrorCreate(
             "Error in draw card with Iterator, surface is NULL\n");
     }
-    TRACE("Draw card ix = %d, suit = %s, rank %d, x,y %d,%d", pCard->Index(),
-          pCard->SuitStr(), pCard->Rank(), pCard->X(), pCard->Y());
+    // TRACE("Draw card ix = %d, suit = %s, rank %d, x,y %d,%d", pCard->Index(),
+    //       pCard->SuitStr(), pCard->Rank(), pCard->X(), pCard->Y());
 
     if (_DeckType.IsPacType()) {
         return DrawCardPac(pCard, s);
@@ -974,7 +957,6 @@ LPErrInApp SolitarioGfx::handleGameLoopKeyDownEvent(SDL_Event &event) {
         if (err != NULL) {
             return err;
         }
-        DrawBackground(false);
         DrawStaticScene();
     }
     if (event.key.keysym.sym == SDLK_a) {
