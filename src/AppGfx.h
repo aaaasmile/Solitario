@@ -24,21 +24,6 @@ using namespace traits;
 
 class AppGfx {
 public:
-    enum eRegionIx {
-        DeckPile_Ix = 0,
-        Found_Ix1 = 1,
-        Found_Ix2 = 2,
-        Found_Ix3 = 3,
-        Found_Ix4 = 4,
-        Found_Ix5 = 5,
-        Found_Ix6 = 6,
-        Found_Ix7 = 7,
-        DeckFaceUp = 8,
-        Ace_Ix1 = 9,
-        Ace_Ix2 = 10,
-        Ace_Ix3 = 11,
-        Ace_Ix4 = 12
-    };
     AppGfx();
     ~AppGfx();
 
@@ -60,11 +45,6 @@ private:
     LPErrInApp startGameLoop();
     LPErrInApp createWindow();
     void terminate();
-    LPErrInApp newGame();
-    LPErrInApp handleGameLoopKeyDownEvent(SDL_Event& event);
-    LPErrInApp handleGameLoopMouseDownEvent(SDL_Event& event);
-    void handleGameLoopMouseMoveEvent(SDL_Event& event);
-    LPErrInApp handleGameLoopMouseUpEvent(SDL_Event& event);
     LPErrInApp loadProfile();
     void writeProfile();
     void usage(int errOut, char* cmd);
@@ -97,7 +77,6 @@ private:
     int _iBpp;
 
     bool _bFullScreen;
-    bool _bStartdrag;
     bool _bOverride;
 
     std::stack<int> _Histmenu;

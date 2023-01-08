@@ -14,6 +14,11 @@ int g_CardHeight = 0;
 int g_SymbolWidth = 84;
 int g_SymbolHeight = 144;
 
+#define CRD_DECKPILE 0
+#define CRD_FOUNDATION 1
+#define CRD_DECK_FACEUP 2
+#define CRD_ACE 3
+
 #define FPS 30
 #define FRAMETICKS (1000 / FPS)
 #define THINKINGS_PER_TICK 1
@@ -38,13 +43,14 @@ SolitarioGfx::~SolitarioGfx() {
 }
 
 LPErrInApp SolitarioGfx::Initialize(SDL_Surface *s, SDL_Renderer *r,
-                                    DeckType &dt) {
+                                    SDL_Window *w, DeckType &dt) {
     TRACE("Initialize Solitario");
     setDeckType(dt);
 
     LPErrInApp err;
     _p_Screen = s;
     _p_sdlRenderer = r;
+    _p_Window = w;
     _p_ScreenTexture = SDL_CreateTexture(
         r, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, s->w, s->h);
     if (_p_ScreenTexture == NULL) {
@@ -931,4 +937,250 @@ LPErrInApp SolitarioGfx::LoadSymbolsForPac() {
     g_SymbolHeight = _p_Symbols->h;
 
     return NULL;
+}
+
+LPErrInApp SolitarioGfx::newGame() {
+    TRACE("New Game");
+    LPErrInApp err;
+    SetSymbol(DeckPile_Ix, CRD_OSYMBOL);
+    CleanUpRegion();
+
+    err = NewDeck(DeckPile_Ix);
+    if (err != NULL) {
+        return err;
+    }
+    Shuffle(DeckPile_Ix);
+
+    // deal
+    int i;
+    for (i = Found_Ix1; i <= Found_Ix7; i++) {
+        LPCardStackGfx pStack = PopStackFromRegion(DeckPile_Ix, i);
+        PushStackInRegion(i, pStack);
+        delete pStack;
+    }
+
+    InitAllCoords();
+
+    for (i = Found_Ix1; i <= Found_Ix7; i++) {
+        SetCardFaceUp(i, true, RegionSize(i) - 1);
+    }
+    return NULL;
+}
+
+LPErrInApp SolitarioGfx::handleGameLoopKeyDownEvent(SDL_Event &event) {
+    LPErrInApp err;
+    if (event.key.keysym.sym == SDLK_n) {
+        err = newGame();
+        if (err != NULL) {
+            return err;
+        }
+        DrawBackground(false);
+        DrawStaticScene();
+    }
+    if (event.key.keysym.sym == SDLK_a) {
+        err = VictoryAnimation();
+        if (err != NULL) {
+            return err;
+        }
+        DrawStaticScene();
+    }
+    if (event.key.keysym.sym == SDLK_r) {
+        DrawStaticScene();
+    }
+    return NULL;
+}
+
+LPErrInApp SolitarioGfx::handleGameLoopMouseDownEvent(SDL_Event &event) {
+    LPErrInApp err;
+    CardRegionGfx *srcReg;
+    bool isInitDrag = false;
+    if (event.button.button == SDL_BUTTON_LEFT) {
+        srcReg = SelectRegionOnPoint(event.button.x, event.button.y);
+        if (srcReg == NULL)
+            return NULL;
+        if ((srcReg->Id == CRD_FOUNDATION) &&
+            srcReg->PtOnTop(event.button.x, event.button.y)) {
+            srcReg->SetCardFaceUp(true, srcReg->Size() - 1);
+        }
+
+        if ((srcReg->Id == CRD_FOUNDATION) || (srcReg->Id == CRD_DECK_FACEUP) ||
+            (srcReg->Id == CRD_ACE)) {
+            // clicked on region that can do dragging
+            err = InitDrag(event.button.x, event.button.y, isInitDrag);
+            if (err != NULL) {
+                return err;
+            }
+            if (isInitDrag) {
+                _bStartdrag = true;
+                SDL_ShowCursor(SDL_DISABLE);
+                SDL_SetWindowGrab(_p_Window, SDL_TRUE);
+            }
+        } else if (srcReg->Id == CRD_DECKPILE) {
+            if (srcReg->IsEmpty() && !IsRegionEmpty(DeckFaceUp)) {
+                // Bring back the cards on the deck
+                LPCardStackGfx pCardStack =
+                    PopStackFromRegion(DeckFaceUp, RegionSize(DeckFaceUp));
+                pCardStack->SetCardsFaceUp(false);
+                err = InitDrag(pCardStack, -1, -1, isInitDrag);
+                if (err != NULL) {
+                    return err;
+                }
+                DoDrop(GetRegion(DeckPile_Ix));
+                Reverse(DeckPile_Ix);
+                InitCardCoords(DeckPile_Ix);
+                delete pCardStack;
+            } else if (!srcReg->IsEmpty()) {
+                // the next card goes to the deck face up region
+                LPCardStackGfx pCardStack = PopStackFromRegion(DeckPile_Ix, 1);
+                pCardStack->SetCardsFaceUp(true);
+                err = InitDrag(pCardStack, -1, -1, isInitDrag);
+                if (err != NULL) {
+                    return err;
+                }
+                DoDrop(GetRegion(DeckFaceUp));
+                delete pCardStack;
+            } else {
+                TRACE("No more card on the pile deck");
+            }
+        }
+    } else if (event.button.button == SDL_BUTTON_RIGHT) {
+        // right-click try to submit the card to the suitable CRD_ACE region
+        srcReg = SelectRegionOnPoint(event.button.x, event.button.y);
+        if (srcReg == NULL)
+            return NULL;
+        LPCardGfx pCard = srcReg->GetCard(srcReg->Size() - 1);
+
+        if (((srcReg->Id == CRD_FOUNDATION) ||
+             (srcReg->Id == CRD_DECK_FACEUP)) &&
+            pCard->IsFaceUp() &&
+            srcReg->PtOnTop(event.button.x, event.button.y)) {
+            LPCardRegionGfx pDropRegion = FindDropRegion(CRD_ACE, pCard);
+            if (pDropRegion != NULL) {
+                LPCardStackGfx pCardStack = srcReg->PopStack(1);
+                err = InitDrag(pCardStack, -1, -1, isInitDrag);
+                if (err != NULL) {
+                    return err;
+                }
+                DoDrop(pDropRegion);
+                delete pCardStack;
+            }
+        }
+    }
+    return NULL;
+}
+
+void SolitarioGfx::handleGameLoopMouseMoveEvent(SDL_Event &event) {
+    if (event.motion.state == SDL_BUTTON(1) && _bStartdrag) {
+        DoDrag(event.motion.x, event.motion.y);
+    }
+}
+
+LPErrInApp SolitarioGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
+    LPErrInApp err;
+    if (_bStartdrag) {
+        _bStartdrag = false;
+        DoDrop();
+        SDL_ShowCursor(SDL_ENABLE);
+        SDL_SetWindowGrab(_p_Window, SDL_FALSE);
+    }
+    if (IsRegionEmpty(DeckPile_Ix) && IsRegionEmpty(DeckFaceUp)) {
+        SetSymbol(DeckPile_Ix, CRD_XSYMBOL);
+        DrawStaticScene();
+    }
+    // victory
+    if ((Size(Ace_Ix1) == 10) && (Size(Ace_Ix2) == 10) &&
+        (Size(Ace_Ix3) == 10) && (Size(Ace_Ix4) == 10)) {
+        VictoryAnimation();
+        err = newGame();
+        if (err != NULL) {
+            return err;
+        }
+        DrawStaticScene();
+    }
+    return NULL;
+}
+
+LPErrInApp SolitarioGfx::StartGameLoop() {
+    // index 0 (deck with face down)
+    CreateRegion(CRD_DECKPILE,          // ID
+                 CRD_VISIBLE | CRD_3D,  // attributes
+                 CRD_DONOTHING,         // Accept mode
+                 CRD_DONOTHING,         // drag mode
+                 CRD_OSYMBOL,           // symbol
+                 35, 10, 2, 2);         // x, y, x offset, yoffset
+    // index 1-7
+    int i;
+    for (i = 1; i <= 7; i++) {
+        CreateRegion(CRD_FOUNDATION,                         // ID
+                     CRD_VISIBLE | CRD_DODRAG | CRD_DODROP,  // attributes
+                     CRD_DOOPCOLOR | CRD_DOLOWER | CRD_DOLOWERBY1 |
+                         CRD_DOKING,  // accept mode
+                     CRD_DRAGFACEUP,  // drag mode
+                     CRD_HSYMBOL,     // symbol
+                     (g_CardWidth * (i - 1)) + (i * 17), g_CardHeight + 40, 0,
+                     32);  // x, y, x offset, yoffset
+    }
+
+    // index 8 (deck face up)
+    CreateRegion(CRD_DECK_FACEUP,                                 // ID
+                 CRD_VISIBLE | CRD_FACEUP | CRD_DODRAG | CRD_3D,  // Attributes
+                 CRD_DOALL,                                       // accept mode
+                 CRD_DRAGTOP,                                     // drag mode
+                 CRD_NSYMBOL,                                     // symbol
+                 g_CardWidth + 65, 10, 0, 0);  // x, y, x offset, yoffset
+
+    // index 9-12 (4 aces place on the top)
+    for (i = 4; i <= 7; i++) {
+        CreateRegion(
+            CRD_ACE,                                         // ID
+            CRD_VISIBLE | CRD_3D | CRD_DODRAG | CRD_DODROP,  // Attributes
+            CRD_DOSINGLE | CRD_DOHIGHER | CRD_DOHIGHERBY1 | CRD_DOACE |
+                CRD_DOSUIT,  // Accept mode
+            CRD_DRAGTOP,     // drop mode
+            CRD_HSYMBOL,     // symbol
+            (g_CardWidth * (i - 1)) + (i * 17), 10, 0,
+            0);  // x, y, x offset, yoffset
+    }
+
+    LPErrInApp err = newGame();
+    if (err != NULL)
+        return err;
+    DrawStaticScene();
+
+    SDL_Event event;
+
+    while (1) {
+        while (SDL_PollEvent(&event)) {
+            switch (event.type) {
+                case SDL_QUIT:
+                    fade(_p_Screen, _p_Screen, 1, 1, _p_sdlRenderer, NULL);
+                    return NULL;
+
+                case SDL_KEYDOWN:
+                    if (event.key.keysym.sym == SDLK_ESCAPE) {
+                        return NULL;
+                    }
+                    err = handleGameLoopKeyDownEvent(event);
+                    if (err != NULL)
+                        return err;
+                    break;
+
+                case SDL_MOUSEBUTTONDOWN:
+                    err = handleGameLoopMouseDownEvent(event);
+                    if (err != NULL)
+                        return err;
+                    break;
+
+                case SDL_MOUSEMOTION:
+                    handleGameLoopMouseMoveEvent(event);
+                    break;
+
+                case SDL_MOUSEBUTTONUP:
+                    err = handleGameLoopMouseUpEvent(event);
+                    if (err != NULL)
+                        return err;
+                    break;
+            }
+        }
+    }
 }

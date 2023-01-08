@@ -24,12 +24,30 @@ const unsigned int CRD_HSYMBOL = 3;
 
 class SolitarioGfx {
     enum { NUM_CARDS_ONDECK = 40, NUM_SYMBOLS = 4 };
+    enum eRegionIx {
+        DeckPile_Ix = 0,
+        Found_Ix1 = 1,
+        Found_Ix2 = 2,
+        Found_Ix3 = 3,
+        Found_Ix4 = 4,
+        Found_Ix5 = 5,
+        Found_Ix6 = 6,
+        Found_Ix7 = 7,
+        DeckFaceUp = 8,
+        Ace_Ix1 = 9,
+        Ace_Ix2 = 10,
+        Ace_Ix3 = 11,
+        Ace_Ix4 = 12
+    };
 
 public:
     SolitarioGfx();
     ~SolitarioGfx();
 
-    LPErrInApp Initialize(SDL_Surface *s, SDL_Renderer *r, DeckType &dt);
+    LPErrInApp Initialize(SDL_Surface *s, SDL_Renderer *r, SDL_Window *w,
+                          DeckType &dt);
+    LPErrInApp StartGameLoop();
+
     int Size(int regionNo) { return _cardRegionList[regionNo].Size(); }
     void CleanUpRegion();
 
@@ -125,6 +143,11 @@ private:
                       SDL_Surface *bg, SDL_Surface *fg);
     void setDeckType(DeckType &dt) { _DeckType.CopyFrom(dt); }
     void clearSurface();
+    LPErrInApp newGame();
+    LPErrInApp handleGameLoopKeyDownEvent(SDL_Event &event);
+    LPErrInApp handleGameLoopMouseDownEvent(SDL_Event &event);
+    void handleGameLoopMouseMoveEvent(SDL_Event &event);
+    LPErrInApp handleGameLoopMouseUpEvent(SDL_Event &event);
 
 private:
     CardStackGfx _dragStack;
@@ -137,6 +160,7 @@ private:
     SDL_Surface *_p_Dragface;
     SDL_Surface *_p_SceneBackground;
     SDL_Renderer *_p_sdlRenderer;
+    SDL_Window *_p_Window;
 
     int _oldx;
     int _oldy;
@@ -146,6 +170,7 @@ private:
     DeckType _DeckType;
     SDL_Surface *_p_CardsSurf[NUM_CARDS_ONDECK];  // for single file
     SDL_Surface *_p_SymbolsSurf[NUM_SYMBOLS];
+    bool _bStartdrag;
 
     SDL_Rect _rctSrcCard;
 
