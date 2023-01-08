@@ -156,10 +156,11 @@ Sviluppato dentro questo progetto:
     igor@MiniToro:~/projects/Solitario$
 
 ### TODO
-- Draw del background non contiene i bordi neri. Il drag della prima foundation è sporco
+
+- Dialogo delle opzioni da mettere nell'App
 - Help
 - Goto invido.it
-- Dialogo delle opzioni
+- Draw del background non contiene i bordi neri. Il drag della prima foundation è sporco [DONE]
 - Il drag parte da x,y = 0,0 [DONE]
 - Il menu ha ancora bisogno di correzzioni sdl 1.2 -> sdl 2.0 [DONE]
 - Il rendering del gioco non usa le immagini in formato Pac ma quelle singole [DONE]

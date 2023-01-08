@@ -819,7 +819,7 @@ LPErrInApp SolitarioGfx::LoadDeckFromSingleFile() {
 }
 
 LPErrInApp SolitarioGfx::LoadSymbolsFromSingleFile() {
-    VCT_STRINGS vct_Strings;
+    VCT_STRING vct_Strings;
     vct_Strings.push_back("dorso.jpg");
     vct_Strings.push_back("fine_1.jpg");
     vct_Strings.push_back("fine_2.jpg");

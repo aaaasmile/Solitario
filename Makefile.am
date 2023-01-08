@@ -41,5 +41,8 @@ solitario_SOURCES = \
 	src/ErrorInfo.cpp\
 	src/MenuMgr.cpp\
 	src/CompGfx/cLabelLinkGfx.cpp\
+	src/CompGfx/cButtonGfx.cpp\
+	src/CompGfx/cCheckBoxGfx.cpp\
+	src/CompGfx/cComboGfx.cpp\
 	src/CompGfx/cLabelGfx.cpp
 	

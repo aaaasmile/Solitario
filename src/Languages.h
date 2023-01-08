@@ -60,6 +60,8 @@ public:
         ID_WELCOMETITLEBAR,
         ID_MEN_OPTIONS,
         ID_MN_HELP,
+        ID_OK,
+        ID_CANCEL,
         TOT_STRINGS  // it mus be always on the last place
     };
 

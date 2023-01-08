@@ -63,6 +63,6 @@ inline void TRACE(const char* fmt, ...) {
 #endif
 #endif
 
-typedef std::vector<std::string> VCT_STRINGS;
+typedef std::vector<std::string> VCT_STRING;
 
 #endif

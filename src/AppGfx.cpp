@@ -611,7 +611,7 @@ bool AppGfx::parseScreenSize(LPCSTR strInput) {
     memset(strBuffer, 0, 2048);
     char seps[] = " ,\t\n";
     char *token;
-    VCT_STRINGS vct_String;
+    VCT_STRING vct_String;
     bool bRet = false;
 
     int iNumChar = strlen(strInput);

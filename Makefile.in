@@ -112,6 +112,9 @@ am_solitario_OBJECTS = src/GameGfx/CardRegionGfx.$(OBJEXT) \
 	src/Main.$(OBJEXT) src/Fading.$(OBJEXT) src/Credits.$(OBJEXT) \
 	src/ErrorInfo.$(OBJEXT) src/MenuMgr.$(OBJEXT) \
 	src/CompGfx/cLabelLinkGfx.$(OBJEXT) \
+	src/CompGfx/cButtonGfx.$(OBJEXT) \
+	src/CompGfx/cCheckBoxGfx.$(OBJEXT) \
+	src/CompGfx/cComboGfx.$(OBJEXT) \
 	src/CompGfx/cLabelGfx.$(OBJEXT)
 solitario_OBJECTS = $(am_solitario_OBJECTS)
 solitario_DEPENDENCIES = libini/libini.a
@@ -136,6 +139,9 @@ am__depfiles_remade = src/$(DEPDIR)/AppGfx.Po src/$(DEPDIR)/CardGfx.Po \
 	src/$(DEPDIR)/GameSettings.Po src/$(DEPDIR)/GfxUtil.Po \
 	src/$(DEPDIR)/Languages.Po src/$(DEPDIR)/Main.Po \
 	src/$(DEPDIR)/MenuMgr.Po src/$(DEPDIR)/MusicManager.Po \
+	src/CompGfx/$(DEPDIR)/cButtonGfx.Po \
+	src/CompGfx/$(DEPDIR)/cCheckBoxGfx.Po \
+	src/CompGfx/$(DEPDIR)/cComboGfx.Po \
 	src/CompGfx/$(DEPDIR)/cLabelGfx.Po \
 	src/CompGfx/$(DEPDIR)/cLabelLinkGfx.Po \
 	src/GameGfx/$(DEPDIR)/CardRegionGfx.Po \
@@ -373,6 +379,9 @@ solitario_SOURCES = \
 	src/ErrorInfo.cpp\
 	src/MenuMgr.cpp\
 	src/CompGfx/cLabelLinkGfx.cpp\
+	src/CompGfx/cButtonGfx.cpp\
+	src/CompGfx/cCheckBoxGfx.cpp\
+	src/CompGfx/cComboGfx.cpp\
 	src/CompGfx/cLabelGfx.cpp
 
 all: all-recursive
@@ -518,6 +527,12 @@ src/CompGfx/$(DEPDIR)/$(am__dirstamp):
 	@: > src/CompGfx/$(DEPDIR)/$(am__dirstamp)
 src/CompGfx/cLabelLinkGfx.$(OBJEXT): src/CompGfx/$(am__dirstamp) \
 	src/CompGfx/$(DEPDIR)/$(am__dirstamp)
+src/CompGfx/cButtonGfx.$(OBJEXT): src/CompGfx/$(am__dirstamp) \
+	src/CompGfx/$(DEPDIR)/$(am__dirstamp)
+src/CompGfx/cCheckBoxGfx.$(OBJEXT): src/CompGfx/$(am__dirstamp) \
+	src/CompGfx/$(DEPDIR)/$(am__dirstamp)
+src/CompGfx/cComboGfx.$(OBJEXT): src/CompGfx/$(am__dirstamp) \
+	src/CompGfx/$(DEPDIR)/$(am__dirstamp)
 src/CompGfx/cLabelGfx.$(OBJEXT): src/CompGfx/$(am__dirstamp) \
 	src/CompGfx/$(DEPDIR)/$(am__dirstamp)
 
@@ -546,6 +561,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/Main.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/MenuMgr.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/MusicManager.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/CompGfx/$(DEPDIR)/cButtonGfx.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/CompGfx/$(DEPDIR)/cCheckBoxGfx.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/CompGfx/$(DEPDIR)/cComboGfx.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/CompGfx/$(DEPDIR)/cLabelGfx.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/CompGfx/$(DEPDIR)/cLabelLinkGfx.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/GameGfx/$(DEPDIR)/CardRegionGfx.Po@am__quote@ # am--include-marker
@@ -938,6 +956,9 @@ distclean: distclean-recursive
 	-rm -f src/$(DEPDIR)/Main.Po
 	-rm -f src/$(DEPDIR)/MenuMgr.Po
 	-rm -f src/$(DEPDIR)/MusicManager.Po
+	-rm -f src/CompGfx/$(DEPDIR)/cButtonGfx.Po
+	-rm -f src/CompGfx/$(DEPDIR)/cCheckBoxGfx.Po
+	-rm -f src/CompGfx/$(DEPDIR)/cComboGfx.Po
 	-rm -f src/CompGfx/$(DEPDIR)/cLabelGfx.Po
 	-rm -f src/CompGfx/$(DEPDIR)/cLabelLinkGfx.Po
 	-rm -f src/GameGfx/$(DEPDIR)/CardRegionGfx.Po
@@ -1002,6 +1023,9 @@ maintainer-clean: maintainer-clean-recursive
 	-rm -f src/$(DEPDIR)/Main.Po
 	-rm -f src/$(DEPDIR)/MenuMgr.Po
 	-rm -f src/$(DEPDIR)/MusicManager.Po
+	-rm -f src/CompGfx/$(DEPDIR)/cButtonGfx.Po
+	-rm -f src/CompGfx/$(DEPDIR)/cCheckBoxGfx.Po
+	-rm -f src/CompGfx/$(DEPDIR)/cComboGfx.Po
 	-rm -f src/CompGfx/$(DEPDIR)/cLabelGfx.Po
 	-rm -f src/CompGfx/$(DEPDIR)/cLabelLinkGfx.Po
 	-rm -f src/GameGfx/$(DEPDIR)/CardRegionGfx.Po
