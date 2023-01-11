@@ -1,8 +1,13 @@
 #include "AppGfx.h"
 
 #include <SDL_image.h>
+#include <fcntl.h>
+#include <limits.h>
 #include <stdlib.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include <time.h>
+#include <unistd.h>
 
 #include "Config.h"
 #include "ErrorInfo.h"
@@ -19,17 +24,19 @@
 #include "Fading.h"
 #include "libini.h"
 
-static const char *lpszIniFileName = INI_PREFIX "options.ini";
-static const char *lpszSectAll = "global";
-static const char *lpszKeyLang = "Language";
-static const char *lpszKeyDeck = "DeckCurrent";
-static const char *lpszKeyMusic = "Musicenabled";
+static const char *g_lpszSolitarioDir = ".solitario";
+static const char *g_lpszIniFileName = "options.ini";
+static const char *g_lpszDefaultIniFileName = DATA_PREFIX "default_options.ini";
+static const char *g_lpszSectAll = "global";
+static const char *g_lpszKeyLang = "Language";
+static const char *g_lpszKeyDeck = "DeckCurrent";
+static const char *g_lpszKeyMusic = "Musicenabled";
 
-static const char *lpszIconProgFile = DATA_PREFIX "images/icona_asso.bmp";
-static const char *lpszTitleFile = DATA_PREFIX "images/title.png";
-static const char *lpszIniFontAriblk = DATA_PREFIX "font/ariblk.ttf";
-static const char *lpszIniFontVera = DATA_PREFIX "font/vera.ttf";
-static const char *lpszImageSplash = DATA_PREFIX "images/im001537.jpg";
+static const char *g_lpszIconProgFile = DATA_PREFIX "images/icona_asso.bmp";
+static const char *g_lpszTitleFile = DATA_PREFIX "images/title.png";
+static const char *g_lpszIniFontAriblk = DATA_PREFIX "font/ariblk.ttf";
+static const char *g_lpszIniFontVera = DATA_PREFIX "font/vera.ttf";
+static const char *g_lpszImageSplash = DATA_PREFIX "images/im001537.jpg";
 
 AppGfx::AppGfx() {
     _p_Screen = NULL;
@@ -70,13 +77,13 @@ LPErrInApp AppGfx::Init() {
     if (TTF_Init() == -1) {
         return ERR_UTIL::ErrorCreate("Font init error");
     }
-    std::string strFileFontStatus = lpszIniFontAriblk;
+    std::string strFileFontStatus = g_lpszIniFontAriblk;
     _p_fontAriblk = TTF_OpenFont(strFileFontStatus.c_str(), 22);
     if (_p_fontAriblk == 0) {
         return ERR_UTIL::ErrorCreate("Unable to load font %s, error: %s\n",
                                      strFileFontStatus.c_str(), SDL_GetError());
     }
-    strFileFontStatus = lpszIniFontVera;
+    strFileFontStatus = g_lpszIniFontVera;
     _p_fontVera = TTF_OpenFont(strFileFontStatus.c_str(), 11);
     if (_p_fontVera == 0) {
         return ERR_UTIL::ErrorCreate("Unable to load font %s, error: %s\n",
@@ -86,7 +93,7 @@ LPErrInApp AppGfx::Init() {
     const char *title = _Languages.GetCStringId(Languages::ID_SOLITARIO);
     SDL_SetWindowTitle(_p_Window, title);
 
-    SDL_Surface *psIcon = SDL_LoadBMP(lpszIconProgFile);
+    SDL_Surface *psIcon = SDL_LoadBMP(g_lpszIconProgFile);
     if (psIcon == 0) {
         return ERR_UTIL::ErrorCreate("Icon not found");
     }
@@ -99,7 +106,7 @@ LPErrInApp AppGfx::Init() {
     srand((unsigned)time(0));
 #endif
 
-    _p_CreditTitle = IMG_Load(lpszTitleFile);
+    _p_CreditTitle = IMG_Load(g_lpszTitleFile);
     if (_p_CreditTitle == 0) {
         return ERR_UTIL::ErrorCreate("Title image not found");
     }
@@ -118,7 +125,7 @@ LPErrInApp AppGfx::Init() {
 }
 
 LPErrInApp AppGfx::loadSceneBackground() {
-    std::string strFileName = lpszImageSplash;
+    std::string strFileName = g_lpszImageSplash;
 
     SDL_RWops *srcBack = SDL_RWFromFile(strFileName.c_str(), "rb");
     if (srcBack == 0) {
@@ -230,35 +237,99 @@ void AppGfx::terminate() {
     SDL_Quit();
 }
 
+LPErrInApp CopyFile(const char *src_path, const char *dst_path) {
+    TRACE("Copy file from %s to %s\n", src_path, dst_path);
+
+    int src_fd, dst_fd, n, io_res;
+    unsigned char buffer[4096];
+    src_fd = open(src_path, O_RDONLY);
+    if (src_fd == -1) {
+        return ERR_UTIL::ErrorCreate("Cannot open file for read  %s", src_path);
+    }
+    dst_fd = open(dst_path, O_CREAT | O_WRONLY | O_EXCL, 0666);
+    if (dst_fd == -1) {
+        return ERR_UTIL::ErrorCreate("Cannot open file for write  %s",
+                                     dst_path);
+    }
+
+    while (1) {
+        io_res = read(src_fd, buffer, 4096);
+        if (io_res == -1) {
+            return ERR_UTIL::ErrorCreate("Error reading file %s.\n", src_path);
+        }
+        n = io_res;
+
+        if (n == 0)
+            break;
+
+        io_res = write(dst_fd, buffer, n);
+        if (io_res == -1) {
+            return ERR_UTIL::ErrorCreate("Error writing to file.\n");
+        }
+    }
+    close(src_fd);
+    close(dst_fd);
+
+    return NULL;
+}
+
 LPErrInApp AppGfx::loadProfile() {
-    ini_fd_t pIni = ini_open(lpszIniFileName, "r", "#");
+    struct stat st = {0};
+    LPErrInApp err;
+    int io_res;
+
+    char dirpath[PATH_MAX - strlen(g_lpszIniFileName)];
+    char filepath[PATH_MAX];
+
+    snprintf(dirpath, sizeof(dirpath), "%s/%s", getenv("HOME"),
+             g_lpszSolitarioDir);
+
+    if (stat(dirpath, &st) == -1) {
+        io_res = mkdir(dirpath, 0700);
+        if (io_res == -1) {
+            return ERR_UTIL::ErrorCreate("Cannot create dir %s", dirpath);
+        }
+        TRACE("Create dir %s\n", dirpath);
+    }
+    snprintf(filepath, PATH_MAX, "%s/%s", dirpath, g_lpszIniFileName);
+
+    if (stat(filepath, &st) == -1) {
+        err = CopyFile(g_lpszDefaultIniFileName, filepath);
+        if (err != NULL) {
+            return err;
+        }
+        TRACE("Default ini file created in %s\n", filepath);
+    }
+
+    ini_fd_t pIni = ini_open(filepath, "r", "#");
 
     if (pIni == NULL)
-        return ERR_UTIL::ErrorCreate("Ini file error %s", lpszIniFileName);
+        return ERR_UTIL::ErrorCreate("loadProfile: Ini file error %s",
+                                     filepath);
 
     int iVal;
 
     // deck type
     iVal = _p_GameSettings->deckTypeVal.GetTypeIndex();
     if (pIni) {
-        ini_locateHeading(pIni, lpszSectAll);
-        ini_locateKey(pIni, lpszKeyDeck);
+        ini_locateHeading(pIni, g_lpszSectAll);
+        ini_locateKey(pIni, g_lpszKeyDeck);
         ini_readInt(pIni, &iVal);
     }
     _p_GameSettings->deckTypeVal.SetTypeIndex(iVal);
     // language
     iVal = _p_GameSettings->eLanguageCurrent;
     if (pIni) {
-        ini_locateHeading(pIni, lpszSectAll);
-        ini_locateKey(pIni, lpszKeyLang);
+        ini_locateHeading(pIni, g_lpszSectAll);
+        ini_locateKey(pIni, g_lpszKeyLang);
         ini_readInt(pIni, &iVal);
     }
     _p_GameSettings->eLanguageCurrent = (Languages::eLangId)iVal;
     // music
     iVal = false;
     if (pIni) {
-        ini_locateHeading(pIni, lpszSectAll);
-        ini_locateKey(pIni, lpszKeyMusic);
+        ini_locateHeading(pIni, g_lpszSectAll);
+        ini_locateKey(pIni, g_lpszKeyMusic);
         ini_readInt(pIni, &iVal);
     }
     if (!_bOverride) {
@@ -270,23 +341,27 @@ LPErrInApp AppGfx::loadProfile() {
 }
 
 void AppGfx::writeProfile() {
-    ini_fd_t pIni = ini_open(lpszIniFileName, "w", "#");
+    char filepath[PATH_MAX];
+    snprintf(filepath, PATH_MAX, "%s/%s/%s", getenv("HOME"), g_lpszSolitarioDir,
+             g_lpszIniFileName);
+
+    ini_fd_t pIni = ini_open(filepath, "w", "#");
     if (pIni == 0)
         return;
 
     // deck type
-    ini_locateHeading(pIni, lpszSectAll);
-    ini_locateKey(pIni, lpszKeyDeck);
+    ini_locateHeading(pIni, g_lpszSectAll);
+    ini_locateKey(pIni, g_lpszKeyDeck);
     ini_writeInt(pIni, (int)_p_GameSettings->deckTypeVal.GetType());
 
     // language
-    ini_locateHeading(pIni, lpszSectAll);
-    ini_locateKey(pIni, lpszKeyLang);
+    ini_locateHeading(pIni, g_lpszSectAll);
+    ini_locateKey(pIni, g_lpszKeyLang);
     ini_writeInt(pIni, _p_GameSettings->eLanguageCurrent);
 
     // music
-    ini_locateHeading(pIni, lpszSectAll);
-    ini_locateKey(pIni, lpszKeyMusic);
+    ini_locateHeading(pIni, g_lpszSectAll);
+    ini_locateKey(pIni, g_lpszKeyMusic);
     ini_writeInt(pIni, _p_GameSettings->bMusicEnabled);
 
     ini_close(pIni);

@@ -156,18 +156,22 @@ Sviluppato dentro questo progetto:
     igor@MiniToro:~/projects/Solitario$
 
 ## Defines
-Nei sorgenti utilizzo le definizioni tipo INI_PREFIX e DATA_PREFIX per puntare
+Nei sorgenti utilizzo le definizioni tipo DATA_PREFIX per puntare
 alle directory dove si trovano i file ini e i files di risorsa per il programma.
 A seconda del target, windows o unbuntu, queste directory sono differenti. 
 È compito della configurazione definire in modo corretto, a seconda del target,
 le variabili sopra elencate. Questo tipo di definizioni vanno messe anche nel 
 file .vscode/c_cpp_properties.json per avere l'editor senza errori.
+Per quanto riguarda la HOME directory, questa dipende dall'utente ed è una
+variabile che setto in runtime (la ~ in compilazione non ha dato i risultati aspettati).
 
 ### TODO
 
-- Dialogo delle opzioni da mettere nell'App
+- Le opzioni cambiate vanno scritte nell'options.ini dell'utente
+- Dialogo delle opzioni da completare
 - Help
 - Goto invido.it
+- Le opzioni di SDL2 dovrebbero risultare dal processo di configure
 - Draw del background non contiene i bordi neri. Il drag della prima foundation è sporco [DONE]
 - Il drag parte da x,y = 0,0 [DONE]
 - Il menu ha ancora bisogno di correzzioni sdl 1.2 -> sdl 2.0 [DONE]

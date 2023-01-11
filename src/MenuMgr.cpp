@@ -16,7 +16,7 @@
 
 static const char* lpszMsgUrl = "Go to invido.it";
 static const char* lpszVersion = VERSION "20221223";
-static const char* lpszIniFontVera = "data/font/vera.ttf";
+static const char* g_lpszIniFontVera = "data/font/vera.ttf";
 
 const SDL_Color MenuMgr::staColor_on = {253, 252, 250};
 const SDL_Color MenuMgr::staColor_off = {128, 128, 128};
@@ -84,10 +84,10 @@ LPErrInApp MenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
     SDL_SetSurfaceAlphaMod(_p_MenuBox, 127);  // SDL 2.0
 
     // link to invido.it
-    _p_font3 = TTF_OpenFont(lpszIniFontVera, 11);
+    _p_font3 = TTF_OpenFont(g_lpszIniFontVera, 11);
     if (_p_font3 == 0) {
         return ERR_UTIL::ErrorCreate("Unable to load font %s, error: %s\n",
-                                     lpszIniFontVera, SDL_GetError());
+                                     g_lpszIniFontVera, SDL_GetError());
     }
     TTF_SetFontStyle(_p_font3, TTF_STYLE_UNDERLINE);
     SDL_Rect rctBt1;

@@ -14,7 +14,6 @@ AC_INIT([solitario],
 AM_INIT_AUTOMAKE([-Wall -Werror foreign subdir-objects])
 # The value of the Variable DATA_PREFIX used in compile is define here below
 AC_SUBST(DATA_PREFIX,["data/"]) 
-AC_SUBST(INI_PREFIX,["~/.solitario/"]) 
 AC_PROG_CXX
 # static library stuff
 AC_PROG_RANLIB

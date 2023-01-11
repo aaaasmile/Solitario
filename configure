@@ -644,7 +644,6 @@ CPPFLAGS
 LDFLAGS
 CXXFLAGS
 CXX
-INI_PREFIX
 DATA_PREFIX
 AM_BACKSLASH
 AM_DEFAULT_VERBOSITY
@@ -3139,8 +3138,6 @@ fi
 
 # The value of the Variable DATA_PREFIX used in compile is define here below
 DATA_PREFIX="data/"
-
-INI_PREFIX="~/.solitario/"
 
 
 
