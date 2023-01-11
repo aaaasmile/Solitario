@@ -15,27 +15,15 @@
 #define OPT_WIN_GENERAL_WIDTH 500
 #define OPT_WIN_GENERAL_HEIGHT 420
 
-#ifdef _WINDOWS
-#include "regkey.h"
-#else
-#include "libini.h"
-#endif
 #include "Credits.h"
 #include "Fading.h"
+#include "libini.h"
 
-#ifdef _WINDOWS
-static LPCSTR strIDS_KEY_LASTPATH = "SOFTWARE\\BredaSoft\\Solitario";
-static LPCSTR strIDS_KEY_PLAYERNAME = "PlayerName";
-static LPCSTR strIDS_KEY_LANGUAGECURRENT = "Language";
-static LPCSTR strIDS_KEY_DECKCURRENT = "DeckCurrent";
-static LPCSTR strIDS_KEY_MUSICENABLED = "Musicenabled";
-#else
-static const char *lpszIniFileName = DATA_PREFIX "options.ini";
+static const char *lpszIniFileName = INI_PREFIX "options.ini";
 static const char *lpszSectAll = "global";
 static const char *lpszKeyLang = "Language";
 static const char *lpszKeyDeck = "DeckCurrent";
 static const char *lpszKeyMusic = "Musicenabled";
-#endif
 
 static const char *lpszIconProgFile = DATA_PREFIX "images/icona_asso.bmp";
 static const char *lpszTitleFile = DATA_PREFIX "images/title.png";
@@ -243,50 +231,6 @@ void AppGfx::terminate() {
 }
 
 LPErrInApp AppGfx::loadProfile() {
-#ifdef _WINDOWS
-    RegistryKey RegKey;
-    LONG lRes;
-
-    lRes = RegKey.Open(HKEY_CURRENT_USER, strIDS_KEY_LASTPATH);
-
-    if (!lRes) {
-        // player name
-        _p_GameSettings->strPlayerName = RegKey.getRegStringValue(
-            _p_GameSettings->strPlayerName.c_str(), strIDS_KEY_PLAYERNAME);
-        // deck type
-        int iVal =
-            RegKey.getRegDWordValue(_p_GameSettings->deckTypeVal.GetTypeIndex(),
-                                    strIDS_KEY_DECKCURRENT);
-        _p_GameSettings->deckTypeVal.SetTypeIndex(iVal);
-
-        // language
-        iVal = RegKey.getRegDWordValue(_p_GameSettings->eLanguageCurrent,
-                                       strIDS_KEY_LANGUAGECURRENT);
-        switch (iVal) {
-            case 0:
-                _p_GameSettings->eLanguageCurrent = LanguageMgr::LANG_ITA;
-                break;
-            case 1:
-                _p_GameSettings->eLanguageCurrent =
-                    LanguageMgr::LANG_DIAL_BREDA;
-                break;
-        }
-        // music
-        iVal = RegKey.getRegDWordValue(0, strIDS_KEY_MUSICENABLED);
-        if (!_bOverride) {
-            if (iVal == 0) {
-                _p_GameSettings->bMusicEnabled = false;
-            } else {
-                _p_GameSettings->bMusicEnabled = true;
-            }
-        }
-    } else {
-        //  create a key
-        RegKey.Create(HKEY_CURRENT_USER, strIDS_KEY_LASTPATH);
-    }
-    RegKey.Close();
-#else
-    // linux version
     ini_fd_t pIni = ini_open(lpszIniFileName, "r", "#");
 
     if (pIni == NULL)
@@ -323,27 +267,9 @@ LPErrInApp AppGfx::loadProfile() {
 
     ini_close(pIni);
     return NULL;
-#endif
 }
 
 void AppGfx::writeProfile() {
-#ifdef _WINDOWS
-    RegistryKey RegKey;
-    LONG lRes;
-    lRes = RegKey.Open(HKEY_CURRENT_USER, strIDS_KEY_LASTPATH);
-    if (!lRes) {
-        RegKey.setRegStringValue(_p_GameSettings->strPlayerName.c_str(),
-                                 strIDS_KEY_PLAYERNAME);
-        RegKey.setRegDWordValue(_p_GameSettings->eLanguageCurrent,
-                                strIDS_KEY_LANGUAGECURRENT);
-        RegKey.setRegDWordValue(_p_GameSettings->deckTypeVal.GetType(),
-                                strIDS_KEY_DECKCURRENT);
-        RegKey.setRegDWordValue(_p_GameSettings->bMusicEnabled,
-                                strIDS_KEY_MUSICENABLED);
-        RegKey.Close();
-    }
-#else
-
     ini_fd_t pIni = ini_open(lpszIniFileName, "w", "#");
     if (pIni == 0)
         return;
@@ -364,7 +290,6 @@ void AppGfx::writeProfile() {
     ini_writeInt(pIni, _p_GameSettings->bMusicEnabled);
 
     ini_close(pIni);
-#endif
 }
 
 TTF_Font *fncBind_GetFontVera(void *self) {

@@ -200,6 +200,7 @@ ECHO_N = -n
 ECHO_T = 
 ETAGS = etags
 EXEEXT = 
+INI_PREFIX = ~/.solitario/
 INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}

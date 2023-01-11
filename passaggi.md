@@ -155,6 +155,14 @@ Sviluppato dentro questo progetto:
 
     igor@MiniToro:~/projects/Solitario$
 
+## Defines
+Nei sorgenti utilizzo le definizioni tipo INI_PREFIX e DATA_PREFIX per puntare
+alle directory dove si trovano i file ini e i files di risorsa per il programma.
+A seconda del target, windows o unbuntu, queste directory sono differenti. 
+È compito della configurazione definire in modo corretto, a seconda del target,
+le variabili sopra elencate. Questo tipo di definizioni vanno messe anche nel 
+file .vscode/c_cpp_properties.json per avere l'editor senza errori.
+
 ### TODO
 
 - Dialogo delle opzioni da mettere nell'App

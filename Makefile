@@ -276,6 +276,7 @@ ECHO_N = -n
 ECHO_T = 
 ETAGS = etags
 EXEEXT = 
+INI_PREFIX = ~/.solitario/
 INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
@@ -351,7 +352,8 @@ DIST_SUBDIRS = data
 AM_CPPFLAGS = -I/usr/include/SDL2 -D_REENTRANT -I ./libini/include 
 AM_CXXFLAGS = \
 	-Wunused\
-	-DDATA_PREFIX=\"$(DATA_PREFIX)\"
+	-DDATA_PREFIX=\"$(DATA_PREFIX)\"\
+	-DINI_PREFIX=\"$(INI_PREFIX)\"
 
 SUBDIRS = libini
 

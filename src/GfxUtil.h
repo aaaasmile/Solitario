@@ -6,11 +6,6 @@
 
 #include <string>
 
-#ifdef WIN32
-#define DATA_PREFIX "./data/"
-#define VERSION "0.1"
-#endif
-
 namespace GFX_UTIL {
     Uint32 inline GetPixel(SDL_Surface *surface, int x, int y);
     void inline SetPixel(SDL_Surface *surface, int x, int y, Uint32 pixel);
