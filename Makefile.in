@@ -111,6 +111,7 @@ am_solitario_OBJECTS = src/GameGfx/CardRegionGfx.$(OBJEXT) \
 	src/GfxUtil.$(OBJEXT) src/Languages.$(OBJEXT) \
 	src/Main.$(OBJEXT) src/Fading.$(OBJEXT) src/Credits.$(OBJEXT) \
 	src/ErrorInfo.$(OBJEXT) src/MenuMgr.$(OBJEXT) \
+	src/MainOptionGfx.$(OBJEXT) \
 	src/CompGfx/cLabelLinkGfx.$(OBJEXT) \
 	src/CompGfx/cButtonGfx.$(OBJEXT) \
 	src/CompGfx/cCheckBoxGfx.$(OBJEXT) \
@@ -138,7 +139,8 @@ am__depfiles_remade = src/$(DEPDIR)/AppGfx.Po src/$(DEPDIR)/CardGfx.Po \
 	src/$(DEPDIR)/ErrorInfo.Po src/$(DEPDIR)/Fading.Po \
 	src/$(DEPDIR)/GameSettings.Po src/$(DEPDIR)/GfxUtil.Po \
 	src/$(DEPDIR)/Languages.Po src/$(DEPDIR)/Main.Po \
-	src/$(DEPDIR)/MenuMgr.Po src/$(DEPDIR)/MusicManager.Po \
+	src/$(DEPDIR)/MainOptionGfx.Po src/$(DEPDIR)/MenuMgr.Po \
+	src/$(DEPDIR)/MusicManager.Po \
 	src/CompGfx/$(DEPDIR)/cButtonGfx.Po \
 	src/CompGfx/$(DEPDIR)/cCheckBoxGfx.Po \
 	src/CompGfx/$(DEPDIR)/cComboGfx.Po \
@@ -378,6 +380,7 @@ solitario_SOURCES = \
 	src/Credits.cpp\
 	src/ErrorInfo.cpp\
 	src/MenuMgr.cpp\
+	src/MainOptionGfx.cpp\
 	src/CompGfx/cLabelLinkGfx.cpp\
 	src/CompGfx/cButtonGfx.cpp\
 	src/CompGfx/cCheckBoxGfx.cpp\
@@ -519,6 +522,8 @@ src/ErrorInfo.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/MenuMgr.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
+src/MainOptionGfx.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
 src/CompGfx/$(am__dirstamp):
 	@$(MKDIR_P) src/CompGfx
 	@: > src/CompGfx/$(am__dirstamp)
@@ -559,6 +564,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/GfxUtil.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/Languages.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/Main.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/MainOptionGfx.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/MenuMgr.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/MusicManager.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/CompGfx/$(DEPDIR)/cButtonGfx.Po@am__quote@ # am--include-marker
@@ -954,6 +960,7 @@ distclean: distclean-recursive
 	-rm -f src/$(DEPDIR)/GfxUtil.Po
 	-rm -f src/$(DEPDIR)/Languages.Po
 	-rm -f src/$(DEPDIR)/Main.Po
+	-rm -f src/$(DEPDIR)/MainOptionGfx.Po
 	-rm -f src/$(DEPDIR)/MenuMgr.Po
 	-rm -f src/$(DEPDIR)/MusicManager.Po
 	-rm -f src/CompGfx/$(DEPDIR)/cButtonGfx.Po
@@ -1021,6 +1028,7 @@ maintainer-clean: maintainer-clean-recursive
 	-rm -f src/$(DEPDIR)/GfxUtil.Po
 	-rm -f src/$(DEPDIR)/Languages.Po
 	-rm -f src/$(DEPDIR)/Main.Po
+	-rm -f src/$(DEPDIR)/MainOptionGfx.Po
 	-rm -f src/$(DEPDIR)/MenuMgr.Po
 	-rm -f src/$(DEPDIR)/MusicManager.Po
 	-rm -f src/CompGfx/$(DEPDIR)/cButtonGfx.Po

@@ -32,7 +32,7 @@ MainOptionGfx::~MainOptionGfx() {
 // Prepare the Click() trait
 void fncBind_ButtonClicked(void* self, int iVal) {
     MainOptionGfx* pApp = (MainOptionGfx*)self;
-    pApp->butCmdClicked(iVal);
+    pApp->ButCmdClicked(iVal);
 }
 
 // Buttons, ok and cancel
@@ -44,7 +44,7 @@ ClickCb MainOptionGfx::prepClickCb() {
 
 void fncBind_ComboboxClicked(void* self, int iVal) {
     MainOptionGfx* pApp = (MainOptionGfx*)self;
-    pApp->comboCmdClicked(iVal);
+    pApp->ComboCmdClicked(iVal);
 }
 // combobox index selected
 ClickCb MainOptionGfx::prepClickComboCb() {
@@ -116,7 +116,6 @@ LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
 }
 
 void MainOptionGfx::Show(SDL_Surface* pScene_background) {
-    int iRes = 0;
     m_bTerminated = false;
     Uint32 uiInitialTick = SDL_GetTicks();
     Uint32 uiLast_time = uiInitialTick;
@@ -167,10 +166,10 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background) {
             }
             if (event.type == SDL_KEYDOWN) {
                 if (event.key.keysym.sym == SDLK_RETURN) {
-                    butCmdClicked(MYIDOK);
+                    ButCmdClicked(MYIDOK);
                     break;
                 } else if (event.key.keysym.sym == SDLK_ESCAPE) {
-                    butCmdClicked(MYIDCANCEL);
+                    ButCmdClicked(MYIDCANCEL);
                     break;
                 }
             }
@@ -249,7 +248,7 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background) {
     SDL_DestroyTexture(pScreenTexture);
 }
 
-void MainOptionGfx::butCmdClicked(int iButID) {
+void MainOptionGfx::ButCmdClicked(int iButID) {
     if (!m_bTerminated) {
         m_bTerminated = true;
         m_iResult = iButID;
@@ -275,4 +274,4 @@ void MainOptionGfx::butCmdClicked(int iButID) {
     }
 }
 
-void MainOptionGfx::comboCmdClicked(int indexSelected) {}
+void MainOptionGfx::ComboCmdClicked(int indexSelected) {}

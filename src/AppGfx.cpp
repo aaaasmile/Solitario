@@ -7,9 +7,13 @@
 #include "Config.h"
 #include "ErrorInfo.h"
 #include "GfxUtil.h"
+#include "MainOptionGfx.h"
 #include "MenuMgr.h"
 #include "MusicManager.h"
 #include "WinTypeGlobal.h"
+
+#define OPT_WIN_GENERAL_WIDTH 500
+#define OPT_WIN_GENERAL_HEIGHT 420
 
 #ifdef _WINDOWS
 #include "regkey.h"
@@ -498,7 +502,19 @@ LPErrInApp AppGfx::showCredits() {
 }
 
 LPErrInApp AppGfx::showOptionGeneral() {
-    // TODO showOptionGeneral
+    TRACE("Show option general\n");
+    MainOptionGfx optGfx;
+
+    SDL_Rect rctOptionWin;
+    rctOptionWin.w = OPT_WIN_GENERAL_WIDTH;
+    rctOptionWin.h = OPT_WIN_GENERAL_HEIGHT;
+    rctOptionWin.x = (_p_Screen->w - rctOptionWin.w) / 2;
+    rctOptionWin.y = (_p_Screen->h - rctOptionWin.h) / 2;
+    MenuDelegator delegator = prepMenuDelegator();
+    optGfx.Initialize(&rctOptionWin, _p_Screen, _p_fontVera, _p_fontAriblk,
+                      _p_sdlRenderer, delegator);
+    optGfx.Show(_p_SceneBackground);
+
     LeaveMenu();
     return NULL;
 }

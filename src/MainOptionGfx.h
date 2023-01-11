@@ -30,12 +30,12 @@ public:
                           SDL_Renderer* pRenderer, MenuDelegator& pApp);
     void Show(SDL_Surface* pScene_background);
     void SetCaption(STRING& strCaption) { m_strHeaderText = strCaption; }
+    void ButCmdClicked(int iButID);
+    void ComboCmdClicked(int indexSelected);
 
 private:
     ClickCb prepClickCb();
     ClickCb prepClickComboCb();
-    void butCmdClicked(int iButID);
-    void comboCmdClicked(int indexSelected);
 
 private:
     SDL_Renderer* m_psdlRenderer;
