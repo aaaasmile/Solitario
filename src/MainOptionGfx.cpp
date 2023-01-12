@@ -15,9 +15,9 @@ MainOptionGfx::MainOptionGfx() {
     m_pFontText = 0;
     m_pSurf_Bar = 0;
     m_pBtOK = 0;
-    m_pBtCancel = 0;
     m_bTerminated = false;
     _p_Languages = 0;
+    _p_MusicManager = 0;
     _p_GameSettings = GAMESET::GetSettings();
 }
 
@@ -27,7 +27,6 @@ MainOptionGfx::~MainOptionGfx() {
         m_pSurf_Bar = NULL;
     }
     delete m_pBtOK;
-    delete m_pBtCancel;
     delete m_pComboLang;
     delete m_pCheckMusic;
 }
@@ -106,20 +105,10 @@ LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
     rctBt1.h = 28;
     rctBt1.y = m_rctOptBox.y + m_rctOptBox.h - 10 - rctBt1.h;
     rctBt1.x =
-        (m_rctOptBox.w - rctBt1.w) / 2 + m_rctOptBox.x - rctBt1.w - iSpace2bt;
+        (m_rctOptBox.w - rctBt1.w) / 2 + m_rctOptBox.x + rctBt1.w + iSpace2bt;
     m_pBtOK->Initialize(&rctBt1, pScreen, m_pFontText, MYIDOK, pRenderer,
                         cbBtOK_Cancel);
     m_pBtOK->SetState(cButtonGfx::INVISIBLE);
-    // Button Cancel
-    m_pBtCancel = new cButtonGfx;
-    rctBt1.w = 120;
-    rctBt1.h = 28;
-    rctBt1.y = m_rctOptBox.y + m_rctOptBox.h - 10 - rctBt1.h;
-    rctBt1.x =
-        (m_rctOptBox.w - rctBt1.w) / 2 + m_rctOptBox.x + rctBt1.w + iSpace2bt;
-    m_pBtCancel->Initialize(&rctBt1, pScreen, m_pFontText, MYIDCANCEL,
-                            pRenderer, cbBtOK_Cancel);
-    m_pBtCancel->SetState(cButtonGfx::INVISIBLE);
     // Combo language
     ClickCb nullCb = {.tc = NULL, .self = NULL};
     m_pComboLang = new cComboGfx;
@@ -157,11 +146,6 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
     strTextBt = _p_Languages->GetStringId(Languages::ID_OK);
     m_pBtOK->SetWindowText(strTextBt.c_str());
     m_pBtOK->SetState(cButtonGfx::VISIBLE);
-
-    // button cancel
-    strTextBt = _p_Languages->GetStringId(Languages::ID_CANCEL);
-    m_pBtCancel->SetWindowText(strTextBt.c_str());
-    m_pBtCancel->SetState(cButtonGfx::VISIBLE);
 
     // combobox language selection
     STRING strDeckSelectTitle =
@@ -205,7 +189,6 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
                 }
             }
             if (event.type == SDL_MOUSEBUTTONUP) {
-                m_pBtCancel->MouseUp(event);
                 m_pBtOK->MouseUp(event);
                 m_pComboLang->MouseUp(event);
                 m_pCheckMusic->MouseUp(event);
@@ -248,7 +231,6 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
 
         // draw buttons
         m_pBtOK->DrawButton(pShadowSrf);
-        m_pBtCancel->DrawButton(pShadowSrf);
 
         // deck selection label
         GFX_UTIL::DrawString(pShadowSrf, strDeckSelectTitle.c_str(),
@@ -280,29 +262,29 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
 }
 
 void MainOptionGfx::ButCmdClicked(int iButID) {
-    if (!m_bTerminated) {
-        m_bTerminated = true;
-        m_iResult = iButID;
-        if (iButID == MYIDOK) {
-            TRACE("Save options");
-            switch (m_pComboLang->GetSlectedIndex()) {
-                case 0:
-                    _p_GameSettings->eLanguageCurrent =
-                        Languages::eLangId::LANG_ITA;
-                    break;
-                case 1:
-                    _p_GameSettings->eLanguageCurrent =
-                        Languages::eLangId::LANG_DIAL_BREDA;
-                    break;
-                case 2:
-                    _p_GameSettings->eLanguageCurrent =
-                        Languages::eLangId::LANG_ENG;
-                    break;
-                default:
-                    break;
-            }
-            _p_GameSettings->bMusicEnabled = m_pCheckMusic->GetCheckState();
-        }
+    m_bTerminated = true;
+    m_iResult = iButID;
+    TRACE("OK options");
+    Languages::eLangId prevLangId = _p_GameSettings->eLanguageCurrent;
+    bool prevMusicEnabled = _p_GameSettings->bMusicEnabled;
+    switch (m_pComboLang->GetSlectedIndex()) {
+        case 0:
+            _p_GameSettings->eLanguageCurrent = Languages::eLangId::LANG_ITA;
+            break;
+        case 1:
+            _p_GameSettings->eLanguageCurrent =
+                Languages::eLangId::LANG_DIAL_BREDA;
+            break;
+        case 2:
+            _p_GameSettings->eLanguageCurrent = Languages::eLangId::LANG_ENG;
+            break;
+        default:
+            break;
+    }
+    _p_GameSettings->bMusicEnabled = m_pCheckMusic->GetCheckState();
+    if ((_p_GameSettings->bMusicEnabled != prevMusicEnabled) ||
+        (_p_GameSettings->eLanguageCurrent != prevLangId)) {
+        TRACE("Settings are changed, save it");  // TODO
     }
 }
 

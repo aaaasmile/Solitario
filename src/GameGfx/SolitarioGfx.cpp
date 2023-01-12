@@ -276,8 +276,8 @@ void SolitarioGfx::updateTextureAsFlipScreen() {
 }
 
 void SolitarioGfx::DoDrag(int x, int y) {
-    TRACE("DoDrag (x=%d, y=%d) => drag_x=%d, drag_y=%d. old_x=%d, old_y=%d", x,
-          y, _dragCard.x, _dragCard.y, _oldx, _oldy);
+    // TRACE("DoDrag (x=%d, y=%d) => drag_x=%d, drag_y=%d. old_x=%d, old_y=%d",
+    // x, y, _dragCard.x, _dragCard.y, _oldx, _oldy);
     SDL_Rect rcs;
     SDL_Rect rcd;
 

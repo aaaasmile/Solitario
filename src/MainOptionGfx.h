@@ -49,7 +49,6 @@ private:
     TTF_Font* m_pFontCtrl;
     SDL_Color m_colCurrent;
     cButtonGfx* m_pBtOK;
-    cButtonGfx* m_pBtCancel;
     bool m_bTerminated;
     int m_iResult;
     STRING m_strHeaderText;

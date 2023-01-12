@@ -502,7 +502,7 @@ LPErrInApp AppGfx::showCredits() {
 }
 
 LPErrInApp AppGfx::showOptionGeneral() {
-    TRACE("Show option general\n");
+    TRACE("Show option general");
     MainOptionGfx optGfx;
 
     SDL_Rect rctOptionWin;
