@@ -54,7 +54,6 @@ ClickCb MainOptionGfx::prepClickComboCb() {
 }
 
 LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
-                                     TTF_Font* pFontTxt, TTF_Font* pFontWinCtrl,
                                      SDL_Renderer* pRenderer,
                                      MenuDelegator& pApp) {
     if (pRect == NULL) {
@@ -66,10 +65,10 @@ LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
     _menuDlgt = pApp;
     m_rctOptBox = *pRect;
     m_pScreen = pScreen;
-    m_pFontText = pFontTxt;
-    m_pFontCtrl = pFontWinCtrl;
+    m_pFontText = _menuDlgt.tc->GetFontVera(_menuDlgt.self);
+    m_pFontCtrl = _menuDlgt.tc->GetFontAriblk(_menuDlgt.self);
     m_psdlRenderer = pRenderer;
-    _p_Languages = (_menuDlgt.tc)->GetLanguageMan(_menuDlgt.self);
+    _p_Languages = _menuDlgt.tc->GetLanguageMan(_menuDlgt.self);
 
     m_pSurf_Bar = SDL_CreateRGBSurface(SDL_SWSURFACE, m_rctOptBox.w,
                                        m_rctOptBox.h, 32, 0, 0, 0, 0);
@@ -82,6 +81,7 @@ LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
     int iSpace2bt = 20;
 
     ClickCb cbBtOK_Cancel = prepClickCb();
+    // button OK
     m_pBtOK = new cButtonGfx;
     rctBt1.w = 120;
     rctBt1.h = 28;
@@ -91,7 +91,7 @@ LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
     m_pBtOK->Initialize(&rctBt1, pScreen, m_pFontText, MYIDOK, pRenderer,
                         cbBtOK_Cancel);
     m_pBtOK->SetState(cButtonGfx::INVISIBLE);
-
+    // Button Cancel
     m_pBtCancel = new cButtonGfx;
     rctBt1.w = 120;
     rctBt1.h = 28;
@@ -101,7 +101,7 @@ LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
     m_pBtCancel->Initialize(&rctBt1, pScreen, m_pFontText, MYIDCANCEL,
                             pRenderer, cbBtOK_Cancel);
     m_pBtCancel->SetState(cButtonGfx::INVISIBLE);
-
+    // Combo language
     ClickCb cbCombo = prepClickComboCb();
     m_pComboLang = new cComboGfx;
     rctBt1.w = 180;
@@ -111,11 +111,23 @@ LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
     m_pComboLang->Initialize(&rctBt1, pScreen, m_pFontText, MYIDCOMBOLANG,
                              pRenderer, cbCombo);
     m_pComboLang->SetState(cComboGfx::INVISIBLE);
+    // Music
+    // check box music
+    m_pCheckMusic = new cCheckBoxGfx;
+    rctBt1.w = 180;
+    rctBt1.h = 28;
+    rctBt1.y = m_pComboLang->m_rctButt.y + m_pComboLang->m_rctButt.h + 20;
+    rctBt1.x = m_pComboLang->m_rctButt.x;
+    ClickCb nullCb = {.tc = NULL, .self = NULL};
+    m_pCheckMusic->Initialize(&rctBt1, pScreen, m_pFontText, MYIDMUSICCHK,
+                              nullCb);
+    m_pCheckMusic->SetState(cCheckBoxGfx::INVISIBLE);
 
     return NULL;
 }
 
-void MainOptionGfx::Show(SDL_Surface* pScene_background) {
+void MainOptionGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
+    m_strHeaderText = strCaption;
     m_bTerminated = false;
     Uint32 uiInitialTick = SDL_GetTicks();
     Uint32 uiLast_time = uiInitialTick;
@@ -173,8 +185,6 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background) {
                     break;
                 }
             }
-            if (event.type == SDL_MOUSEMOTION) {
-            }
             if (event.type == SDL_MOUSEBUTTONUP) {
                 m_pBtCancel->MouseUp(event);
                 m_pBtOK->MouseUp(event);
@@ -229,6 +239,8 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background) {
 
         // draw the deck combobox selection
         m_pComboLang->DrawButton(pShadowSrf);
+        // draw checkbox music
+        m_pCheckMusic->DrawButton(pShadowSrf);
 
         // render the dialogbox
         SDL_BlitSurface(pShadowSrf, NULL, m_pScreen, NULL);
@@ -253,6 +265,7 @@ void MainOptionGfx::ButCmdClicked(int iButID) {
         m_bTerminated = true;
         m_iResult = iButID;
         if (iButID == MYIDOK) {
+            TRACE("Save options");
             switch (m_pComboLang->GetSlectedIndex()) {
                 case 0:
                     _p_GameSettings->eLanguageCurrent =

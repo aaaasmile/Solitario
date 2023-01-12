@@ -511,9 +511,9 @@ LPErrInApp AppGfx::showOptionGeneral() {
     rctOptionWin.x = (_p_Screen->w - rctOptionWin.w) / 2;
     rctOptionWin.y = (_p_Screen->h - rctOptionWin.h) / 2;
     MenuDelegator delegator = prepMenuDelegator();
-    optGfx.Initialize(&rctOptionWin, _p_Screen, _p_fontVera, _p_fontAriblk,
-                      _p_sdlRenderer, delegator);
-    optGfx.Show(_p_SceneBackground);
+    STRING caption = _Languages.GetStringId(Languages::ID_MEN_OPTIONS);
+    optGfx.Initialize(&rctOptionWin, _p_Screen, _p_sdlRenderer, delegator);
+    optGfx.Show(_p_SceneBackground, caption);
 
     LeaveMenu();
     return NULL;

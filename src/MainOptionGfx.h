@@ -26,9 +26,8 @@ public:
     ~MainOptionGfx();
 
     LPErrInApp Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
-                          TTF_Font* pFontTxt, TTF_Font* pFontWinCtrl,
                           SDL_Renderer* pRenderer, MenuDelegator& pApp);
-    void Show(SDL_Surface* pScene_background);
+    void Show(SDL_Surface* pScene_background, STRING& strCaption);
     void SetCaption(STRING& strCaption) { m_strHeaderText = strCaption; }
     void ButCmdClicked(int iButID);
     void ComboCmdClicked(int indexSelected);
