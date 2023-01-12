@@ -8,6 +8,7 @@
 #include "CompGfx/cCheckBoxGfx.h"
 #include "CompGfx/cComboGfx.h"
 #include "GfxUtil.h"
+#include "MusicManager.h"
 
 MainOptionGfx::MainOptionGfx() {
     m_pScreen = 0;
@@ -27,6 +28,8 @@ MainOptionGfx::~MainOptionGfx() {
     }
     delete m_pBtOK;
     delete m_pBtCancel;
+    delete m_pComboLang;
+    delete m_pCheckMusic;
 }
 
 // Prepare the Click() trait
@@ -42,10 +45,16 @@ ClickCb MainOptionGfx::prepClickCb() {
     return (ClickCb){.tc = &tc, .self = this};
 }
 
-void fncBind_ComboboxClicked(void* self, int iVal) {
+void fncBind_ComboboxClicked(void* self, int val) {
     MainOptionGfx* pApp = (MainOptionGfx*)self;
-    pApp->ComboCmdClicked(iVal);
+    pApp->ComboCmdClicked(val);
 }
+
+void fncBind_CheckboxMusicClicked(void* self, bool state) {
+    MainOptionGfx* pApp = (MainOptionGfx*)self;
+    pApp->CheckboxMusicClicked(state);
+}
+
 // combobox index selected
 ClickCb MainOptionGfx::prepClickComboCb() {
     static VClickCb const tc = {.Click = (&fncBind_ComboboxClicked)};
@@ -53,8 +62,17 @@ ClickCb MainOptionGfx::prepClickComboCb() {
     return (ClickCb){.tc = &tc, .self = this};
 }
 
+// Checkbox music
+CheckboxClickCb MainOptionGfx::prepCheckBoxClickMusic() {
+    static VCheckboxClickCb const tc = {.Click =
+                                            (&fncBind_CheckboxMusicClicked)};
+
+    return (CheckboxClickCb){.tc = &tc, .self = this};
+}
+
 LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
                                      SDL_Renderer* pRenderer,
+                                     MusicManager* pMusicMgr,
                                      MenuDelegator& pApp) {
     if (pRect == NULL) {
         return ERR_UTIL::ErrorCreate("Rect is null");
@@ -63,6 +81,7 @@ LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
         return ERR_UTIL::ErrorCreate("pScreen is null");
     }
     _menuDlgt = pApp;
+    _p_MusicManager = pMusicMgr;
     m_rctOptBox = *pRect;
     m_pScreen = pScreen;
     m_pFontText = _menuDlgt.tc->GetFontVera(_menuDlgt.self);
@@ -102,25 +121,25 @@ LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
                             pRenderer, cbBtOK_Cancel);
     m_pBtCancel->SetState(cButtonGfx::INVISIBLE);
     // Combo language
-    ClickCb cbCombo = prepClickComboCb();
+    ClickCb nullCb = {.tc = NULL, .self = NULL};
     m_pComboLang = new cComboGfx;
     rctBt1.w = 180;
     rctBt1.h = 26;
     rctBt1.y = m_rctOptBox.y + 80;
     rctBt1.x = m_rctOptBox.x + 50;
     m_pComboLang->Initialize(&rctBt1, pScreen, m_pFontText, MYIDCOMBOLANG,
-                             pRenderer, cbCombo);
+                             pRenderer, nullCb);
     m_pComboLang->SetState(cComboGfx::INVISIBLE);
     // Music
     // check box music
+    CheckboxClickCb cbCheckboxMusic = prepCheckBoxClickMusic();
     m_pCheckMusic = new cCheckBoxGfx;
     rctBt1.w = 180;
     rctBt1.h = 28;
     rctBt1.y = m_pComboLang->m_rctButt.y + m_pComboLang->m_rctButt.h + 20;
     rctBt1.x = m_pComboLang->m_rctButt.x;
-    ClickCb nullCb = {.tc = NULL, .self = NULL};
     m_pCheckMusic->Initialize(&rctBt1, pScreen, m_pFontText, MYIDMUSICCHK,
-                              nullCb);
+                              cbCheckboxMusic);
     m_pCheckMusic->SetState(cCheckBoxGfx::INVISIBLE);
 
     return NULL;
@@ -288,3 +307,11 @@ void MainOptionGfx::ButCmdClicked(int iButID) {
 }
 
 void MainOptionGfx::ComboCmdClicked(int indexSelected) {}
+
+void MainOptionGfx::CheckboxMusicClicked(bool state) {
+    if (state) {
+        _p_MusicManager->PlayCurrentMusic();
+    } else {
+        _p_MusicManager->StopMusic();
+    }
+}

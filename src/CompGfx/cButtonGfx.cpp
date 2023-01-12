@@ -142,9 +142,6 @@ void cButtonGfx::DrawButton(SDL_Surface* pScreen) {
             GFX_UTIL::DrawRect(pScreen, m_rctButt.x, m_rctButt.y,
                                m_rctButt.x + m_rctButt.w,
                                m_rctButt.y + m_rctButt.h, m_colCurrent);
-        } else {
-            // button disabled
-            // TO DO
         }
     }
 }

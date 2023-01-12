@@ -24,7 +24,7 @@ public:
     };
 
     void Initialize(SDL_Rect* pRect, SDL_Surface* pScreen, TTF_Font* pFont,
-                    int iButID, ClickCb& fncbClickEvent);
+                    int iButID, CheckboxClickCb& fncbClickEvent);
     void SetWindowText(LPCSTR strCaption) { m_strButText = strCaption; }
     void MouseMove(SDL_Event& event, SDL_Surface* pScreen,
                    SDL_Surface* pScene_background);
@@ -41,7 +41,7 @@ public:
     SDL_Rect m_rctButt;
     STRING m_strButText;
     bool m_bIsEnabled;
-    ClickCb m_fncbClickEvent;
+    CheckboxClickCb m_fncbClickEvent;
 
 private:
     TTF_Font* m_pFontText;

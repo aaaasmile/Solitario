@@ -271,10 +271,6 @@ void cComboGfx::DrawButton(SDL_Surface* pScreen) {
                                m_rctBoxDown.x + m_rctBoxDown.w,
                                m_rctBoxUp.y + m_rctBoxUp.h + m_rctBoxDown.h,
                                GFX_UTIL_COLOR::White);
-
-        } else {
-            // button disabled
-            // TO DO
         }
     }
 }

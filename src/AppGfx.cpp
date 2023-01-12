@@ -512,7 +512,8 @@ LPErrInApp AppGfx::showOptionGeneral() {
     rctOptionWin.y = (_p_Screen->h - rctOptionWin.h) / 2;
     MenuDelegator delegator = prepMenuDelegator();
     STRING caption = _Languages.GetStringId(Languages::ID_MEN_OPTIONS);
-    optGfx.Initialize(&rctOptionWin, _p_Screen, _p_sdlRenderer, delegator);
+    optGfx.Initialize(&rctOptionWin, _p_Screen, _p_sdlRenderer, _p_MusicManager,
+                      delegator);
     optGfx.Show(_p_SceneBackground, caption);
 
     LeaveMenu();

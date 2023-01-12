@@ -99,10 +99,6 @@ void cLabelGfx::Draw(SDL_Surface* pScreen) {
             GFX_UTIL::DrawString(pScreen, m_strButText.c_str(),
                                  m_rctButt.x + iXOffSet, m_rctButt.y + iYOffset,
                                  m_colCurrent, m_pFontText, false);
-
-        } else {
-            // label disabled
-            // TO DO
         }
     }
 }

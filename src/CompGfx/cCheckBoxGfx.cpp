@@ -13,7 +13,7 @@ cCheckBoxGfx::~cCheckBoxGfx() {}
 
 void cCheckBoxGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
                               TTF_Font* pFont, int iButID,
-                              ClickCb& fncbClickEvent) {
+                              CheckboxClickCb& fncbClickEvent) {
     m_fncbClickEvent = fncbClickEvent;
     m_rctButt = *pRect;
 
@@ -50,7 +50,8 @@ void cCheckBoxGfx::MouseUp(SDL_Event& event) {
                 m_bClickState = true;
             }
             if ((m_fncbClickEvent.tc) != NULL)
-                (m_fncbClickEvent.tc)->Click(m_fncbClickEvent.self, m_iButID);
+                (m_fncbClickEvent.tc)
+                    ->Click(m_fncbClickEvent.self, m_bClickState);
         }
     }
 }
@@ -115,10 +116,6 @@ void cCheckBoxGfx::DrawButton(SDL_Surface* pScreen) {
             GFX_UTIL::DrawString(
                 pScreen, m_strButText.c_str(), m_rctButt.x + iXOffSet,
                 m_rctButt.y + iYOffset - ty, m_colCurrent, m_pFontText, false);
-
-        } else {
-            // button disabled
-            // TO DO
         }
     }
 }

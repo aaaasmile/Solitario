@@ -15,6 +15,8 @@ MusicManager::MusicManager() {
     for (int j = 0; j < NUM_OF_WAV; j++) {
         m_pMusicsWav[j] = 0;
     }
+    _currentMusicID = 0;
+    _currentLoop = LOOP_ON;
 }
 
 MusicManager::~MusicManager() {
@@ -84,6 +86,9 @@ bool MusicManager::PlayMusic(int iID, eLoopType eVal) {
         return false;
     }
 
+    _currentMusicID = iID;
+    _currentLoop = eVal;
+
     if (eVal == LOOP_OFF) {
         Mix_PlayMusic(m_pMusics[iID], 0);
     } else {
@@ -91,6 +96,10 @@ bool MusicManager::PlayMusic(int iID, eLoopType eVal) {
     }
 
     return true;
+}
+
+void MusicManager::PlayCurrentMusic() {
+    PlayMusic(_currentMusicID, _currentLoop);
 }
 
 bool MusicManager::PlayEffect(int iID) {

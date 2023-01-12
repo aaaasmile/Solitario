@@ -15,6 +15,7 @@ class cButtonGfx;
 class Languages;
 class cCheckBoxGfx;
 class cComboGfx;
+class MusicManager;
 
 using namespace traits;
 
@@ -26,15 +27,18 @@ public:
     ~MainOptionGfx();
 
     LPErrInApp Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
-                          SDL_Renderer* pRenderer, MenuDelegator& pApp);
+                          SDL_Renderer* pRenderer, MusicManager* pMusicMgr,
+                          MenuDelegator& pApp);
     void Show(SDL_Surface* pScene_background, STRING& strCaption);
     void SetCaption(STRING& strCaption) { m_strHeaderText = strCaption; }
     void ButCmdClicked(int iButID);
     void ComboCmdClicked(int indexSelected);
+    void CheckboxMusicClicked(bool state);
 
 private:
     ClickCb prepClickCb();
     ClickCb prepClickComboCb();
+    CheckboxClickCb prepCheckBoxClickMusic();
 
 private:
     SDL_Renderer* m_psdlRenderer;
@@ -55,6 +59,7 @@ private:
     Languages* _p_Languages;
     MenuDelegator _menuDlgt;
     GameSettings* _p_GameSettings;
+    MusicManager* _p_MusicManager;
 };
 
 #endif

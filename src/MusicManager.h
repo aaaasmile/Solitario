@@ -16,6 +16,7 @@ public:
     void Init();
     void StopMusic();
     bool PlayMusic(int iID, eLoopType eVal);
+    void PlayCurrentMusic();
     bool PlayEffect(int iID);
     LPErrInApp LoadMusicRes();
     bool IsPLayingMusic();
@@ -25,6 +26,8 @@ private:
     Mix_Chunk* m_pMusicsWav[NUM_OF_WAV];
     Mix_Music* m_pMusics[NUM_OF_SOUNDS];
     bool m_bMusicAvailable;
+    int _currentMusicID;
+    eLoopType _currentLoop;
 };
 
 #endif

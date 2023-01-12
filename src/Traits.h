@@ -22,13 +22,23 @@ namespace traits {
 
     // trait for button click
     typedef struct {
-        void (*const Click)(void* self, int iButID);
+        void (*const Click)(void* self, int btID);
     } VClickCb, *LPVClickCb;
 
     typedef struct {
         VClickCb const* tc;
         void* self;
     } ClickCb, *LPClickCb;
+
+    // trait for checkbox click
+    typedef struct {
+        void (*const Click)(void* self, bool state);
+    } VCheckboxClickCb, *LPVCheckboxClickCb;
+
+    typedef struct {
+        VCheckboxClickCb const* tc;
+        void* self;
+    } CheckboxClickCb, *LPCheckboxClickCb;
 };
 
 #endif
