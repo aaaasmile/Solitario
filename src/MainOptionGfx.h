@@ -32,7 +32,6 @@ public:
     void Show(SDL_Surface* pScene_background, STRING& strCaption);
     void SetCaption(STRING& strCaption) { m_strHeaderText = strCaption; }
     void ButEndOPtClicked(int iButID);
-    void ComboLangCmdClicked(int indexSelected);
     void CheckboxMusicClicked(bool state);
 
 private:

@@ -44,21 +44,9 @@ ClickCb MainOptionGfx::prepClickCb() {
     return (ClickCb){.tc = &tc, .self = this};
 }
 
-void fncBind_ComboboxClicked(void* self, int val) {
-    MainOptionGfx* pApp = (MainOptionGfx*)self;
-    pApp->ComboLangCmdClicked(val);
-}
-
 void fncBind_CheckboxMusicClicked(void* self, bool state) {
     MainOptionGfx* pApp = (MainOptionGfx*)self;
     pApp->CheckboxMusicClicked(state);
-}
-
-// combobox index selected
-ClickCb MainOptionGfx::prepClickComboCb() {
-    static VClickCb const tc = {.Click = (&fncBind_ComboboxClicked)};
-
-    return (ClickCb){.tc = &tc, .self = this};
 }
 
 // Checkbox music
@@ -288,8 +276,6 @@ void MainOptionGfx::ButEndOPtClicked(int iButID) {
         _menuDlgt.tc->PersistSettings(_menuDlgt.self);
     }
 }
-
-void MainOptionGfx::ComboLangCmdClicked(int indexSelected) {}
 
 void MainOptionGfx::CheckboxMusicClicked(bool state) {
     if (state) {
