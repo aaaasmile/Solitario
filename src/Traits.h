@@ -13,6 +13,7 @@ namespace traits {
         Languages* (*const GetLanguageMan)(void* self);
         void (*const LeaveMenu)(void* self);
         void (*const SetNextMenu)(void* self, int iVal);
+        void (*const PersistSettings)(void* self);
     } VMenuDelegator, *LPVMenuDelegator;
 
     typedef struct {

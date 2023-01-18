@@ -34,7 +34,7 @@ MainOptionGfx::~MainOptionGfx() {
 // Prepare the Click() trait
 void fncBind_ButtonClicked(void* self, int iVal) {
     MainOptionGfx* pApp = (MainOptionGfx*)self;
-    pApp->ButCmdClicked(iVal);
+    pApp->ButEndOPtClicked(iVal);
 }
 
 // Buttons, ok and cancel
@@ -46,7 +46,7 @@ ClickCb MainOptionGfx::prepClickCb() {
 
 void fncBind_ComboboxClicked(void* self, int val) {
     MainOptionGfx* pApp = (MainOptionGfx*)self;
-    pApp->ComboCmdClicked(val);
+    pApp->ComboLangCmdClicked(val);
 }
 
 void fncBind_CheckboxMusicClicked(void* self, bool state) {
@@ -181,10 +181,10 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
             }
             if (event.type == SDL_KEYDOWN) {
                 if (event.key.keysym.sym == SDLK_RETURN) {
-                    ButCmdClicked(MYIDOK);
+                    ButEndOPtClicked(MYIDOK);
                     break;
                 } else if (event.key.keysym.sym == SDLK_ESCAPE) {
-                    ButCmdClicked(MYIDCANCEL);
+                    ButEndOPtClicked(MYIDCANCEL);
                     break;
                 }
             }
@@ -261,7 +261,7 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
     SDL_DestroyTexture(pScreenTexture);
 }
 
-void MainOptionGfx::ButCmdClicked(int iButID) {
+void MainOptionGfx::ButEndOPtClicked(int iButID) {
     m_bTerminated = true;
     m_iResult = iButID;
     TRACE("OK options");
@@ -284,11 +284,12 @@ void MainOptionGfx::ButCmdClicked(int iButID) {
     _p_GameSettings->bMusicEnabled = m_pCheckMusic->GetCheckState();
     if ((_p_GameSettings->bMusicEnabled != prevMusicEnabled) ||
         (_p_GameSettings->eLanguageCurrent != prevLangId)) {
-        TRACE("Settings are changed, save it");  // TODO
+        TRACE("Settings are changed, save it");
+        _menuDlgt.tc->PersistSettings(_menuDlgt.self);
     }
 }
 
-void MainOptionGfx::ComboCmdClicked(int indexSelected) {}
+void MainOptionGfx::ComboLangCmdClicked(int indexSelected) {}
 
 void MainOptionGfx::CheckboxMusicClicked(bool state) {
     if (state) {

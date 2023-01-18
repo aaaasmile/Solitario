@@ -39,6 +39,7 @@ public:
     TTF_Font* GetFontAriblk() { return _p_fontAriblk; }
     void LeaveMenu();
     void SetNextMenu(int iVal) { _Histmenu.push(iVal); }
+    void PersistSettings();
 
 private:
     int waitKeyLoop();

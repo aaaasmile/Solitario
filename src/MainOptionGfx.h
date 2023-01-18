@@ -31,8 +31,8 @@ public:
                           MenuDelegator& pApp);
     void Show(SDL_Surface* pScene_background, STRING& strCaption);
     void SetCaption(STRING& strCaption) { m_strHeaderText = strCaption; }
-    void ButCmdClicked(int iButID);
-    void ComboCmdClicked(int indexSelected);
+    void ButEndOPtClicked(int iButID);
+    void ComboLangCmdClicked(int indexSelected);
     void CheckboxMusicClicked(bool state);
 
 private:

@@ -365,6 +365,7 @@ void AppGfx::writeProfile() {
     ini_writeInt(pIni, _p_GameSettings->bMusicEnabled);
 
     ini_close(pIni);
+    TRACE("Settings file %s written", filepath);
 }
 
 TTF_Font *fncBind_GetFontVera(void *self) {
@@ -392,6 +393,11 @@ void fncBind_SetNextMenu(void *self, int iVal) {
     pApp->SetNextMenu(iVal);
 }
 
+void fncBind_PersistSettings(void *self) {
+    AppGfx *pApp = (AppGfx *)self;
+    pApp->PersistSettings();
+}
+
 MenuDelegator AppGfx::prepMenuDelegator() {
     // Use only static otherwise you loose it
     static VMenuDelegator const tc = {
@@ -399,7 +405,8 @@ MenuDelegator AppGfx::prepMenuDelegator() {
         .GetFontAriblk = (&fncBind_GetFontAriblk),
         .GetLanguageMan = (&fncBind_GetLanguageMan),
         .LeaveMenu = (&fncBind_LeaveMenu),
-        .SetNextMenu = (&fncBind_SetNextMenu)};
+        .SetNextMenu = (&fncBind_SetNextMenu),
+        .PersistSettings = (&fncBind_PersistSettings)};
 
     return (MenuDelegator){.tc = &tc, .self = this};
 }
@@ -407,6 +414,11 @@ MenuDelegator AppGfx::prepMenuDelegator() {
 void AppGfx::LeaveMenu() {
     drawSceneBackground();
     _Histmenu.pop();
+}
+
+void AppGfx::PersistSettings() {
+    TRACE("Persist settings");
+    writeProfile();
 }
 
 void AppGfx::drawSceneBackground() {
