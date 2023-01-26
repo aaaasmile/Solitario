@@ -167,11 +167,13 @@ variabile che setto in runtime (la ~ in compilazione non ha dato i risultati asp
 
 ### TODO
 
-- Le opzioni cambiate vanno scritte nell'options.ini dell'utente
-- Dialogo delle opzioni da completare
+- Dialogo delle opzioni da completare (mazzo di carte)
+- Sfondo delle opzioni non è centrato
+- Nei credits vorrei la musica water
 - Help
 - Goto invido.it
 - Le opzioni di SDL2 dovrebbero risultare dal processo di configure
+- Le opzioni cambiate vanno scritte nell'options.ini dell'utente [DONE]
 - Draw del background non contiene i bordi neri. Il drag della prima foundation è sporco [DONE]
 - Il drag parte da x,y = 0,0 [DONE]
 - Il menu ha ancora bisogno di correzzioni sdl 1.2 -> sdl 2.0 [DONE]
