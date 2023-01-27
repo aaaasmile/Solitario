@@ -159,7 +159,7 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
     SDL_Texture* pScreenTexture =
         SDL_CreateTextureFromSurface(m_psdlRenderer, pShadowSrf);
     while (!m_bTerminated) {
-        // center
+        // center the background
         SDL_FillRect(pShadowSrf, &pShadowSrf->clip_rect,
                      SDL_MapRGBA(pShadowSrf->format, 0, 0, 0, 0));
         SDL_Rect rctTarget;
