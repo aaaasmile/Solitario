@@ -27,6 +27,7 @@
 static const char *g_lpszSolitarioDir = ".solitario";
 static const char *g_lpszIniFileName = "options.ini";
 static const char *g_lpszDefaultIniFileName = DATA_PREFIX "default_options.ini";
+static const char *g_lpszHelpFileName = DATA_PREFIX "solitario.pdf";
 static const char *g_lpszSectAll = "global";
 static const char *g_lpszKeyLang = "Language";
 static const char *g_lpszKeyDeck = "DeckCurrent";
@@ -502,7 +503,14 @@ LPErrInApp AppGfx::MainLoop() {
 }
 
 LPErrInApp AppGfx::showHelp() {
-    // TODO showHelp
+    const char *cmd = NULL;
+    char cmdpath[PATH_MAX];
+
+    cmd = "zathura";
+    snprintf(cmdpath, sizeof(cmdpath), "%s ./%s", cmd, g_lpszHelpFileName);
+
+    system(cmdpath);
+
     LeaveMenu();
     return NULL;
 }

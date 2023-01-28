@@ -229,6 +229,17 @@ Anche qui se lancio il solitario ottengo lo stesso errore di Docker
         Serial number of failed request:  85
         Current serial number in output stream:  85
 
+## Help
+Il file Pdf dell' help l'ho generato usando Context. I file sorgenti tex si trovano
+nella sottodirectory help-source. Questo il dettaglio di Context:
+
+    mtx-context     | ConTeXt Process Management 1.04
+    mtx-context     |
+    mtx-context     | main context file: D:/Projects/ConTex/tex/texmf-context/tex/context/base/mkiv/context.mkiv
+    mtx-context     | current version: 2022.11.14 22:58
+    mtx-context     | main context file: D:/Projects/ConTex/tex/texmf-context/tex/context/base/mkxl/context.mkxl
+    mtx-context     | current version: 2022.11.14 22:58
+
 ### TODO
 
 - Dialogo delle opzioni da completare (mazzo di carte)
