@@ -239,6 +239,7 @@ nella sottodirectory help-source. Questo il dettaglio di Context:
     mtx-context     | current version: 2022.11.14 22:58
     mtx-context     | main context file: D:/Projects/ConTex/tex/texmf-context/tex/context/base/mkxl/context.mkxl
     mtx-context     | current version: 2022.11.14 22:58
+Per la visualizzazione dell'help su ubuntu uso zathura.
 
 ### TODO
 
