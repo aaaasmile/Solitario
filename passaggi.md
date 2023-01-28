@@ -243,11 +243,11 @@ nella sottodirectory help-source. Questo il dettaglio di Context:
 ### TODO
 
 - Dialogo delle opzioni da completare (mazzo di carte)
-- Sfondo delle opzioni non è centrato
-- Nei credits vorrei la musica water
-- Help
 - Goto invido.it
 - Le opzioni di SDL2 dovrebbero risultare dal processo di configure
+- Sfondo delle opzioni non è centrato [DONE]
+- Nei credits vorrei la musica water [DONE]
+- Help [DONE]
 - Le opzioni cambiate vanno scritte nell'options.ini dell'utente [DONE]
 - Draw del background non contiene i bordi neri. Il drag della prima foundation è sporco [DONE]
 - Il drag parte da x,y = 0,0 [DONE]

@@ -516,8 +516,19 @@ LPErrInApp AppGfx::showHelp() {
 }
 
 LPErrInApp AppGfx::showCredits() {
+    if (_p_MusicManager->IsPLayingMusic()) {
+        _p_MusicManager->StopMusic();
+        _p_MusicManager->PlayMusic(MusicManager::MUSIC_GAME_SND,
+                                   MusicManager::LOOP_ON);
+    }
+
     credits(_p_Screen, _p_CreditTitle, _p_sdlRenderer);
     LeaveMenu();
+    if (_p_MusicManager->IsPLayingMusic()) {
+        _p_MusicManager->StopMusic();
+        _p_MusicManager->PlayMusic(MusicManager::MUSIC_INIT_SND,
+                                   MusicManager::LOOP_ON);
+    }
     return NULL;
 }
 
