@@ -189,13 +189,44 @@ Sul mio computer, però, ricevo quest'errore in docker:
     Serial number of failed request:  85
     Current serial number in output stream:  85
 
-## Apptainer (host testato Linux)
+## Apptainer Installazione
+Un altro tipo di Container è Apptainer che crea immagini più piccole di Docker.
+Installazione di Apptainer in Ubuntu 22.04 (nativo e WSL2)
+
+    wget https://github.com/apptainer/apptainer/releases/download/v1.1.5/apptainer_1.1.5_amd64.deb
+    sudo apt-get install libfuse2 uidmap squashfuse fuse2fs fuse-overlayfs libsquashfuse0 libfuse3-3 fuse3
+    sudo dpkg -i apptainer_1.1.5_amd64.deb
+    sudo apptainer config fakeroot --add $USER
+    sudo apptainer config fakeroot --enable $USER
+
+## Apptainer (host testato con successo Linux)
 Nella directory _container_ ho messo il file solitario-ubuntu-22.04.def che mi è stato
 gentilmente messo a disposizione per creare un file sif. Si crea con:
 
     apptainer build --fakeroot solitario-ubuntu-22.04.sif solitario-ubuntu-22.04.def
 Si esegue con
     apptainer run --bind /run solitario-ubuntu-22.04.sif
+
+## Apptainer (host Windows con WSL2)
+L'installazione di Apptainer di sopra ha funzionato senza problemi.
+Il display invece è stato un po' difficoltoso. Nella file def ho aggiunto le x11-apps per
+provare se un'applicazione tipo _xclock_ funziona.
+
+Occorre lanciare Xming, l'XServer integrato in WSL2 non riesco a farlo andare.
+Xming va lanciato con l'opzione "No Access Control" selezionato.
+Per poi provare se funziona il display, ho usato 
+    export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}'):0
+    apptainer shell solitario-ubuntu-22.04.sif
+    xclock
+
+Anche qui se lancio il solitario ottengo lo stesso errore di Docker
+
+    igor@MiniToro:~/apptainer/my-try$ apptainer run --bind /run solitario-ubuntu-22.04.sif
+    X Error of failed request:  GLXUnsupportedPrivateRequest
+        Major opcode of failed request:  143 (GLX)
+        Minor opcode of failed request:  17 (X_GLXVendorPrivateWithReply)
+        Serial number of failed request:  85
+        Current serial number in output stream:  85
 
 ### TODO
 
