@@ -1,0 +1,156 @@
+system          > 
+system          > ConTeXt  ver: 2022.11.14 22:58 LMTX  fmt: 2022.11.15  int: english/english
+system          > 
+system          > 'cont-new.mkxl' loaded
+open source     > level 1, order 1, name 'D:/Projects/ConTex/tex/texmf-context/tex/context/base/mkxl/cont-new.mkxl'
+system          > beware: some patches loaded from cont-new.mkiv
+close source    > level 1, order 1, name 'D:/Projects/ConTex/tex/texmf-context/tex/context/base/mkxl/cont-new.mkxl'
+system          > files > jobname './solitario', input './solitario.tex', result './solitario'
+fonts           > latin modern fonts are not preloaded
+languages       > language 'en' is active
+open source     > level 1, order 2, name './solitario.tex'
+open source     > level 2, order 3, name 'D:/Projects/ConTex/tex/texmf-context/tex/context/fonts/mkiv/type-imp-texgyre.mkiv'
+close source    > level 2, order 3, name 'D:/Projects/ConTex/tex/texmf-context/tex/context/fonts/mkiv/type-imp-texgyre.mkiv'
+languages       > goodies > file 'lang-it.llg' is not found
+colors          > 'rgb' color space is supported
+colors          > 'cmyk' color space is supported
+structures      > bookmark: Solitario 2.0
+structure       > sectioning > title @ level 2 : 0.0 -> Solitario 2.0
+floatblocks     > '1' placed (here)
+structures      > bookmark: Comandi di gioco
+structure       > sectioning > subject @ level 3 : 0.0.0 -> Comandi di gioco
+structures      > bookmark: Scopo del gioco
+structure       > sectioning > subject @ level 3 : 0.0.0 -> Scopo del gioco
+backend         > xmp > using file 'D:/Projects/ConTex/tex/texmf-context/tex/context/base/mkiv/lpdf-pdx.xml'
+pages           > flushing realpage 1, userpage 1, subpage 1
+floatblocks     > '2' placed (here)
+structures      > bookmark: Movimenti delle carte
+structure       > sectioning > subject @ level 3 : 0.0.0 -> Movimenti delle carte
+floatblocks     > 1 saved
+pages           > flushing realpage 2, userpage 2, subpage 2
+floatblocks     > 1 moved
+floatblocks     > '3' moved
+floatblocks     > 2 saved
+structures      > bookmark: Informazioni
+structure       > sectioning > subject @ level 3 : 0.0.0 -> Informazioni
+close source    > level 1, order 3, name './solitario.tex'
+floatblocks     > 2 moved
+pages           > flushing realpage 3, userpage 3, subpage 3
+pages           > flushing realpage 4, userpage 4, subpage 4
+system          > start used files
+system          > text: solitario
+system          > stop used files
+system          > start used files
+system          >    1: filename=publ-imp-default.lua filetype=lua foundname=D:/Projects/ConTex/tex/texmf-context/tex/context/base/mkiv/publ-imp-default.lua fullname=D:/Projects/ConTex/tex/texmf-context/tex/context/base/mkiv/publ-imp-default.lua usedmethod=database
+system          >    2: filename=cont-new.mkxl filetype=tex foundname=D:/Projects/ConTex/tex/texmf-context/tex/context/base/mkxl/cont-new.mkxl fullname=D:/Projects/ConTex/tex/texmf-context/tex/context/base/mkxl/cont-new.mkxl usedmethod=database
+system          >    3: filename=lang-exc.lua filetype=lua foundname=D:/Projects/ConTex/tex/texmf-context/tex/context/base/mkiv/lang-exc.lua fullname=D:/Projects/ConTex/tex/texmf-context/tex/context/base/mkiv/lang-exc.lua usedmethod=database
+system          >    4: filename=lang-us.lua filetype=lua foundname=D:/Projects/ConTex/tex/texmf-context/tex/context/patterns/mkiv/lang-us.lua fullname=D:/Projects/ConTex/tex/texmf-context/tex/context/patterns/mkiv/lang-us.lua usedmethod=database
+system          >    5: filename=D:\Projects\github\carte\solitario\help-source/solitario.tex format=tex foundname=D:/Projects/github/carte/solitario/help-source/solitario.tex fullname=D:/Projects/github/carte/solitario/help-source/solitario.tex usedmethod=direct
+system          >    6: filename=type-imp-texgyre.mkiv filetype=tex foundname=D:/Projects/ConTex/tex/texmf-context/tex/context/fonts/mkiv/type-imp-texgyre.mkiv fullname=D:/Projects/ConTex/tex/texmf-context/tex/context/fonts/mkiv/type-imp-texgyre.mkiv usedmethod=database
+system          >    7: filename=lm.lfg filetype=tex foundname=D:/Projects/ConTex/tex/texmf-context/tex/context/fonts/mkiv/lm.lfg fullname=D:/Projects/ConTex/tex/texmf-context/tex/context/fonts/mkiv/lm.lfg usedmethod=database
+system          >    8: filename=texgyrepagella-regular filetype=otf format=otf foundname=D:/Projects/ConTex/tex/texmf/fonts/data/gust/tex-gyre/pagella/texgyrepagella-regular.otf fullname=D:/Projects/ConTex/tex/texmf/fonts/data/gust/tex-gyre/pagella/texgyrepagella-regular.otf usedmethod=database
+system          >    9: filename=D:/scratch/latex/ConTex/tex/texmf/fonts/data/gust/tex-gyre/pagella/texgyrepagella-regular.otf foundname=D:/scratch/latex/ConTex/tex/texmf/fonts/data/gust/tex-gyre/pagella/texgyrepagella-regular.otf fullname=D:/scratch/latex/ConTex/tex/texmf/fonts/data/gust/tex-gyre/pagella/texgyrepagella-regular.otf usedmethod=direct
+system          >   10: filename=texgyrepagella-math.otf filetype=otf format=otf foundname=D:/Projects/ConTex/tex/texmf/fonts/data/gust/tex-gyre/pagella/texgyrepagella-math.otf fullname=D:/Projects/ConTex/tex/texmf/fonts/data/gust/tex-gyre/pagella/texgyrepagella-math.otf usedmethod=database
+system          >   11: filename=D:/scratch/latex/ConTex/tex/texmf/fonts/data/gust/tex-gyre/pagella/texgyrepagella-math.otf foundname=D:/scratch/latex/ConTex/tex/texmf/fonts/data/gust/tex-gyre/pagella/texgyrepagella-math.otf fullname=D:/scratch/latex/ConTex/tex/texmf/fonts/data/gust/tex-gyre/pagella/texgyrepagella-math.otf usedmethod=direct
+system          >   12: filename=pagella-math.lfg filetype=tex foundname=D:/Projects/ConTex/tex/texmf-context/tex/context/fonts/mkiv/pagella-math.lfg fullname=D:/Projects/ConTex/tex/texmf-context/tex/context/fonts/mkiv/pagella-math.lfg usedmethod=database
+system          >   13: filename=common-math.lfg filetype=tex foundname=D:/Projects/ConTex/tex/texmf-context/tex/context/fonts/mkiv/common-math.lfg fullname=D:/Projects/ConTex/tex/texmf-context/tex/context/fonts/mkiv/common-math.lfg usedmethod=database
+system          >   14: filename=lang-it.lua filetype=lua foundname=D:/Projects/ConTex/tex/texmf-context/tex/context/patterns/mkiv/lang-it.lua fullname=D:/Projects/ConTex/tex/texmf-context/tex/context/patterns/mkiv/lang-it.lua usedmethod=database
+system          >   15: filename=texgyrepagella-bold filetype=otf format=otf foundname=D:/Projects/ConTex/tex/texmf/fonts/data/gust/tex-gyre/pagella/texgyrepagella-bold.otf fullname=D:/Projects/ConTex/tex/texmf/fonts/data/gust/tex-gyre/pagella/texgyrepagella-bold.otf usedmethod=database
+system          >   16: filename=D:/scratch/latex/ConTex/tex/texmf/fonts/data/gust/tex-gyre/pagella/texgyrepagella-bold.otf foundname=D:/scratch/latex/ConTex/tex/texmf/fonts/data/gust/tex-gyre/pagella/texgyrepagella-bold.otf fullname=D:/scratch/latex/ConTex/tex/texmf/fonts/data/gust/tex-gyre/pagella/texgyrepagella-bold.otf usedmethod=direct
+system          >   17: filename=ingame.png foundname=ingame.png fullname=D:/Projects/github/carte/solitario/help-source/ingame.png usedmethod=direct
+system          >   18: filename=lpdf-pdx.xml filetype=tex foundname=D:/Projects/ConTex/tex/texmf-context/tex/context/base/mkiv/lpdf-pdx.xml fullname=D:/Projects/ConTex/tex/texmf-context/tex/context/base/mkiv/lpdf-pdx.xml usedmethod=database
+system          >   19: filename=fine.png foundname=fine.png fullname=D:/Projects/github/carte/solitario/help-source/fine.png usedmethod=direct
+system          >   20: filename=basamento.png foundname=basamento.png fullname=D:/Projects/github/carte/solitario/help-source/basamento.png usedmethod=direct
+system          >   21: filename=mazzo.png foundname=mazzo.png fullname=D:/Projects/github/carte/solitario/help-source/mazzo.png usedmethod=direct
+system          > stop used files
+system          > start commandline options
+system          > autopdf="true"
+system          > currentrun="1"
+system          > fulljobname="./solitario.tex"
+system          > input="./solitario.tex"
+system          > kindofrun="1"
+system          > maxnofruns="9"
+system          > texmfbinpath="D:/Projects/ConTex/tex/texmf-win64/bin"
+system          > stop commandline options
+system          > start commandline files
+system          >    1: ./solitario.tex
+system          > stop commandline files
+modules         > start used modules
+modules         > stop used modules
+system          > 
+system          > status after finishing run
+system          > 
+system          >   -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+system          >           string       pool       hash     lookup       node      token     buffer      input       file       nest  parameter       save       font   language       mark     insert
+system          >   -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+system          >   max    2097152  100000000    2097152    2097152  100000000   10000000  100000000     100000       2000      10000     100000     500000     100000      10000      10000        500
+system          >   min     150000   10000000     150000     150000    2000000    1000000    1000000      10000        500       1000      20000     100000        250        250         50         10
+system          >   set     500000   10000000     250000     250000   50000000   10000000   10000000     100000       2000      10000     100000     500000     100000        250        250        250
+system          >   stp     100000    1000000     100000     100000     500000     250000    1000000      10000        250       1000      10000      10000        250        250         50         25
+system          > 
+system          >   mem     150000     934185     150000               2000000    1000000    1000000      10000        500       1000      20000      10000    6148496        144       1200        320
+system          >   all    2400000     934185    2400000              18000000    8000000    1000000     320000      16000      72000      80000     160000    6148496        144      28800      10240
+system          > 
+system          >   ini    2144207     888179          0      47039          0     516209                                                                                       0                      
+system          >   ptr      48982                  9640      48966                566931          0          0          0          0          0          0         10          0          0          7
+system          >   top      48983                740851     131074      31126     566512        289         38          5         12         41        355        250        250         50         10
+system          >   -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+system          > 
+system          >   current input type    : initial
+system          > 
+system          >   approximate memory    : 43030713 (41 MB)
+system          > 
+system          >   expansion depth       : min: 10000, max: 1000000, set: 10000, top: 9
+system          > 
+system          >   luabytecode registers : 1006
+system          >   luabytecode bytes     : 16112 (0 MB)
+system          >   luastate bytes now    : 80921173 (77 MB)
+system          >   luastate bytes max    : 93266555 (88 MB)
+system          > 
+system          >   file callbacks        : 536
+system          >   saved callbacks       : 1113
+system          >   direct callbacks      : 6
+system          >   function callbacks    : 2040
+system          >   value callbacks       : 5
+system          >   message callbacks     : 0
+system          >   bytecode callbacks    : 612
+system          > 
+system          >   mp instances          : 0
+system          >   mp estimated memory   : 0 (0 MB)
+system          >   mp file callbacks     : 0
+system          >   mp text callbacks     : 0
+system          >   mp script callbacks   : 0
+system          >   mp log callbacks      : 0
+system          > 
+system          >   total callbacks       : 4312
+system          >   mp total callbacks    : 0
+system          >   backend callbacks     : 0
+system          > 
+mkiv lua stats  > used config file: selfautoparent:/texmf/web2c/texmfcnf.lua
+mkiv lua stats  > used cache path: D:/Projects/ConTex/tex/texmf-cache/luametatex-cache/context/5fe67e0bfe781ce0dde776fb1556f32e
+mkiv lua stats  > resource resolver: loadtime 0.004 seconds, 0 scans with scantime 0.000 seconds, 0 shared scans, 21 found files, scanned paths: <none>
+mkiv lua stats  > stored bytecode data: 506 modules (0.131 sec), 106 tables (0.010 sec), 612 chunks (0.141 sec)
+mkiv lua stats  > traced context: maxstack: 1653, freed: 0, unreachable: 1653
+mkiv lua stats  > cleaned up reserved nodes: 78 nodes, 7 lists of 434
+mkiv lua stats  > node memory usage: 37 attribute, 8 dir, 3 glue, 81 gluespec, 3 kern, 647 mathspec, 2 penalty, 2 temp
+mkiv lua stats  > node list callback tasks: 13 unique task lists, 10 instances (re)created, 535 calls
+mkiv lua stats  > used backend: pdf
+mkiv lua stats  > jobdata time: 0.001 seconds saving, 0.001 seconds loading
+mkiv lua stats  > callbacks: file: 536, saved: 1113, direct: 6, function: 2040, value: 5, message: 0, bytecode: 612, late 0, total: 4312 (1078 per page)
+mkiv lua stats  > randomizer: resumed with value 0.15547126123858
+mkiv lua stats  > v-node processing time: 0.017 seconds 
+mkiv lua stats  > loaded patterns: en::1 it::66, load time: 0.000
+mkiv lua stats  > interactive elements: 7 references, 9 destinations
+mkiv lua stats  > loaded fonts: 3 files: texgyrepagella-bold.otf, texgyrepagella-math.otf, texgyrepagella-regular.otf
+mkiv lua stats  > font engine: otf 3.130, afm 1.513, tfm 1.000, 10 instances, 5 shared in backend, 3 common vectors, 2 common hashes, load time 0.158 seconds 
+mkiv lua stats  > math tweaking time: 0.077 seconds, 12 math goodie tables
+mkiv lua stats  > graphics processing time: 0.194 seconds including tex, 4 processed images, 4 unique asked, 0 bad names
+mkiv lua stats  > pdf annotations: 7 links (7 unique), 0 special
+mkiv lua stats  > font embedding time: 0.003 seconds, 2 fonts
+mkiv lua stats  > result saved in file: solitario.pdf, compresslevel 1, objectcompresslevel 3
+mkiv lua stats  > positions: 4 collected, 0 deltas, 0 shared partials, 0 partial entries
+mkiv lua stats  > used platform: win64, type: windows, binary subtree: texmf-win64
+mkiv lua stats  > used engine: luametatex version: 2.1002, functionality level: 20221105, format id: 675, compiler: gcc
+mkiv lua stats  > tex properties: 740851 hash slots used of 2097152, 48966 control sequences, approximate memory usage: 41 MB
+mkiv lua stats  > lua properties: engine: lua 5.4, used memory: 80 MB, ctx: 77 MB, max: 88 MB, symbol mask: utf (τεχ)
+mkiv lua stats  > runtime: 0.580 seconds, 4 processed pages, 4 shipped pages, 6.892 pages/second

@@ -1,0 +1,502 @@
+local utilitydata = { }
+
+utilitydata.comment={
+ ["escape"]="[===[ ... ]===]",
+ ["file"]="solitario",
+ ["format"]="cont-en",
+ ["stamp"]="2022.11.14 22:58",
+ ["version"]=0x1.547ae147ae148p+0,
+}
+
+if not utilitydata.job then utilitydata.job = { } end
+if not utilitydata.job.variables then utilitydata.job.variables = { } end
+
+utilitydata.job.variables.checksums={
+}
+
+if not utilitydata.job then utilitydata.job = { } end
+if not utilitydata.job.variables then utilitydata.job.variables = { } end
+
+utilitydata.job.variables.collected={
+ ["macros"]={},
+ ["randomseed"]=0x1.3e67b773e685p-3,
+ ["sectionblockorder"]={},
+}
+
+if not utilitydata.job then utilitydata.job = { } end
+if not utilitydata.job.structure then utilitydata.job.structure = { } end
+
+utilitydata.job.structure.collected={
+ ["branches"]={},
+ ["name"]="",
+ ["type"]="text",
+}
+
+if not utilitydata.job then utilitydata.job = { } end
+if not utilitydata.job.positions then utilitydata.job.positions = { } end
+
+utilitydata.job.positions.collected={
+ ["shared"]={
+  ["x_h_d"]={},
+  ["x_h_d_hs"]={},
+  ["x_y_w_h"]={},
+  ["y_w_h_d"]={},
+ },
+ ["user"]={},
+}
+
+if not utilitydata.job then utilitydata.job = { } end
+if not utilitydata.job.passes then utilitydata.job.passes = { } end
+
+utilitydata.job.passes.collected={
+ ["itemgroup:itemize:1"]={
+  { 3, 0 },
+ },
+}
+
+if not utilitydata.job then utilitydata.job = { } end
+if not utilitydata.job.datasets then utilitydata.job.datasets = { } end
+
+utilitydata.job.datasets.collected={
+}
+
+if not utilitydata.job then utilitydata.job = { } end
+if not utilitydata.job.pagestates then utilitydata.job.pagestates = { } end
+
+utilitydata.job.pagestates.collected={
+ ["float"]={ 1, 2, 3, 4 },
+}
+
+if not utilitydata.structures then utilitydata.structures = { } end
+if not utilitydata.structures.specials then utilitydata.structures.specials = { } end
+
+utilitydata.structures.specials.collected={
+}
+
+if not utilitydata.structures then utilitydata.structures = { } end
+if not utilitydata.structures.sections then utilitydata.structures.sections = { } end
+
+utilitydata.structures.sections.collected={
+}
+
+if not utilitydata.structures then utilitydata.structures = { } end
+if not utilitydata.structures.counters then utilitydata.structures.counters = { } end
+
+utilitydata.structures.counters.collected={
+ ["chemical"]={
+  { 0, 0 },
+ },
+ ["combination"]={
+  { 0 },
+ },
+ ["endnote"]={
+  { 0 },
+ },
+ ["figure"]={
+  { 0, 4 },
+ },
+ ["footnote"]={
+  { 0 },
+ },
+ ["formula"]={
+  { 0, 0 },
+ },
+ ["graphic"]={
+  { 0, 0 },
+ },
+ ["intermezzo"]={
+  { 0, 0 },
+ },
+ ["itemgroup:itemize"]={
+  { 0, 0, 3 },
+ },
+ ["itemgroup:itemize:note"]={
+  { 0, 0 },
+ },
+ ["linenote"]={
+  { 0 },
+ },
+ ["paragraph"]={
+  { 0, 0 },
+ },
+ ["realpage"]={
+  { 4 },
+ },
+ ["subpage"]={
+  { 4 },
+ },
+ ["table"]={
+  { 0, 0 },
+ },
+ ["textnote:note"]={
+  { 0 },
+ },
+ ["userpage"]={
+  { 4 },
+ },
+}
+
+if not utilitydata.structures then utilitydata.structures = { } end
+if not utilitydata.structures.lists then utilitydata.structures.lists = { } end
+
+utilitydata.structures.lists.collected={
+ {
+  ["metadata"]=1,
+  ["numberdata"]=3,
+  ["references"]={
+   ["internal"]=1,
+   ["realpage"]=1,
+   ["section"]=0,
+   ["view"]="fit",
+  },
+  ["titledata"]={
+   ["bookmark"]="Solitario 2.0",
+   ["label"]="chapter",
+   ["title"]="Solitario 2.0",
+  },
+ },
+ {
+  ["metadata"]=4,
+  ["numberdata"]=6,
+  ["prefixdata"]=7,
+  ["references"]={
+   ["internal"]=2,
+   ["realpage"]=1,
+   ["reference"]="fig:ingame",
+   ["section"]=0,
+   ["used"]="fit",
+   ["view"]="fit",
+  },
+  ["titledata"]={
+   ["title"]="Inizio della partita",
+  },
+ },
+ {
+  ["metadata"]=8,
+  ["numberdata"]=10,
+  ["references"]={
+   ["internal"]=3,
+   ["realpage"]=1,
+   ["section"]=0,
+   ["view"]="fit",
+  },
+  ["titledata"]={
+   ["bookmark"]="Comandi di gioco",
+   ["label"]="section",
+   ["title"]="Comandi di gioco",
+  },
+ },
+ {
+  ["metadata"]=8,
+  ["numberdata"]=10,
+  ["references"]={
+   ["internal"]=4,
+   ["realpage"]=2,
+   ["section"]=0,
+   ["view"]="fit",
+  },
+  ["titledata"]={
+   ["bookmark"]="Scopo del gioco",
+   ["label"]="section",
+   ["title"]="Scopo del gioco",
+  },
+ },
+ {
+  ["metadata"]=11,
+  ["numberdata"]=13,
+  ["prefixdata"]=7,
+  ["references"]={
+   ["internal"]=5,
+   ["realpage"]=2,
+   ["reference"]="fig:finepartita",
+   ["section"]=0,
+   ["used"]="fit",
+   ["view"]="fit",
+  },
+  ["titledata"]={
+   ["title"]="Fine della partita",
+  },
+ },
+ {
+  ["metadata"]=8,
+  ["numberdata"]=10,
+  ["references"]={
+   ["internal"]=6,
+   ["realpage"]=2,
+   ["section"]=0,
+   ["view"]="fit",
+  },
+  ["titledata"]={
+   ["bookmark"]="Movimenti delle carte",
+   ["label"]="section",
+   ["title"]="Movimenti delle carte",
+  },
+ },
+ {
+  ["metadata"]=11,
+  ["numberdata"]=15,
+  ["prefixdata"]=7,
+  ["references"]={
+   ["internal"]=7,
+   ["realpage"]=3,
+   ["reference"]="fig:assobase",
+   ["section"]=0,
+   ["used"]="fit",
+   ["view"]="fit",
+  },
+  ["titledata"]={
+   ["title"]="Asso sul basamento",
+  },
+ },
+ {
+  ["metadata"]=8,
+  ["numberdata"]=10,
+  ["references"]={
+   ["internal"]=9,
+   ["realpage"]=3,
+   ["section"]=0,
+   ["view"]="fit",
+  },
+  ["titledata"]={
+   ["bookmark"]="Informazioni",
+   ["label"]="section",
+   ["title"]="Informazioni",
+  },
+ },
+ {
+  ["metadata"]=11,
+  ["numberdata"]=17,
+  ["prefixdata"]=7,
+  ["references"]={
+   ["internal"]=8,
+   ["realpage"]=4,
+   ["reference"]="fig:mazzo",
+   ["section"]=0,
+   ["used"]="fit",
+   ["view"]="fit",
+  },
+  ["titledata"]={
+   ["title"]="Mazzo di aiuto",
+  },
+ },
+}
+
+if not utilitydata.structures then utilitydata.structures = { } end
+if not utilitydata.structures.pages then utilitydata.structures.pages = { } end
+
+utilitydata.structures.pages.collected={
+ {
+  ["block"]="bodypart",
+  ["number"]=1,
+  ["numberdata"]=18,
+  ["prefixdata"]=19,
+  ["state"]="start",
+ },
+ {
+  ["block"]="bodypart",
+  ["number"]=2,
+  ["numberdata"]=18,
+  ["prefixdata"]=19,
+  ["state"]="start",
+ },
+ {
+  ["block"]="bodypart",
+  ["number"]=3,
+  ["numberdata"]=18,
+  ["prefixdata"]=19,
+  ["state"]="start",
+ },
+ {
+  ["block"]="bodypart",
+  ["number"]=4,
+  ["numberdata"]=18,
+  ["prefixdata"]=19,
+  ["state"]="start",
+ },
+}
+
+if not utilitydata.structures then utilitydata.structures = { } end
+if not utilitydata.structures.references then utilitydata.structures.references = { } end
+
+utilitydata.structures.references.collected={
+}
+
+if not utilitydata.structures then utilitydata.structures = { } end
+if not utilitydata.structures.references then utilitydata.structures.references = { } end
+
+utilitydata.structures.references.referred={
+ { 1, 1 },
+ { 1, 3 },
+ { 2, 5 },
+ { 2, 7 },
+ { 3, 9 },
+}
+
+if not utilitydata.job then utilitydata.job = { } end
+if not utilitydata.job.parwrappers then utilitydata.job.parwrappers = { } end
+
+utilitydata.job.parwrappers.collected={
+}
+
+if not utilitydata.job then utilitydata.job = { } end
+if not utilitydata.job.objects then utilitydata.job.objects = { } end
+
+utilitydata.job.objects.collected={
+}
+
+if not utilitydata.structures then utilitydata.structures = { } end
+if not utilitydata.structures.synonyms then utilitydata.structures.synonyms = { } end
+
+utilitydata.structures.synonyms.collected={
+}
+
+if not utilitydata.structures then utilitydata.structures = { } end
+if not utilitydata.structures.registers then utilitydata.structures.registers = { } end
+
+utilitydata.structures.registers.collected={
+}
+
+if not utilitydata.structures then utilitydata.structures = { } end
+if not utilitydata.structures.blocks then utilitydata.structures.blocks = { } end
+
+utilitydata.structures.blocks.collected={
+}
+
+if not utilitydata.job then utilitydata.job = { } end
+if not utilitydata.job.files then utilitydata.job.files = { } end
+
+utilitydata.job.files.collected={
+}
+
+if not utilitydata.publications then utilitydata.publications = { } end
+
+utilitydata.publications.collected={
+}
+
+if not utilitydata.job then utilitydata.job = { } end
+if not utilitydata.job.fileobjreferences then utilitydata.job.fileobjreferences = { } end
+
+utilitydata.job.fileobjreferences.collected={
+}
+
+if not utilitydata.job then utilitydata.job = { } end
+if not utilitydata.job.embedded then utilitydata.job.embedded = { } end
+
+utilitydata.job.embedded.collected={
+}
+
+utilitydata.job.packed={
+ ["index"]={
+  {
+   ["catcodes"]=9,
+   ["coding"]="tex",
+   ["kind"]="section",
+   ["level"]=2,
+   ["name"]="title",
+   ["nolist"]=true,
+  },
+  { 0, 0 },
+  {
+   ["block"]="bodypart",
+   ["conversionset"]="default",
+   ["hidenumber"]=true,
+   ["language"]="it",
+   ["numbers"]=2,
+   ["separatorset"]="default",
+   ["set"]="all",
+  },
+  {
+   ["catcodes"]=9,
+   ["coding"]="tex",
+   ["kind"]="float",
+   ["level"]=2,
+   ["name"]="figure",
+  },
+  { 1 },
+  {
+   ["conversionset"]="subfloats",
+   ["counter"]="figure",
+   ["level"]=1,
+   ["numbers"]=5,
+  },
+  {
+   ["connector"]=".",
+   ["prefix"]="yes",
+   ["segments"]="2:2",
+  },
+  {
+   ["catcodes"]=9,
+   ["coding"]="tex",
+   ["kind"]="section",
+   ["level"]=3,
+   ["name"]="subject",
+   ["nolist"]=true,
+  },
+  { 0, 0, 0 },
+  {
+   ["block"]="bodypart",
+   ["conversionset"]="default",
+   ["hidenumber"]=true,
+   ["language"]="it",
+   ["numbers"]=9,
+   ["separatorset"]="default",
+   ["set"]="all",
+  },
+  {
+   ["catcodes"]=9,
+   ["coding"]="tex",
+   ["kind"]="float",
+   ["level"]=3,
+   ["name"]="figure",
+  },
+  { 2 },
+  {
+   ["conversionset"]="subfloats",
+   ["counter"]="figure",
+   ["level"]=1,
+   ["numbers"]=12,
+  },
+  { 3 },
+  {
+   ["conversionset"]="subfloats",
+   ["counter"]="figure",
+   ["level"]=1,
+   ["numbers"]=14,
+  },
+  { 4 },
+  {
+   ["conversionset"]="subfloats",
+   ["counter"]="figure",
+   ["level"]=1,
+   ["numbers"]=16,
+  },
+  {
+   ["conversionset"]="pagenumber",
+  },
+  {
+   ["connector"]="–",
+   ["prefix"]="no",
+   ["set"]="part",
+  },
+ },
+ ["keys"]={
+  ["directives"]=true,
+  ["metadata"]=true,
+  ["numberdata"]=true,
+  ["numbers"]=true,
+  ["ownnumbers"]=true,
+  ["pagedata"]=true,
+  ["prefixdata"]=true,
+  ["processors"]=true,
+  ["sectiondata"]=true,
+  ["specification"]=true,
+ },
+ ["skip"]={
+  ["datasets"]=true,
+  ["positions"]=true,
+  ["userdata"]=true,
+ },
+ ["version"]=0x1.051eb851eb852p+0,
+}
+
+return utilitydata

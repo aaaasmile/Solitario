@@ -9,3 +9,4 @@ src/solitario
 *.a
 solitario
 config.h.in~
+help-source/solitario.pdf
