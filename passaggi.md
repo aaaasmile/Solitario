@@ -205,6 +205,7 @@ gentilmente messo a disposizione per creare un file sif. Si crea con:
 
     apptainer build --fakeroot solitario-ubuntu-22.04.sif solitario-ubuntu-22.04.def
 Si esegue con
+
     apptainer run --bind /run solitario-ubuntu-22.04.sif
 
 ## Apptainer (host Windows con WSL2)
