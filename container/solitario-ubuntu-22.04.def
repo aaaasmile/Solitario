@@ -1,0 +1,71 @@
+#!/bin/bash
+
+BootStrap: docker
+From: ubuntu:22.04
+
+%environment
+export LANGUAGE='en_US.UTF-8'
+export LC_ALL='en_US.UTF-8'
+export LANG='en_US.UTF-8'
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+
+# Ubuntu
+export DEBIAN_FRONTEND=noninteractive
+
+%files
+
+%post
+export LANGUAGE='en_US.UTF-8'
+export LC_ALL='en_US.UTF-8'
+export LANG='en_US.UTF-8'
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+
+# Ubuntu
+export DEBIAN_FRONTEND=noninteractive
+
+# Time zone
+ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+apt-get -q update
+
+apt-get -q -y install locales
+
+# Locale
+locale-gen $LC_ALL
+
+apt-get -q -y install \
+    build-essential \
+    autoconf \
+    gawk \
+    git \
+    vim \
+    tar \
+    gzip \
+    mc \
+    nano \
+    wget \
+	x11-apps
+
+apt-get -q -y install \
+    automake \
+    libsdl2-dev \
+    libsdl2-image-dev \
+    libsdl2-mixer-dev \
+    libsdl2-ttf-dev
+
+# Solitario
+cd /usr/local/src
+wget https://github.com/aaaasmile/Solitario/archive/refs/heads/ubuntu-compile.zip
+unzip ubuntu-compile.zip
+cd Solitario-ubuntu-compile
+autoreconf --install
+./configure --bindir=/usr/local/games/Solitario
+make -j8
+make install
+cp -a data /usr/local/games/Solitario
+
+# Clean
+rm -rf /usr/local/src/*
+
+%runscript
+cd /usr/local/games/Solitario && ./solitario "$@"

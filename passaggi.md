@@ -165,6 +165,38 @@ file .vscode/c_cpp_properties.json per avere l'editor senza errori.
 Per quanto riguarda la HOME directory, questa dipende dall'utente ed è una
 variabile che setto in runtime (la ~ in compilazione non ha dato i risultati aspettati).
 
+## Docker (host testato Windows)
+Nella directory _container_ ho messo il file Dockerfile che uso per creare un'immagine 
+da lanciare in windows. In Linux è meglio usare Apptainer (vedi sotto).
+Per creare l'immagine Docker uso (powershell):
+
+    docker build  -t solitario-ubuntu .
+Il programma lo lancio poi con:
+
+    docker run -it --rm -e DISPLAY=host.docker.internal:0 solitario-ubuntu
+Nota che, al contrario di WSL2, occorre lanciare un X-server tipo Xming in Windows11.  
+Per vedere il contenuto dell'immagine creata si può lanciare una bash con:
+
+    docker run -it --rm --entrypoint bash -e DISPLAY=host.docker.internal:0 solitario-ubuntu
+Per vedere se funziona il server X posso lanciare xclock che fa parte dell'immagine:
+
+    docker run -it --rm --entrypoint xclock -e DISPLAY=host.docker.internal:0 solitario-ubuntu
+Sul mio computer, però, ricevo quest'errore in docker:
+
+    Error of failed request:  GLXUnsupportedPrivateRequest
+    Major opcode of failed request:  143 (GLX)
+    Minor opcode of failed request:  17 (X_GLXVendorPrivateWithReply)
+    Serial number of failed request:  85
+    Current serial number in output stream:  85
+
+## Apptainer (host testato Linux)
+Nella directory _container_ ho messo il file solitario-ubuntu-22.04.def che mi è stato
+gentilmente messo a disposizione per creare un file sif. Si crea con:
+
+    apptainer build --fakeroot solitario-ubuntu-22.04.sif solitario-ubuntu-22.04.def
+Si esegue con
+    apptainer run --bind /run solitario-ubuntu-22.04.sif
+
 ### TODO
 
 - Dialogo delle opzioni da completare (mazzo di carte)
