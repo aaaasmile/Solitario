@@ -6,6 +6,9 @@
 
 #include <string>
 
+#include "DeckType.h"
+#include "ErrorInfo.h"
+
 namespace GFX_UTIL {
     Uint32 inline GetPixel(SDL_Surface *surface, int x, int y);
     void inline SetPixel(SDL_Surface *surface, int x, int y, Uint32 pixel);
@@ -31,7 +34,8 @@ namespace GFX_UTIL {
                               const SDL_Color *color2, int break_size);
     void DrawRect(SDL_Surface *screen, int x, int y, int dx, int dy,
                   SDL_Color c);
-
+    LPErrInApp LoadCardPac(SDL_Surface **pp_Deck, DeckType &deckType,
+                           Uint16 *pac_w, Uint16 *pac_h);
 };
 
 class GFX_UTIL_COLOR {

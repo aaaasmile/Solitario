@@ -20,7 +20,13 @@ class MusicManager;
 using namespace traits;
 
 class MainOptionGfx {
-    enum { MYIDOK = 0, MYIDCANCEL = 1, MYIDMUSICCHK = 2, MYIDCOMBOLANG = 3 };
+    enum {
+        MYIDOK = 0,
+        MYIDCANCEL = 1,
+        MYIDMUSICCHK = 2,
+        MYIDCOMBOLANG = 3,
+        MYIDCOMBODECK = 4
+    };
 
 public:
     MainOptionGfx();
@@ -53,6 +59,7 @@ private:
     STRING m_strHeaderText;
     cCheckBoxGfx* m_pCheckMusic;
     cComboGfx* m_pComboLang;
+    cComboGfx* m_pComboDeck;
 
     Languages* _p_Languages;
     MenuDelegator _menuDlgt;

@@ -22,6 +22,7 @@ public:
         TRENTO,
         TREVISO,
         TRIESTE,
+        NUM_OF_DECK
     };
     enum ePacType { PacTypePac, PacTypeSingleFile };
 

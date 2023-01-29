@@ -1,5 +1,11 @@
 #include "GfxUtil.h"
 
+#include <SDL_image.h>
+
+#include "WinTypeGlobal.h"
+
+const char *lpszDeckDir = DATA_PREFIX "mazzi/";
+
 SDL_Color GFX_UTIL_COLOR::White = {255, 255, 255, 0};
 SDL_Color GFX_UTIL_COLOR::Gray = {128, 128, 128, 0};
 SDL_Color GFX_UTIL_COLOR::Red = {255, 0, 0, 0};
@@ -190,6 +196,51 @@ void GFX_UTIL::DrawRect(SDL_Surface *screen, int x, int y, int dx, int dy,
     DrawStaticLine(screen, x, y, x, dy, color);
     DrawStaticLine(screen, dx, y, dx, dy, color);
     DrawStaticLine(screen, x, dy, dx, dy, color);
+}
+
+LPErrInApp GFX_UTIL::LoadCardPac(SDL_Surface **pp_Deck, DeckType &deckType,
+                                 Uint16 *pac_w, Uint16 *pac_h) {
+    TRACE("Load card Pac");
+    Uint32 timetag;
+    char description[100];
+    Uint8 num_anims;
+    Uint16 w, h;
+    Uint16 frames;
+
+    std::string strFileName = lpszDeckDir;
+    strFileName += deckType.GetResFileName();
+
+    SDL_RWops *src = SDL_RWFromFile(strFileName.c_str(), "rb");
+    if (src == 0) {
+        return ERR_UTIL::ErrorCreate(
+            "SDL_RWFromFile on pac file error (file %s): %s\n",
+            strFileName.c_str(), SDL_GetError());
+    }
+    SDL_RWread(src, description, 100, 1);
+    timetag = SDL_ReadLE32(src);
+    TRACE("Timetag is %d", timetag);
+    SDL_RWread(src, &num_anims, 1, 1);
+    // witdh of the picture (pac of 4 cards)
+    w = SDL_ReadLE16(src);
+    // height of the picture (pac of 10 rows of cards)
+    h = SDL_ReadLE16(src);
+    frames = SDL_ReadLE16(src);
+
+    for (int i = 0; i < frames; i++) {
+        SDL_ReadLE16(src);
+    }
+
+    *pp_Deck = IMG_LoadPNG_RW(src);
+    if (!*pp_Deck) {
+        return ERR_UTIL::ErrorCreate(
+            "IMG_LoadPNG_RW on pac file error (file %s): %s\n",
+            strFileName.c_str(), SDL_GetError());
+    }
+
+    SDL_SetColorKey(*pp_Deck, true, SDL_MapRGB((*pp_Deck)->format, 0, 128, 0));
+    *pac_h = h;
+    *pac_w = w;
+    return NULL;
 }
 
 void GFX_UTIL::DrawStaticBrokenLine(SDL_Surface *screen, int x0, int y0, int x1,

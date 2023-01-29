@@ -24,8 +24,8 @@ int g_SymbolHeight = 144;
 #define THINKINGS_PER_TICK 1
 
 static const char *lpszBackgroundImgFile = DATA_PREFIX "images/im001537.jpg";
-static const char *lpszDeckDir = DATA_PREFIX "mazzi/";
 static const char *lpszSymbDir = DATA_PREFIX "images/";
+extern const char *lpszDeckDir;
 
 SolitarioGfx::SolitarioGfx() {
     _p_ScreenBackbuffer = 0;
@@ -853,48 +853,11 @@ LPErrInApp SolitarioGfx::LoadSymbolsFromSingleFile() {
 }
 
 LPErrInApp SolitarioGfx::LoadCardPac() {
-    TRACE("Load card Pac");
-    Uint32 timetag;
-    char description[100];
-    Uint8 num_anims;
     Uint16 w, h;
-    Uint16 frames;
-
-    std::string strFileName = lpszDeckDir;
-    strFileName += _DeckType.GetResFileName();
-
-    SDL_RWops *src = SDL_RWFromFile(strFileName.c_str(), "rb");
-    if (src == 0) {
-        return ERR_UTIL::ErrorCreate(
-            "SDL_RWFromFile on pac file error (file %s): %s\n",
-            strFileName.c_str(), SDL_GetError());
-    }
-    SDL_RWread(src, description, 100, 1);
-    timetag = SDL_ReadLE32(src);
-    TRACE("Timetag is %d", timetag);
-    SDL_RWread(src, &num_anims, 1, 1);
-    // witdh of the picture (pac of 4 cards)
-    w = SDL_ReadLE16(src);
-    // height of the picture (pac of 10 rows of cards)
-    h = SDL_ReadLE16(src);
-    frames = SDL_ReadLE16(src);
-
-    for (int i = 0; i < frames; i++) {
-        SDL_ReadLE16(src);
-    }
-
-    _p_Deck = IMG_LoadPNG_RW(src);
-    if (!_p_Deck) {
-        return ERR_UTIL::ErrorCreate(
-            "IMG_LoadPNG_RW on pac file error (file %s): %s\n",
-            strFileName.c_str(), SDL_GetError());
-    }
-
-    SDL_SetColorKey(_p_Deck, true, SDL_MapRGB(_p_Deck->format, 0, 128, 0));
-
+    GFX_UTIL::LoadCardPac(&_p_Deck, _DeckType, &w, &h);
+    TRACE("Pac size  w = %d, h = %d", w, h);
     g_CardWidth = w / 4;
     g_CardHeight = h / 10;
-
     return NULL;
 }
 
