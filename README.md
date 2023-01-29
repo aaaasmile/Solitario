@@ -1,6 +1,6 @@
 # Solitario versione 2.0
 
-This is the a Solitaire game with 40 italian Briscola cards. The original game was the [Klondike](https://en.wikipedia.org/wiki/Klondike_(solitaire)) using 52 cards. This is an SDL2 project developed on Linux Ubuntu.  
+This is the a Solitaire game with 40 italian Briscola cards. The original game and source of inspiration is the [Klondike](https://en.wikipedia.org/wiki/Klondike_(solitaire)) that is using 52 cards. This is an SDL2 project developed on Linux Ubuntu.  
 This is also ported to Windows using MySys2.
 
 ## Supported Deck
