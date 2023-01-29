@@ -19,8 +19,14 @@ This is also ported to Windows using MySys2.
 - TREVISO
 - TRIESTE
 
+## Supported Languages
+- Italian
+- English
+- Breda Dialect
+
 ## Screeshots
-![Inizio Partita](./help-source/ingame.png)
+![Schermata iniziale](./help-source/inizio.png)
+![Inizio Partita](./help-source/basamento.png)
 
 ## Help
 [Help PDF file](./data/solitario.pdf) 
