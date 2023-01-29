@@ -1,0 +1,38 @@
+#!/bin/bash
+
+Bootstrap: localimage
+From: solitario-ubuntu-22.04.sif
+
+%environment
+export PATH="$PATH:/opt/VirtualGL/bin"
+
+%post
+# Update
+apt-get -q update
+
+# Upgrade
+apt-get -q -y upgrade
+
+# EGL utilities
+apt-get -q -y install \
+    mesa-utils-extra
+
+# VirtualGL requirements
+apt-get -q -y install \
+    libegl1-mesa \
+    libglu1-mesa \
+    libxtst6 \
+    libxv1 \
+	zathura
+
+# VirtualGL
+cd /usr/local/src
+wget -qc https://sourceforge.net/projects/virtualgl/files/3.0.2/virtualgl_3.0.2_amd64.deb/download -O virtualgl_3.0.2_amd64.deb
+dpkg -i virtualgl_3.0.2_amd64.deb
+
+# Clean
+rm -rf /usr/local/src/*
+rm -f "$HOME/.wget-hsts"
+
+%runscript
+cd /usr/local/games/Solitario && vglrun ./solitario "$@"

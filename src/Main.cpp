@@ -1,0 +1,22 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "AppGfx.h"
+#include "ErrorInfo.h"
+
+int main(int argc, char* argv[]) {
+    AppGfx* app = new AppGfx();
+    app->ParseCmdLine(argc, argv);
+    LPErrInApp err = app->Init();
+    if (err != NULL) {
+        fprintf(stderr, "Init error: %s\n", err->ErrorText.c_str());
+        exit(1);
+    }
+    err = app->MainLoop();
+    if (err != NULL) {
+        fprintf(stderr, "App error: %s\n", err->ErrorText.c_str());
+        exit(1);
+    }
+
+    return EXIT_SUCCESS;
+}

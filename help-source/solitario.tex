@@ -1,0 +1,113 @@
+\setuplayout[topspace=0.5in, backspace=1in, header=24pt, footer=36pt,
+  height=middle, width=middle]
+% uncomment the next line to see the layout
+%\showframe
+\setuppagenumbering[location={header,right}]
+
+\setupbodyfont[pagella]
+
+% Lingua
+\setbreakpoints[compound] % break at / and -
+\setuplanguage[it][
+  goodies={lang-it.llg}, % prevent wrong ligatures
+  lefthyphenmin=2,
+  righthyphenmin=2,
+  leftquotation=»,
+  rightquotation=«,
+  leftquote=›,
+  rightquote=‹,
+]
+\mainlanguage[it]
+
+\definetyping[powsh][bodyfont=small]
+\definetyping[sh][bodyfont=small]
+
+%urls - i primi comandi servoro per poter usare l'url
+\setupinteraction [state=start]
+\setupcolors      [state=start]
+\setupurl         [color=blue]
+\setupinteraction [state=start,color=blue]
+\useURL[uri:Invido]
+              [https://invido.it/progetti/solitario_progetto.html]
+              []
+              [Invido.it]
+\useURL[uri:Klondike]
+              [https://it.wikipedia.org/wiki/Klondike_(solitario)]
+              []
+              [Klondike]
+\useURL[uri:GithubSolitario]
+              [https://github.com/aaaasmile/Solitario]
+              []
+              [GithubSolitario]
+
+
+\starttext
+
+\title{Solitario 2.0}
+
+Questo è il classico gioco del Solitario con le carte da Briscola.
+Il gioco si ispira all'originale \from[uri:Klondike] come mostrato in \in{figura}[fig:ingame].
+Il tavolo di gioco si suddivide in tre sezioni: il basamento degli Assi, le pile di carte e il mazzo delle
+carte restanti.
+
+\placefigure
+    [][fig:ingame]
+    {Inizio della partita}
+    {\externalfigure[ingame.png][width=0.9\makeupwidth]}
+
+\subject{Comandi di gioco}
+Il Solitario si gioca con il mouse. Con la tastiera, invece, è possibile inviare dei comandi per:
+\startitemize[1]
+\item Iniziare usa nuova partita (tasto {\bold n})
+\item Uscire dal gioco (tasto {\bold Escape})
+\item Mostrare un'animazione  (tasto {\bold a})
+\stopitemize
+Il tasto destro del mouse viene usato su una carta scoperta per essere mandata di colpo
+e automaticamente sul basamento degli Assi. Il tasto sinistro del mouse server per spostare le carte da una pila all'altra.
+
+\subject{Scopo del gioco}
+Il gioco termina, e il solitario risulta riuscito, quando le quattro pile in alto a destra, inizialmente vuote,
+contengono tutte le carte oridinate dei quattro semi partendo dall'Asso fino al Re (vedi \in{figura}[fig:finepartita]).
+
+\placefigure
+    [][fig:finepartita]
+    {Fine della partita}
+    {\externalfigure[fine.png][width=0.9\makeupwidth]}
+
+\subject{Movimenti delle carte}
+Una carta può  essere spostata da una pila all'altra cliccando una carta scoperta e trasportandola sopra
+un'altra carta scoperta di un'altra pila (Drag & Drop). La carta deve essere compatibile con la pila di destinazione.
+Per esempio, una coppa può essere sovrapposta solo ad una carta che è o spade o bastoni.
+Lo stesso vale per denari. I bastoni e le spade possono, invece, essere spostati solo sopra un denari o coppe.
+Così una spada non può essere messa sopra un bastoni o un'altra spada. Lo stesso vale per bastoni.
+Il denari non può essere messo sopra una coppa e neanche un altro denari. Lo stesso vale per coppe.
+
+Non solo l'alternanza del seme è importante ma anche l'ordine, che deve essere decrescente.
+
+Esempio: sotto un Fante ci va un Sette, sotto un Re un Cavallo e così via fino al Due.
+Lo spostamento delle carte constente di poter scoprire le carte coperte sulle varie pile.
+
+Quando si scopre un Asso allora lo si può mettere su uno dei quattro basamenti in alto a destra
+(per esempio con il tasto destro del mouse).
+Poi si passa al Due e così via fino al Re (vedi \in{figura}[fig:assobase]).
+
+\placefigure
+    [][fig:assobase]
+    {Asso sul basamento}
+    {\externalfigure[basamento.png][width=0.9\makeupwidth]}
+
+Quando lo spostamento delle carte tra le pile o sul basamento degli Assi non è più possibile,
+allora si può cliccare il mazzo di carte restanti in alto a destra (vedi \in{figura}[fig:mazzo]).
+Il mazzo delle carte restanti può essere usato a ripetizione fino a quando si svuota completamente.
+
+\placefigure
+    [][fig:mazzo]
+    {Mazzo di aiuto}
+    {\externalfigure[mazzo.png][width=0.9\makeupwidth]}
+
+\subject{Informazioni}
+Versione: 2.0\\
+Sorgenti: \from[uri:GithubSolitario]\\
+Licenza: GPL-2.0 \\
+Libreria: SDL 2 \\
+Web: \from[uri:Invido]

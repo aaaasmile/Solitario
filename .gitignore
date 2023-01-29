@@ -1,0 +1,12 @@
+.deps
+autom4te.cache
+stderr.txt
+*.o
+configure~
+config.log
+temp
+src/solitario
+*.a
+solitario
+config.h.in~
+help-source/solitario.pdf

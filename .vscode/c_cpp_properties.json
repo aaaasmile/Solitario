@@ -1,0 +1,18 @@
+{
+    "configurations": [
+        {
+            "name": "linux",
+            "includePath": [
+                "${workspaceFolder}/src/**",
+                "${workspaceFolder}/libini/include",
+                "/usr/include/SDL2"
+            ],
+            "defines": [
+                "DATA_PREFIX=\"\""
+            ],
+            "cppStandard": "c++17",
+            "cStandard": "c17"
+        }
+    ],
+    "version": 4
+}

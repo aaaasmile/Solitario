@@ -1,12 +1,12 @@
 Summary: Solitario
 Name: solitario
-Version: 0.1
+Version: 1.0
 Release: 1
 Source: %{name}-%{version}.tar.gz
-Url: http://kickers.fabbricadigitale.it/briscola/index.php
+Url: https://invido.it
 Copyright: GPL
 Group: Svaghi/Giochi
-Vendor: Igor Sarzi Sartori <6colpiunbucosolo@gmx.net>
+Vendor: Invido.it <6colpiunbucosolo@gmx.net>
 Packager: Fabio Spataro <fabio.spataro@fis.unipr.it>
 Prefix: %{_prefix}
 BuildRoot: %{_tmppath}/%{name}-root
