@@ -199,7 +199,7 @@ Installazione di Apptainer in Ubuntu 22.04 (nativo e WSL2)
     sudo apptainer config fakeroot --add $USER
     sudo apptainer config fakeroot --enable $USER
 
-## Apptainer (host testato con successo Linux)
+## Apptainer (host testato con successo Linux e anche su WSL2)
 Nella directory _container_ ho messo il file solitario-ubuntu-22.04.def che mi è stato
 gentilmente messo a disposizione per creare un file sif. Si crea con:
 
@@ -207,6 +207,9 @@ gentilmente messo a disposizione per creare un file sif. Si crea con:
 Si esegue con
 
     apptainer run --bind /run solitario-ubuntu-22.04.sif
+Per avere una shell nel container si usa:
+     apptainer shell lolcow_latest.sif
+     apptainer shell solitario-ubuntu-22.04.sif
 
 ## Apptainer (host Windows con WSL2)
 L'installazione di Apptainer di sopra ha funzionato senza problemi.
