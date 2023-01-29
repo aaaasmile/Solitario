@@ -6,6 +6,7 @@
 
 #include <vector>
 
+#include "CardGfx.h"
 #include "ErrorInfo.h"
 #include "GameSettings.h"
 #include "Traits.h"
@@ -39,11 +40,13 @@ public:
     void SetCaption(STRING& strCaption) { m_strHeaderText = strCaption; }
     void ButEndOPtClicked(int iButID);
     void CheckboxMusicClicked(bool state);
+    void DeckSelectionClicked(int indexSel);
 
 private:
     ClickCb prepClickCb();
     ClickCb prepClickComboCb();
     CheckboxClickCb prepCheckBoxClickMusic();
+    ClickCb prepSelectionDeckCb();
 
 private:
     SDL_Renderer* m_psdlRenderer;
@@ -60,6 +63,8 @@ private:
     cCheckBoxGfx* m_pCheckMusic;
     cComboGfx* m_pComboLang;
     cComboGfx* m_pComboDeck;
+    SDL_Surface* m_pDeckAll[DeckType::NUM_OF_DECK];
+    CardGfx m_CardOnEachDeck[3][DeckType::NUM_OF_DECK];
 
     Languages* _p_Languages;
     MenuDelegator _menuDlgt;

@@ -1,6 +1,8 @@
 #ifndef CARDGFX__H
 #define CARDGFX__H
 
+#include <SDL.h>
+
 #include <vector>
 
 #include "ErrorInfo.h"
@@ -43,12 +45,21 @@ public:
     bool IsRed() const { return !IsBlack(); }
     int X() { return _x; }
     int Y() { return _y; }
-    int Index() { return _idx; }
+    int Width() { return _width; }
+    void SetWidth(int val) { _width = val; }
+    void SetHeight(int val) { _height = val; }
+    int Height() { return _height; }
+    void SetDeckSurface(SDL_Surface* pVal, int w, int h) {
+        _pPacDeck = pVal;
+        _width = w;
+        _height = h;
+    }
 
     bool IsFaceUp() const { return _faceUp; }
     bool IsFaceDown() const { return !_faceUp; }
 
     void SetFaceUp(bool bval) { _faceUp = bval; }
+    int Index() { return _idx; }
     LPErrInApp SetIdx(int nIdx) {
         if (nIdx >= NUM_CARDS || nIdx < 0) {
             return ERR_UTIL::ErrorCreate("Error SetIdx %d is out of range",
@@ -92,6 +103,10 @@ private:
     int _x;
     int _y;
     int _idx;
+    int _width;
+    int _height;
+
+    SDL_Surface* _pPacDeck;
 };
 
 typedef CardGfx* LPCardGfx;

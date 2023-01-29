@@ -57,6 +57,17 @@ CheckboxClickCb MainOptionGfx::prepCheckBoxClickMusic() {
     return (CheckboxClickCb){.tc = &tc, .self = this};
 }
 
+// deck selection
+void fncBind_ComboDeckClicked(void* self, int index) {
+    MainOptionGfx* pApp = (MainOptionGfx*)self;
+    pApp->DeckSelectionClicked(index);
+}
+
+ClickCb MainOptionGfx::prepSelectionDeckCb() {
+    static VClickCb const tc = {.Click = (&fncBind_ComboDeckClicked)};
+    return (ClickCb){.tc = &tc, .self = this};
+}
+
 LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
                                      SDL_Renderer* pRenderer,
                                      MusicManager* pMusicMgr,
@@ -118,45 +129,50 @@ LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
     m_pCheckMusic->Initialize(&rctBt1, pScreen, m_pFontText, MYIDMUSICCHK,
                               cbCheckboxMusic);
     m_pCheckMusic->SetState(cCheckBoxGfx::INVISIBLE);
-
+    // Deck
     // combo deck selection
-    // m_pComboDeck = new cComboGfx;
-    // rctBt1.w = 180;
-    // rctBt1.h = 26;
-    // rctBt1.y = m_pCheckMusic->m_rctButt.y + m_pCheckMusic->m_rctButt.h + 20;
-    // rctBt1.x = m_pCheckMusic->m_rctButt.x;
+    ClickCb deckSelCb = prepSelectionDeckCb();
+    m_pComboDeck = new cComboGfx;
+    rctBt1.w = 180;
+    rctBt1.h = 26;
+    rctBt1.y = m_pCheckMusic->m_rctButt.y + m_pCheckMusic->m_rctButt.h + 20;
+    rctBt1.x = m_pCheckMusic->m_rctButt.x;
 
-    // m_pComboDeck->Initialize(&rctBt1, pScreen, m_pFontText, MYIDCOMBODECK,
-    //                          pRenderer);
-    // m_pComboDeck->SetState(cComboGfx::INVISIBLE);
+    m_pComboDeck->Initialize(&rctBt1, pScreen, m_pFontText, MYIDCOMBODECK,
+                             pRenderer, deckSelCb);
+    m_pComboDeck->SetState(cComboGfx::INVISIBLE);
 
     // init deck surface
-    // for (int i = 0; i < DeckType::NUM_OF_DECK; i++) {
-    //     loadCardPac((DeckType::eDeckType)i, &m_pDeckAll[i],
-    //                 &m_CardOnEachDeck[0][i]);
-    //     // the surface of the card 0 is already set in function loadCardPac
-    //     m_CardOnEachDeck[0][i].m_iX = rctBt1.x;
-    //     m_CardOnEachDeck[0][i].m_iY = rctBt1.y + rctBt1.h + 50;
-    //     m_CardOnEachDeck[0][i].cardSpec.SetCardIndex(9);
+    Uint16 pac_w, pac_h;
+    DeckType* pDt = new DeckType();
+    for (int i = 0; i < DeckType::NUM_OF_DECK; i++) {
+        pDt->SetType((DeckType::eDeckType)i);
+        GFX_UTIL::LoadCardPac(&m_pDeckAll[i], *pDt, &pac_w, &pac_h);
+        m_CardOnEachDeck[0][i].SetWidth(pac_w / 4);
+        m_CardOnEachDeck[0][i].SetHeight(pac_h / 10);
+        m_CardOnEachDeck[0][i].SetCardLoc(rctBt1.x, rctBt1.y + rctBt1.h + 50);
+        m_CardOnEachDeck[0][i].SetIdx(9);
+        m_CardOnEachDeck[0][i].SetDeckSurface(m_pDeckAll[i],
+                                              m_CardOnEachDeck[0][i].Width(),
+                                              m_CardOnEachDeck[0][i].Height());
 
-    //     m_CardOnEachDeck[1][i].SetDeckSurface(m_pDeckAll[i],
-    //                                           m_CardOnEachDeck[0][i].m_iWidth,
-    //                                           m_CardOnEachDeck[0][i].m_iHeight);
-    //     m_CardOnEachDeck[1][i].m_iX =
-    //         m_CardOnEachDeck[0][i].m_iX + 10 +
-    //         m_CardOnEachDeck[0][i].m_iWidth;
-    //     m_CardOnEachDeck[1][i].m_iY = rctBt1.y + rctBt1.h + 50;
-    //     m_CardOnEachDeck[1][i].cardSpec.SetCardIndex(7);
+        m_CardOnEachDeck[1][i].SetDeckSurface(m_pDeckAll[i],
+                                              m_CardOnEachDeck[0][i].Width(),
+                                              m_CardOnEachDeck[0][i].Height());
+        m_CardOnEachDeck[1][i].SetCardLoc(
+            m_CardOnEachDeck[0][i].X() + 10 + m_CardOnEachDeck[0][i].Width(),
+            rctBt1.y + rctBt1.h + 50);
+        m_CardOnEachDeck[1][i].SetIdx(7);
 
-    //     m_CardOnEachDeck[2][i].SetDeckSurface(m_pDeckAll[i],
-    //                                           m_CardOnEachDeck[0][i].m_iWidth,
-    //                                           m_CardOnEachDeck[0][i].m_iHeight);
-    //     m_CardOnEachDeck[2][i].m_iX =
-    //         m_CardOnEachDeck[1][i].m_iX + 10 +
-    //         m_CardOnEachDeck[1][i].m_iWidth;
-    //     m_CardOnEachDeck[2][i].m_iY = rctBt1.y + rctBt1.h + 50;
-    //     m_CardOnEachDeck[2][i].cardSpec.SetCardIndex(5);
-    // }
+        m_CardOnEachDeck[2][i].SetDeckSurface(m_pDeckAll[i],
+                                              m_CardOnEachDeck[0][i].Width(),
+                                              m_CardOnEachDeck[0][i].Height());
+        m_CardOnEachDeck[2][i].SetCardLoc(
+            m_CardOnEachDeck[1][i].X() + 10 + m_CardOnEachDeck[1][i].Width(),
+            rctBt1.y + rctBt1.h + 50);
+        m_CardOnEachDeck[2][i].SetIdx(5);
+    }
+    delete pDt;
 
     return NULL;
 }
@@ -331,3 +347,5 @@ void MainOptionGfx::CheckboxMusicClicked(bool state) {
         _p_MusicManager->StopMusic();
     }
 }
+
+void MainOptionGfx::DeckSelectionClicked(int indexSel) {}
