@@ -70,10 +70,10 @@ am__make_running_with_option = \
   test $$has_opt = yes
 am__make_dryrun = (target_option=n; $(am__make_running_with_option))
 am__make_keepgoing = (target_option=k; $(am__make_running_with_option))
-pkgdatadir = $(datadir)/solitario-1.7
-pkgincludedir = $(includedir)/solitario-1.7
-pkglibdir = $(libdir)/solitario-1.7
-pkglibexecdir = $(libexecdir)/solitario-1.7
+pkgdatadir = $(datadir)/solitario-2.0
+pkgincludedir = $(includedir)/solitario-2.0
+pkglibdir = $(libdir)/solitario-2.0
+pkglibexecdir = $(libexecdir)/solitario-2.0
 am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
 install_sh_DATA = $(install_sh) -c -m 644
 install_sh_PROGRAM = $(install_sh) -c
@@ -204,8 +204,9 @@ am__define_uniq_tagged_files = \
     if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
   done | $(am__uniquify_input)`
 am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/src/Config.h.in \
-	AUTHORS COPYING ChangeLog INSTALL NEWS README ar-lib compile \
-	config.guess config.sub depcomp install-sh ltmain.sh missing
+	AUTHORS COPYING ChangeLog INSTALL NEWS README.md ar-lib \
+	compile config.guess config.sub depcomp install-sh ltmain.sh \
+	missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -288,19 +289,19 @@ LTLIBOBJS =
 MAKEINFO = ${SHELL} '/home/igor/projects/Solitario/missing' makeinfo
 MKDIR_P = /usr/bin/mkdir -p
 OBJEXT = o
-PACKAGE = solitario-1.7
+PACKAGE = solitario-2.0
 PACKAGE_BUGREPORT = 6colpiunbucosolo@gmx.net
 PACKAGE_NAME = solitario
-PACKAGE_STRING = solitario 1.7
-PACKAGE_TARNAME = solitario-1.7
+PACKAGE_STRING = solitario 2.0
+PACKAGE_TARNAME = solitario-2.0
 PACKAGE_URL = https://invido.it
-PACKAGE_VERSION = 1.7
+PACKAGE_VERSION = 2.0
 PATH_SEPARATOR = :
 RANLIB = ranlib
 SET_MAKE = 
 SHELL = /bin/bash
 STRIP = 
-VERSION = 1.7
+VERSION = 2.0
 abs_builddir = /home/igor/projects/Solitario
 abs_srcdir = /home/igor/projects/Solitario
 abs_top_builddir = /home/igor/projects/Solitario

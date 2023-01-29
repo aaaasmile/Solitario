@@ -1,13 +1,11 @@
-Solitario versione 1.7
-----------------------
+# Solitario versione 2.0
 
-Introduzione
-------------
+
+## Introduzione
 Questa è la versione Linux del famoso solitario, presente su windows Xp e Linux
 (in gnome è AisleRiot 2.4.0 Harfe), che però utilizza le 40 carte da briscola italiane. 
 
-Regole del gioco
-----------------
+## Regole del gioco
 Le regole sono molto semplici: il gioco termina quando tutte le carte 
 vengono accatastate sulle quattro pile libere a disposizione in alto a destra.
 Si parte dagli assi, poi i due fino ad arrivare ai re.
@@ -21,8 +19,7 @@ in uno dei quattro posti liberi in alto a destra.
 Il gioco termina quando non sono più possibili spostamenti da effettuare, oppure
 quando tutte le carte sono state scoperte ed impilate.
 
-Comandi durante il gioco
-------------------------
+## Comandi durante il gioco
 La navigazione nei vari menu avviene tramite tastiera. Lo spostamento delle 
 carte con il mouse. Durante la partita sono disponibili i seguenti comandi:
 
@@ -30,8 +27,7 @@ Tasto 'N'  : inizia una nuova partita
 Tasto 'A'  : mostra un'animazione
 
 
-Mazzi di carte supportati
-------------------------- 
+## Mazzi di carte supportati
 -Piacentine
 -Bergamasche
 -Bolognesi
@@ -47,27 +43,23 @@ Mazzi di carte supportati
 -Trentine
 -Triestine
 
-Lingue
-------
+## Lingue
 - Italiano
 - Dialetto Bredese
+- Inglese
 
-Autore
-------
+## Autore
 aaaasmile
 invido.it
 
-Credits
--------
+## Credits
 Il programma utilizza la libreria sdl che si trova su 
 http://www.libsdl.org e la libreria drac sviluppata da Rico Roberto Zuñiga
 Fabio Spataro per i package della versione Linux.
 
 
-Librerie usate
---------------
-SDL, SDL_image, SDL_mixer, libini
+## Librerie usate
+SDL2, SDL_image2, SDL_mixer2, libini
 
-Licenza
--------
+## Licenza
 GPL-2.0 License

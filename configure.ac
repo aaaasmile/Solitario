@@ -3,7 +3,7 @@
 #############################################################################
 # all this file is created manually
 #change the version here
-m4_define([solitario_VERSION], [1.7])
+m4_define([solitario_VERSION], [2.0])
 #this settings will ba also available in config.h
 AC_INIT([solitario], 
         m4_defn([solitario_VERSION]), 
