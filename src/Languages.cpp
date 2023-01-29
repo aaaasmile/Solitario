@@ -8,22 +8,22 @@ Languages::Languages() {
     }
     _eLangid = LANG_ITA;
     // dialetto
-    _mtxLangString[LANG_DIAL_BREDA][ID_START] = "CÃ¼mincia";
+    _mtxLangString[LANG_DIAL_BREDA][ID_START] = "Cümincia";
     _mtxLangString[LANG_DIAL_BREDA][ID_LANGUAGESEL] = "Lengui furesti";
-    _mtxLangString[LANG_DIAL_BREDA][ID_HISCORE] = "Al mÃ¨i di mÃ¨i";
+    _mtxLangString[LANG_DIAL_BREDA][ID_HISCORE] = "Al mèi di mèi";
     _mtxLangString[LANG_DIAL_BREDA][ID_VIDEOSET] = "Giosta al display";
     _mtxLangString[LANG_DIAL_BREDA][ID_MAINMENU] = "Menu principal";
     _mtxLangString[LANG_DIAL_BREDA][ID_EXIT] = "Fnomla che";
-    _mtxLangString[LANG_DIAL_BREDA][ID_CHOOSELEVEL] = "Cata fÃ²ra al jeuq";
+    _mtxLangString[LANG_DIAL_BREDA][ID_CHOOSELEVEL] = "Cata fòra al jeuq";
     _mtxLangString[LANG_DIAL_BREDA][ID_BACKMAINMENU] = "Al menu principal";
     _mtxLangString[LANG_DIAL_BREDA][ID_EASY] = "Facil";
     _mtxLangString[LANG_DIAL_BREDA][ID_HARD] = "Dificilisim";
     _mtxLangString[LANG_DIAL_BREDA][ID_HARDER] = "Mia tant facil";
-    _mtxLangString[LANG_DIAL_BREDA][ID_BACK] = "Turna indrÃ¨";
+    _mtxLangString[LANG_DIAL_BREDA][ID_BACK] = "Turna indrè";
     _mtxLangString[LANG_DIAL_BREDA][ID_SELECTDISPLAYSETTINGS] =
-        "Cata fÃ¶ra al display";
+        "Cata föra al display";
     _mtxLangString[LANG_DIAL_BREDA][ID_INVIDO] = "Invidu";
-    _mtxLangString[LANG_DIAL_BREDA][ID_CHOOSELANGUA] = "Cata fÃ¶ra la lengua";
+    _mtxLangString[LANG_DIAL_BREDA][ID_CHOOSELANGUA] = "Cata föra la lengua";
     _mtxLangString[LANG_DIAL_BREDA][ID_ENGLISH] = "L'ingles";
     _mtxLangString[LANG_DIAL_BREDA][ID_DIALETMN] = "Al dialet";
     _mtxLangString[LANG_DIAL_BREDA][ID_ITALIANO] = "L'italian";
@@ -37,12 +37,12 @@ Languages::Languages() {
         "La lista adla gent in dla chat:";
     _mtxLangString[LANG_DIAL_BREDA][ID_SOLITARIO] = "Sulitari";
     _mtxLangString[LANG_DIAL_BREDA][ID_MAZZONAME] = "Mas ad li carti";
-    _mtxLangString[LANG_DIAL_BREDA][ID_SOUNDOPT] = "MÃ¼sica";
+    _mtxLangString[LANG_DIAL_BREDA][ID_SOUNDOPT] = "Müsica";
     _mtxLangString[LANG_DIAL_BREDA][ID_ABILITATO] = "Impisada";
     _mtxLangString[LANG_DIAL_BREDA][ID_DISABILITATO] = "Smorsa";
 
     _mtxLangString[LANG_DIAL_BREDA][ID_CHOOSEMAZZO] =
-        "Cata fÃ¶ra al mas ad lÃ¬ carti";
+        "Cata föra al mas ad lì carti";
     _mtxLangString[LANG_DIAL_BREDA][ID_PIACENTINA] = "Piacentini";
     _mtxLangString[LANG_DIAL_BREDA][ID_BERGAMO] = "Bergum";
     _mtxLangString[LANG_DIAL_BREDA][ID_BOLOGNA] = "Bulugnesi";
@@ -51,7 +51,7 @@ Languages::Languages() {
     _mtxLangString[LANG_DIAL_BREDA][ID_NAPOLI] = "Napuletani";
     _mtxLangString[LANG_DIAL_BREDA][ID_PIEMONTE] = "Piemuntesi";
     _mtxLangString[LANG_DIAL_BREDA][ID_ROMAGNA] = "Rumagnoli";
-    _mtxLangString[LANG_DIAL_BREDA][ID_SARDEGNA] = "SardagnÃ¶li";
+    _mtxLangString[LANG_DIAL_BREDA][ID_SARDEGNA] = "Sardagnöli";
     _mtxLangString[LANG_DIAL_BREDA][ID_TOSCANA] = "Tuscani";
     _mtxLangString[LANG_DIAL_BREDA][ID_TRENTO] = "Trentini";
     _mtxLangString[LANG_DIAL_BREDA][ID_TREVISO] = "Trevisani";
@@ -64,7 +64,7 @@ Languages::Languages() {
     _mtxLangString[LANG_DIAL_BREDA][ID_MEN_OPTIONS] = "Upsion";
     _mtxLangString[LANG_DIAL_BREDA][ID_MN_HELP] = "Ad du na man";
     _mtxLangString[LANG_DIAL_BREDA][ID_OK] = "Ukei";
-    _mtxLangString[LANG_DIAL_BREDA][ID_CANCEL] = "CancÃ¨la";
+    _mtxLangString[LANG_DIAL_BREDA][ID_CANCEL] = "Cancèla";
 
     // italiano
     _mtxLangString[LANG_ITA][ID_START] = "Inizia";

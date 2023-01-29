@@ -49,16 +49,14 @@ public:
     void SetWidth(int val) { _width = val; }
     void SetHeight(int val) { _height = val; }
     int Height() { return _height; }
-    void SetDeckSurface(SDL_Surface* pVal, int w, int h) {
-        _pPacDeck = pVal;
-        _width = w;
-        _height = h;
-    }
+    void SetDeckSurface(SDL_Surface* pVal) { _pPacDeck = pVal; }
 
     bool IsFaceUp() const { return _faceUp; }
     bool IsFaceDown() const { return !_faceUp; }
 
     void SetFaceUp(bool bval) { _faceUp = bval; }
+    LPErrInApp DrawCardPac(SDL_Surface* s);
+
     int Index() { return _idx; }
     LPErrInApp SetIdx(int nIdx) {
         if (nIdx >= NUM_CARDS || nIdx < 0) {

@@ -18,7 +18,7 @@
 #include "WinTypeGlobal.h"
 
 #define OPT_WIN_GENERAL_WIDTH 500
-#define OPT_WIN_GENERAL_HEIGHT 420
+#define OPT_WIN_GENERAL_HEIGHT 480
 
 #include "Credits.h"
 #include "Fading.h"
@@ -353,7 +353,7 @@ void AppGfx::writeProfile() {
     // deck type
     ini_locateHeading(pIni, g_lpszSectAll);
     ini_locateKey(pIni, g_lpszKeyDeck);
-    ini_writeInt(pIni, (int)_p_GameSettings->deckTypeVal.GetType());
+    ini_writeInt(pIni, (int)_p_GameSettings->deckTypeVal.GetTypeIndex());
 
     // language
     ini_locateHeading(pIni, g_lpszSectAll);
@@ -543,8 +543,11 @@ LPErrInApp AppGfx::showOptionGeneral() {
     rctOptionWin.y = (_p_Screen->h - rctOptionWin.h) / 2;
     MenuDelegator delegator = prepMenuDelegator();
     STRING caption = _Languages.GetStringId(Languages::ID_MEN_OPTIONS);
-    optGfx.Initialize(&rctOptionWin, _p_Screen, _p_sdlRenderer, _p_MusicManager,
-                      delegator);
+    LPErrInApp err = optGfx.Initialize(&rctOptionWin, _p_Screen, _p_sdlRenderer,
+                                       _p_MusicManager, delegator);
+    if (err) {
+        return err;
+    }
     optGfx.Show(_p_SceneBackground, caption);
 
     LeaveMenu();

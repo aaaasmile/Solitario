@@ -417,7 +417,6 @@ LPCardRegionGfx SolitarioGfx::FindDropRegion(int id, LPCardStackGfx pStack) {
 }
 
 void SolitarioGfx::DrawStaticScene() {
-    TRACE("Draw static scene");
     SDL_FillRect(_p_Screen, &_p_Screen->clip_rect,
                  SDL_MapRGBA(_p_Screen->format, 0, 0, 0, 0));
     SDL_Rect rctTarget;
@@ -546,8 +545,7 @@ LPErrInApp SolitarioGfx::DrawCardPac(int x, int y, int nCdIndex,
 
 LPErrInApp SolitarioGfx::DrawCard(LPCardGfx pCard, SDL_Surface *s) {
     if (s == NULL) {
-        return ERR_UTIL::ErrorCreate(
-            "Error in draw card with Iterator, surface is NULL\n");
+        return ERR_UTIL::ErrorCreate("Error in draw card, surface is NULL\n");
     }
     // TRACE("Draw card ix = %d, suit = %s, rank %d, x,y %d,%d", pCard->Index(),
     //       pCard->SuitStr(), pCard->Rank(), pCard->X(), pCard->Y());
@@ -572,40 +570,18 @@ LPErrInApp SolitarioGfx::DrawCard(LPCardGfx pCard, SDL_Surface *s) {
     dest.y = pCard->Y();
 
     if (SDL_BlitSurface(_p_CardsSurf[nCdIndex], &_rctSrcCard, s, &dest) == -1) {
-        return ERR_UTIL::ErrorCreate(
-            "SDL_BlitSurface in draw card with Iterator error: %s\n",
-            SDL_GetError());
+        return ERR_UTIL::ErrorCreate("SDL_BlitSurface in draw card error: %s\n",
+                                     SDL_GetError());
     }
     return NULL;
 }
 
 LPErrInApp SolitarioGfx::DrawCardPac(LPCardGfx pCard, SDL_Surface *s) {
-    int nCdIndex = pCard->Index();
+    pCard->SetDeckSurface(_p_Deck);
+    pCard->SetWidth(g_CardWidth);
+    pCard->SetHeight(g_CardHeight);
 
-    if (nCdIndex < 0)
-        nCdIndex = 0;
-    if (nCdIndex > NUM_CARDS)
-        nCdIndex = NUM_CARDS - 1;
-
-    int iSegnoIx = nCdIndex / 10;
-    int iCartaIx = nCdIndex % 10;
-    SDL_Rect srcCard;
-
-    srcCard.x = iSegnoIx * g_CardWidth;
-    srcCard.y = iCartaIx * g_CardHeight;
-    srcCard.w = g_CardWidth;
-    srcCard.h = g_CardHeight;
-
-    SDL_Rect dest;
-    dest.x = pCard->X();
-    dest.y = pCard->Y();
-
-    if (SDL_BlitSurface(_p_Deck, &srcCard, s, &dest) == -1) {
-        return ERR_UTIL::ErrorCreate(
-            "SDL_BlitSurface in DrawCardPac with Iterator error: %s\n",
-            SDL_GetError());
-    }
-    return NULL;
+    return pCard->DrawCardPac(s);
 }
 
 LPErrInApp SolitarioGfx::DrawCardBack(int x, int y) {

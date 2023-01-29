@@ -29,6 +29,11 @@ MainOptionGfx::~MainOptionGfx() {
     delete m_pBtOK;
     delete m_pComboLang;
     delete m_pCheckMusic;
+    for (int i = 0; i < DeckType::NUM_OF_DECK; i++) {
+        if (m_pDeckAll[i]) {
+            SDL_FreeSurface(m_pDeckAll[i]);
+        }
+    }
 }
 
 // Prepare the Click() trait
@@ -142,37 +147,41 @@ LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
                              pRenderer, deckSelCb);
     m_pComboDeck->SetState(cComboGfx::INVISIBLE);
 
-    // init deck surface
+    // init surfaces with all pac decks
     Uint16 pac_w, pac_h;
-    DeckType* pDt = new DeckType();
+    DeckType dt;
+    LPErrInApp err;
     for (int i = 0; i < DeckType::NUM_OF_DECK; i++) {
-        pDt->SetType((DeckType::eDeckType)i);
-        GFX_UTIL::LoadCardPac(&m_pDeckAll[i], *pDt, &pac_w, &pac_h);
-        m_CardOnEachDeck[0][i].SetWidth(pac_w / 4);
-        m_CardOnEachDeck[0][i].SetHeight(pac_h / 10);
-        m_CardOnEachDeck[0][i].SetCardLoc(rctBt1.x, rctBt1.y + rctBt1.h + 50);
+        dt.SetTypeIndex(i);
+        err = GFX_UTIL::LoadCardPac(&m_pDeckAll[i], dt, &pac_w, &pac_h);
+        if (err != NULL) {
+            return err;
+        }
+        int ww = pac_w / 4;
+        int hh = pac_h / 10;
+        int x_pos = rctBt1.x;
+        int y_pos = rctBt1.y + rctBt1.h + 50;
+
         m_CardOnEachDeck[0][i].SetIdx(9);
-        m_CardOnEachDeck[0][i].SetDeckSurface(m_pDeckAll[i],
-                                              m_CardOnEachDeck[0][i].Width(),
-                                              m_CardOnEachDeck[0][i].Height());
+        m_CardOnEachDeck[0][i].SetWidth(ww);
+        m_CardOnEachDeck[0][i].SetHeight(hh);
+        m_CardOnEachDeck[0][i].SetCardLoc(x_pos, y_pos);
+        m_CardOnEachDeck[0][i].SetDeckSurface(m_pDeckAll[i]);
 
-        m_CardOnEachDeck[1][i].SetDeckSurface(m_pDeckAll[i],
-                                              m_CardOnEachDeck[0][i].Width(),
-                                              m_CardOnEachDeck[0][i].Height());
-        m_CardOnEachDeck[1][i].SetCardLoc(
-            m_CardOnEachDeck[0][i].X() + 10 + m_CardOnEachDeck[0][i].Width(),
-            rctBt1.y + rctBt1.h + 50);
         m_CardOnEachDeck[1][i].SetIdx(7);
+        m_CardOnEachDeck[1][i].SetWidth(ww);
+        m_CardOnEachDeck[1][i].SetHeight(hh);
+        m_CardOnEachDeck[1][i].SetCardLoc(m_CardOnEachDeck[0][i].X() + 10 + ww,
+                                          y_pos);
+        m_CardOnEachDeck[1][i].SetDeckSurface(m_pDeckAll[i]);
 
-        m_CardOnEachDeck[2][i].SetDeckSurface(m_pDeckAll[i],
-                                              m_CardOnEachDeck[0][i].Width(),
-                                              m_CardOnEachDeck[0][i].Height());
-        m_CardOnEachDeck[2][i].SetCardLoc(
-            m_CardOnEachDeck[1][i].X() + 10 + m_CardOnEachDeck[1][i].Width(),
-            rctBt1.y + rctBt1.h + 50);
         m_CardOnEachDeck[2][i].SetIdx(5);
+        m_CardOnEachDeck[2][i].SetWidth(ww);
+        m_CardOnEachDeck[2][i].SetHeight(hh);
+        m_CardOnEachDeck[2][i].SetCardLoc(m_CardOnEachDeck[1][i].X() + 10 + ww,
+                                          y_pos);
+        m_CardOnEachDeck[2][i].SetDeckSurface(m_pDeckAll[i]);
     }
-    delete pDt;
 
     return NULL;
 }
@@ -191,7 +200,7 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
     m_pBtOK->SetState(cButtonGfx::VISIBLE);
 
     // combobox language selection
-    STRING strDeckSelectTitle =
+    STRING strSelectLanguage =
         _p_Languages->GetStringId(Languages::ID_CHOOSELANGUA);
     strTextBt = _p_Languages->GetStringId(Languages::ID_ITALIANO);
     m_pComboLang->AddLineText(strTextBt.c_str());
@@ -208,6 +217,18 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
     m_pCheckMusic->SetWindowText(strTextBt.c_str());
     m_pCheckMusic->SetState(cCheckBoxGfx::VISIBLE);
     m_pCheckMusic->SetCheckState(_p_GameSettings->bMusicEnabled);
+
+    // combobox deck selection
+    STRING strDeckSelectTitle =
+        _p_Languages->GetStringId(Languages::ID_CHOOSEMAZZO);
+    DeckType dt;
+    for (int i = 0; i < DeckType::NUM_OF_DECK; i++) {
+        dt.SetTypeIndex(i);
+        strTextBt = dt.GetDeckName();
+        m_pComboDeck->AddLineText(strTextBt.c_str());
+    }
+    m_pComboDeck->SetState(cComboGfx::VISIBLE);
+    m_pComboDeck->SelectIndex(_p_GameSettings->deckTypeVal.GetTypeIndex());
 
     SDL_Surface* pShadowSrf = SDL_CreateRGBSurface(
         SDL_SWSURFACE, m_pScreen->w, m_pScreen->h, 32, 0, 0, 0, 0);
@@ -243,6 +264,7 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
                 m_pBtOK->MouseUp(event);
                 m_pComboLang->MouseUp(event);
                 m_pCheckMusic->MouseUp(event);
+                m_pComboDeck->MouseUp(event);
             }
         }
 
@@ -280,19 +302,33 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
                              rectHeader.x + 10, rectHeader.y,
                              GFX_UTIL_COLOR::White, m_pFontCtrl, false);
 
-        // draw buttons
+        // Button OK
         m_pBtOK->DrawButton(pShadowSrf);
 
-        // deck selection label
-        GFX_UTIL::DrawString(pShadowSrf, strDeckSelectTitle.c_str(),
+        // Combo Language: Label and crontrol
+        GFX_UTIL::DrawString(pShadowSrf, strSelectLanguage.c_str(),
                              m_pComboLang->m_rctButt.x,
                              m_pComboLang->m_rctButt.y - 20,
                              GFX_UTIL_COLOR::Orange, m_pFontText, false);
 
-        // draw the deck combobox selection
         m_pComboLang->DrawButton(pShadowSrf);
-        // draw checkbox music
+
+        // Checkbox music
         m_pCheckMusic->DrawButton(pShadowSrf);
+
+        // Combo Deck: Label and crontrol
+        GFX_UTIL::DrawString(pShadowSrf, strDeckSelectTitle.c_str(),
+                             m_pComboDeck->m_rctButt.x,
+                             m_pComboDeck->m_rctButt.y - 20,
+                             GFX_UTIL_COLOR::Orange, m_pFontText, false);
+
+        m_pComboDeck->DrawButton(pShadowSrf);
+
+        // Deck example Cards
+        int iCurrIndex = m_pComboDeck->GetSlectedIndex();
+        m_CardOnEachDeck[0][iCurrIndex].DrawCardPac(pShadowSrf);
+        m_CardOnEachDeck[1][iCurrIndex].DrawCardPac(pShadowSrf);
+        m_CardOnEachDeck[2][iCurrIndex].DrawCardPac(pShadowSrf);
 
         // render the dialogbox
         SDL_BlitSurface(pShadowSrf, NULL, m_pScreen, NULL);
@@ -317,6 +353,7 @@ void MainOptionGfx::ButEndOPtClicked(int iButID) {
     m_iResult = iButID;
     TRACE("OK options");
     Languages::eLangId prevLangId = _p_GameSettings->eLanguageCurrent;
+    DeckType::eDeckType prevDeckType = _p_GameSettings->deckTypeVal.GetType();
     bool prevMusicEnabled = _p_GameSettings->bMusicEnabled;
     switch (m_pComboLang->GetSlectedIndex()) {
         case 0:
@@ -332,8 +369,12 @@ void MainOptionGfx::ButEndOPtClicked(int iButID) {
         default:
             break;
     }
+    DeckType dt;
+    dt.SetTypeIndex(m_pComboDeck->GetSlectedIndex());
+    _p_GameSettings->deckTypeVal.CopyFrom(dt);
     _p_GameSettings->bMusicEnabled = m_pCheckMusic->GetCheckState();
     if ((_p_GameSettings->bMusicEnabled != prevMusicEnabled) ||
+        (_p_GameSettings->deckTypeVal.GetType() != prevDeckType) ||
         (_p_GameSettings->eLanguageCurrent != prevLangId)) {
         TRACE("Settings are changed, save it");
         _menuDlgt.tc->PersistSettings(_menuDlgt.self);
