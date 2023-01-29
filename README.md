@@ -25,8 +25,9 @@ This is also ported to Windows using MySys2.
 - Breda Dialect
 
 ## Screeshots
-![Schermata iniziale](./help-source/inizio.png)
+![Schermata iniziale](./help-source/inizio.png)  
+
 ![Inizio Partita](./help-source/basamento.png)
 
 ## Help
-[Help PDF file](./data/solitario.pdf) 
+[Help Italian PDF file](./data/solitario.pdf) 
