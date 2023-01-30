@@ -269,7 +269,7 @@ ninja
 Uso un solo file CMakeLists.txt che contiene tutti i sorgenti compresa la libreria libini. Al momento
 supporto solo il target MySys che definisce WIN32. L'unica funzione che da dei problemi è mkdir.
 Nota che se cambio la lista dei files o un linker, non ho bisogno di rilanciare cmake.
-
+Quello che mi manca è l'integrazione in VsCode con diversi target per la produzione, il debugger e i TRACE.
 
 ### TODO
 

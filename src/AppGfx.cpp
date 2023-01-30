@@ -509,9 +509,13 @@ LPErrInApp AppGfx::MainLoop() {
 LPErrInApp AppGfx::showHelp() {
     const char *cmd = NULL;
     char cmdpath[PATH_MAX];
-
+#ifdef WIN32
+    cmd = "start";
+    snprintf(cmdpath, sizeof(cmdpath), "%s .\\%s", cmd, g_lpszHelpFileName);
+#else
     cmd = "zathura";
     snprintf(cmdpath, sizeof(cmdpath), "%s ./%s", cmd, g_lpszHelpFileName);
+#endif
 
     system(cmdpath);
 

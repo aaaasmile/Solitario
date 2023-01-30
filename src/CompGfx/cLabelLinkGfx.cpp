@@ -2,12 +2,6 @@
 
 #include "GfxUtil.h"
 
-#ifdef WIN32
-#include <windows.h>
-
-#include "shellapi.h"
-#endif
-
 cLabelLinkGfx::cLabelLinkGfx() {
     m_eState = INVISIBLE;
     m_pFontText = 0;
@@ -88,7 +82,13 @@ void cLabelLinkGfx::MouseUp(SDL_Event& event) {
                 (m_fncbClickEvent.tc)->Click(m_fncbClickEvent.self, m_iButID);
             if (m_strUrl.length()) {
 #ifdef WIN32
-                ShellExecute(0, "open", m_strUrl.c_str(), 0, 0, SW_SHOWNORMAL);
+                const char* cmd = NULL;
+                char cmdpath[PATH_MAX];
+
+                cmd = "start";
+                snprintf(cmdpath, sizeof(cmdpath), "%s %s", cmd,
+                         m_strUrl.c_str());
+                system(cmdpath);
 #endif
             }
         }

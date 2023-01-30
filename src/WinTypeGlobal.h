@@ -52,6 +52,7 @@ inline void TRACE(const char* fmt, ...) {
 #endif
 }
 #else
+#ifdef USETRACE
 inline void TRACE(const char* fmt, ...) {
     char myBuff[1024];
     va_list args;
@@ -59,6 +60,9 @@ inline void TRACE(const char* fmt, ...) {
     vsprintf(myBuff, fmt, args);
     fprintf(stdout, "[TR]%s\n", myBuff);
 }
+#else
+inline void TRACE(const char* fmt, ...) {}
+#endif
 #endif
 #endif
 
