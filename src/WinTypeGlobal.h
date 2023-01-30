@@ -36,7 +36,7 @@ typedef const char *LPCSTR, *PCSTR;
 #ifndef TRACE
 #include <stdio.h>
 extern void TraceInLogFile(char* myBuff);
-#ifdef WIN32
+#ifdef TRACEINDEBUGGER
 inline void TRACE(const char* fmt, ...) {
     char myBuff[512];
     va_list args;
@@ -52,7 +52,6 @@ inline void TRACE(const char* fmt, ...) {
 #endif
 }
 #else
-// non windows
 inline void TRACE(const char* fmt, ...) {
     char myBuff[1024];
     va_list args;

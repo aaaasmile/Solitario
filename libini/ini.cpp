@@ -131,8 +131,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "Config.h"
-
 #define INI_BUFFER_SIZE (1024 * 5)
 
 enum {

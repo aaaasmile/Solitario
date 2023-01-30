@@ -286,7 +286,11 @@ LPErrInApp AppGfx::loadProfile() {
              g_lpszSolitarioDir);
 
     if (stat(dirpath, &st) == -1) {
+#ifdef WIN32
+        io_res = mkdir(dirpath);
+#else
         io_res = mkdir(dirpath, 0700);
+#endif
         if (io_res == -1) {
             return ERR_UTIL::ErrorCreate("Cannot create dir %s", dirpath);
         }

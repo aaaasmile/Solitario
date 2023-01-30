@@ -3,6 +3,8 @@
 #include "GfxUtil.h"
 
 #ifdef WIN32
+#include <windows.h>
+
 #include "shellapi.h"
 #endif
 

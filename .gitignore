@@ -10,3 +10,4 @@ src/solitario
 solitario
 config.h.in~
 help-source/solitario.pdf
+build

@@ -244,6 +244,33 @@ nella sottodirectory help-source. Questo il dettaglio di Context:
     mtx-context     | current version: 2022.11.14 22:58
 Per la visualizzazione dell'help su ubuntu uso zathura.
 
+## CMake
+Dopo avere sviluppato l'intero progetto su WSL2 con Ubuntu è arrivato il momento di avere anche il target
+Windows, nel mio caso MySys2. Per questo voglio provare CMake e non cercare di fare andare Automake
+per entrambi target.
+Si parte dal file CMakeLists.txt nella root del progetto. In Visual Code ho installato l'extension di Microsoft 
+per CMake. 
+Per lanciarlo uso MySys con la sequenza:
+```sh
+# Create a build folder
+mkdir build
+cd build
+
+# Build
+cmake ..
+ninja
+```
+
+Invece di usare il solito make ho voluto provare un suo successore, vale a dire ninja. Si installa con (ricorda che uso solo ucrt):
+```sh
+pacman -S mingw-w64-ucrt-x86_64-ninja
+ninja 
+```
+Uso un solo file CMakeLists.txt che contiene tutti i sorgenti compresa la libreria libini. Al momento
+supporto solo il target MySys che definisce WIN32. L'unica funzione che da dei problemi è mkdir.
+Nota che se cambio la lista dei files o un linker, non ho bisogno di rilanciare cmake.
+
+
 ### TODO
 
 - Dialogo delle opzioni da completare (mazzo di carte)
