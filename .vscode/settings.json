@@ -46,5 +46,6 @@
         "streambuf": "cpp",
         "cinttypes": "cpp",
         "valarray": "cpp"
-    }
+    },
+    "cmake.configureOnOpen": false
 }

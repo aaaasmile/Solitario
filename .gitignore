@@ -11,3 +11,6 @@ solitario
 config.h.in~
 help-source/solitario.pdf
 build
+solitario.exe
+config.status
+libini/Makefile
