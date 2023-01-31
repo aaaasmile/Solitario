@@ -33,7 +33,7 @@
     <ClCompile Include="..\..\src\MainOptionGfx.cpp" />
     <ClCompile Include="..\..\src\MenuMgr.cpp" />
     <ClCompile Include="..\..\src\MusicManager.cpp" />
-    <ClCompile Include="..\vs-source\TraceService.cpp" />
+    <ClCompile Include="..\..\src\TraceService.cpp" />
     <ClCompile Include="..\vs-source\Util-vs.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -59,9 +59,9 @@
     <ClInclude Include="..\..\src\MenuMgr.h" />
     <ClInclude Include="..\..\src\MusicManager.h" />
     <ClInclude Include="..\..\src\resource.h" />
+    <ClInclude Include="..\..\src\TraceService.h" />
     <ClInclude Include="..\..\src\Traits.h" />
     <ClInclude Include="..\..\src\WinTypeGlobal.h" />
-    <ClInclude Include="..\vs-source\TraceService.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{141432FB-0FF9-45F0-A711-E849737ADCBD}</ProjectGuid>

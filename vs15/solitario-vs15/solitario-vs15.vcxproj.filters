@@ -96,8 +96,8 @@
     <ClCompile Include="..\vs-source\Util-vs.cpp">
       <Filter>Source Files\Vs-stuff</Filter>
     </ClCompile>
-    <ClCompile Include="..\vs-source\TraceService.cpp">
-      <Filter>Source Files\Vs-stuff</Filter>
+    <ClCompile Include="..\..\src\TraceService.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -173,8 +173,8 @@
     <ClInclude Include="..\..\src\CompGfx\cLabelLinkGfx.h">
       <Filter>Source Files\CompoGfx</Filter>
     </ClInclude>
-    <ClInclude Include="..\vs-source\TraceService.h">
-      <Filter>Source Files\Vs-stuff</Filter>
+    <ClInclude Include="..\..\src\TraceService.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
