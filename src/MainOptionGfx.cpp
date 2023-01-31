@@ -44,9 +44,11 @@ void fncBind_ButtonClicked(void* self, int iVal) {
 
 // Buttons, ok and cancel
 ClickCb MainOptionGfx::prepClickCb() {
-    static VClickCb const tc = {.Click = (&fncBind_ButtonClicked)};
+    /*static VClickCb const tc = {.Click = (&fncBind_ButtonClicked)};
 
-    return (ClickCb){.tc = &tc, .self = this};
+    return (ClickCb){.tc = &tc, .self = this};*/
+  ClickCb cb;
+  return cb;
 }
 
 void fncBind_CheckboxMusicClicked(void* self, bool state) {
@@ -56,10 +58,12 @@ void fncBind_CheckboxMusicClicked(void* self, bool state) {
 
 // Checkbox music
 CheckboxClickCb MainOptionGfx::prepCheckBoxClickMusic() {
-    static VCheckboxClickCb const tc = {.Click =
+    /*static VCheckboxClickCb const tc = {.Click =
                                             (&fncBind_CheckboxMusicClicked)};
 
-    return (CheckboxClickCb){.tc = &tc, .self = this};
+    return (CheckboxClickCb){.tc = &tc, .self = this};*/
+  CheckboxClickCb cb;
+  return cb;
 }
 
 // deck selection
@@ -69,8 +73,10 @@ void fncBind_ComboDeckClicked(void* self, int index) {
 }
 
 ClickCb MainOptionGfx::prepSelectionDeckCb() {
-    static VClickCb const tc = {.Click = (&fncBind_ComboDeckClicked)};
-    return (ClickCb){.tc = &tc, .self = this};
+    /*static VClickCb const tc = {.Click = (&fncBind_ComboDeckClicked)};
+    return (ClickCb){.tc = &tc, .self = this};*/
+  ClickCb cb;
+  return cb;
 }
 
 LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
@@ -114,7 +120,8 @@ LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
                         cbBtOK_Cancel);
     m_pBtOK->SetState(cButtonGfx::INVISIBLE);
     // Combo language
-    ClickCb nullCb = {.tc = NULL, .self = NULL};
+    //ClickCb nullCb = {.tc = NULL, .self = NULL};
+    ClickCb nullCb;
     m_pComboLang = new cComboGfx;
     rctBt1.w = 180;
     rctBt1.h = 26;

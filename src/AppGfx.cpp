@@ -7,7 +7,12 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <time.h>
+#ifdef WIN32
+#include <io.h>
+#include <direct.h>
+#else
 #include <unistd.h>
+#endif
 
 #include "Config.h"
 #include "ErrorInfo.h"
@@ -40,6 +45,8 @@ static const char *g_lpszIniFontVera = DATA_PREFIX "font/vera.ttf";
 static const char *g_lpszImageSplash = DATA_PREFIX "images/im001537.jpg";
 
 AppGfx::AppGfx() {
+    _p_Window = NULL;
+    _p_ScreenTexture = NULL;
     _p_Screen = NULL;
     _iScreenW = 1024;
     _iScreenH = 768;
@@ -279,11 +286,15 @@ LPErrInApp AppGfx::loadProfile() {
     LPErrInApp err;
     int io_res;
 
-    char dirpath[PATH_MAX - strlen(g_lpszIniFileName)];
+    char dirpath[PATH_MAX];
     char filepath[PATH_MAX];
-
+#ifdef WIN32
+    snprintf(dirpath, sizeof(dirpath), "%s/%s", "c:/temp",
+        g_lpszSolitarioDir);
+#else
     snprintf(dirpath, sizeof(dirpath), "%s/%s", getenv("HOME"),
              g_lpszSolitarioDir);
+#endif
 
     if (stat(dirpath, &st) == -1) {
 #ifdef WIN32
@@ -405,7 +416,7 @@ void fncBind_PersistSettings(void *self) {
 
 MenuDelegator AppGfx::prepMenuDelegator() {
     // Use only static otherwise you loose it
-    static VMenuDelegator const tc = {
+   /* static VMenuDelegator const tc = {
         .GetFontVera = (&fncBind_GetFontVera),
         .GetFontAriblk = (&fncBind_GetFontAriblk),
         .GetLanguageMan = (&fncBind_GetLanguageMan),
@@ -413,7 +424,9 @@ MenuDelegator AppGfx::prepMenuDelegator() {
         .SetNextMenu = (&fncBind_SetNextMenu),
         .PersistSettings = (&fncBind_PersistSettings)};
 
-    return (MenuDelegator){.tc = &tc, .self = this};
+    return (MenuDelegator){.tc = &tc, .self = this};*/
+    MenuDelegator md;
+    return md;
 }
 
 void AppGfx::LeaveMenu() {

@@ -11,3 +11,8 @@ solitario
 config.h.in~
 help-source/solitario.pdf
 build
+vs15/solitario-vs15/.vs
+vs15/solitario-vs15/x64
+
+vs15/solitario-vs15/solitario-vs15.VC.db
+vs15/solitario-vs15/solitario-vs15.VC.VC.opendb

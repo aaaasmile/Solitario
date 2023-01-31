@@ -58,7 +58,7 @@ inline void TRACE(const char* fmt, ...) {
     va_list args;
     va_start(args, fmt);
     vsprintf(myBuff, fmt, args);
-    fprintf(stdout, "[TR]%s\n", myBuff);
+    printf("[TR]%s\n", myBuff);
 }
 #else
 inline void TRACE(const char* fmt, ...) {}
