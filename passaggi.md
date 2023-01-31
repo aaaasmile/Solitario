@@ -277,6 +277,12 @@ Ci sono due confugurazioni: win32 e linux. Sono due nomi riservati che vengono s
 Esse servono per avere un editor con intellisense ed errori appropriati in quanto i folder delle
 librerie nei due ambienti sono piazzate in paths differenti. Se non viene selezionato in modo 
 corretto, nella statusbar in basso a destra lo si può selezionare manualmente.
+Nella Statusbar in fondo è anche possibile settare anche tutti i vari target che ninja riesce a
+compilare nella directory build. Nella mia configurazione iniziale però ho solo  [all] e 
+dovrei aggiungere anche debug. In ogni modo il debugger con F5 parte subito in modo corretto
+senza nessun task aggiuntivo come ho su Ubuntu. In Launch si tratta di avere il programma solitario.exe
+con il suo path e gdb. Non mi funziona CTRL + SHIFT + B in quanto esegue make per ubuntu, ma, invece,
+oltre alla powershell con ninja in build, mi funziona la icona Build nella statusbar
 
 ### TODO
 

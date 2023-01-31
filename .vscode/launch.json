@@ -30,14 +30,13 @@
             "name": "Debug MySys Win",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Solitario.exe",
+            "program": "${workspaceFolder}/build/solitario.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
-            "preLaunchTask": "Ninja Debug Build",
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",

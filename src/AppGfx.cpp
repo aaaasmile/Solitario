@@ -308,6 +308,7 @@ LPErrInApp AppGfx::loadProfile() {
         }
         TRACE("Create dir %s\n", dirpath);
     }
+    _p_GameSettings->SettingsDir = dirpath;
     snprintf(filepath, PATH_MAX, "%s/%s", dirpath, g_lpszIniFileName);
 
     if (stat(filepath, &st) == -1) {

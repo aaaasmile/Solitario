@@ -27,6 +27,8 @@ public:
     }
 };
 
+typedef GameSettings* LPGameSettings;
+
 namespace GAMESET {
     GameSettings* GetSettings();
 }
