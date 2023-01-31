@@ -245,7 +245,7 @@ void TraceService::SetOutputChannel(int iChannel, eOutType eVal, LPCSTR lpszFile
         m_aeChannelOut[iChannel] = eVal;
         if (eVal == OT_FILE)
         {
-            if (m_abChannelMask[iChannel]) {
+            if (!m_abChannelMask[iChannel]) {
                 m_aChannelFiles[iChannel].open(lpszFileName);
                 m_abChannelMask[iChannel] = true;
             }

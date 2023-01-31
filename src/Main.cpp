@@ -5,7 +5,7 @@
 #include "ErrorInfo.h"
 
 int main(int argc, char* argv[]) {
-    TRACE("[Main] - start\n");
+    TRACE("\n *** [Main] - start *** \n");
     AppGfx* app = new AppGfx();
     app->ParseCmdLine(argc, argv);
     LPErrInApp err = app->Init();

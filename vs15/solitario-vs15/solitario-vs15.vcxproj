@@ -107,7 +107,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);DATA_PREFIX="data/";PATH_MAX=1024;TRACEINDEBUGGER</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);DATA_PREFIX="data/";PATH_MAX=1024;TRACEINSERVICE</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>../sdl-include;../sdl-include/SDL2;../../src;../../libini/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
