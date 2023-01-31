@@ -7,7 +7,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <time.h>
-#ifdef WIN32
+#ifdef _MSC_VER
 #include <io.h>
 #include <direct.h>
 #else
@@ -60,7 +60,7 @@ AppGfx::AppGfx() {
 AppGfx::~AppGfx() { terminate(); }
 
 LPErrInApp AppGfx::Init() {
-    TRACE("Init App");
+    TRACE("Init App\n");
     LPErrInApp err = loadProfile();
     if (err != NULL) {
         return err;
@@ -148,6 +148,7 @@ LPErrInApp AppGfx::loadSceneBackground() {
 }
 
 LPErrInApp AppGfx::createWindow() {
+    TRACE_DEBUG("createWindow\n");
     int flagwin = 0;
     if (_p_Window != NULL) {
         _p_Window = NULL;
@@ -195,6 +196,7 @@ LPErrInApp AppGfx::createWindow() {
         return ERR_UTIL::ErrorCreate("Error SDL_CreateTexture: %s\n",
                                      SDL_GetError());
     }
+    TRACE_DEBUG("createWindow - Success\n");
     return NULL;
 }
 
@@ -288,7 +290,7 @@ LPErrInApp AppGfx::loadProfile() {
 
     char dirpath[PATH_MAX];
     char filepath[PATH_MAX];
-#ifdef WIN32
+#ifdef _MSC_VER
     snprintf(dirpath, sizeof(dirpath), "%s/%s", "c:/temp",
         g_lpszSolitarioDir);
 #else
@@ -316,6 +318,7 @@ LPErrInApp AppGfx::loadProfile() {
         }
         TRACE("Default ini file created in %s\n", filepath);
     }
+
 
     ini_fd_t pIni = ini_open(filepath, "r", "#");
 

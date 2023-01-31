@@ -34,13 +34,21 @@ typedef const char *LPCSTR, *PCSTR;
     }
     #else
         #ifdef TRACEINSERVICE
-            extern void TraceInService(char* myBuff);
+            extern void TraceInServiceINFO(char* myBuff);
+            extern void TraceInServiceDEBUG(char* myBuff);
             inline void TRACE(const char* fmt, ...) {
                 char myBuff[1024];
                 va_list args;
                 va_start(args, fmt);
                 vsprintf(myBuff, fmt, args);
-                TraceInService(myBuff);
+                TraceInServiceINFO(myBuff);
+            }
+            inline void TRACE_DEBUG(const char* fmt, ...) {
+                char myBuff[1024];
+                va_list args;
+                va_start(args, fmt);
+                vsprintf(myBuff, fmt, args);
+                TraceInServiceDEBUG(myBuff);
             }
         #else
             #ifdef TRACEINSTD

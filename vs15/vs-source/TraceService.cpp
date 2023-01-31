@@ -6,17 +6,17 @@ TraceService* TraceService::pinstance = NULL;
 
 static const char* alpszDetTypeName[] =
 {
+    "TR_DEBUG",
     "TR_INFO",
     "TR_WARN",
-    "TR_ERR",
-    "TR_NOTSET"
+    "TR_ERR"
 };
 
 void EntryTraceDetail::Reset()
 {
     m_ulTimeStamp = 0;
     m_iID = 0;
-    m_eTrType = TR_NOTSET;
+    m_eTrType = TR_INFO;
     m_strFileName = "";
     m_iLineNumber = 0;
     m_strComment = "";
@@ -48,7 +48,7 @@ STRING EntryTraceDetail::ToString()
     }
     else
     {
-        sprintf(buff, "%s", m_strComment.c_str() );
+        sprintf(buff, "[%d][%s]%s", m_ulTimeStamp, alpszDetTypeName[m_eTrType], m_strComment.c_str() );
     }
     
     strRes = buff;
@@ -149,9 +149,9 @@ void  TraceService::AddCommentToLastEntry(LPCSTR lpszForm, ... )
     }
 }
 
-void TraceService::AddSimpleTrace(int iChannelNext, LPCSTR lpszForm, ...)
+void  TraceService::AddTrace(EntryTraceDetail::eType traceDet, LPCSTR lpszForm, ...)
 {
-    int iChannel = 0;
+    int iChannel = NUM_OF_CHANN - 1;
     do
     {
         if (m_abChannelMask[iChannel])
@@ -162,10 +162,10 @@ void TraceService::AddSimpleTrace(int iChannelNext, LPCSTR lpszForm, ...)
             GetSystemTime(&SysTm);
 
             // update info trace
-            m_mtxEntryTraceDetails[iChannel][iIndexNew].m_eTrType = EntryTraceDetail::TR_INFO;
+            m_mtxEntryTraceDetails[iChannel][iIndexNew].m_eTrType = traceDet;
             m_mtxEntryTraceDetails[iChannel][iIndexNew].m_iID = -1;
             m_mtxEntryTraceDetails[iChannel][iIndexNew].m_iLineNumber = -1;
-            m_mtxEntryTraceDetails[iChannel][iIndexNew].m_strFileName = "\\nofile";
+            m_mtxEntryTraceDetails[iChannel][iIndexNew].m_strFileName = "";
             m_mtxEntryTraceDetails[iChannel][iIndexNew].m_ulTimeStamp = SysTm.wMinute * 60 + SysTm.wSecond;
 
             // info for flashout
@@ -177,7 +177,7 @@ void TraceService::AddSimpleTrace(int iChannelNext, LPCSTR lpszForm, ...)
             va_start(marker, lpszForm);
             vsprintf(buff, lpszForm, marker);
             va_end(marker);
-            m_mtxEntryTraceDetails[m_iLastChannelUsed][m_iLastEntryUsed].m_strComment = buff;
+            m_mtxEntryTraceDetails[iChannel][iIndexNew].m_strComment = buff;
 
             flashTheEntry();
 
@@ -192,11 +192,9 @@ void TraceService::AddSimpleTrace(int iChannelNext, LPCSTR lpszForm, ...)
                 m_aiChannelCursor[iChannel] = 0;
             }
         }
-        if (iChannel == iChannelNext)
-            iChannel = -1;
-        else
-            iChannel = iChannelNext;
-    } while (iChannel == -1);
+        iChannel--;
+
+    } while (iChannel >= 0);
 }
 
 void  TraceService::flashTheEntry()
@@ -206,15 +204,16 @@ void  TraceService::flashTheEntry()
     {
         case OT_FILE:
             strEntry = m_mtxEntryTraceDetails[m_iLastChannelUsed][m_iLastEntryUsed].ToString(); 
-            m_aChannelFiles[m_iLastChannelUsed] << strEntry.c_str() << std::endl;
+            m_aChannelFiles[m_iLastChannelUsed] << strEntry.c_str();
+            m_aChannelFiles[m_iLastChannelUsed].flush();
             break;
         case OT_STDOUT:
             strEntry = m_mtxEntryTraceDetails[m_iLastChannelUsed][m_iLastEntryUsed].ToString(); 
-            std::cout << strEntry.c_str() << std::endl; 
+            std::cout << strEntry.c_str(); 
             break;
         case OT_STDERR:
             strEntry = m_mtxEntryTraceDetails[m_iLastChannelUsed][m_iLastEntryUsed].ToString(); 
-            std::cerr << strEntry.c_str() << std::endl;
+            std::cerr << strEntry.c_str();
             break;
         case OT_CUSTOMFN:
             if (m_pICustomTracer)
@@ -223,32 +222,32 @@ void  TraceService::flashTheEntry()
                 m_pICustomTracer->Trace( strEntry.c_str() ); 
             }
             break;
-        case OT_SOCKET:
-            strEntry = m_mtxEntryTraceDetails[m_iLastChannelUsed][m_iLastEntryUsed].ToString(); 
-            // TO DO
-            break;
-
+#ifdef _MSC_VER
         case OT_MSVDEBUGGER:
             strEntry = m_mtxEntryTraceDetails[m_iLastChannelUsed][m_iLastEntryUsed].ToString(); 
             ::OutputDebugString(strEntry.c_str());
             break;
+#endif
     }
 }
 
 void TraceService::SetOutputChannel(int iChannel, eOutType eVal, LPCSTR lpszFileName)
 {
-    if (m_abChannelMask[iChannel] || lpszFileName == "") {
+    if (m_abChannelMask[iChannel]) {
         return;
     }
     if (iChannel >= 0 && iChannel < NUM_OF_CHANN )
     {
         m_aeChannelOut[iChannel] = eVal;
-        if (eVal == OT_FILE)
+        if (eVal == OT_FILE && lpszFileName != "")
         {
             if (!m_abChannelMask[iChannel]) {
                 m_aChannelFiles[iChannel].open(lpszFileName);
                 m_abChannelMask[iChannel] = true;
             }
+        }
+        else {
+            m_abChannelMask[iChannel] = true;
         }
     }
 }

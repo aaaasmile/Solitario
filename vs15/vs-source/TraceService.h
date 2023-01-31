@@ -20,10 +20,10 @@ class EntryTraceDetail
 public:
     enum eType
     {
-        TR_INFO,
-        TR_WARN,
-        TR_ERR,
-        TR_NOTSET
+        TR_DEBUG = 0,
+        TR_INFO = 1,
+        TR_WARN = 2,
+        TR_ERR = 3
     };
 public:
     void    Reset();
@@ -44,7 +44,7 @@ class TraceService
     enum
     {
         NUM_OF_ENTRIES = 500,
-        NUM_OF_CHANN = 5
+        NUM_OF_CHANN = 3
     };
 protected:
     TraceService();
@@ -63,7 +63,6 @@ public:
         OT_STDERR,
         OT_FILE,
         OT_CUSTOMFN,
-        OT_SOCKET,
         OT_MSVDEBUGGER
     };
 
@@ -73,7 +72,7 @@ public:
     void   AddCommentToLastEntry(LPCSTR lpszForm, ... );
     void   EnableChannel(int iChann, bool bVal){if(iChann>= 0 && iChann < NUM_OF_CHANN)m_abChannelMask[iChann] = bVal;}
     void   SetOutputChannel(int iChannel, eOutType eVal, LPCSTR lpszFileName);
-    void   AddSimpleTrace(int iChannel, LPCSTR lpszForm, ...);
+    void   AddTrace(EntryTraceDetail::eType traceDet,  LPCSTR lpszForm, ...);
    
 private:
     void   flashTheEntry();
