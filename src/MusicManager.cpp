@@ -3,9 +3,9 @@
 #include <SDL2/SDL.h>
 
 static const char* lpszaSound_filenames[MusicManager::NUM_OF_SOUNDS] = {
-    "data/music/wolmer-invido.ogg", "data/music/watermusic.it"};
+    DATA_PREFIX "music/wolmer-invido.ogg", DATA_PREFIX "music/watermusic.it"};
 
-static const char* lpszaEffects_filenames[MusicManager::NUM_OF_WAV] = { NULL };
+static const char* lpszaEffects_filenames[MusicManager::NUM_OF_WAV] = {NULL};
 
 MusicManager::MusicManager() {
     for (int i = 0; i < NUM_OF_SOUNDS; i++) {
@@ -62,13 +62,13 @@ LPErrInApp MusicManager::LoadMusicRes() {
     }
 
     for (int j = 0; j < NUM_OF_WAV; j++) {
-      if (lpszaEffects_filenames[j] != NULL) {
-        m_pMusicsWav[j] = Mix_LoadWAV(lpszaEffects_filenames[j]);
-        if (m_pMusicsWav[j] == NULL) {
-          return ERR_UTIL::ErrorCreate("Unable to load %s wav resource\n",
-            lpszaEffects_filenames[j]);
+        if (lpszaEffects_filenames[j] != NULL) {
+            m_pMusicsWav[j] = Mix_LoadWAV(lpszaEffects_filenames[j]);
+            if (m_pMusicsWav[j] == NULL) {
+                return ERR_UTIL::ErrorCreate("Unable to load %s wav resource\n",
+                                             lpszaEffects_filenames[j]);
+            }
         }
-      }
     }
     return NULL;
 }

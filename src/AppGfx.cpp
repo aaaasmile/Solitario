@@ -8,8 +8,8 @@
 #include <sys/types.h>
 #include <time.h>
 #ifdef _MSC_VER
-#include <io.h>
 #include <direct.h>
+#include <io.h>
 #else
 #include <unistd.h>
 #endif
@@ -80,7 +80,7 @@ LPErrInApp AppGfx::Init() {
     _p_MusicManager = new MusicManager;
     _p_MusicManager->Init();
 
-    _Languages.SetLang(_p_GameSettings->eLanguageCurrent);
+    _Languages.SetLang(_p_GameSettings->CurrentLanguage);
 
     if (TTF_Init() == -1) {
         return ERR_UTIL::ErrorCreate("Font init error");
@@ -211,7 +211,7 @@ LPErrInApp AppGfx::startGameLoop() {
     _p_SolitarioGfx = new SolitarioGfx();
 
     err = _p_SolitarioGfx->Initialize(_p_Screen, _p_sdlRenderer, _p_Window,
-                                      _p_GameSettings->deckTypeVal);
+                                      _p_GameSettings->DeckTypeVal);
     if (err != NULL)
         return err;
 
@@ -291,8 +291,7 @@ LPErrInApp AppGfx::loadProfile() {
     char dirpath[PATH_MAX];
     char filepath[PATH_MAX];
 #ifdef _MSC_VER
-    snprintf(dirpath, sizeof(dirpath), "%s/%s", "c:/temp",
-        g_lpszSolitarioDir);
+    snprintf(dirpath, sizeof(dirpath), "%s/%s", "c:/temp", g_lpszSolitarioDir);
 #else
     snprintf(dirpath, sizeof(dirpath), "%s/%s", getenv("HOME"),
              g_lpszSolitarioDir);
@@ -319,7 +318,6 @@ LPErrInApp AppGfx::loadProfile() {
         TRACE("Default ini file created in %s\n", filepath);
     }
 
-
     ini_fd_t pIni = ini_open(filepath, "r", "#");
 
     if (pIni == NULL)
@@ -329,21 +327,21 @@ LPErrInApp AppGfx::loadProfile() {
     int iVal;
 
     // deck type
-    iVal = _p_GameSettings->deckTypeVal.GetTypeIndex();
+    iVal = _p_GameSettings->DeckTypeVal.GetTypeIndex();
     if (pIni) {
         ini_locateHeading(pIni, g_lpszSectAll);
         ini_locateKey(pIni, g_lpszKeyDeck);
         ini_readInt(pIni, &iVal);
     }
-    _p_GameSettings->deckTypeVal.SetTypeIndex(iVal);
+    _p_GameSettings->DeckTypeVal.SetTypeIndex(iVal);
     // language
-    iVal = _p_GameSettings->eLanguageCurrent;
+    iVal = _p_GameSettings->CurrentLanguage;
     if (pIni) {
         ini_locateHeading(pIni, g_lpszSectAll);
         ini_locateKey(pIni, g_lpszKeyLang);
         ini_readInt(pIni, &iVal);
     }
-    _p_GameSettings->eLanguageCurrent = (Languages::eLangId)iVal;
+    _p_GameSettings->CurrentLanguage = (Languages::eLangId)iVal;
     // music
     iVal = false;
     if (pIni) {
@@ -352,7 +350,7 @@ LPErrInApp AppGfx::loadProfile() {
         ini_readInt(pIni, &iVal);
     }
     if (!_bOverride) {
-        _p_GameSettings->bMusicEnabled = iVal;
+        _p_GameSettings->MusicEnabled = iVal;
     }
 
     ini_close(pIni);
@@ -371,20 +369,20 @@ void AppGfx::writeProfile() {
     // deck type
     ini_locateHeading(pIni, g_lpszSectAll);
     ini_locateKey(pIni, g_lpszKeyDeck);
-    ini_writeInt(pIni, (int)_p_GameSettings->deckTypeVal.GetTypeIndex());
+    ini_writeInt(pIni, (int)_p_GameSettings->DeckTypeVal.GetTypeIndex());
 
     // language
     ini_locateHeading(pIni, g_lpszSectAll);
     ini_locateKey(pIni, g_lpszKeyLang);
-    ini_writeInt(pIni, _p_GameSettings->eLanguageCurrent);
+    ini_writeInt(pIni, _p_GameSettings->CurrentLanguage);
 
     // music
     ini_locateHeading(pIni, g_lpszSectAll);
     ini_locateKey(pIni, g_lpszKeyMusic);
-    ini_writeInt(pIni, _p_GameSettings->bMusicEnabled);
+    ini_writeInt(pIni, _p_GameSettings->MusicEnabled);
 
     ini_close(pIni);
-    TRACE("Settings file %s written", filepath);
+    TRACE("Settings file %s written\n", filepath);
 }
 
 TTF_Font *fncBind_GetFontVera(void *self) {
@@ -419,7 +417,7 @@ void fncBind_PersistSettings(void *self) {
 
 MenuDelegator AppGfx::prepMenuDelegator() {
     // Use only static otherwise you loose it
-#ifndef _MSC_VER 
+#ifndef _MSC_VER
     static VMenuDelegator const tc = {
         .GetFontVera = (&fncBind_GetFontVera),
         .GetFontAriblk = (&fncBind_GetFontAriblk),
@@ -431,14 +429,10 @@ MenuDelegator AppGfx::prepMenuDelegator() {
     return (MenuDelegator){.tc = &tc, .self = this};
 #else
     static VMenuDelegator const tc = {
-        (&fncBind_GetFontVera),
-        (&fncBind_GetFontAriblk),
-        (&fncBind_GetLanguageMan),
-        (&fncBind_LeaveMenu),
-        (&fncBind_SetNextMenu),
-        (&fncBind_PersistSettings)
-    };
-    MenuDelegator md = { &tc, this };
+        (&fncBind_GetFontVera),    (&fncBind_GetFontAriblk),
+        (&fncBind_GetLanguageMan), (&fncBind_LeaveMenu),
+        (&fncBind_SetNextMenu),    (&fncBind_PersistSettings)};
+    MenuDelegator md = {&tc, this};
     return md;
 #endif
 }
@@ -485,7 +479,7 @@ LPErrInApp AppGfx::MainLoop() {
     while (!bquit && !_Histmenu.empty()) {
         switch (_Histmenu.top()) {
             case MenuMgr::MENU_ROOT:
-                if (_p_GameSettings->bMusicEnabled &&
+                if (_p_GameSettings->MusicEnabled &&
                     !_p_MusicManager->IsPLayingMusic()) {
                     _p_MusicManager->PlayMusic(MusicManager::MUSIC_INIT_SND,
                                                MusicManager::LOOP_ON);
@@ -665,7 +659,7 @@ void AppGfx::ParseCmdLine(int argc, char *argv[]) {
         } else if (strcmp(argv[i], "--nosound") == 0 ||
                    strcmp(argv[i], "--quiet") == 0 ||
                    strcmp(argv[i], "-q") == 0) {
-            _p_GameSettings->bMusicEnabled = false;
+            _p_GameSettings->MusicEnabled = false;
             _bOverride = true;
         } else if (strcmp(argv[i], "--version") == 0 ||
                    strcmp(argv[i], "-v") == 0) {

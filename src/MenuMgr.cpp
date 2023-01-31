@@ -15,8 +15,8 @@
 #include "WinTypeGlobal.h"
 
 static const char* lpszMsgUrl = "Go to invido.it";
-static const char* lpszVersion = VERSION "20221223";
-static const char* g_lpszIniFontVera = "data/font/vera.ttf";
+static const char* lpszVersion = VERSION "20230131";
+static const char* g_lpszIniFontVera = DATA_PREFIX "font/vera.ttf";
 
 const SDL_Color MenuMgr::staColor_on = {253, 252, 250};
 const SDL_Color MenuMgr::staColor_off = {128, 128, 128};
@@ -51,12 +51,12 @@ void fncBind_LabelClicked(void* self, int iVal) {
 }
 
 ClickCb MenuMgr::prepClickCb() {
-#ifndef _MSC_VER 
-    static VClickCb const tc = { .Click = (&fncBind_LabelClicked) };
-    return (ClickCb) { .tc = &tc, .self = this };
+#ifndef _MSC_VER
+    static VClickCb const tc = {.Click = (&fncBind_LabelClicked)};
+    return (ClickCb){.tc = &tc, .self = this};
 #else
-    static VClickCb const tc = { (&fncBind_LabelClicked) };
-    ClickCb cb = { &tc, this };
+    static VClickCb const tc = {(&fncBind_LabelClicked)};
+    ClickCb cb = {&tc, this};
     return cb;
 #endif
 }

@@ -44,13 +44,13 @@ void fncBind_ButtonClicked(void* self, int iVal) {
 
 // Buttons, ok and cancel
 ClickCb MainOptionGfx::prepClickCb() {
-#ifndef _MSC_VER 
+#ifndef _MSC_VER
     static VClickCb const tc = {.Click = (&fncBind_ButtonClicked)};
 
     return (ClickCb){.tc = &tc, .self = this};
 #else
-    static VClickCb const tc = { (&fncBind_ButtonClicked) };
-    ClickCb cb = { &tc , this};
+    static VClickCb const tc = {(&fncBind_ButtonClicked)};
+    ClickCb cb = {&tc, this};
     return cb;
 #endif
 }
@@ -62,14 +62,14 @@ void fncBind_CheckboxMusicClicked(void* self, bool state) {
 
 // Checkbox music
 CheckboxClickCb MainOptionGfx::prepCheckBoxClickMusic() {
-#ifndef _MSC_VER 
+#ifndef _MSC_VER
     static VCheckboxClickCb const tc = {.Click =
                                             (&fncBind_CheckboxMusicClicked)};
 
     return (CheckboxClickCb){.tc = &tc, .self = this};
 #else
-    static VCheckboxClickCb const tc = { (&fncBind_CheckboxMusicClicked) };
-    CheckboxClickCb cb = { &tc,this };
+    static VCheckboxClickCb const tc = {(&fncBind_CheckboxMusicClicked)};
+    CheckboxClickCb cb = {&tc, this};
     return cb;
 #endif
 }
@@ -81,11 +81,11 @@ void fncBind_ComboDeckClicked(void* self, int index) {
 }
 
 ClickCb MainOptionGfx::prepSelectionDeckCb() {
-#ifndef _MSC_VER 
+#ifndef _MSC_VER
     static VClickCb const tc = {.Click = (&fncBind_ComboDeckClicked)};
     return (ClickCb){.tc = &tc, .self = this};
 #else
-    static VClickCb const tc = { (&fncBind_ComboDeckClicked) };
+    static VClickCb const tc = {(&fncBind_ComboDeckClicked)};
     ClickCb cb = {&tc, this};
     return cb;
 #endif
@@ -228,13 +228,13 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
     m_pComboLang->AddLineText(strTextBt.c_str());
 
     m_pComboLang->SetState(cComboGfx::VISIBLE);
-    m_pComboLang->SelectIndex(_p_GameSettings->eLanguageCurrent);
+    m_pComboLang->SelectIndex(_p_GameSettings->CurrentLanguage);
 
     // checkbox music
     strTextBt = _p_Languages->GetStringId(Languages::ID_SOUNDOPT);
     m_pCheckMusic->SetWindowText(strTextBt.c_str());
     m_pCheckMusic->SetState(cCheckBoxGfx::VISIBLE);
-    m_pCheckMusic->SetCheckState(_p_GameSettings->bMusicEnabled);
+    m_pCheckMusic->SetCheckState(_p_GameSettings->MusicEnabled);
 
     // combobox deck selection
     STRING strDeckSelectTitle =
@@ -246,7 +246,7 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
         m_pComboDeck->AddLineText(strTextBt.c_str());
     }
     m_pComboDeck->SetState(cComboGfx::VISIBLE);
-    m_pComboDeck->SelectIndex(_p_GameSettings->deckTypeVal.GetTypeIndex());
+    m_pComboDeck->SelectIndex(_p_GameSettings->DeckTypeVal.GetTypeIndex());
 
     SDL_Surface* pShadowSrf = SDL_CreateRGBSurface(
         SDL_SWSURFACE, m_pScreen->w, m_pScreen->h, 32, 0, 0, 0, 0);
@@ -370,30 +370,30 @@ void MainOptionGfx::ButEndOPtClicked(int iButID) {
     m_bTerminated = true;
     m_iResult = iButID;
     TRACE("OK options");
-    Languages::eLangId prevLangId = _p_GameSettings->eLanguageCurrent;
-    DeckType::eDeckType prevDeckType = _p_GameSettings->deckTypeVal.GetType();
-    bool prevMusicEnabled = _p_GameSettings->bMusicEnabled;
+    Languages::eLangId prevLangId = _p_GameSettings->CurrentLanguage;
+    DeckType::eDeckType prevDeckType = _p_GameSettings->DeckTypeVal.GetType();
+    bool prevMusicEnabled = _p_GameSettings->MusicEnabled;
     switch (m_pComboLang->GetSlectedIndex()) {
         case 0:
-            _p_GameSettings->eLanguageCurrent = Languages::eLangId::LANG_ITA;
+            _p_GameSettings->CurrentLanguage = Languages::eLangId::LANG_ITA;
             break;
         case 1:
-            _p_GameSettings->eLanguageCurrent =
+            _p_GameSettings->CurrentLanguage =
                 Languages::eLangId::LANG_DIAL_BREDA;
             break;
         case 2:
-            _p_GameSettings->eLanguageCurrent = Languages::eLangId::LANG_ENG;
+            _p_GameSettings->CurrentLanguage = Languages::eLangId::LANG_ENG;
             break;
         default:
             break;
     }
     DeckType dt;
     dt.SetTypeIndex(m_pComboDeck->GetSlectedIndex());
-    _p_GameSettings->deckTypeVal.CopyFrom(dt);
-    _p_GameSettings->bMusicEnabled = m_pCheckMusic->GetCheckState();
-    if ((_p_GameSettings->bMusicEnabled != prevMusicEnabled) ||
-        (_p_GameSettings->deckTypeVal.GetType() != prevDeckType) ||
-        (_p_GameSettings->eLanguageCurrent != prevLangId)) {
+    _p_GameSettings->DeckTypeVal.CopyFrom(dt);
+    _p_GameSettings->MusicEnabled = m_pCheckMusic->GetCheckState();
+    if ((_p_GameSettings->MusicEnabled != prevMusicEnabled) ||
+        (_p_GameSettings->DeckTypeVal.GetType() != prevDeckType) ||
+        (_p_GameSettings->CurrentLanguage != prevLangId)) {
         TRACE("Settings are changed, save it");
         _menuDlgt.tc->PersistSettings(_menuDlgt.self);
     }

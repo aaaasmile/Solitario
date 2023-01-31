@@ -18,7 +18,7 @@
             ],
             "group": {
                 "kind": "build",
-                "isDefault": true
+                "isDefault": false
             }
         },
         {
@@ -30,5 +30,23 @@
             },
             "problemMatcher": "$msCompile"
         },
+        {
+            "label": "Ninja Build",
+            "type": "cppbuild",
+            "command": "ninja",
+            "args": [
+                ""
+            ],
+            "options": {
+                "cwd": "$${workspaceFolder}/build"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
     ]
 }

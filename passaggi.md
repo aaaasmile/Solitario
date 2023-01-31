@@ -271,11 +271,22 @@ supporto solo il target MySys che definisce WIN32. L'unica funzione che da dei p
 Nota che se cambio la lista dei files o un linker, non ho bisogno di rilanciare cmake.
 Quello che mi manca è l'integrazione in VsCode con diversi target per la produzione, il debugger e i TRACE.
 
+## Visual Code in Windows
+Il file c_cpp_properties.json è nella repository, quindi viene usato sia in WSL2 che in windows.
+Ci sono due confugurazioni: win32 e linux. Sono due nomi riservati che vengono selezionati automaticamente.
+Esse servono per avere un editor con intellisense ed errori appropriati in quanto i folder delle
+librerie nei due ambienti sono piazzate in paths differenti. Se non viene selezionato in modo 
+corretto, nella statusbar in basso a destra lo si può selezionare manualmente.
+
 ### TODO
 
-- Dialogo delle opzioni da completare (mazzo di carte)
-- Goto invido.it
-- Le opzioni di SDL2 dovrebbero risultare dal processo di configure
+- Deployment su Windows
+- Score
+- Il codice taget di supporto del trace service si può implementare una sola volta mentre su ogni target
+    si implementa solo la configurazione
+- Dialogo delle opzioni da completare (mazzo di carte) [DONE]
+- Goto invido.it [DONE]
+- Le opzioni di SDL2 dovrebbero risultare dal processo di configure. Uso CMake. [DONE]
 - Sfondo delle opzioni non è centrato [DONE]
 - Nei credits vorrei la musica water [DONE]
 - Help [DONE]
@@ -284,5 +295,4 @@ Quello che mi manca è l'integrazione in VsCode con diversi target per la produz
 - Il drag parte da x,y = 0,0 [DONE]
 - Il menu ha ancora bisogno di correzzioni sdl 1.2 -> sdl 2.0 [DONE]
 - Il rendering del gioco non usa le immagini in formato Pac ma quelle singole [DONE]
-
 
