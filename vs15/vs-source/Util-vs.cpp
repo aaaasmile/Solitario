@@ -5,16 +5,14 @@ typedef TraceService* LPTraceService;
 typedef struct {
     bool _initialized;
     LPTraceService _pTracer;
-    void* _self;
     bool _debugEnabled;
 }Tracer, *LPTracer;
 
-static Tracer _tracer = { false, NULL, NULL, false };
+static Tracer _tracer = { false, NULL, false };
 
 static void traceInitialize() {
-    TraceService* pTracer = TraceService::Instance();
+    LPTraceService pTracer = TraceService::Instance();
     _tracer._pTracer = pTracer;
-    _tracer._self = &_tracer;
     pTracer->SetOutputChannel(0, TraceService::eOutType::OT_FILE, "C:/temp/solitario.log");
     pTracer->SetOutputChannel(1, TraceService::eOutType::OT_MSVDEBUGGER, "");
     _tracer._initialized = true;

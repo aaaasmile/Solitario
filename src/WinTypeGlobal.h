@@ -32,6 +32,7 @@ typedef const char *LPCSTR, *PCSTR;
         int result = vsprintf(myBuff, fmt, args);
         ::OutputDebugString(myBuff);
     }
+    inline void TRACE_DEBUG(const char* fmt, ...) {}
     #else
         #ifdef TRACEINSERVICE
             extern void TraceInServiceINFO(char* myBuff);
@@ -63,6 +64,7 @@ typedef const char *LPCSTR, *PCSTR;
             #else   
                 inline void TRACE(const char* fmt, ...) {}
             #endif
+            inline void TRACE_DEBUG(const char* fmt, ...) {}
         #endif
     #endif
 #endif

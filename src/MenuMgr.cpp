@@ -51,14 +51,14 @@ void fncBind_LabelClicked(void* self, int iVal) {
 }
 
 ClickCb MenuMgr::prepClickCb() {
-    /*VClickCb tc; 
-    tc.Click = (&fncBind_LabelClicked) ;
-    ClickCb cb;
-    cb.tc = &tc; 
-    cb.self = this;
-    return cb;*/
-  ClickCb cb;
-  return cb;
+#ifndef _MSC_VER 
+    static VClickCb const tc = { .Click = (&fncBind_LabelClicked) };
+    return (ClickCb) { .tc = &tc, .self = this };
+#else
+    static VClickCb const tc = { (&fncBind_LabelClicked) };
+    ClickCb cb = { &tc, this };
+    return cb;
+#endif
 }
 
 LPErrInApp MenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,

@@ -419,7 +419,8 @@ void fncBind_PersistSettings(void *self) {
 
 MenuDelegator AppGfx::prepMenuDelegator() {
     // Use only static otherwise you loose it
-   /* static VMenuDelegator const tc = {
+#ifndef _MSC_VER 
+    static VMenuDelegator const tc = {
         .GetFontVera = (&fncBind_GetFontVera),
         .GetFontAriblk = (&fncBind_GetFontAriblk),
         .GetLanguageMan = (&fncBind_GetLanguageMan),
@@ -427,9 +428,19 @@ MenuDelegator AppGfx::prepMenuDelegator() {
         .SetNextMenu = (&fncBind_SetNextMenu),
         .PersistSettings = (&fncBind_PersistSettings)};
 
-    return (MenuDelegator){.tc = &tc, .self = this};*/
-    MenuDelegator md;
+    return (MenuDelegator){.tc = &tc, .self = this};
+#else
+    static VMenuDelegator const tc = {
+        (&fncBind_GetFontVera),
+        (&fncBind_GetFontAriblk),
+        (&fncBind_GetLanguageMan),
+        (&fncBind_LeaveMenu),
+        (&fncBind_SetNextMenu),
+        (&fncBind_PersistSettings)
+    };
+    MenuDelegator md = { &tc, this };
     return md;
+#endif
 }
 
 void AppGfx::LeaveMenu() {
@@ -557,7 +568,7 @@ LPErrInApp AppGfx::showCredits() {
 }
 
 LPErrInApp AppGfx::showOptionGeneral() {
-    TRACE("Show option general");
+    TRACE("Show option general\n");
     MainOptionGfx optGfx;
 
     SDL_Rect rctOptionWin;

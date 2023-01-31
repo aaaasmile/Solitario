@@ -44,11 +44,15 @@ void fncBind_ButtonClicked(void* self, int iVal) {
 
 // Buttons, ok and cancel
 ClickCb MainOptionGfx::prepClickCb() {
-    /*static VClickCb const tc = {.Click = (&fncBind_ButtonClicked)};
+#ifndef _MSC_VER 
+    static VClickCb const tc = {.Click = (&fncBind_ButtonClicked)};
 
-    return (ClickCb){.tc = &tc, .self = this};*/
-  ClickCb cb;
-  return cb;
+    return (ClickCb){.tc = &tc, .self = this};
+#else
+    static VClickCb const tc = { (&fncBind_ButtonClicked) };
+    ClickCb cb = { &tc , this};
+    return cb;
+#endif
 }
 
 void fncBind_CheckboxMusicClicked(void* self, bool state) {
@@ -58,12 +62,16 @@ void fncBind_CheckboxMusicClicked(void* self, bool state) {
 
 // Checkbox music
 CheckboxClickCb MainOptionGfx::prepCheckBoxClickMusic() {
-    /*static VCheckboxClickCb const tc = {.Click =
+#ifndef _MSC_VER 
+    static VCheckboxClickCb const tc = {.Click =
                                             (&fncBind_CheckboxMusicClicked)};
 
-    return (CheckboxClickCb){.tc = &tc, .self = this};*/
-  CheckboxClickCb cb;
-  return cb;
+    return (CheckboxClickCb){.tc = &tc, .self = this};
+#else
+    static VCheckboxClickCb const tc = { (&fncBind_CheckboxMusicClicked) };
+    CheckboxClickCb cb = { &tc,this };
+    return cb;
+#endif
 }
 
 // deck selection
@@ -73,10 +81,14 @@ void fncBind_ComboDeckClicked(void* self, int index) {
 }
 
 ClickCb MainOptionGfx::prepSelectionDeckCb() {
-    /*static VClickCb const tc = {.Click = (&fncBind_ComboDeckClicked)};
-    return (ClickCb){.tc = &tc, .self = this};*/
-  ClickCb cb;
-  return cb;
+#ifndef _MSC_VER 
+    static VClickCb const tc = {.Click = (&fncBind_ComboDeckClicked)};
+    return (ClickCb){.tc = &tc, .self = this};
+#else
+    static VClickCb const tc = { (&fncBind_ComboDeckClicked) };
+    ClickCb cb = {&tc, this};
+    return cb;
+#endif
 }
 
 LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
@@ -120,8 +132,7 @@ LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
                         cbBtOK_Cancel);
     m_pBtOK->SetState(cButtonGfx::INVISIBLE);
     // Combo language
-    //ClickCb nullCb = {.tc = NULL, .self = NULL};
-    ClickCb nullCb;
+    ClickCb nullCb = {NULL, NULL};
     m_pComboLang = new cComboGfx;
     rctBt1.w = 180;
     rctBt1.h = 26;
