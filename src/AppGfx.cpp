@@ -40,6 +40,8 @@ static const char *g_lpszIniFontVera = DATA_PREFIX "font/vera.ttf";
 static const char *g_lpszImageSplash = DATA_PREFIX "images/im001537.jpg";
 
 AppGfx::AppGfx() {
+    _p_Window = NULL;
+    _p_ScreenTexture = NULL;
     _p_Screen = NULL;
     _iScreenW = 1024;
     _iScreenH = 768;
