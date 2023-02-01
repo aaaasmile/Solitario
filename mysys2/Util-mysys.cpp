@@ -1,3 +1,4 @@
+#include "GameSettings.h"
 #include "TraceService.h"
 
 typedef TraceService* LPTraceService;
@@ -11,9 +12,17 @@ typedef struct {
 static Tracer _tracer = {false, NULL, false};
 
 static void traceInitialize() {
+    char buff[1024];
+    bool dirCreated;
     char logpath[PATH_MAX];
-    snprintf(logpath, sizeof(logpath), "%s/.solitario/solitario.log",
-             getenv("HOME"));
+
+    snprintf(logpath, sizeof(logpath), "%s/solitario.log",
+             GAMESET::GetHomeSolitarioFolder());
+    LPErrInApp err = GAMESET::CreateHomeSolitarioFolderIfNotExists(dirCreated);
+    if (err != NULL) {
+        fprintf(stderr, "Fatal Trace init error: %s\n", err->ErrorText.c_str());
+        exit(1);
+    }
 
     LPTraceService pTracer = TraceService::Instance();
     _tracer._pTracer = pTracer;
@@ -22,8 +31,9 @@ static void traceInitialize() {
 #ifdef _DEBUG
     _tracer._debugEnabled = true;
 #endif
-    char buff[1024];
-    snprintf(buff, sizeof(buff), "Using log file located in %s", logpath);
+    snprintf(buff, sizeof(buff),
+             "Using log file located in %s. Dir created: %s \n", logpath,
+             (dirCreated ? "true" : "false"));
     _tracer._pTracer->AddTrace(EntryTraceDetail::eType::TR_INFO, buff);
 }
 

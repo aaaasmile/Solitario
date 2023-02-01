@@ -30,6 +30,8 @@ public:
 typedef GameSettings* LPGameSettings;
 
 namespace GAMESET {
-    GameSettings* GetSettings();
+    LPGameSettings GetSettings();
+    const char* GetHomeSolitarioFolder();
+    LPErrInApp CreateHomeSolitarioFolderIfNotExists(bool& dirCreated);
 }
 #endif

@@ -29,7 +29,6 @@
 #include "Fading.h"
 #include "libini.h"
 
-static const char *g_lpszSolitarioDir = ".solitario";
 static const char *g_lpszIniFileName = "options.ini";
 static const char *g_lpszDefaultIniFileName = DATA_PREFIX "default_options.ini";
 static const char *g_lpszHelpFileName = DATA_PREFIX "solitario.pdf";
@@ -287,25 +286,16 @@ LPErrInApp AppGfx::loadProfile() {
     struct stat st = {0};
     LPErrInApp err;
     int io_res;
+    bool dirCreated;
 
     char dirpath[PATH_MAX];
     char filepath[PATH_MAX];
-#ifdef _MSC_VER
-    snprintf(dirpath, sizeof(dirpath), "%s/%s", "c:/temp", g_lpszSolitarioDir);
-#else
-    snprintf(dirpath, sizeof(dirpath), "%s/%s", getenv("HOME"),
-             g_lpszSolitarioDir);
-#endif
-
-    if (stat(dirpath, &st) == -1) {
-#ifdef WIN32
-        io_res = mkdir(dirpath);
-#else
-        io_res = mkdir(dirpath, 0700);
-#endif
-        if (io_res == -1) {
-            return ERR_UTIL::ErrorCreate("Cannot create dir %s", dirpath);
-        }
+    snprintf(dirpath, sizeof(dirpath), "%s", GAMESET::GetHomeSolitarioFolder());
+    err = GAMESET::CreateHomeSolitarioFolderIfNotExists(dirCreated);
+    if (err != NULL) {
+        return err;
+    }
+    if (dirCreated) {
         TRACE("Create dir %s\n", dirpath);
     }
     _p_GameSettings->SettingsDir = dirpath;
@@ -360,7 +350,7 @@ LPErrInApp AppGfx::loadProfile() {
 
 void AppGfx::writeProfile() {
     char filepath[PATH_MAX];
-    snprintf(filepath, PATH_MAX, "%s/%s/%s", getenv("HOME"), g_lpszSolitarioDir,
+    snprintf(filepath, PATH_MAX, "%s/%s", GAMESET::GetHomeSolitarioFolder(),
              g_lpszIniFileName);
 
     ini_fd_t pIni = ini_open(filepath, "w", "#");
