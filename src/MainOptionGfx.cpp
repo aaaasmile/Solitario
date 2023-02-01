@@ -369,7 +369,7 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
 void MainOptionGfx::ButEndOPtClicked(int iButID) {
     m_bTerminated = true;
     m_iResult = iButID;
-    TRACE("OK options");
+    TRACE("OK options\n");
     Languages::eLangId prevLangId = _p_GameSettings->CurrentLanguage;
     DeckType::eDeckType prevDeckType = _p_GameSettings->DeckTypeVal.GetType();
     bool prevMusicEnabled = _p_GameSettings->MusicEnabled;
@@ -394,7 +394,7 @@ void MainOptionGfx::ButEndOPtClicked(int iButID) {
     if ((_p_GameSettings->MusicEnabled != prevMusicEnabled) ||
         (_p_GameSettings->DeckTypeVal.GetType() != prevDeckType) ||
         (_p_GameSettings->CurrentLanguage != prevLangId)) {
-        TRACE("Settings are changed, save it");
+        TRACE("Settings are changed, save it\n");
         _menuDlgt.tc->PersistSettings(_menuDlgt.self);
     }
 }

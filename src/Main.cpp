@@ -20,6 +20,6 @@ int main(int argc, char* argv[]) {
         TRACE("Fatal: %s\n", err->ErrorText.c_str());
         exit(1);
     }
-
+    TRACE("App terminated with success\n");
     return EXIT_SUCCESS;
 }

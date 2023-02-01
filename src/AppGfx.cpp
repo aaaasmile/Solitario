@@ -200,7 +200,7 @@ LPErrInApp AppGfx::createWindow() {
 }
 
 LPErrInApp AppGfx::startGameLoop() {
-    TRACE("Start Game Loop");
+    TRACE("Start Game Loop\n");
     _p_MusicManager->StopMusic();
 
     LPErrInApp err;
@@ -434,13 +434,13 @@ void AppGfx::LeaveMenu() {
 }
 
 void AppGfx::PersistSettings() {
-    TRACE("Persist settings");
+    TRACE("Persist settings\n");
     writeProfile();
 }
 
 void AppGfx::drawSceneBackground() {
-    TRACE("drawSceneBackground %dx%d", _p_SceneBackground->w,
-          _p_SceneBackground->h);
+    TRACE_DEBUG("drawSceneBackground %dx%d\n", _p_SceneBackground->w,
+                _p_SceneBackground->h);
     SDL_FillRect(_p_Screen, &_p_Screen->clip_rect,
                  SDL_MapRGBA(_p_Screen->format, 0, 0, 0, 0));
     SDL_Rect rctTarget;

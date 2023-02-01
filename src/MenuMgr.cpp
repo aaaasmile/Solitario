@@ -367,7 +367,7 @@ LPErrInApp MenuMgr::HandleRootMenu() {
 }
 
 void MenuMgr::rootMenuNext() {
-    TRACE("Menu selected %d", _ifocus_valuesM_A);
+    TRACE_DEBUG("Menu selected %d\n", _ifocus_valuesM_A);
     switch (_ifocus_valuesM_A) {
         case 0:  // Play
             (_menuDlgt.tc)->SetNextMenu(_menuDlgt.self, MENU_GAME);
