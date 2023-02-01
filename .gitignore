@@ -11,6 +11,9 @@ solitario
 config.h.in~
 help-source/solitario.pdf
 build
+solitario.exe
+config.status
+libini/Makefile
 vs15/solitario-vs15/.vs
 vs15/solitario-vs15/x64
 
