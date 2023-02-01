@@ -286,6 +286,8 @@ oltre alla powershell con ninja in build, mi funziona la icona Build nella statu
 
 ### TODO
 
+- In windows manca il settaggio del path dove si trova l'exe per avere il path completo
+  del caricamento delle resources.
 - Deployment su Windows
 - Score
 - Il codice taget di supporto del trace service si può implementare una sola volta mentre su ogni target
