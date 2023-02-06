@@ -60,6 +60,16 @@ AppGfx::~AppGfx() { terminate(); }
 
 LPErrInApp AppGfx::Init() {
     TRACE("Init App\n");
+    LPCSTR exeDirPath = GAMESET::GetExeSolitarioFolder();
+    TRACE("Exe directory is %s\n", exeDirPath);
+#ifdef WIN32
+    if (chdir(exeDirPath) < 0) {
+        return ERR_UTIL::ErrorCreate("Unable to change to the exe directory");
+    } else {
+        TRACE("Dir changed to %s\n", exeDirPath);
+    }
+#endif
+
     LPErrInApp err = loadProfile();
     if (err != NULL) {
         return err;
@@ -285,7 +295,6 @@ LPErrInApp CopyFile(const char *src_path, const char *dst_path) {
 LPErrInApp AppGfx::loadProfile() {
     struct stat st = {0};
     LPErrInApp err;
-    int io_res;
     bool dirCreated;
 
     char dirpath[PATH_MAX];

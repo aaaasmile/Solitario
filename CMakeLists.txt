@@ -34,6 +34,7 @@ set(SOURCES src/GameGfx/CardRegionGfx.cpp
             src/MenuMgr.cpp
             src/MainOptionGfx.cpp
             src/TraceService.cpp
+            src/WhereAmI.c
             src/CompGfx/cLabelLinkGfx.cpp
             src/CompGfx/cButtonGfx.cpp
             src/CompGfx/cCheckBoxGfx.cpp
