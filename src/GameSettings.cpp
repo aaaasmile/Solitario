@@ -40,9 +40,9 @@ const char* GAMESET::GetExeSolitarioFolder() {
     TRACE("Exe path: %s\n", path);
 
     std::string exeFolder = path;
-    // std::replace(exeFolder.begin(), exeFolder.end(), '\\', '/');
+    std::replace(exeFolder.begin(), exeFolder.end(), '\\', '/');
 
-    size_t iPos = exeFolder.find_last_of('\\');
+    size_t iPos = exeFolder.find_last_of('/');
     exeFolder = exeFolder.substr(0, iPos);
     snprintf(_exeRootDir, sizeof(_exeRootDir), "%s", exeFolder.c_str());
 

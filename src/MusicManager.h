@@ -23,9 +23,9 @@ public:
     void SetVolumeMusic(int iVal);
 
 private:
-    Mix_Chunk* m_pMusicsWav[NUM_OF_WAV];
-    Mix_Music* m_pMusics[NUM_OF_SOUNDS];
-    bool m_bMusicAvailable;
+    Mix_Chunk* _p_MusicsWav[NUM_OF_WAV];
+    Mix_Music* _p_Musics[NUM_OF_SOUNDS];
+    bool _isMusicAvailable;
     int _currentMusicID;
     eLoopType _currentLoop;
 };
