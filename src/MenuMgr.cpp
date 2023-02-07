@@ -15,8 +15,8 @@
 #include "WinTypeGlobal.h"
 
 static const char* lpszMsgUrl = "Go to invido.it";
-static const char* lpszVersion = VERSION "20221223";
-static const char* g_lpszIniFontVera = "data/font/vera.ttf";
+static const char* lpszVersion = VERSION "20230131";
+static const char* g_lpszIniFontVera = DATA_PREFIX "font/vera.ttf";
 
 const SDL_Color MenuMgr::staColor_on = {253, 252, 250};
 const SDL_Color MenuMgr::staColor_off = {128, 128, 128};
@@ -51,9 +51,14 @@ void fncBind_LabelClicked(void* self, int iVal) {
 }
 
 ClickCb MenuMgr::prepClickCb() {
+#ifndef _MSC_VER
     static VClickCb const tc = {.Click = (&fncBind_LabelClicked)};
-
     return (ClickCb){.tc = &tc, .self = this};
+#else
+    static VClickCb const tc = {(&fncBind_LabelClicked)};
+    ClickCb cb = {&tc, this};
+    return cb;
+#endif
 }
 
 LPErrInApp MenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
@@ -362,7 +367,7 @@ LPErrInApp MenuMgr::HandleRootMenu() {
 }
 
 void MenuMgr::rootMenuNext() {
-    TRACE("Menu selected %d", _ifocus_valuesM_A);
+    TRACE_DEBUG("Menu selected %d\n", _ifocus_valuesM_A);
     switch (_ifocus_valuesM_A) {
         case 0:  // Play
             (_menuDlgt.tc)->SetNextMenu(_menuDlgt.self, MENU_GAME);

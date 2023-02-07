@@ -9,7 +9,7 @@ class MusicManager {
 public:
     enum { MUSIC_INIT_SND, MUSIC_GAME_SND, NUM_OF_SOUNDS };
     enum eLoopType { LOOP_ON, LOOP_OFF };
-    enum { NUM_OF_WAV };
+    enum { NOTHING, NUM_OF_WAV };
     MusicManager();
     virtual ~MusicManager();
 
@@ -23,9 +23,9 @@ public:
     void SetVolumeMusic(int iVal);
 
 private:
-    Mix_Chunk* m_pMusicsWav[NUM_OF_WAV];
-    Mix_Music* m_pMusics[NUM_OF_SOUNDS];
-    bool m_bMusicAvailable;
+    Mix_Chunk* _p_MusicsWav[NUM_OF_WAV];
+    Mix_Music* _p_Musics[NUM_OF_SOUNDS];
+    bool _isMusicAvailable;
     int _currentMusicID;
     eLoopType _currentLoop;
 };

@@ -45,7 +45,10 @@
         "stdexcept": "cpp",
         "streambuf": "cpp",
         "cinttypes": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "cstring": "cpp",
+        "fstream": "cpp",
+        "sstream": "cpp"
     },
     "cmake.configureOnOpen": false
 }

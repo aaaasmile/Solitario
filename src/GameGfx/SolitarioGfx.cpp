@@ -29,6 +29,7 @@ extern const char *lpszDeckDir;
 
 SolitarioGfx::SolitarioGfx() {
     _p_ScreenBackbuffer = 0;
+    _bStartdrag = false;
     _p_Dragface = 0;
     _p_SceneBackground = 0;
     _p_ScreenTexture = 0;
@@ -61,7 +62,7 @@ void SolitarioGfx::clearSurface() {
 
 LPErrInApp SolitarioGfx::Initialize(SDL_Surface *s, SDL_Renderer *r,
                                     SDL_Window *w, DeckType &dt) {
-    TRACE("Initialize Solitario");
+    TRACE("Initialize Solitario\n");
     setDeckType(dt);
 
     LPErrInApp err;
@@ -88,7 +89,7 @@ LPErrInApp SolitarioGfx::Initialize(SDL_Surface *s, SDL_Renderer *r,
                                      SDL_GetError());
     }
     if (_DeckType.IsPacType()) {
-        TRACE("Deck Pac stuff");
+        TRACE("Deck Pac stuff\n");
         err = LoadCardPac();
         if (err != NULL) {
             return err;
@@ -98,7 +99,7 @@ LPErrInApp SolitarioGfx::Initialize(SDL_Surface *s, SDL_Renderer *r,
             return err;
         }
     } else {
-        TRACE("Single deck file stuff");
+        TRACE("Single deck file stuff\n");
         err = LoadDeckFromSingleFile();
         if (err != NULL) {
             return err;
@@ -442,7 +443,7 @@ void SolitarioGfx::DrawStaticScene() {
 }
 
 LPErrInApp SolitarioGfx::DrawInitialScene() {
-    TRACE("DrawInitialScene");
+    TRACE("DrawInitialScene\n");
     SDL_FillRect(_p_Screen, &_p_Screen->clip_rect,
                  SDL_MapRGBA(_p_Screen->format, 0, 0, 0, 0));
     SDL_Rect rctTarget;
@@ -497,7 +498,7 @@ LPErrInApp SolitarioGfx::DrawCard(int x, int y, int nCdIndex, SDL_Surface *s) {
 
     int iSegnoIx = nCdIndex / 10;
     int iCartaIx = nCdIndex % 10;
-    TRACE("Suit %d, card: %d", iSegnoIx, iCartaIx);
+    TRACE_DEBUG("Suit %d, card: %d\n", iSegnoIx, iCartaIx);
 
     _rctSrcCard.x = 0;
     _rctSrcCard.y = 0;
@@ -523,7 +524,7 @@ LPErrInApp SolitarioGfx::DrawCardPac(int x, int y, int nCdIndex,
 
     int iSegnoIx = nCdIndex / 10;
     int iCartaIx = nCdIndex % 10;
-    TRACE("Suit %d, card: %d", iSegnoIx, iCartaIx);
+    TRACE_DEBUG("Suit %d, card: %d\n", iSegnoIx, iCartaIx);
 
     SDL_Rect srcCard;
     srcCard.x = iSegnoIx * g_CardWidth;
@@ -831,7 +832,7 @@ LPErrInApp SolitarioGfx::LoadSymbolsFromSingleFile() {
 LPErrInApp SolitarioGfx::LoadCardPac() {
     Uint16 w, h;
     GFX_UTIL::LoadCardPac(&_p_Deck, _DeckType, &w, &h);
-    TRACE("Pac size  w = %d, h = %d", w, h);
+    TRACE("Pac size  w = %d, h = %d\n", w, h);
     g_CardWidth = w / 4;
     g_CardHeight = h / 10;
     return NULL;
@@ -862,7 +863,7 @@ LPErrInApp SolitarioGfx::LoadSymbolsForPac() {
 }
 
 LPErrInApp SolitarioGfx::newGame() {
-    TRACE("New Game");
+    TRACE("New Game\n");
     LPErrInApp err;
     SetSymbol(DeckPile_Ix, CRD_OSYMBOL);
     CleanUpRegion();
@@ -969,7 +970,7 @@ LPErrInApp SolitarioGfx::handleLeftMouseDown(SDL_Event &event) {
             DoDrop(GetRegion(DeckFaceUp));
             delete pCardStack;
         } else {
-            TRACE("No more card on the pile deck");
+            TRACE("No more card on the pile deck\n");
         }
     }
     return NULL;

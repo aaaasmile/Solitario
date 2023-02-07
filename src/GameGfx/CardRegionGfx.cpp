@@ -145,6 +145,9 @@ bool CardRegionGfx::CanDrop(LPCardStackGfx stack) {
     if (InternalStack.IsEmpty() &&
         (!(_acceptMode & CRD_DOKING) && !(_acceptMode & CRD_DOACE)))
         return false;
+    if (stack->Size() == 0)
+        return false;
+
     // LastCard is the destination stack
     // StartCard is the dragging card that is dropping
     LPCardGfx pStartCard = stack->First();

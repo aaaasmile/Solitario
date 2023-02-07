@@ -7,7 +7,12 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <time.h>
+#ifdef _MSC_VER
+#include <direct.h>
+#include <io.h>
+#else
 #include <unistd.h>
+#endif
 
 #include "Config.h"
 #include "ErrorInfo.h"
@@ -24,7 +29,6 @@
 #include "Fading.h"
 #include "libini.h"
 
-static const char *g_lpszSolitarioDir = ".solitario";
 static const char *g_lpszIniFileName = "options.ini";
 static const char *g_lpszDefaultIniFileName = DATA_PREFIX "default_options.ini";
 static const char *g_lpszHelpFileName = DATA_PREFIX "solitario.pdf";
@@ -40,6 +44,9 @@ static const char *g_lpszIniFontVera = DATA_PREFIX "font/vera.ttf";
 static const char *g_lpszImageSplash = DATA_PREFIX "images/im001537.jpg";
 
 AppGfx::AppGfx() {
+    _p_Window = NULL;
+    _p_ScreenTexture = NULL;
+    _p_SolitarioGfx = NULL;
     _p_Screen = NULL;
     _iScreenW = 1024;
     _iScreenH = 768;
@@ -53,7 +60,17 @@ AppGfx::AppGfx() {
 AppGfx::~AppGfx() { terminate(); }
 
 LPErrInApp AppGfx::Init() {
-    TRACE("Init App");
+    TRACE("Init App\n");
+    LPCSTR exeDirPath = GAMESET::GetExeSolitarioFolder();
+    TRACE("Exe directory is %s\n", exeDirPath);
+#ifdef WIN32
+    if (chdir(exeDirPath) < 0) {
+        return ERR_UTIL::ErrorCreate("Unable to change to the exe directory");
+    } else {
+        TRACE("Dir changed to %s\n", exeDirPath);
+    }
+#endif
+
     LPErrInApp err = loadProfile();
     if (err != NULL) {
         return err;
@@ -73,7 +90,7 @@ LPErrInApp AppGfx::Init() {
     _p_MusicManager = new MusicManager;
     _p_MusicManager->Init();
 
-    _Languages.SetLang(_p_GameSettings->eLanguageCurrent);
+    _Languages.SetLang(_p_GameSettings->CurrentLanguage);
 
     if (TTF_Init() == -1) {
         return ERR_UTIL::ErrorCreate("Font init error");
@@ -141,6 +158,7 @@ LPErrInApp AppGfx::loadSceneBackground() {
 }
 
 LPErrInApp AppGfx::createWindow() {
+    TRACE_DEBUG("createWindow\n");
     int flagwin = 0;
     if (_p_Window != NULL) {
         _p_Window = NULL;
@@ -188,11 +206,12 @@ LPErrInApp AppGfx::createWindow() {
         return ERR_UTIL::ErrorCreate("Error SDL_CreateTexture: %s\n",
                                      SDL_GetError());
     }
+    TRACE_DEBUG("createWindow - Success\n");
     return NULL;
 }
 
 LPErrInApp AppGfx::startGameLoop() {
-    TRACE("Start Game Loop");
+    TRACE("Start Game Loop\n");
     _p_MusicManager->StopMusic();
 
     LPErrInApp err;
@@ -202,7 +221,7 @@ LPErrInApp AppGfx::startGameLoop() {
     _p_SolitarioGfx = new SolitarioGfx();
 
     err = _p_SolitarioGfx->Initialize(_p_Screen, _p_sdlRenderer, _p_Window,
-                                      _p_GameSettings->deckTypeVal);
+                                      _p_GameSettings->DeckTypeVal);
     if (err != NULL)
         return err;
 
@@ -277,25 +296,19 @@ LPErrInApp CopyFile(const char *src_path, const char *dst_path) {
 LPErrInApp AppGfx::loadProfile() {
     struct stat st = {0};
     LPErrInApp err;
-    int io_res;
+    bool dirCreated;
 
-    char dirpath[PATH_MAX - strlen(g_lpszIniFileName)];
+    char dirpath[PATH_MAX];
     char filepath[PATH_MAX];
-
-    snprintf(dirpath, sizeof(dirpath), "%s/%s", getenv("HOME"),
-             g_lpszSolitarioDir);
-
-    if (stat(dirpath, &st) == -1) {
-#ifdef WIN32
-        io_res = mkdir(dirpath);
-#else
-        io_res = mkdir(dirpath, 0700);
-#endif
-        if (io_res == -1) {
-            return ERR_UTIL::ErrorCreate("Cannot create dir %s", dirpath);
-        }
+    snprintf(dirpath, sizeof(dirpath), "%s", GAMESET::GetHomeSolitarioFolder());
+    err = GAMESET::CreateHomeSolitarioFolderIfNotExists(dirCreated);
+    if (err != NULL) {
+        return err;
+    }
+    if (dirCreated) {
         TRACE("Create dir %s\n", dirpath);
     }
+    _p_GameSettings->SettingsDir = dirpath;
     snprintf(filepath, PATH_MAX, "%s/%s", dirpath, g_lpszIniFileName);
 
     if (stat(filepath, &st) == -1) {
@@ -315,21 +328,21 @@ LPErrInApp AppGfx::loadProfile() {
     int iVal;
 
     // deck type
-    iVal = _p_GameSettings->deckTypeVal.GetTypeIndex();
+    iVal = _p_GameSettings->DeckTypeVal.GetTypeIndex();
     if (pIni) {
         ini_locateHeading(pIni, g_lpszSectAll);
         ini_locateKey(pIni, g_lpszKeyDeck);
         ini_readInt(pIni, &iVal);
     }
-    _p_GameSettings->deckTypeVal.SetTypeIndex(iVal);
+    _p_GameSettings->DeckTypeVal.SetTypeIndex(iVal);
     // language
-    iVal = _p_GameSettings->eLanguageCurrent;
+    iVal = _p_GameSettings->CurrentLanguage;
     if (pIni) {
         ini_locateHeading(pIni, g_lpszSectAll);
         ini_locateKey(pIni, g_lpszKeyLang);
         ini_readInt(pIni, &iVal);
     }
-    _p_GameSettings->eLanguageCurrent = (Languages::eLangId)iVal;
+    _p_GameSettings->CurrentLanguage = (Languages::eLangId)iVal;
     // music
     iVal = false;
     if (pIni) {
@@ -338,7 +351,7 @@ LPErrInApp AppGfx::loadProfile() {
         ini_readInt(pIni, &iVal);
     }
     if (!_bOverride) {
-        _p_GameSettings->bMusicEnabled = iVal;
+        _p_GameSettings->MusicEnabled = iVal;
     }
 
     ini_close(pIni);
@@ -347,7 +360,7 @@ LPErrInApp AppGfx::loadProfile() {
 
 void AppGfx::writeProfile() {
     char filepath[PATH_MAX];
-    snprintf(filepath, PATH_MAX, "%s/%s/%s", getenv("HOME"), g_lpszSolitarioDir,
+    snprintf(filepath, PATH_MAX, "%s/%s", GAMESET::GetHomeSolitarioFolder(),
              g_lpszIniFileName);
 
     ini_fd_t pIni = ini_open(filepath, "w", "#");
@@ -357,20 +370,20 @@ void AppGfx::writeProfile() {
     // deck type
     ini_locateHeading(pIni, g_lpszSectAll);
     ini_locateKey(pIni, g_lpszKeyDeck);
-    ini_writeInt(pIni, (int)_p_GameSettings->deckTypeVal.GetTypeIndex());
+    ini_writeInt(pIni, (int)_p_GameSettings->DeckTypeVal.GetTypeIndex());
 
     // language
     ini_locateHeading(pIni, g_lpszSectAll);
     ini_locateKey(pIni, g_lpszKeyLang);
-    ini_writeInt(pIni, _p_GameSettings->eLanguageCurrent);
+    ini_writeInt(pIni, _p_GameSettings->CurrentLanguage);
 
     // music
     ini_locateHeading(pIni, g_lpszSectAll);
     ini_locateKey(pIni, g_lpszKeyMusic);
-    ini_writeInt(pIni, _p_GameSettings->bMusicEnabled);
+    ini_writeInt(pIni, _p_GameSettings->MusicEnabled);
 
     ini_close(pIni);
-    TRACE("Settings file %s written", filepath);
+    TRACE("Settings file %s written\n", filepath);
 }
 
 TTF_Font *fncBind_GetFontVera(void *self) {
@@ -405,6 +418,7 @@ void fncBind_PersistSettings(void *self) {
 
 MenuDelegator AppGfx::prepMenuDelegator() {
     // Use only static otherwise you loose it
+#ifndef _MSC_VER
     static VMenuDelegator const tc = {
         .GetFontVera = (&fncBind_GetFontVera),
         .GetFontAriblk = (&fncBind_GetFontAriblk),
@@ -414,6 +428,14 @@ MenuDelegator AppGfx::prepMenuDelegator() {
         .PersistSettings = (&fncBind_PersistSettings)};
 
     return (MenuDelegator){.tc = &tc, .self = this};
+#else
+    static VMenuDelegator const tc = {
+        (&fncBind_GetFontVera),    (&fncBind_GetFontAriblk),
+        (&fncBind_GetLanguageMan), (&fncBind_LeaveMenu),
+        (&fncBind_SetNextMenu),    (&fncBind_PersistSettings)};
+    MenuDelegator md = {&tc, this};
+    return md;
+#endif
 }
 
 void AppGfx::LeaveMenu() {
@@ -422,13 +444,13 @@ void AppGfx::LeaveMenu() {
 }
 
 void AppGfx::PersistSettings() {
-    TRACE("Persist settings");
+    TRACE("Persist settings\n");
     writeProfile();
 }
 
 void AppGfx::drawSceneBackground() {
-    TRACE("drawSceneBackground %dx%d", _p_SceneBackground->w,
-          _p_SceneBackground->h);
+    TRACE_DEBUG("drawSceneBackground %dx%d\n", _p_SceneBackground->w,
+                _p_SceneBackground->h);
     SDL_FillRect(_p_Screen, &_p_Screen->clip_rect,
                  SDL_MapRGBA(_p_Screen->format, 0, 0, 0, 0));
     SDL_Rect rctTarget;
@@ -458,7 +480,7 @@ LPErrInApp AppGfx::MainLoop() {
     while (!bquit && !_Histmenu.empty()) {
         switch (_Histmenu.top()) {
             case MenuMgr::MENU_ROOT:
-                if (_p_GameSettings->bMusicEnabled &&
+                if (_p_GameSettings->MusicEnabled &&
                     !_p_MusicManager->IsPLayingMusic()) {
                     _p_MusicManager->PlayMusic(MusicManager::MUSIC_INIT_SND,
                                                MusicManager::LOOP_ON);
@@ -541,7 +563,7 @@ LPErrInApp AppGfx::showCredits() {
 }
 
 LPErrInApp AppGfx::showOptionGeneral() {
-    TRACE("Show option general");
+    TRACE("Show option general\n");
     MainOptionGfx optGfx;
 
     SDL_Rect rctOptionWin;
@@ -638,7 +660,7 @@ void AppGfx::ParseCmdLine(int argc, char *argv[]) {
         } else if (strcmp(argv[i], "--nosound") == 0 ||
                    strcmp(argv[i], "--quiet") == 0 ||
                    strcmp(argv[i], "-q") == 0) {
-            _p_GameSettings->bMusicEnabled = false;
+            _p_GameSettings->MusicEnabled = false;
             _bOverride = true;
         } else if (strcmp(argv[i], "--version") == 0 ||
                    strcmp(argv[i], "-v") == 0) {

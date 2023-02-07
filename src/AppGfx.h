@@ -29,9 +29,9 @@ public:
 
     LPErrInApp Init();
     LPErrInApp MainLoop();
-    std::string GetPlayerName() { return _p_GameSettings->strPlayerName; }
+    std::string GetPlayerName() { return _p_GameSettings->PlayerName; }
     void SetPlayerName(std::string strVal) {
-        _p_GameSettings->strPlayerName = strVal;
+        _p_GameSettings->PlayerName = strVal;
     }
     Languages* GetLanguageMan() { return &_Languages; }
     void ParseCmdLine(int argc, char* argv[]);

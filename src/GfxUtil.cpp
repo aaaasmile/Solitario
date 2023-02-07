@@ -200,7 +200,7 @@ void GFX_UTIL::DrawRect(SDL_Surface *screen, int x, int y, int dx, int dy,
 
 LPErrInApp GFX_UTIL::LoadCardPac(SDL_Surface **pp_Deck, DeckType &deckType,
                                  Uint16 *pac_w, Uint16 *pac_h) {
-    TRACE("Load card Pac");
+    TRACE("Load card Pac\n");
     Uint32 timetag;
     char description[100];
     Uint8 num_anims;
@@ -218,7 +218,7 @@ LPErrInApp GFX_UTIL::LoadCardPac(SDL_Surface **pp_Deck, DeckType &deckType,
     }
     SDL_RWread(src, description, 100, 1);
     timetag = SDL_ReadLE32(src);
-    TRACE("Timetag is %d", timetag);
+    TRACE("Timetag is %d\n", timetag);
     SDL_RWread(src, &num_anims, 1, 1);
     // witdh of the picture (pac of 4 cards)
     w = SDL_ReadLE16(src);

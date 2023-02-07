@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\GameGfx">
+      <UniqueIdentifier>{c6857f4a-82f6-4d31-840f-10db9e220b74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\CompoGfx">
+      <UniqueIdentifier>{415c6e05-1ec6-491a-9552-5108ddd76750}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\libini">
+      <UniqueIdentifier>{a487b244-af62-4201-ab91-bdf34f067275}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Vs-stuff">
+      <UniqueIdentifier>{7af44eb3-97ad-4a28-9205-7407c5799fdb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\AppGfx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\CardGfx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Credits.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\DeckType.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ErrorInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Fading.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\GameSettings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\GfxUtil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Languages.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\MainOptionGfx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\MenuMgr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\MusicManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\GameGfx\CardRegionGfx.cpp">
+      <Filter>Source Files\GameGfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\GameGfx\CardStackGfx.cpp">
+      <Filter>Source Files\GameGfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\GameGfx\SolitarioGfx.cpp">
+      <Filter>Source Files\GameGfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\CompGfx\cButtonGfx.cpp">
+      <Filter>Source Files\CompoGfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\CompGfx\cCheckBoxGfx.cpp">
+      <Filter>Source Files\CompoGfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\CompGfx\cComboGfx.cpp">
+      <Filter>Source Files\CompoGfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\CompGfx\cLabelGfx.cpp">
+      <Filter>Source Files\CompoGfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\CompGfx\cLabelLinkGfx.cpp">
+      <Filter>Source Files\CompoGfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libini\ini.cpp">
+      <Filter>Source Files\libini</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vs-source\Util-vs.cpp">
+      <Filter>Source Files\Vs-stuff</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\TraceService.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\AppGfx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CardGfx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Credits.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\DeckType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ErrorInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Fading.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\GameSettings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\GfxUtil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Languages.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\MainOptionGfx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\MenuMgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\MusicManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Traits.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\WinTypeGlobal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\GameGfx\CardRegionGfx.h">
+      <Filter>Source Files\GameGfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\GameGfx\CardStackGfx.h">
+      <Filter>Source Files\GameGfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\GameGfx\SolitarioGfx.h">
+      <Filter>Source Files\GameGfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CompGfx\cButtonGfx.h">
+      <Filter>Source Files\CompoGfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CompGfx\cCheckBoxGfx.h">
+      <Filter>Source Files\CompoGfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CompGfx\cComboGfx.h">
+      <Filter>Source Files\CompoGfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CompGfx\cLabelGfx.h">
+      <Filter>Source Files\CompoGfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CompGfx\cLabelLinkGfx.h">
+      <Filter>Source Files\CompoGfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\TraceService.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
