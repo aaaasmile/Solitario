@@ -111,7 +111,7 @@ am_solitario_OBJECTS = src/GameGfx/CardRegionGfx.$(OBJEXT) \
 	src/GfxUtil.$(OBJEXT) src/Languages.$(OBJEXT) \
 	src/Main.$(OBJEXT) src/Fading.$(OBJEXT) src/Credits.$(OBJEXT) \
 	src/ErrorInfo.$(OBJEXT) src/MenuMgr.$(OBJEXT) \
-	src/MainOptionGfx.$(OBJEXT) \
+	src/MainOptionGfx.$(OBJEXT) src/WhereAmI.$(OBJEXT) \
 	src/CompGfx/cLabelLinkGfx.$(OBJEXT) \
 	src/CompGfx/cButtonGfx.$(OBJEXT) \
 	src/CompGfx/cCheckBoxGfx.$(OBJEXT) \
@@ -140,7 +140,7 @@ am__depfiles_remade = src/$(DEPDIR)/AppGfx.Po src/$(DEPDIR)/CardGfx.Po \
 	src/$(DEPDIR)/GameSettings.Po src/$(DEPDIR)/GfxUtil.Po \
 	src/$(DEPDIR)/Languages.Po src/$(DEPDIR)/Main.Po \
 	src/$(DEPDIR)/MainOptionGfx.Po src/$(DEPDIR)/MenuMgr.Po \
-	src/$(DEPDIR)/MusicManager.Po \
+	src/$(DEPDIR)/MusicManager.Po src/$(DEPDIR)/WhereAmI.Po \
 	src/CompGfx/$(DEPDIR)/cButtonGfx.Po \
 	src/CompGfx/$(DEPDIR)/cCheckBoxGfx.Po \
 	src/CompGfx/$(DEPDIR)/cComboGfx.Po \
@@ -150,6 +150,18 @@ am__depfiles_remade = src/$(DEPDIR)/AppGfx.Po src/$(DEPDIR)/CardGfx.Po \
 	src/GameGfx/$(DEPDIR)/CardStackGfx.Po \
 	src/GameGfx/$(DEPDIR)/SolitarioGfx.Po
 am__mv = mv -f
+COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
+	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+AM_V_CC = $(am__v_CC_@AM_V@)
+am__v_CC_ = $(am__v_CC_@AM_DEFAULT_V@)
+am__v_CC_0 = @echo "  CC      " $@;
+am__v_CC_1 = 
+CCLD = $(CC)
+LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+am__v_CCLD_0 = @echo "  CCLD    " $@;
+am__v_CCLD_1 = 
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 AM_V_CXX = $(am__v_CXX_@AM_V@)
@@ -382,6 +394,7 @@ solitario_SOURCES = \
 	src/ErrorInfo.cpp\
 	src/MenuMgr.cpp\
 	src/MainOptionGfx.cpp\
+	src/WhereAmI.c\
 	src/CompGfx/cLabelLinkGfx.cpp\
 	src/CompGfx/cButtonGfx.cpp\
 	src/CompGfx/cCheckBoxGfx.cpp\
@@ -391,7 +404,7 @@ solitario_SOURCES = \
 all: all-recursive
 
 .SUFFIXES:
-.SUFFIXES: .cpp .o .obj
+.SUFFIXES: .c .cpp .o .obj
 am--refresh: Makefile
 	@:
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
@@ -525,6 +538,8 @@ src/MenuMgr.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/MainOptionGfx.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
+src/WhereAmI.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
 src/CompGfx/$(am__dirstamp):
 	@$(MKDIR_P) src/CompGfx
 	@: > src/CompGfx/$(am__dirstamp)
@@ -568,6 +583,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/MainOptionGfx.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/MenuMgr.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/MusicManager.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/WhereAmI.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/CompGfx/$(DEPDIR)/cButtonGfx.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/CompGfx/$(DEPDIR)/cCheckBoxGfx.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/CompGfx/$(DEPDIR)/cComboGfx.Po@am__quote@ # am--include-marker
@@ -582,6 +598,22 @@ $(am__depfiles_remade):
 	@echo '# dummy' >$@-t && $(am__mv) $@-t $@
 
 am--depfiles: $(am__depfiles_remade)
+
+.c.o:
+@am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
+@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
+@am__fastdepCC_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ $<
+
+.c.obj:
+@am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.obj$$||'`;\
+@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ `$(CYGPATH_W) '$<'` &&\
+@am__fastdepCC_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -964,6 +996,7 @@ distclean: distclean-recursive
 	-rm -f src/$(DEPDIR)/MainOptionGfx.Po
 	-rm -f src/$(DEPDIR)/MenuMgr.Po
 	-rm -f src/$(DEPDIR)/MusicManager.Po
+	-rm -f src/$(DEPDIR)/WhereAmI.Po
 	-rm -f src/CompGfx/$(DEPDIR)/cButtonGfx.Po
 	-rm -f src/CompGfx/$(DEPDIR)/cCheckBoxGfx.Po
 	-rm -f src/CompGfx/$(DEPDIR)/cComboGfx.Po
@@ -1032,6 +1065,7 @@ maintainer-clean: maintainer-clean-recursive
 	-rm -f src/$(DEPDIR)/MainOptionGfx.Po
 	-rm -f src/$(DEPDIR)/MenuMgr.Po
 	-rm -f src/$(DEPDIR)/MusicManager.Po
+	-rm -f src/$(DEPDIR)/WhereAmI.Po
 	-rm -f src/CompGfx/$(DEPDIR)/cButtonGfx.Po
 	-rm -f src/CompGfx/$(DEPDIR)/cCheckBoxGfx.Po
 	-rm -f src/CompGfx/$(DEPDIR)/cComboGfx.Po
