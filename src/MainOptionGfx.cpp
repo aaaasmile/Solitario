@@ -29,6 +29,7 @@ MainOptionGfx::~MainOptionGfx() {
     delete m_pBtOK;
     delete m_pComboLang;
     delete m_pCheckMusic;
+    delete m_pComboDeck;
     for (int i = 0; i < DeckType::NUM_OF_DECK; i++) {
         if (m_pDeckAll[i]) {
             SDL_FreeSurface(m_pDeckAll[i]);

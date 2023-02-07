@@ -29,6 +29,7 @@ extern const char *lpszDeckDir;
 
 SolitarioGfx::SolitarioGfx() {
     _p_ScreenBackbuffer = 0;
+    _bStartdrag = false;
     _p_Dragface = 0;
     _p_SceneBackground = 0;
     _p_ScreenTexture = 0;
@@ -523,7 +524,7 @@ LPErrInApp SolitarioGfx::DrawCardPac(int x, int y, int nCdIndex,
 
     int iSegnoIx = nCdIndex / 10;
     int iCartaIx = nCdIndex % 10;
-    TRACE("Suit %d, card: %d\n", iSegnoIx, iCartaIx);
+    TRACE_DEBUG("Suit %d, card: %d\n", iSegnoIx, iCartaIx);
 
     SDL_Rect srcCard;
     srcCard.x = iSegnoIx * g_CardWidth;
