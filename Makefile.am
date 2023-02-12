@@ -36,8 +36,8 @@ solitario_SOURCES = \
 	src/GfxUtil.cpp\
 	src/Languages.cpp\
 	src/Main.cpp\
-	src/Fading.cpp\
-	src/Credits.cpp\
+	src/Fading.c\
+	src/Credits.c\
 	src/ErrorInfo.cpp\
 	src/MenuMgr.cpp\
 	src/MainOptionGfx.cpp\

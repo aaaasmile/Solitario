@@ -286,6 +286,7 @@ oltre alla powershell con ninja in build, mi funziona la icona Build nella statu
 
 ### TODO
 
+- Domanda (msgbox) quando vuole uscire o cominciare una nuova partita
 - Score
 - Effetto sonoro quando si manda una carta nella pila degli assi e magari alla fine del drag
 - windows setup
