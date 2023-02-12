@@ -6,7 +6,12 @@
 #include "CardRegionGfx.h"
 #include "ErrorInfo.h"
 #include "GameSettings.h"
+#include "Languages.h"
+#include "Traits.h"
 #include "WinTypeGlobal.h"
+
+using namespace traits;
+class cButtonGfx;
 
 typedef std::vector<CardRegionGfx>::iterator regionVI;
 
@@ -45,7 +50,8 @@ public:
     ~SolitarioGfx();
 
     LPErrInApp Initialize(SDL_Surface *s, SDL_Renderer *r, SDL_Window *w,
-                          DeckType &dt);
+                          DeckType &dt, LPLanguages planguages,
+                          TTF_Font *pfontText);
     LPErrInApp StartGameLoop();
 
     int Size(int regionNo) { return _cardRegionList[regionNo].Size(); }
@@ -136,6 +142,8 @@ public:
     LPCardRegionGfx GetRegion(int regionNo) {
         return &_cardRegionList[regionNo];
     }
+    void BtQuitClick();
+    void BtNewGameClick();
 
 private:
     void updateTextureAsFlipScreen();
@@ -149,6 +157,8 @@ private:
     LPErrInApp handleGameLoopMouseUpEvent(SDL_Event &event);
     LPErrInApp handleLeftMouseDown(SDL_Event &event);
     LPErrInApp handleRightMouseDown(SDL_Event &event);
+    ClickCb prepClickQuitCb();
+    ClickCb prepClickNewGameCb();
 
 private:
     CardStackGfx _dragStack;
@@ -162,6 +172,8 @@ private:
     SDL_Surface *_p_SceneBackground;
     SDL_Renderer *_p_sdlRenderer;
     SDL_Window *_p_Window;
+    LPLanguages _p_Languages;
+    TTF_Font *_p_FontText;
 
     int _oldx;
     int _oldy;
@@ -176,6 +188,9 @@ private:
     SDL_Rect _rctSrcCard;
 
     std::vector<CardRegionGfx> _cardRegionList;
+    bool _terminated;
+    cButtonGfx *_p_BtQuit;
+    cButtonGfx *_p_BtNewGame;
 };
 
 #endif
