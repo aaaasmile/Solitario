@@ -4,7 +4,7 @@
 #include <SDL_endian.h>
 #include <SDL_image.h>
 
-#include "CompGfx/cButtonGfx.h"
+#include "CompGfx/ButtonGfx.h"
 #include "CompGfx/cCheckBoxGfx.h"
 #include "CompGfx/cComboGfx.h"
 #include "GfxUtil.h"
@@ -123,14 +123,14 @@ LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
 
     ClickCb cbBtOK_Cancel = prepClickCb();
     // button OK
-    m_pBtOK = new cButtonGfx;
+    m_pBtOK = new ButtonGfx;
     rctBt1.w = 120;
     rctBt1.h = 28;
     rctBt1.y = m_rctOptBox.y + m_rctOptBox.h - 10 - rctBt1.h;
     rctBt1.x =
         (m_rctOptBox.w - rctBt1.w) / 2 + m_rctOptBox.x + rctBt1.w + iSpace2bt;
     m_pBtOK->Initialize(&rctBt1, pScreen, m_pFontText, MYIDOK, cbBtOK_Cancel);
-    m_pBtOK->SetState(cButtonGfx::INVISIBLE);
+    m_pBtOK->SetVisibleState(ButtonGfx::INVISIBLE);
     // Combo language
     ClickCb nullCb = {NULL, NULL};
     m_pComboLang = new cComboGfx;
@@ -214,8 +214,8 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
     // button ok
     STRING strTextBt;
     strTextBt = _p_Languages->GetStringId(Languages::ID_OK);
-    m_pBtOK->SetWindowText(strTextBt.c_str());
-    m_pBtOK->SetState(cButtonGfx::VISIBLE);
+    m_pBtOK->SetButtonText(strTextBt.c_str());
+    m_pBtOK->SetVisibleState(ButtonGfx::VISIBLE);
 
     // combobox language selection
     STRING strSelectLanguage =

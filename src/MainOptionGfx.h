@@ -12,7 +12,7 @@
 #include "Traits.h"
 #include "WinTypeGlobal.h"
 
-class cButtonGfx;
+class ButtonGfx;
 class Languages;
 class cCheckBoxGfx;
 class cComboGfx;
@@ -56,7 +56,7 @@ private:
     TTF_Font* m_pFontText;
     TTF_Font* m_pFontCtrl;
     SDL_Color m_colCurrent;
-    cButtonGfx* m_pBtOK;
+    ButtonGfx* m_pBtOK;
     bool m_bTerminated;
     int m_iResult;
     STRING m_strHeaderText;

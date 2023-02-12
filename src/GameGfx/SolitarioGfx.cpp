@@ -4,7 +4,7 @@
 #include <SDL_image.h>
 #include <stdio.h>
 
-#include "CompGfx/cButtonGfx.h"
+#include "CompGfx/ButtonGfx.h"
 #include "Fading.h"
 #include "GfxUtil.h"
 #include "WinTypeGlobal.h"
@@ -492,21 +492,21 @@ LPErrInApp SolitarioGfx::DrawInitialScene() {
     SDL_Rect rctBt1;
     // button Quit
     ClickCb cbBtQuit = prepClickQuitCb();
-    _p_BtQuit = new cButtonGfx;
+    _p_BtQuit = new ButtonGfx;
     rctBt1.w = 120;
     rctBt1.h = 28;
     rctBt1.y = _p_Screen->h - 70;
     rctBt1.x = 30;
     _p_BtQuit->Initialize(&rctBt1, _p_Screen, _p_FontText, MYIDQUIT, cbBtQuit);
-    _p_BtQuit->SetState(cButtonGfx::INVISIBLE);
+    _p_BtQuit->SetVisibleState(ButtonGfx::INVISIBLE);
 
     // button new game
     ClickCb cbBtNewGame = prepClickNewGameCb();
-    _p_BtNewGame = new cButtonGfx;
+    _p_BtNewGame = new ButtonGfx;
     rctBt1.x = rctBt1.x + rctBt1.w + 30;
     _p_BtNewGame->Initialize(&rctBt1, _p_Screen, _p_FontText, MYIDNEWGAME,
                              cbBtNewGame);
-    _p_BtNewGame->SetState(cButtonGfx::INVISIBLE);
+    _p_BtNewGame->SetVisibleState(ButtonGfx::INVISIBLE);
     return NULL;
 }
 
@@ -1095,12 +1095,12 @@ LPErrInApp SolitarioGfx::StartGameLoop() {
     // button Quit
     STRING strTextBt;
     strTextBt = _p_Languages->GetStringId(Languages::ID_EXIT);
-    _p_BtQuit->SetWindowText(strTextBt.c_str());
-    _p_BtQuit->SetState(cButtonGfx::VISIBLE);
+    _p_BtQuit->SetButtonText(strTextBt.c_str());
+    _p_BtQuit->SetVisibleState(ButtonGfx::VISIBLE);
     // button New Game
     strTextBt = _p_Languages->GetStringId(Languages::ID_START);
-    _p_BtNewGame->SetWindowText(strTextBt.c_str());
-    _p_BtNewGame->SetState(cButtonGfx::VISIBLE);
+    _p_BtNewGame->SetButtonText(strTextBt.c_str());
+    _p_BtNewGame->SetVisibleState(ButtonGfx::VISIBLE);
 
     // index 0 (deck with face down)
     CreateRegion(CRD_DECKPILE,          // ID

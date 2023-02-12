@@ -11,7 +11,7 @@
 #include "WinTypeGlobal.h"
 
 using namespace traits;
-class cButtonGfx;
+class ButtonGfx;
 
 typedef std::vector<CardRegionGfx>::iterator regionVI;
 
@@ -190,8 +190,8 @@ private:
     std::vector<CardRegionGfx> _cardRegionList;
     bool _terminated;
     bool _newgamerequest;
-    cButtonGfx *_p_BtQuit;
-    cButtonGfx *_p_BtNewGame;
+    ButtonGfx *_p_BtQuit;
+    ButtonGfx *_p_BtNewGame;
 };
 
 #endif
