@@ -33,3 +33,4 @@ Makefile.in
 missing
 solitario.spec
 stamp-h1
+ar-lib
