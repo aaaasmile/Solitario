@@ -300,7 +300,7 @@ LPErrInApp AppGfx::loadProfile() {
     bool dirCreated;
 
     char dirpath[PATH_MAX];
-    char filepath[PATH_MAX];
+    char filepath[PATH_MAX + strlen(g_lpszIniFileName)];
     snprintf(dirpath, sizeof(dirpath), "%s", GAMESET::GetHomeSolitarioFolder());
     err = GAMESET::CreateHomeSolitarioFolderIfNotExists(dirCreated);
     if (err != NULL) {
@@ -310,7 +310,7 @@ LPErrInApp AppGfx::loadProfile() {
         TRACE("Create dir %s\n", dirpath);
     }
     _p_GameSettings->SettingsDir = dirpath;
-    snprintf(filepath, PATH_MAX, "%s/%s", dirpath, g_lpszIniFileName);
+    snprintf(filepath, sizeof(filepath), "%s/%s", dirpath, g_lpszIniFileName);
 
     if (stat(filepath, &st) == -1) {
         err = CopyFile(g_lpszDefaultIniFileName, filepath);
