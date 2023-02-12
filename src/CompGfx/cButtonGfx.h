@@ -21,9 +21,9 @@ public:
     void Initialize(SDL_Rect* pRect, SDL_Surface* pScreen, TTF_Font* pFont,
                     int iButID, ClickCb& fncbClickEvent);
     void SetWindowText(LPCSTR strCaption) { m_strButText = strCaption; }
-    bool MouseMove(SDL_Event& event, SDL_Surface* pScreen);
-    void MouseUp(SDL_Event& event);
-    void MouseDown(SDL_Event& event, SDL_Surface* pScreen);
+    bool MouseMove(SDL_Event& event);
+    bool MouseUp(SDL_Event& event);
+    bool MouseDown(SDL_Event& event);
     void DrawButton(SDL_Surface* pScreen);
     void EnableWindow(bool bVal) { m_bIsEnabled = bVal; }
     void SetState(VisbleState eVal);

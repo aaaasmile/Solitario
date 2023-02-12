@@ -1055,10 +1055,10 @@ void SolitarioGfx::handleGameLoopMouseMoveEvent(SDL_Event &event) {
     if (event.motion.state == SDL_BUTTON(1) && _bStartdrag) {
         DoDrag(event.motion.x, event.motion.y);
     }
-    bool statusChanged = _p_BtNewGame->MouseMove(event, _p_Screen);
-    statusChanged = statusChanged || _p_BtQuit->MouseMove(event, _p_Screen);
+    bool statusChanged = _p_BtNewGame->MouseMove(event);
+    statusChanged = statusChanged || _p_BtQuit->MouseMove(event);
     if (statusChanged) {
-        updateTextureAsFlipScreen();
+        DrawStaticScene();
     }
 }
 

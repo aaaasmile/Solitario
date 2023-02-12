@@ -43,13 +43,23 @@ void cButtonGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
 
 void cButtonGfx::SetState(VisbleState eVal) { m_eState = eVal; }
 
-bool cButtonGfx::MouseMove(SDL_Event& event, SDL_Surface* pScreen) {
+bool cButtonGfx::MouseMove(SDL_Event& event) {
     MouseState previous = _mouseState;
-    DrawButton(pScreen);
+    if (m_eState == VISIBLE && m_bIsEnabled) {
+        if (event.motion.x >= m_rctButt.x &&
+            event.motion.x <= m_rctButt.x + m_rctButt.w &&
+            event.motion.y >= m_rctButt.y &&
+            event.motion.y <= m_rctButt.y + m_rctButt.h) {
+            _mouseState = MouseState::INSIDE;
+        } else {
+            _mouseState = MouseState::OUTSIDE;
+        }
+    }
+
     return previous != _mouseState;
 }
 
-void cButtonGfx::MouseDown(SDL_Event& event, SDL_Surface* pScreen) {
+bool cButtonGfx::MouseDown(SDL_Event& event) {
     m_bMouseIsDown = false;
     if (m_eState == VISIBLE && m_bIsEnabled) {
         if (event.motion.x >= m_rctButt.x &&
@@ -58,11 +68,11 @@ void cButtonGfx::MouseDown(SDL_Event& event, SDL_Surface* pScreen) {
             event.motion.y <= m_rctButt.y + m_rctButt.h) {
             m_bMouseIsDown = true;
         }
-        DrawButton(pScreen);
     }
+    return m_bMouseIsDown;
 }
 
-void cButtonGfx::MouseUp(SDL_Event& event) {
+bool cButtonGfx::MouseUp(SDL_Event& event) {
     if (m_eState == VISIBLE && m_bIsEnabled) {
         if (event.motion.x >= m_rctButt.x &&
             event.motion.x <= m_rctButt.x + m_rctButt.w &&
@@ -76,6 +86,7 @@ void cButtonGfx::MouseUp(SDL_Event& event) {
         }
     }
     m_bMouseIsDown = false;
+    return _mouseState == MouseState::INSIDE;
 }
 
 void cButtonGfx::DrawButton(SDL_Surface* pScreen) {
