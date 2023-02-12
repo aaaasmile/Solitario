@@ -288,7 +288,8 @@ oltre alla powershell con ninja in build, mi funziona la icona Build nella statu
 
 - Score
 - Effetto sonoro quando si manda una carta nella pila degli assi e magari alla fine del drag
-- Rimuovere in git i file automake generati 
+- windows setup
+- Rimuovere in git i file automake generati [DONE]
 - Il codice taget di supporto del trace service si può implementare una sola volta mentre su ogni target
     si implementa solo la configurazione
 - In windows manca il settaggio del path dove si trova l'exe per avere il path completo
