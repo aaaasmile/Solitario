@@ -35,8 +35,10 @@ public:
     }
     Languages* GetLanguageMan() { return &_Languages; }
     void ParseCmdLine(int argc, char* argv[]);
-    TTF_Font* GetFontVera() { return _p_fontVera; }
-    TTF_Font* GetFontAriblk() { return _p_fontAriblk; }
+    TTF_Font* GetFontVera() { return _p_fontVera; }  // text small
+    TTF_Font* GetFontAriblk() {
+        return _p_fontAriblk;
+    }  // text for big command on menu
     void LeaveMenu();
     void SetNextMenu(int iVal) { _Histmenu.push(iVal); }
     void PersistSettings();

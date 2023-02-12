@@ -948,11 +948,7 @@ LPErrInApp SolitarioGfx::newGame() {
 LPErrInApp SolitarioGfx::handleGameLoopKeyDownEvent(SDL_Event &event) {
     LPErrInApp err;
     if (event.key.keysym.sym == SDLK_n) {
-        err = newGame();
-        if (err != NULL) {
-            return err;
-        }
-        DrawStaticScene();
+        _newgamerequest = true;
     }
     if (event.key.keysym.sym == SDLK_a) {
         err = VictoryAnimation();
@@ -1060,6 +1056,8 @@ void SolitarioGfx::handleGameLoopMouseMoveEvent(SDL_Event &event) {
     if (event.motion.state == SDL_BUTTON(1) && _bStartdrag) {
         DoDrag(event.motion.x, event.motion.y);
     }
+    _p_BtNewGame->MouseMove(event, _p_Screen, NULL, _p_ScreenTexture);
+    _p_BtQuit->MouseMove(event, _p_Screen, NULL, _p_ScreenTexture);
 }
 
 LPErrInApp SolitarioGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
@@ -1183,6 +1181,14 @@ LPErrInApp SolitarioGfx::StartGameLoop() {
                     break;
             }
         }
+        if (_newgamerequest) {
+            _newgamerequest = false;
+            err = newGame();
+            if (err != NULL) {
+                return err;
+            }
+            DrawStaticScene();
+        }
     }
     return NULL;
 }
@@ -1192,4 +1198,7 @@ void SolitarioGfx::BtQuitClick() {
     _terminated = true;
 }
 
-void SolitarioGfx::BtNewGameClick() { TRACE("New Game with user button\n"); }
+void SolitarioGfx::BtNewGameClick() {
+    TRACE("New Game with user button\n");
+    _newgamerequest = true;
+}

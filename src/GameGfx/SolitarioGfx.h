@@ -189,6 +189,7 @@ private:
 
     std::vector<CardRegionGfx> _cardRegionList;
     bool _terminated;
+    bool _newgamerequest;
     cButtonGfx *_p_BtQuit;
     cButtonGfx *_p_BtNewGame;
 };
