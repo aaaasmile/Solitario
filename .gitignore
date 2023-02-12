@@ -34,3 +34,10 @@ missing
 solitario.spec
 stamp-h1
 ar-lib
+src/stamp-h1
+compile
+src/.dirstamp
+src/CompGfx/.dirstamp
+*.dirstamp
+libini/Makefile
+libini/Makefile.in
