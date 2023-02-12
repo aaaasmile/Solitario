@@ -4,6 +4,7 @@
 #include <SDL_image.h>
 #include <stdio.h>
 
+#include "CompGfx/cButtonGfx.h"
 #include "Fading.h"
 #include "GfxUtil.h"
 #include "WinTypeGlobal.h"
@@ -27,6 +28,9 @@ static const char *lpszBackgroundImgFile = DATA_PREFIX "images/im001537.jpg";
 static const char *lpszSymbDir = DATA_PREFIX "images/";
 extern const char *lpszDeckDir;
 
+const int MYIDQUIT = 0;
+const int MYIDNEWGAME = 1;
+
 SolitarioGfx::SolitarioGfx() {
     _p_ScreenBackbuffer = 0;
     _bStartdrag = false;
@@ -36,11 +40,15 @@ SolitarioGfx::SolitarioGfx() {
     for (int i = 0; i < NUM_CARDS_ONDECK; i++) {
         _p_CardsSurf[i] = 0;
     }
+    _p_BtQuit = NULL;
+    _p_BtNewGame = NULL;
 }
 
 SolitarioGfx::~SolitarioGfx() {
     CleanUpRegion();
     clearSurface();
+    delete _p_BtNewGame;
+    delete _p_BtQuit;
 }
 
 void SolitarioGfx::clearSurface() {
@@ -60,11 +68,35 @@ void SolitarioGfx::clearSurface() {
     }
 }
 
+// command buttons
+void fncBind_ButtonQuitClick(void *self, int val) {
+    SolitarioGfx *pApp = (SolitarioGfx *)self;
+    pApp->BtQuitClick();
+}
+
+ClickCb SolitarioGfx::prepClickQuitCb() {
+    static VClickCb const tc = {.Click = (&fncBind_ButtonQuitClick)};
+    return (ClickCb){.tc = &tc, .self = this};
+}
+
+void fncBind_ButtonNewGameClick(void *self, int val) {
+    SolitarioGfx *pApp = (SolitarioGfx *)self;
+    pApp->BtNewGameClick();
+}
+
+ClickCb SolitarioGfx::prepClickNewGameCb() {
+    static VClickCb const tc = {.Click = (&fncBind_ButtonNewGameClick)};
+    return (ClickCb){.tc = &tc, .self = this};
+}
+
 LPErrInApp SolitarioGfx::Initialize(SDL_Surface *s, SDL_Renderer *r,
-                                    SDL_Window *w, DeckType &dt) {
+                                    SDL_Window *w, DeckType &dt,
+                                    LPLanguages planguages,
+                                    TTF_Font *pfontText) {
     TRACE("Initialize Solitario\n");
     setDeckType(dt);
-
+    _p_Languages = planguages;
+    _p_FontText = pfontText;
     LPErrInApp err;
     _p_Screen = s;
     _p_sdlRenderer = r;
@@ -418,6 +450,8 @@ LPCardRegionGfx SolitarioGfx::FindDropRegion(int id, LPCardStackGfx pStack) {
 }
 
 void SolitarioGfx::DrawStaticScene() {
+    // static scene is drawn direct into the screen.
+    // Then the screen is copied into the back buffer for animations
     SDL_FillRect(_p_Screen, &_p_Screen->clip_rect,
                  SDL_MapRGBA(_p_Screen->format, 0, 0, 0, 0));
     SDL_Rect rctTarget;
@@ -433,6 +467,8 @@ void SolitarioGfx::DrawStaticScene() {
         CardRegionGfx cardRegion = *vir;
         DrawCardStack(&cardRegion);
     }
+    _p_BtNewGame->DrawButton(_p_Screen);
+    _p_BtQuit->DrawButton(_p_Screen);
     // it seams here that SDL_BlitSurface copy only the bitmap and not the fill
     // rect, do it also into the backbuffer
     SDL_FillRect(_p_ScreenBackbuffer, &_p_ScreenBackbuffer->clip_rect,
@@ -453,6 +489,25 @@ LPErrInApp SolitarioGfx::DrawInitialScene() {
     rctTarget.h = _p_SceneBackground->h;
 
     fade(_p_Screen, _p_SceneBackground, 2, 0, _p_sdlRenderer, &rctTarget);
+    SDL_Rect rctBt1;
+    // button Quit
+    ClickCb cbBtQuit = prepClickQuitCb();
+    _p_BtQuit = new cButtonGfx;
+    rctBt1.w = 120;
+    rctBt1.h = 28;
+    rctBt1.y = _p_Screen->h - 70;
+    rctBt1.x = 30;
+    _p_BtQuit->Initialize(&rctBt1, _p_Screen, _p_FontText, MYIDQUIT,
+                          _p_sdlRenderer, cbBtQuit);
+    _p_BtQuit->SetState(cButtonGfx::INVISIBLE);
+
+    // button new game
+    ClickCb cbBtNewGame = prepClickNewGameCb();
+    _p_BtNewGame = new cButtonGfx;
+    rctBt1.x = rctBt1.x + rctBt1.w + 30;
+    _p_BtNewGame->Initialize(&rctBt1, _p_Screen, _p_FontText, MYIDNEWGAME,
+                             _p_sdlRenderer, cbBtNewGame);
+    _p_BtNewGame->SetState(cButtonGfx::INVISIBLE);
     return NULL;
 }
 
@@ -1008,7 +1063,9 @@ void SolitarioGfx::handleGameLoopMouseMoveEvent(SDL_Event &event) {
 }
 
 LPErrInApp SolitarioGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
-    LPErrInApp err;
+    _p_BtQuit->MouseUp(event);
+    _p_BtNewGame->MouseUp(event);
+
     if (_bStartdrag) {
         _bStartdrag = false;
         DoDrop();
@@ -1020,6 +1077,7 @@ LPErrInApp SolitarioGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
         DrawStaticScene();
     }
     // victory
+    LPErrInApp err;
     if ((Size(Ace_Ix1) == 10) && (Size(Ace_Ix2) == 10) &&
         (Size(Ace_Ix3) == 10) && (Size(Ace_Ix4) == 10)) {
         VictoryAnimation();
@@ -1029,10 +1087,21 @@ LPErrInApp SolitarioGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
         }
         DrawStaticScene();
     }
+
     return NULL;
 }
 
 LPErrInApp SolitarioGfx::StartGameLoop() {
+    // button Quit
+    STRING strTextBt;
+    strTextBt = _p_Languages->GetStringId(Languages::ID_EXIT);
+    _p_BtQuit->SetWindowText(strTextBt.c_str());
+    _p_BtQuit->SetState(cButtonGfx::VISIBLE);
+    // button New Game
+    strTextBt = _p_Languages->GetStringId(Languages::ID_START);
+    _p_BtNewGame->SetWindowText(strTextBt.c_str());
+    _p_BtNewGame->SetState(cButtonGfx::VISIBLE);
+
     // index 0 (deck with face down)
     CreateRegion(CRD_DECKPILE,          // ID
                  CRD_VISIBLE | CRD_3D,  // attributes
@@ -1080,8 +1149,8 @@ LPErrInApp SolitarioGfx::StartGameLoop() {
     DrawStaticScene();
 
     SDL_Event event;
-
-    while (1) {
+    _terminated = false;
+    while (!_terminated) {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT:
@@ -1115,4 +1184,12 @@ LPErrInApp SolitarioGfx::StartGameLoop() {
             }
         }
     }
+    return NULL;
 }
+
+void SolitarioGfx::BtQuitClick() {
+    TRACE("Quit with user button\n");
+    _terminated = true;
+}
+
+void SolitarioGfx::BtNewGameClick() { TRACE("New Game with user button\n"); }

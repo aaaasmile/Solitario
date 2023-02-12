@@ -221,7 +221,8 @@ LPErrInApp AppGfx::startGameLoop() {
     _p_SolitarioGfx = new SolitarioGfx();
 
     err = _p_SolitarioGfx->Initialize(_p_Screen, _p_sdlRenderer, _p_Window,
-                                      _p_GameSettings->DeckTypeVal);
+                                      _p_GameSettings->DeckTypeVal, &_Languages,
+                                      _p_fontVera);
     if (err != NULL)
         return err;
 

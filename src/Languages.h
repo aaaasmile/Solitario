@@ -76,4 +76,6 @@ private:
     std::string _mtxLangString[TOT_LANG][TOT_STRINGS];
 };
 
+typedef Languages* LPLanguages;
+
 #endif
