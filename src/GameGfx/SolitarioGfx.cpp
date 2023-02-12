@@ -497,8 +497,7 @@ LPErrInApp SolitarioGfx::DrawInitialScene() {
     rctBt1.h = 28;
     rctBt1.y = _p_Screen->h - 70;
     rctBt1.x = 30;
-    _p_BtQuit->Initialize(&rctBt1, _p_Screen, _p_FontText, MYIDQUIT,
-                          _p_sdlRenderer, cbBtQuit);
+    _p_BtQuit->Initialize(&rctBt1, _p_Screen, _p_FontText, MYIDQUIT, cbBtQuit);
     _p_BtQuit->SetState(cButtonGfx::INVISIBLE);
 
     // button new game
@@ -506,7 +505,7 @@ LPErrInApp SolitarioGfx::DrawInitialScene() {
     _p_BtNewGame = new cButtonGfx;
     rctBt1.x = rctBt1.x + rctBt1.w + 30;
     _p_BtNewGame->Initialize(&rctBt1, _p_Screen, _p_FontText, MYIDNEWGAME,
-                             _p_sdlRenderer, cbBtNewGame);
+                             cbBtNewGame);
     _p_BtNewGame->SetState(cButtonGfx::INVISIBLE);
     return NULL;
 }
@@ -1056,8 +1055,11 @@ void SolitarioGfx::handleGameLoopMouseMoveEvent(SDL_Event &event) {
     if (event.motion.state == SDL_BUTTON(1) && _bStartdrag) {
         DoDrag(event.motion.x, event.motion.y);
     }
-    _p_BtNewGame->MouseMove(event, _p_Screen, NULL, _p_ScreenTexture);
-    _p_BtQuit->MouseMove(event, _p_Screen, NULL, _p_ScreenTexture);
+    bool statusChanged = _p_BtNewGame->MouseMove(event, _p_Screen);
+    statusChanged = statusChanged || _p_BtQuit->MouseMove(event, _p_Screen);
+    if (statusChanged) {
+        updateTextureAsFlipScreen();
+    }
 }
 
 LPErrInApp SolitarioGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {

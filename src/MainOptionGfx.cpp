@@ -129,8 +129,7 @@ LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
     rctBt1.y = m_rctOptBox.y + m_rctOptBox.h - 10 - rctBt1.h;
     rctBt1.x =
         (m_rctOptBox.w - rctBt1.w) / 2 + m_rctOptBox.x + rctBt1.w + iSpace2bt;
-    m_pBtOK->Initialize(&rctBt1, pScreen, m_pFontText, MYIDOK, pRenderer,
-                        cbBtOK_Cancel);
+    m_pBtOK->Initialize(&rctBt1, pScreen, m_pFontText, MYIDOK, cbBtOK_Cancel);
     m_pBtOK->SetState(cButtonGfx::INVISIBLE);
     // Combo language
     ClickCb nullCb = {NULL, NULL};
