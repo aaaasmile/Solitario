@@ -1,4 +1,6 @@
 #include "Languages.h"
+// CAUTION: this file is intended to be saved in ISO 8859-1
+// If you use UTF-8 then you need to change each TTF call to UTF-8 version
 
 Languages::Languages() {
     for (int i = 0; i < TOT_STRINGS; i++) {
@@ -65,6 +67,7 @@ Languages::Languages() {
     _mtxLangString[LANG_DIAL_BREDA][ID_MN_HELP] = "Ad du na man";
     _mtxLangString[LANG_DIAL_BREDA][ID_OK] = "Ukei";
     _mtxLangString[LANG_DIAL_BREDA][ID_CANCEL] = "Cancèla";
+    _mtxLangString[LANG_DIAL_BREDA][ID_NEWGAME] = "Natra";
 
     // italiano
     _mtxLangString[LANG_ITA][ID_START] = "Inizia";
@@ -119,6 +122,7 @@ Languages::Languages() {
     _mtxLangString[LANG_ITA][ID_MN_HELP] = "Guida";
     _mtxLangString[LANG_ITA][ID_OK] = "OK";
     _mtxLangString[LANG_ITA][ID_CANCEL] = "Cancella";
+    _mtxLangString[LANG_ITA][ID_NEWGAME] = "Nuova";
 
     // English
     _mtxLangString[LANG_ENG][ID_START] = "Start";
@@ -173,6 +177,7 @@ Languages::Languages() {
     _mtxLangString[LANG_ENG][ID_MN_HELP] = "Help";
     _mtxLangString[LANG_ENG][ID_OK] = "OK";
     _mtxLangString[LANG_ENG][ID_CANCEL] = "Cancel";
+    _mtxLangString[LANG_ENG][ID_NEWGAME] = "New Game";
 }
 
 std::string Languages::GetStringId(eStringID eId) {

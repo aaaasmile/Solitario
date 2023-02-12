@@ -62,6 +62,7 @@ public:
         ID_MN_HELP,
         ID_OK,
         ID_CANCEL,
+        ID_NEWGAME,
         TOT_STRINGS  // it mus be always on the last place
     };
 

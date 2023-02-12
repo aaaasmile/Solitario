@@ -1098,7 +1098,7 @@ LPErrInApp SolitarioGfx::StartGameLoop() {
     _p_BtQuit->SetButtonText(strTextBt.c_str());
     _p_BtQuit->SetVisibleState(ButtonGfx::VISIBLE);
     // button New Game
-    strTextBt = _p_Languages->GetStringId(Languages::ID_START);
+    strTextBt = _p_Languages->GetStringId(Languages::ID_NEWGAME);
     _p_BtNewGame->SetButtonText(strTextBt.c_str());
     _p_BtNewGame->SetVisibleState(ButtonGfx::VISIBLE);
 
