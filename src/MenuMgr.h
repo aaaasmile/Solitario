@@ -12,8 +12,8 @@
 #include "Traits.h"
 
 class Languages;
-class cLabelLinkGfx;
-class cLabelGfx;
+class LabelLinkGfx;
+class LabelGfx;
 
 using namespace traits;
 
@@ -74,8 +74,8 @@ private:
     SDL_Surface* _p_MenuBox;
     SDL_Surface* _p_Scene_background;
     SDL_Rect _rctPanel;
-    cLabelGfx* _p_LabelVersion;
-    cLabelLinkGfx* _p_homeUrl;
+    LabelGfx* _p_LabelVersion;
+    LabelLinkGfx* _p_homeUrl;
     bool _bMouseInside;
 };
 

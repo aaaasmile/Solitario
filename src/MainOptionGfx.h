@@ -14,8 +14,8 @@
 
 class ButtonGfx;
 class Languages;
-class cCheckBoxGfx;
-class cComboGfx;
+class CheckBoxGfx;
+class ComboGfx;
 class MusicManager;
 
 using namespace traits;
@@ -60,9 +60,9 @@ private:
     bool m_bTerminated;
     int m_iResult;
     STRING m_strHeaderText;
-    cCheckBoxGfx* m_pCheckMusic;
-    cComboGfx* m_pComboLang;
-    cComboGfx* m_pComboDeck;
+    CheckBoxGfx* m_pCheckMusic;
+    ComboGfx* m_pComboLang;
+    ComboGfx* m_pComboDeck;
     SDL_Surface* m_pDeckAll[DeckType::NUM_OF_DECK];
     CardGfx m_CardOnEachDeck[3][DeckType::NUM_OF_DECK];
 

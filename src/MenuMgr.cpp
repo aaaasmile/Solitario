@@ -7,8 +7,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "CompGfx/cLabelGfx.h"
-#include "CompGfx/cLabelLinkGfx.h"
+#include "CompGfx/LabelGfx.h"
+#include "CompGfx/LabelLinkGfx.h"
 #include "Config.h"
 #include "ErrorInfo.h"
 #include "GfxUtil.h"
@@ -100,23 +100,23 @@ LPErrInApp MenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
     rctBt1.w = 150;
     rctBt1.y = _p_Screen->h - rctBt1.h - 20;
     rctBt1.x = _p_Screen->w - rctBt1.w - 20;
-    _p_homeUrl = new cLabelLinkGfx;
+    _p_homeUrl = new LabelLinkGfx;
     ClickCb cb = prepClickCb();
     _p_homeUrl->Initialize(&rctBt1, _p_Screen, _p_font3, MYIDLABELURL,
                            _p_sdlRenderer, cb);
-    _p_homeUrl->SetState(cLabelLinkGfx::INVISIBLE);
+    _p_homeUrl->SetState(LabelLinkGfx::INVISIBLE);
     _p_homeUrl->SetUrl(PACKAGE_URL);
     _p_homeUrl->SetWindowText(lpszMsgUrl);
 
     // label version
-    _p_LabelVersion = new cLabelGfx;
+    _p_LabelVersion = new LabelGfx;
     rctBt1.h = 28;
     rctBt1.w = 150;
     rctBt1.y = _p_homeUrl->m_rctButt.y - 20;
     rctBt1.x = _p_homeUrl->m_rctButt.x;
     _p_LabelVersion->Initialize(&rctBt1, _p_Screen, _p_font2, MYIDLABELVER,
                                 _p_sdlRenderer, cb);
-    _p_LabelVersion->SetState(cLabelGfx::INVISIBLE);
+    _p_LabelVersion->SetState(LabelGfx::INVISIBLE);
     _p_LabelVersion->SetWindowText(lpszVersion);
 
     return NULL;
@@ -226,8 +226,8 @@ LPErrInApp MenuMgr::drawStringSH(const char* tmp, int x, int y,
 LPErrInApp MenuMgr::HandleRootMenu() {
     LPErrInApp err;
     // show the link url label
-    _p_homeUrl->SetState(cLabelLinkGfx::VISIBLE);
-    _p_LabelVersion->SetState(cLabelGfx::VISIBLE);
+    _p_homeUrl->SetState(LabelLinkGfx::VISIBLE);
+    _p_LabelVersion->SetState(LabelGfx::VISIBLE);
 
     SDL_Color c = staColor_white;
     drawBackground();

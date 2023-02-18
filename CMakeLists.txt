@@ -35,11 +35,11 @@ set(SOURCES src/GameGfx/CardRegionGfx.cpp
             src/MainOptionGfx.cpp
             src/TraceService.cpp
             src/WhereAmI.c
-            src/CompGfx/cLabelLinkGfx.cpp
+            src/CompGfx/LabelLinkGfx.cpp
             src/CompGfx/ButtonGfx.cpp
-            src/CompGfx/cCheckBoxGfx.cpp
-            src/CompGfx/cComboGfx.cpp
-            src/CompGfx/cLabelGfx.cpp)
+            src/CompGfx/CheckBoxGfx.cpp
+            src/CompGfx/ComboGfx.cpp
+            src/CompGfx/LabelGfx.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 

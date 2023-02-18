@@ -5,8 +5,8 @@
 #include <SDL_image.h>
 
 #include "CompGfx/ButtonGfx.h"
-#include "CompGfx/cCheckBoxGfx.h"
-#include "CompGfx/cComboGfx.h"
+#include "CompGfx/CheckBoxGfx.h"
+#include "CompGfx/ComboGfx.h"
 #include "GfxUtil.h"
 #include "MusicManager.h"
 
@@ -133,29 +133,29 @@ LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
     m_pBtOK->SetVisibleState(ButtonGfx::INVISIBLE);
     // Combo language
     ClickCb nullCb = {NULL, NULL};
-    m_pComboLang = new cComboGfx;
+    m_pComboLang = new ComboGfx;
     rctBt1.w = 180;
     rctBt1.h = 26;
     rctBt1.y = m_rctOptBox.y + 80;
     rctBt1.x = m_rctOptBox.x + 50;
     m_pComboLang->Initialize(&rctBt1, pScreen, m_pFontText, MYIDCOMBOLANG,
                              pRenderer, nullCb);
-    m_pComboLang->SetState(cComboGfx::INVISIBLE);
+    m_pComboLang->SetState(ComboGfx::INVISIBLE);
     // Music
     // check box music
     CheckboxClickCb cbCheckboxMusic = prepCheckBoxClickMusic();
-    m_pCheckMusic = new cCheckBoxGfx;
+    m_pCheckMusic = new CheckBoxGfx;
     rctBt1.w = 180;
     rctBt1.h = 28;
     rctBt1.y = m_pComboLang->m_rctButt.y + m_pComboLang->m_rctButt.h + 20;
     rctBt1.x = m_pComboLang->m_rctButt.x;
     m_pCheckMusic->Initialize(&rctBt1, pScreen, m_pFontText, MYIDMUSICCHK,
                               cbCheckboxMusic);
-    m_pCheckMusic->SetState(cCheckBoxGfx::INVISIBLE);
+    m_pCheckMusic->SetState(CheckBoxGfx::INVISIBLE);
     // Deck
     // combo deck selection
     ClickCb deckSelCb = prepSelectionDeckCb();
-    m_pComboDeck = new cComboGfx;
+    m_pComboDeck = new ComboGfx;
     rctBt1.w = 180;
     rctBt1.h = 26;
     rctBt1.y = m_pCheckMusic->m_rctButt.y + m_pCheckMusic->m_rctButt.h + 20;
@@ -163,7 +163,7 @@ LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
 
     m_pComboDeck->Initialize(&rctBt1, pScreen, m_pFontText, MYIDCOMBODECK,
                              pRenderer, deckSelCb);
-    m_pComboDeck->SetState(cComboGfx::INVISIBLE);
+    m_pComboDeck->SetState(ComboGfx::INVISIBLE);
 
     // init surfaces with all pac decks
     Uint16 pac_w, pac_h;
@@ -227,13 +227,13 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
     strTextBt = _p_Languages->GetStringId(Languages::ID_ENGLISH);
     m_pComboLang->AddLineText(strTextBt.c_str());
 
-    m_pComboLang->SetState(cComboGfx::VISIBLE);
+    m_pComboLang->SetState(ComboGfx::VISIBLE);
     m_pComboLang->SelectIndex(_p_GameSettings->CurrentLanguage);
 
     // checkbox music
     strTextBt = _p_Languages->GetStringId(Languages::ID_SOUNDOPT);
     m_pCheckMusic->SetWindowText(strTextBt.c_str());
-    m_pCheckMusic->SetState(cCheckBoxGfx::VISIBLE);
+    m_pCheckMusic->SetState(CheckBoxGfx::VISIBLE);
     m_pCheckMusic->SetCheckState(_p_GameSettings->MusicEnabled);
 
     // combobox deck selection
@@ -245,7 +245,7 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
         strTextBt = dt.GetDeckName();
         m_pComboDeck->AddLineText(strTextBt.c_str());
     }
-    m_pComboDeck->SetState(cComboGfx::VISIBLE);
+    m_pComboDeck->SetState(ComboGfx::VISIBLE);
     m_pComboDeck->SelectIndex(_p_GameSettings->DeckTypeVal.GetTypeIndex());
 
     SDL_Surface* pShadowSrf = SDL_CreateRGBSurface(
