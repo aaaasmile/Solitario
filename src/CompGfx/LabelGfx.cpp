@@ -17,7 +17,7 @@ LabelGfx::~LabelGfx() {
 }
 
 void LabelGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
-                          TTF_Font* pFont, SDL_Renderer* psdlRenderer) {
+                          TTF_Font* pFont) {
     _rctCtrl = *pRect;
 
     // black bar surface
@@ -29,7 +29,6 @@ void LabelGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
     _p_FontText = pFont;
 
     _color = GFX_UTIL_COLOR::White;
-    _p_sdlRenderer = psdlRenderer;
 }
 
 void LabelGfx::SetState(SateGfx eVal) {
@@ -39,32 +38,6 @@ void LabelGfx::SetState(SateGfx eVal) {
         _color = GFX_UTIL_COLOR::White;
     }
 }
-
-void LabelGfx::MouseMove(SDL_Event& event, SDL_Surface* pScreen,
-                         SDL_Texture* pScene_background,
-                         SDL_Texture* pScreenTexture) {
-    if (_StateGfx == VISIBLE && _isEnabled) {
-        if (event.motion.x >= _rctCtrl.x &&
-            event.motion.x <= _rctCtrl.x + _rctCtrl.w &&
-            event.motion.y >= _rctCtrl.y &&
-            event.motion.y <= _rctCtrl.y + _rctCtrl.h) {
-            // mouse inner button
-            _color = GFX_UTIL_COLOR::Orange;
-            Redraw(pScreen, pScene_background, pScreenTexture);
-        } else {
-            // mouse outside
-            if (_color.r == GFX_UTIL_COLOR::Orange.r &&
-                _color.g == GFX_UTIL_COLOR::Orange.g &&
-                _color.b == GFX_UTIL_COLOR::Orange.b) {
-                // button was selected
-                _color = GFX_UTIL_COLOR::White;
-                Redraw(pScreen, pScene_background, pScreenTexture);
-            }
-        }
-    }
-}
-
-void LabelGfx::MouseUp(SDL_Event& event) {}
 
 void LabelGfx::Draw(SDL_Surface* pScreen) {
     if (_StateGfx != INVISIBLE) {
@@ -84,16 +57,4 @@ void LabelGfx::Draw(SDL_Surface* pScreen) {
                                  _color, _p_FontText, false);
         }
     }
-}
-
-void LabelGfx::Redraw(SDL_Surface* pScreen, SDL_Texture* pScene_background,
-                      SDL_Texture* pScreenTexture) {
-    if (pScene_background) {
-        SDL_RenderCopy(_p_sdlRenderer, pScene_background, &_rctCtrl,
-                       &_rctCtrl);  // SDL 2.0
-    }
-    Draw(pScreen);
-    SDL_UpdateTexture(pScreenTexture, NULL, pScreen->pixels, pScreen->pitch);
-    SDL_RenderCopy(_p_sdlRenderer, pScreenTexture, NULL, NULL);
-    SDL_RenderPresent(_p_sdlRenderer);
 }
