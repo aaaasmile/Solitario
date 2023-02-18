@@ -4,13 +4,20 @@ nel lontano 2004 dove ho compilato la versione per Linux e Windows.
 Dopo 18 anni ho messo la repository su github e la compilazione è rimasta indietro.
 Così ho pensato di sviluppare la nuova versione con SDL2, Visual Code e WSL2 come target.
 
-## Build Veloce
+## Build Veloce (WSL2 e ubuntu)
 Dopo il clone della repository, nella root directory del progetto:
 
     autoreconf --install
     ./configure
     make
     ./solitario
+
+## Build veloce in MySys2
+
+    mkdir Build
+    cd Build
+    cmake ..
+    ninja
 
 ## Compilazione per Ubuntu 22.04.1 LTS
 Per le mie prove ho usato WSL2 su windows con la App Ubuntu 22.04.1 LTS.
@@ -243,7 +250,10 @@ nella sottodirectory help-source. Questo il dettaglio di Context:
     mtx-context     | main context file: D:/Projects/ConTex/tex/texmf-context/tex/context/base/mkxl/context.mkxl
     mtx-context     | current version: 2022.11.14 22:58
 Per la visualizzazione dell'help su ubuntu uso zathura.
+ConText lo faccio partire con SciTe da: 
 
+    D:\Projects\ConTex\prepare_context.ps1
+In Scite apro il file solitario.tex e genero il file pdf con CTRL + F7.
 ## CMake
 Dopo avere sviluppato l'intero progetto su WSL2 con Ubuntu è arrivato il momento di avere anche il target
 Windows, nel mio caso MySys2. Per questo voglio provare CMake e non cercare di fare andare Automake
