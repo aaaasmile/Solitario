@@ -123,8 +123,8 @@ LPErrInApp MenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
     rctBt1.x = _p_Screen->w - rctBt1.w - 20;
     _p_homeUrl = new LabelLinkGfx;
     ClickCb cb = prepClickCb();
-    _p_homeUrl->Initialize(&rctBt1, _p_Screen, _p_font3, MYIDLABELURL,
-                           _p_sdlRenderer, cb);
+    _p_homeUrl->Initialize(&rctBt1, _p_ScreenBackbuffer, _p_font3, MYIDLABELURL,
+                           cb);
     _p_homeUrl->SetState(LabelLinkGfx::INVISIBLE);
     _p_homeUrl->SetUrl(PACKAGE_URL);
     _p_homeUrl->SetWindowText(lpszMsgUrl);
@@ -135,7 +135,7 @@ LPErrInApp MenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
     rctBt1.w = 150;
     rctBt1.y = _p_homeUrl->m_rctButt.y - 20;
     rctBt1.x = _p_homeUrl->m_rctButt.x;
-    _p_LabelVersion->Initialize(&rctBt1, _p_Screen, _p_font2);
+    _p_LabelVersion->Initialize(&rctBt1, _p_ScreenBackbuffer, _p_font2);
     _p_LabelVersion->SetState(LabelGfx::INVISIBLE);
     _p_LabelVersion->SetWindowText(lpszVersion);
 
@@ -379,6 +379,7 @@ LPErrInApp MenuMgr::HandleRootMenu() {
                 // mouse outside, no focus
                 _bMouseInside = false;
             }
+            _p_homeUrl->MouseMove(event);
         }
         if (event.type == SDL_MOUSEBUTTONDOWN) {
             if (_bMouseInside) {

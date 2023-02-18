@@ -21,17 +21,13 @@ public:
     virtual ~LabelLinkGfx();
 
     void Initialize(SDL_Rect* pRect, SDL_Surface* pScreen, TTF_Font* pFont,
-                    int iButID, SDL_Renderer* psdlRenderer,
-                    ClickCb& fncbClickEvent);
+                    int iButID, ClickCb& fncbClickEvent);
     void SetWindowText(LPCSTR strCaption) { m_strButText = strCaption; }
-    void MouseMove(SDL_Event& event, SDL_Surface* pScreen,
-                   SDL_Texture* pScene_background, SDL_Texture* pScreenTexture);
+    void MouseMove(SDL_Event& event);
     void MouseUp(SDL_Event& event);
     virtual void Draw(SDL_Surface* pScreen);
     void EnableWindow(bool bVal) { m_bIsEnabled = bVal; }
     void SetState(eSate eVal);
-    void Redraw(SDL_Surface* pScreen, SDL_Texture* pScene_background,
-                SDL_Texture* pScreenTexture);
     void SetUrl(LPCSTR lpszUrl) { m_strUrl = lpszUrl; }
 
 public:
@@ -47,7 +43,8 @@ protected:
     SDL_Color m_colCurrent;
     int m_iButID;
     STRING m_strUrl;
-    SDL_Renderer* m_psdlRenderer;
+    bool _isDirty;
+    bool _mouseOuside;
 };
 
 #endif

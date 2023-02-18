@@ -8,6 +8,7 @@ LabelLinkGfx::LabelLinkGfx() {
     m_iButID = 0;
     m_bIsEnabled = true;
     m_pSurf_Bar = 0;
+    _isDirty = true;
 }
 
 LabelLinkGfx::~LabelLinkGfx() {
@@ -19,11 +20,9 @@ LabelLinkGfx::~LabelLinkGfx() {
 
 void LabelLinkGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
                               TTF_Font* pFont, int iButID,
-                              SDL_Renderer* psdlRenderer,
                               ClickCb& fncbClickEvent) {
     m_fncbClickEvent = fncbClickEvent;
     m_rctButt = *pRect;
-    m_psdlRenderer = psdlRenderer;
 
     // black bar surface
     m_pSurf_Bar = SDL_CreateRGBSurface(SDL_SWSURFACE, m_rctButt.w, m_rctButt.h,
@@ -44,27 +43,25 @@ void LabelLinkGfx::SetState(eSate eVal) {
     if (eOldState != m_eState && m_eState == VISIBLE) {
         m_colCurrent = GFX_UTIL_COLOR::White;
     }
+    _isDirty = true;
 }
 
-void LabelLinkGfx::MouseMove(SDL_Event& event, SDL_Surface* pScreen,
-                             SDL_Texture* pScene_background,
-                             SDL_Texture* pScreenTexture) {
+void LabelLinkGfx::MouseMove(SDL_Event& event) {
     if (m_eState == VISIBLE && m_bIsEnabled) {
         if (event.motion.x >= m_rctButt.x &&
             event.motion.x <= m_rctButt.x + m_rctButt.w &&
             event.motion.y >= m_rctButt.y &&
             event.motion.y <= m_rctButt.y + m_rctButt.h) {
             // mouse inner button
-            m_colCurrent = GFX_UTIL_COLOR::Orange;
-            Redraw(pScreen, pScene_background, pScreenTexture);
+            if (_mouseOuside) {
+                _isDirty = true;
+                _mouseOuside = false;
+            }
         } else {
             // mouse outside
-            if (m_colCurrent.r == GFX_UTIL_COLOR::Orange.r &&
-                m_colCurrent.g == GFX_UTIL_COLOR::Orange.g &&
-                m_colCurrent.b == GFX_UTIL_COLOR::Orange.b) {
-                // button was selected
-                m_colCurrent = GFX_UTIL_COLOR::White;
-                Redraw(pScreen, pScene_background, pScreenTexture);
+            if (!_mouseOuside) {
+                _isDirty = true;
+                _mouseOuside = true;
             }
         }
     }
@@ -96,6 +93,9 @@ void LabelLinkGfx::MouseUp(SDL_Event& event) {
 }
 
 void LabelLinkGfx::Draw(SDL_Surface* pScreen) {
+    if (!_isDirty) {
+        return;
+    }
     if (m_eState != INVISIBLE) {
         if (m_bIsEnabled) {
             // begin stuff mouse
@@ -123,18 +123,7 @@ void LabelLinkGfx::Draw(SDL_Surface* pScreen) {
             GFX_UTIL::DrawString(pScreen, m_strButText.c_str(),
                                  m_rctButt.x + iXOffSet, m_rctButt.y + iYOffset,
                                  m_colCurrent, m_pFontText, false);
+            _isDirty = false;
         }
     }
-}
-
-void LabelLinkGfx::Redraw(SDL_Surface* pScreen, SDL_Texture* pScene_background,
-                          SDL_Texture* pScreenTexture) {
-    if (pScene_background) {
-        SDL_RenderCopy(m_psdlRenderer, pScene_background, &m_rctButt,
-                       &m_rctButt);  // SDL 2.0
-    }
-    Draw(pScreen);
-    SDL_UpdateTexture(pScreenTexture, NULL, pScreen->pixels, pScreen->pitch);
-    SDL_RenderCopy(m_psdlRenderer, pScreenTexture, NULL, NULL);
-    SDL_RenderPresent(m_psdlRenderer);
 }
