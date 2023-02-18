@@ -27,7 +27,7 @@ public:
         MENU_HELP,
         QUITAPP
     };
-    enum { MYIDLABELURL = 0, MYIDLABELVER = 1 };
+    enum { MYIDLABELURL = 0 };
 
     MenuMgr();
     virtual ~MenuMgr();

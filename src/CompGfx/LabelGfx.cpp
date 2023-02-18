@@ -3,101 +3,85 @@
 #include "GfxUtil.h"
 
 LabelGfx::LabelGfx() {
-    m_eState = INVISIBLE;
-    m_pFontText = 0;
-    m_iButID = 0;
-    m_bIsEnabled = true;
-    m_pSurf_Bar = 0;
+    _StateGfx = INVISIBLE;
+    _p_FontText = 0;
+    _isEnabled = true;
+    _p_Surf_Bar = 0;
 }
 
 LabelGfx::~LabelGfx() {
-    if (m_pSurf_Bar) {
-        SDL_FreeSurface(m_pSurf_Bar);
-        m_pSurf_Bar = NULL;
+    if (_p_Surf_Bar) {
+        SDL_FreeSurface(_p_Surf_Bar);
+        _p_Surf_Bar = NULL;
     }
 }
 
 void LabelGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
-                          TTF_Font* pFont, int iButID,
-                          SDL_Renderer* psdlRenderer, ClickCb& fncbClickEvent) {
-    m_fncbClickEvent = fncbClickEvent;
-    m_rctButt = *pRect;
+                          TTF_Font* pFont, SDL_Renderer* psdlRenderer) {
+    _rctCtrl = *pRect;
 
     // black bar surface
-    m_pSurf_Bar = SDL_CreateRGBSurface(SDL_SWSURFACE, m_rctButt.w, m_rctButt.h,
+    _p_Surf_Bar = SDL_CreateRGBSurface(SDL_SWSURFACE, _rctCtrl.w, _rctCtrl.h,
                                        32, 0, 0, 0, 0);
-    SDL_FillRect(m_pSurf_Bar, NULL, SDL_MapRGBA(pScreen->format, 255, 0, 0, 0));
-    SDL_SetSurfaceBlendMode(m_pSurf_Bar, SDL_BLENDMODE_BLEND);
-    SDL_SetSurfaceAlphaMod(m_pSurf_Bar, 127);  // SDL 2.0
-    m_pFontText = pFont;
+    SDL_FillRect(_p_Surf_Bar, NULL, SDL_MapRGBA(pScreen->format, 255, 0, 0, 0));
+    SDL_SetSurfaceBlendMode(_p_Surf_Bar, SDL_BLENDMODE_BLEND);
+    SDL_SetSurfaceAlphaMod(_p_Surf_Bar, 127);  // SDL 2.0
+    _p_FontText = pFont;
 
-    m_colCurrent = GFX_UTIL_COLOR::White;
-    m_iButID = iButID;
-    m_psdlRenderer = psdlRenderer;
+    _color = GFX_UTIL_COLOR::White;
+    _p_sdlRenderer = psdlRenderer;
 }
 
-void LabelGfx::SetState(eSate eVal) {
-    eSate eOldState = m_eState;
-    m_eState = eVal;
-    if (eOldState != m_eState && m_eState == VISIBLE) {
-        m_colCurrent = GFX_UTIL_COLOR::White;
+void LabelGfx::SetState(SateGfx eVal) {
+    SateGfx eOldState = _StateGfx;
+    _StateGfx = eVal;
+    if (eOldState != _StateGfx && _StateGfx == VISIBLE) {
+        _color = GFX_UTIL_COLOR::White;
     }
 }
 
 void LabelGfx::MouseMove(SDL_Event& event, SDL_Surface* pScreen,
                          SDL_Texture* pScene_background,
                          SDL_Texture* pScreenTexture) {
-    if (m_eState == VISIBLE && m_bIsEnabled) {
-        if (event.motion.x >= m_rctButt.x &&
-            event.motion.x <= m_rctButt.x + m_rctButt.w &&
-            event.motion.y >= m_rctButt.y &&
-            event.motion.y <= m_rctButt.y + m_rctButt.h) {
+    if (_StateGfx == VISIBLE && _isEnabled) {
+        if (event.motion.x >= _rctCtrl.x &&
+            event.motion.x <= _rctCtrl.x + _rctCtrl.w &&
+            event.motion.y >= _rctCtrl.y &&
+            event.motion.y <= _rctCtrl.y + _rctCtrl.h) {
             // mouse inner button
-            m_colCurrent = GFX_UTIL_COLOR::Orange;
+            _color = GFX_UTIL_COLOR::Orange;
             Redraw(pScreen, pScene_background, pScreenTexture);
         } else {
             // mouse outside
-            if (m_colCurrent.r == GFX_UTIL_COLOR::Orange.r &&
-                m_colCurrent.g == GFX_UTIL_COLOR::Orange.g &&
-                m_colCurrent.b == GFX_UTIL_COLOR::Orange.b) {
+            if (_color.r == GFX_UTIL_COLOR::Orange.r &&
+                _color.g == GFX_UTIL_COLOR::Orange.g &&
+                _color.b == GFX_UTIL_COLOR::Orange.b) {
                 // button was selected
-                m_colCurrent = GFX_UTIL_COLOR::White;
+                _color = GFX_UTIL_COLOR::White;
                 Redraw(pScreen, pScene_background, pScreenTexture);
             }
         }
     }
 }
 
-void LabelGfx::MouseUp(SDL_Event& event) {
-    if (m_eState == VISIBLE && m_bIsEnabled) {
-        if (event.motion.x >= m_rctButt.x &&
-            event.motion.x <= m_rctButt.x + m_rctButt.w &&
-            event.motion.y >= m_rctButt.y &&
-            event.motion.y <= m_rctButt.y + m_rctButt.h) {
-            // mouse go up inner the button
-            // send a click event
-            if (m_fncbClickEvent.tc != NULL)
-                (m_fncbClickEvent.tc)->Click(m_fncbClickEvent.self, m_iButID);
-        }
-    }
-}
+void LabelGfx::MouseUp(SDL_Event& event) {}
 
 void LabelGfx::Draw(SDL_Surface* pScreen) {
-    if (m_eState != INVISIBLE) {
-        if (m_bIsEnabled) {
+    if (_StateGfx != INVISIBLE) {
+        if (_isEnabled) {
             int tx, ty;
-            TTF_SizeText(m_pFontText, m_strButText.c_str(), &tx, &ty);
-            int iXOffSet = (m_rctButt.w - tx) / 2;
+            TTF_SizeText(_p_FontText, _CtrlText.c_str(), &tx, &ty);
+            int iXOffSet = (_rctCtrl.w - tx) / 2;
             if (iXOffSet < 0) {
                 iXOffSet = 1;
             }
-            int iYOffset = (m_rctButt.h - ty) / 2;
+            int iYOffset = (_rctCtrl.h - ty) / 2;
 
             iYOffset = 0;
             iXOffSet = 0;
-            GFX_UTIL::DrawString(pScreen, m_strButText.c_str(),
-                                 m_rctButt.x + iXOffSet, m_rctButt.y + iYOffset,
-                                 m_colCurrent, m_pFontText, false);
+            GFX_UTIL::DrawString(pScreen, _CtrlText.c_str(),
+                                 _rctCtrl.x + iXOffSet, _rctCtrl.y + iYOffset,
+                                 _color, _p_FontText, false);
         }
     }
 }
@@ -105,11 +89,11 @@ void LabelGfx::Draw(SDL_Surface* pScreen) {
 void LabelGfx::Redraw(SDL_Surface* pScreen, SDL_Texture* pScene_background,
                       SDL_Texture* pScreenTexture) {
     if (pScene_background) {
-        SDL_RenderCopy(m_psdlRenderer, pScene_background, &m_rctButt,
-                       &m_rctButt);  // SDL 2.0
+        SDL_RenderCopy(_p_sdlRenderer, pScene_background, &_rctCtrl,
+                       &_rctCtrl);  // SDL 2.0
     }
     Draw(pScreen);
     SDL_UpdateTexture(pScreenTexture, NULL, pScreen->pixels, pScreen->pitch);
-    SDL_RenderCopy(m_psdlRenderer, pScreenTexture, NULL, NULL);
-    SDL_RenderPresent(m_psdlRenderer);
+    SDL_RenderCopy(_p_sdlRenderer, pScreenTexture, NULL, NULL);
+    SDL_RenderPresent(_p_sdlRenderer);
 }
