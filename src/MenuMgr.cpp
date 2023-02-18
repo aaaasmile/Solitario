@@ -28,17 +28,28 @@ const SDL_Color MenuMgr::staColor_gray = {128, 128, 128};
 MenuMgr::MenuMgr() {
     _p_font1 = 0;
     _p_font2 = 0;
+    _p_font3 = 0;
+    _p_ScreenBackbuffer = 0;
     _ifocus_valuesM_A = 0;
     _p_Languages = 0;
     _p_MenuBox = 0;
     _p_Scene_background = 0;
     _bMouseInside = false;
+    _p_homeUrl = NULL;
 }
 
 MenuMgr::~MenuMgr() {
     if (_p_MenuBox) {
         SDL_FreeSurface(_p_MenuBox);
         _p_MenuBox = NULL;
+    }
+    if (_p_ScreenBackbuffer != NULL) {
+        SDL_FreeSurface(_p_ScreenBackbuffer);
+        _p_ScreenBackbuffer = NULL;
+    }
+    if (_p_ScreenTexture != NULL) {
+        SDL_DestroyTexture(_p_ScreenTexture);
+        _p_ScreenTexture = NULL;
     }
     delete _p_homeUrl;
     delete _p_LabelVersion;
@@ -76,6 +87,16 @@ LPErrInApp MenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
     _rctPanel.h = _iSy - _iDeby * 2;
     _rctPanel.x = _iDebx;
     _rctPanel.y = _iDeby;
+
+    _p_ScreenBackbuffer = SDL_CreateRGBSurface(SDL_SWSURFACE, _p_Screen->w,
+                                               _p_Screen->h, 32, 0, 0, 0, 0);
+    _p_ScreenTexture = SDL_CreateTexture(pRenderer, SDL_PIXELFORMAT_ARGB8888,
+                                         SDL_TEXTUREACCESS_STREAMING,
+                                         _p_Screen->w, _p_Screen->h);
+    if (_p_ScreenTexture == NULL) {
+        return ERR_UTIL::ErrorCreate("Cannot create texture: %s\n",
+                                     SDL_GetError());
+    }
 
     _p_font1 = (_menuDlgt.tc)->GetFontAriblk(_menuDlgt.self);
     _p_font2 = (_menuDlgt.tc)->GetFontVera(_menuDlgt.self);
@@ -118,6 +139,10 @@ LPErrInApp MenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
     _p_LabelVersion->SetState(LabelGfx::INVISIBLE);
     _p_LabelVersion->SetWindowText(lpszVersion);
 
+    SDL_FillRect(_p_ScreenBackbuffer, &_p_ScreenBackbuffer->clip_rect,
+                 SDL_MapRGBA(_p_ScreenBackbuffer->format, 0, 0, 0, 0));
+    SDL_BlitSurface(_p_Screen, NULL, _p_ScreenBackbuffer, NULL);
+
     return NULL;
 }
 
@@ -127,7 +152,7 @@ void MenuMgr::drawStaticSpriteEx(int src_x, int src_y, int src_dx, int src_dy,
                                  int dst_x, int dst_y, SDL_Surface* sprite) {
     SDL_Rect src_rec = {src_x, src_y, src_dx, src_dy};
     SDL_Rect dst_rec = {dst_x, dst_y, 0, 0};
-    SDL_BlitSurface(sprite, &src_rec, _p_Screen, &dst_rec);
+    SDL_BlitSurface(sprite, &src_rec, _p_ScreenBackbuffer, &dst_rec);
 }
 
 void MenuMgr::drawRect(int x, int y, int dx, int dy, SDL_Color c) {
@@ -141,13 +166,13 @@ void MenuMgr::drawStaticLine(int x0, int y0, int x1, int y1, SDL_Color color) {
     int d =
         (int)sqrtf(pow((float)(x1 - x0), 2.0f) + pow((float)(y1 - y0), 2.0f));
     static int x = 0, y = 0;
-    static int w = _p_Screen->w;
-    static int h = _p_Screen->h;
+    static int w = _p_ScreenBackbuffer->w;
+    static int h = _p_ScreenBackbuffer->h;
     for (int t = 0; t < d; t++) {
         x = x0 + (x1 - x0) * t / d;
         y = y0 + (y1 - y0) * t / d;
         if ((x >= 0) && (y >= 0) && (x < w) && (y < h)) {
-            setPixel(_p_Screen, x, y, color);
+            setPixel(_p_ScreenBackbuffer, x, y, color);
         }
     }
 }
@@ -166,29 +191,30 @@ void MenuMgr::setPixel(SDL_Surface* pSurface, int x, int y, SDL_Color color) {
 
 void MenuMgr::fillRect(int x0, int y0, int width, int height, Uint32 color) {
     SDL_Rect rect = {x0, y0, width, height};
-    SDL_FillRect(_p_Screen, &rect, color);
+    SDL_FillRect(_p_ScreenBackbuffer, &rect, color);
 }
 
 void MenuMgr::drawBackground() {
     SDL_Rect rctTarget;
-    rctTarget.x = (_p_Screen->w - _p_Scene_background->w) / 2;
-    rctTarget.y = (_p_Screen->h - _p_Scene_background->h) / 2;
+    rctTarget.x = (_p_ScreenBackbuffer->w - _p_Scene_background->w) / 2;
+    rctTarget.y = (_p_ScreenBackbuffer->h - _p_Scene_background->h) / 2;
     rctTarget.w = _p_Scene_background->w;
     rctTarget.h = _p_Scene_background->h;
 
-    SDL_BlitSurface(_p_Scene_background, NULL, _p_Screen, &rctTarget);
+    SDL_BlitSurface(_p_Scene_background, NULL, _p_ScreenBackbuffer, &rctTarget);
 
-    _iSx = _p_Screen->clip_rect.w;
+    _iSx = _p_ScreenBackbuffer->clip_rect.w;
     _iDebx = _iSx / 6;
-    _iSy = _p_Screen->clip_rect.h;
+    _iSy = _p_ScreenBackbuffer->clip_rect.h;
     _iDeby = _iSy / 5;
 
-    Uint32 c_redfg = SDL_MapRGB(_p_Screen->format, 153, 202, 51);
+    Uint32 c_redfg = SDL_MapRGB(_p_ScreenBackbuffer->format, 153, 202, 51);
 
     // don't invert, because content overwrite header
     // content
-    GFX_UTIL::DrawStaticSpriteEx(_p_Screen, 0, 0, _rctPanel.w, _rctPanel.h,
-                                 _rctPanel.x, _rctPanel.y, _p_MenuBox);
+    GFX_UTIL::DrawStaticSpriteEx(_p_ScreenBackbuffer, 0, 0, _rctPanel.w,
+                                 _rctPanel.h, _rctPanel.x, _rctPanel.y,
+                                 _p_MenuBox);
 
     // header bar
     fillRect(_iDebx, _iDeby - 2, _iSx - _iDebx * 2, 38, c_redfg);
@@ -298,6 +324,8 @@ LPErrInApp MenuMgr::HandleRootMenu() {
     if (err != NULL) {
         return err;
     }
+    SDL_BlitSurface(_p_ScreenBackbuffer, NULL, _p_Screen, NULL);
+    updateTextureAsFlipScreen();
 
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -360,9 +388,20 @@ LPErrInApp MenuMgr::HandleRootMenu() {
             _p_homeUrl->MouseUp(event);
         }
     }
-    _p_homeUrl->Draw(_p_Screen);
-    _p_LabelVersion->Draw(_p_Screen);
+    _p_homeUrl->Draw(_p_ScreenBackbuffer);
+    _p_LabelVersion->Draw(_p_ScreenBackbuffer);
+
+    SDL_BlitSurface(_p_ScreenBackbuffer, NULL, _p_Screen, NULL);
+
+    updateTextureAsFlipScreen();
     return NULL;
+}
+
+void MenuMgr::updateTextureAsFlipScreen() {
+    SDL_UpdateTexture(_p_ScreenTexture, NULL, _p_Screen->pixels,
+                      _p_Screen->pitch);
+    SDL_RenderCopy(_p_sdlRenderer, _p_ScreenTexture, NULL, NULL);
+    SDL_RenderPresent(_p_sdlRenderer);
 }
 
 void MenuMgr::rootMenuNext() {

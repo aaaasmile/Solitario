@@ -49,6 +49,7 @@ private:
     void fillRect(int x0, int y0, int width, int height, Uint32 color);
     void rootMenuNext();
     ClickCb prepClickCb();
+    void updateTextureAsFlipScreen();
 
 private:
     static const SDL_Color staColor_on;
@@ -65,6 +66,7 @@ private:
     TTF_Font* _p_font2;
     TTF_Font* _p_font3;
     SDL_Surface* _p_Screen;
+    SDL_Surface* _p_ScreenBackbuffer;
     SDL_Renderer* _p_sdlRenderer;
     int _ifocus_valuesM_A;
     int _iDeby;
@@ -73,6 +75,7 @@ private:
     int _iSy;
     SDL_Surface* _p_MenuBox;
     SDL_Surface* _p_Scene_background;
+    SDL_Texture* _p_ScreenTexture;
     SDL_Rect _rctPanel;
     LabelGfx* _p_LabelVersion;
     LabelLinkGfx* _p_homeUrl;
