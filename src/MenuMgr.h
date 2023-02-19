@@ -37,9 +37,9 @@ public:
     void SetBackground(SDL_Surface* pVal) { _p_SceneBackground = pVal; }
 
 private:
-    void drawBackground();
-    LPErrInApp drawMenuText(const char* text, int x, int y, SDL_Color& color,
-                            TTF_Font* customfont);
+    void drawBackground(SDL_Surface* psurf);
+    LPErrInApp drawMenuText(SDL_Surface* psurf, const char* text, int x, int y,
+                            SDL_Color& color, TTF_Font* customfont);
     void rootMenuNext();
     void updateTextureAsFlipScreen();
 
@@ -51,15 +51,15 @@ private:
     TTF_Font* _p_fontVeraUnderscore;
     SDL_Surface* _p_Screen;
     SDL_Surface* _p_ScreenBackbuffer;
+    SDL_Surface* _p_MenuBox;
+    SDL_Surface* _p_SceneBackground;
+    SDL_Texture* _p_ScreenTexture;
     SDL_Renderer* _p_sdlRenderer;
     int _focusedMenuItem;
     int _box_Y;
     int _box_X;
     int _screenW;
     int _screenH;
-    SDL_Surface* _p_MenuBox;
-    SDL_Surface* _p_SceneBackground;
-    SDL_Texture* _p_ScreenTexture;
     SDL_Rect _rctPanel;
     LabelGfx* _p_LabelVersion;
     LabelLinkGfx* _p_homeUrl;

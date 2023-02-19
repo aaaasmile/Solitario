@@ -129,49 +129,46 @@ LPErrInApp MenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
     return NULL;
 }
 
-void MenuMgr::drawBackground() {
+void MenuMgr::drawBackground(SDL_Surface* psurf) {
     SDL_Rect rctTarget;
-    rctTarget.x = (_p_ScreenBackbuffer->w - _p_SceneBackground->w) / 2;
-    rctTarget.y = (_p_ScreenBackbuffer->h - _p_SceneBackground->h) / 2;
+    rctTarget.x = (psurf->w - _p_SceneBackground->w) / 2;
+    rctTarget.y = (psurf->h - _p_SceneBackground->h) / 2;
     rctTarget.w = _p_SceneBackground->w;
     rctTarget.h = _p_SceneBackground->h;
 
-    SDL_BlitSurface(_p_SceneBackground, NULL, _p_ScreenBackbuffer, &rctTarget);
+    SDL_BlitSurface(_p_SceneBackground, NULL, psurf, &rctTarget);
 
-    _screenW = _p_ScreenBackbuffer->clip_rect.w;
+    _screenW = psurf->clip_rect.w;
     _box_X = _screenW / 6;
-    _screenH = _p_ScreenBackbuffer->clip_rect.h;
+    _screenH = psurf->clip_rect.h;
     _box_Y = _screenH / 5;
 
-    Uint32 c_redfg = SDL_MapRGB(_p_ScreenBackbuffer->format, 153, 202, 51);
+    Uint32 c_redfg = SDL_MapRGB(psurf->format, 153, 202, 51);
 
     // content
-    GFX_UTIL::DrawStaticSpriteEx(_p_ScreenBackbuffer, 0, 0, _rctPanel.w,
-                                 _rctPanel.h, _rctPanel.x, _rctPanel.y,
-                                 _p_MenuBox);
+    GFX_UTIL::DrawStaticSpriteEx(psurf, 0, 0, _rctPanel.w, _rctPanel.h,
+                                 _rctPanel.x, _rctPanel.y, _p_MenuBox);
 
     // header bar
-    GFX_UTIL::FillRect(_p_ScreenBackbuffer, _box_X, _box_Y - 2,
-                       _screenW - _box_X * 2, 38, c_redfg);
+    GFX_UTIL::FillRect(psurf, _box_X, _box_Y - 2, _screenW - _box_X * 2, 38,
+                       c_redfg);
 
-    GFX_UTIL::DrawRect(_p_ScreenBackbuffer, _box_X - 1, _box_Y - 1,
-                       _screenW - _box_X + 1, _screenH - _box_Y + 1,
-                       g_color_gray);
-    GFX_UTIL::DrawRect(_p_ScreenBackbuffer, _box_X - 2, _box_Y - 2,
-                       _screenW - _box_X + 2, _screenH - _box_Y + 2,
-                       g_color_black);
-    GFX_UTIL::DrawRect(_p_ScreenBackbuffer, _box_X, _box_Y, _screenW - _box_X,
+    GFX_UTIL::DrawRect(psurf, _box_X - 1, _box_Y - 1, _screenW - _box_X + 1,
+                       _screenH - _box_Y + 1, g_color_gray);
+    GFX_UTIL::DrawRect(psurf, _box_X - 2, _box_Y - 2, _screenW - _box_X + 2,
+                       _screenH - _box_Y + 2, g_color_black);
+    GFX_UTIL::DrawRect(psurf, _box_X, _box_Y, _screenW - _box_X,
                        _screenH - _box_Y, g_color_white);
-    GFX_UTIL::DrawRect(_p_ScreenBackbuffer, _box_X, _box_Y, _screenW - _box_X,
-                       _box_Y + 36, g_color_white);
+    GFX_UTIL::DrawRect(psurf, _box_X, _box_Y, _screenW - _box_X, _box_Y + 36,
+                       g_color_white);
 }
 
-LPErrInApp MenuMgr::drawMenuText(const char* text, int x, int y,
-                                 SDL_Color& color, TTF_Font* customfont) {
-    GFX_UTIL::DrawString(_p_ScreenBackbuffer, text, x + 2, y + 2, g_color_ombre,
-                         customfont, true);
-    GFX_UTIL::DrawString(_p_ScreenBackbuffer, text, x, y, color, customfont,
+LPErrInApp MenuMgr::drawMenuText(SDL_Surface* psurf, const char* text, int x,
+                                 int y, SDL_Color& color,
+                                 TTF_Font* customfont) {
+    GFX_UTIL::DrawString(psurf, text, x + 2, y + 2, g_color_ombre, customfont,
                          true);
+    GFX_UTIL::DrawString(psurf, text, x, y, color, customfont, true);
     return NULL;
 }
 
@@ -182,11 +179,12 @@ LPErrInApp MenuMgr::HandleRootMenu() {
     _p_LabelVersion->SetState(LabelGfx::VISIBLE);
 
     SDL_Color c = g_color_white;
-    drawBackground();
+    drawBackground(_p_ScreenBackbuffer);
     int iNumItemInMenu = 4;
 
     // Draw title bar
     err = drawMenuText(
+        _p_ScreenBackbuffer,
         _p_Languages->GetStringId(Languages::ID_WELCOMETITLEBAR).c_str(),
         _box_X + 10, _box_Y + 5, c, _p_fontAriblk);
     if (err != NULL) {
@@ -199,7 +197,8 @@ LPErrInApp MenuMgr::HandleRootMenu() {
     } else {
         c = g_staColor_on;
     }
-    err = drawMenuText(_p_Languages->GetStringId(Languages::ID_START).c_str(),
+    err = drawMenuText(_p_ScreenBackbuffer,
+                       _p_Languages->GetStringId(Languages::ID_START).c_str(),
                        _box_X + 10, _box_Y + 50, c, _p_fontAriblk);
     if (err != NULL) {
         return err;
@@ -211,6 +210,7 @@ LPErrInApp MenuMgr::HandleRootMenu() {
         c = g_staColor_on;
     }
     err = drawMenuText(
+        _p_ScreenBackbuffer,
         _p_Languages->GetStringId(Languages::ID_MEN_OPTIONS).c_str(),
         _box_X + 10, _box_Y + 90, c, _p_fontAriblk);
     if (err != NULL) {
@@ -222,7 +222,8 @@ LPErrInApp MenuMgr::HandleRootMenu() {
     } else {
         c = g_staColor_on;
     }
-    err = drawMenuText(_p_Languages->GetStringId(Languages::ID_CREDITS).c_str(),
+    err = drawMenuText(_p_ScreenBackbuffer,
+                       _p_Languages->GetStringId(Languages::ID_CREDITS).c_str(),
                        _box_X + 10, _box_Y + 130, c, _p_fontAriblk);
     if (err != NULL) {
         return err;
@@ -234,7 +235,8 @@ LPErrInApp MenuMgr::HandleRootMenu() {
     } else {
         c = g_staColor_on;
     }
-    err = drawMenuText(_p_Languages->GetStringId(Languages::ID_MN_HELP).c_str(),
+    err = drawMenuText(_p_ScreenBackbuffer,
+                       _p_Languages->GetStringId(Languages::ID_MN_HELP).c_str(),
                        _box_X + 10, _box_Y + 170, c, _p_fontAriblk);
     if (err != NULL) {
         return err;
@@ -246,7 +248,8 @@ LPErrInApp MenuMgr::HandleRootMenu() {
     } else {
         c = g_staColor_on;
     }
-    err = drawMenuText(_p_Languages->GetStringId(Languages::ID_EXIT).c_str(),
+    err = drawMenuText(_p_ScreenBackbuffer,
+                       _p_Languages->GetStringId(Languages::ID_EXIT).c_str(),
                        _box_X + 10, _screenH - _box_Y - 40, c, _p_fontAriblk);
     if (err != NULL) {
         return err;
