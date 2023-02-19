@@ -32,10 +32,9 @@ public:
     MenuMgr();
     virtual ~MenuMgr();
     LPErrInApp Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
-                          MenuDelegator& pApp);
+                          MenuDelegator& pmenuDelegator);
     LPErrInApp HandleRootMenu();
-    void SetBackground(SDL_Surface* pVal) { _p_Scene_background = pVal; }
-    void LabelClicked(int iButID);
+    void SetBackground(SDL_Surface* pVal) { _p_SceneBackground = pVal; }
 
 private:
     void drawBackground();
@@ -48,7 +47,6 @@ private:
     void setPixel(SDL_Surface* pSurface, int x, int y, SDL_Color color);
     void fillRect(int x0, int y0, int width, int height, Uint32 color);
     void rootMenuNext();
-    ClickCb prepClickCb();
     void updateTextureAsFlipScreen();
 
 private:
@@ -62,19 +60,19 @@ private:
 private:
     MenuDelegator _menuDlgt;
     Languages* _p_Languages;
-    TTF_Font* _p_font1;
-    TTF_Font* _p_font2;
-    TTF_Font* _p_font3;
+    TTF_Font* _p_fontAriblk;
+    TTF_Font* _p_fontVera;
+    TTF_Font* _p_fontVeraUnderscore;
     SDL_Surface* _p_Screen;
     SDL_Surface* _p_ScreenBackbuffer;
     SDL_Renderer* _p_sdlRenderer;
-    int _ifocus_valuesM_A;
-    int _iDeby;
-    int _iDebx;
-    int _iSx;
-    int _iSy;
+    int _focusedMenuItem;
+    int _box_Y;
+    int _box_X;
+    int _screenW;
+    int _screenH;
     SDL_Surface* _p_MenuBox;
-    SDL_Surface* _p_Scene_background;
+    SDL_Surface* _p_SceneBackground;
     SDL_Texture* _p_ScreenTexture;
     SDL_Rect _rctPanel;
     LabelGfx* _p_LabelVersion;

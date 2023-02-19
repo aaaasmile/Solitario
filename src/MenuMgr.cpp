@@ -26,14 +26,14 @@ const SDL_Color MenuMgr::staColor_black = {0, 0, 0};
 const SDL_Color MenuMgr::staColor_gray = {128, 128, 128};
 
 MenuMgr::MenuMgr() {
-    _p_font1 = 0;
-    _p_font2 = 0;
-    _p_font3 = 0;
+    _p_fontAriblk = 0;
+    _p_fontVera = 0;
+    _p_fontVeraUnderscore = 0;
     _p_ScreenBackbuffer = 0;
-    _ifocus_valuesM_A = 0;
+    _focusedMenuItem = 0;
     _p_Languages = 0;
     _p_MenuBox = 0;
-    _p_Scene_background = 0;
+    _p_SceneBackground = 0;
     _bMouseInside = false;
     _p_homeUrl = NULL;
 }
@@ -55,38 +55,21 @@ MenuMgr::~MenuMgr() {
     delete _p_LabelVersion;
 }
 
-// Prepare the Click() trait
-void fncBind_LabelClicked(void* self, int iVal) {
-    MenuMgr* pApp = (MenuMgr*)self;
-    pApp->LabelClicked(iVal);
-}
-
-ClickCb MenuMgr::prepClickCb() {
-#ifndef _MSC_VER
-    static VClickCb const tc = {.Click = (&fncBind_LabelClicked)};
-    return (ClickCb){.tc = &tc, .self = this};
-#else
-    static VClickCb const tc = {(&fncBind_LabelClicked)};
-    ClickCb cb = {&tc, this};
-    return cb;
-#endif
-}
-
 LPErrInApp MenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
-                               MenuDelegator& pApp) {
-    _menuDlgt = pApp;
+                               MenuDelegator& pmenuDelegator) {
+    _menuDlgt = pmenuDelegator;
     _p_Screen = pScreen;
     _p_sdlRenderer = pRenderer;
 
-    _iSx = _p_Screen->clip_rect.w;
-    _iDebx = _iSx / 6;
-    _iSy = _p_Screen->clip_rect.h;
-    _iDeby = _iSy / 5;
+    _screenW = _p_Screen->clip_rect.w;
+    _box_X = _screenW / 6;
+    _screenH = _p_Screen->clip_rect.h;
+    _box_Y = _screenH / 5;
 
-    _rctPanel.w = _iSx - _iDebx * 2;
-    _rctPanel.h = _iSy - _iDeby * 2;
-    _rctPanel.x = _iDebx;
-    _rctPanel.y = _iDeby;
+    _rctPanel.w = _screenW - _box_X * 2;
+    _rctPanel.h = _screenH - _box_Y * 2;
+    _rctPanel.x = _box_X;
+    _rctPanel.y = _box_Y;
 
     _p_ScreenBackbuffer = SDL_CreateRGBSurface(SDL_SWSURFACE, _p_Screen->w,
                                                _p_Screen->h, 32, 0, 0, 0, 0);
@@ -98,8 +81,8 @@ LPErrInApp MenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
                                      SDL_GetError());
     }
 
-    _p_font1 = (_menuDlgt.tc)->GetFontAriblk(_menuDlgt.self);
-    _p_font2 = (_menuDlgt.tc)->GetFontVera(_menuDlgt.self);
+    _p_fontAriblk = (_menuDlgt.tc)->GetFontAriblk(_menuDlgt.self);
+    _p_fontVera = (_menuDlgt.tc)->GetFontVera(_menuDlgt.self);
     _p_Languages = (_menuDlgt.tc)->GetLanguageMan(_menuDlgt.self);
 
     _p_MenuBox = SDL_CreateRGBSurface(SDL_SWSURFACE, _rctPanel.w, _rctPanel.h,
@@ -110,21 +93,21 @@ LPErrInApp MenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
     SDL_SetSurfaceAlphaMod(_p_MenuBox, 127);  // SDL 2.0
 
     // link to invido.it
-    _p_font3 = TTF_OpenFont(g_lpszIniFontVera, 11);
-    if (_p_font3 == 0) {
+    _p_fontVeraUnderscore = TTF_OpenFont(g_lpszIniFontVera, 11);
+    if (_p_fontVeraUnderscore == 0) {
         return ERR_UTIL::ErrorCreate("Unable to load font %s, error: %s\n",
                                      g_lpszIniFontVera, SDL_GetError());
     }
-    TTF_SetFontStyle(_p_font3, TTF_STYLE_UNDERLINE);
+    TTF_SetFontStyle(_p_fontVeraUnderscore, TTF_STYLE_UNDERLINE);
     SDL_Rect rctBt1;
     rctBt1.h = 28;
     rctBt1.w = 150;
     rctBt1.y = _p_Screen->h - rctBt1.h - 20;
     rctBt1.x = _p_Screen->w - rctBt1.w - 20;
     _p_homeUrl = new LabelLinkGfx;
-    ClickCb cb = prepClickCb();
-    _p_homeUrl->Initialize(&rctBt1, _p_ScreenBackbuffer, _p_font3, MYIDLABELURL,
-                           cb);
+    ClickCb cbNUll = ClickCb{.tc = NULL, .self = NULL};
+    _p_homeUrl->Initialize(&rctBt1, _p_ScreenBackbuffer, _p_fontVeraUnderscore,
+                           MYIDLABELURL, cbNUll);
     _p_homeUrl->SetState(LabelLinkGfx::INVISIBLE);
     _p_homeUrl->SetUrl(PACKAGE_URL);
     _p_homeUrl->SetWindowText(lpszMsgUrl);
@@ -135,7 +118,7 @@ LPErrInApp MenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
     rctBt1.w = 150;
     rctBt1.y = _p_homeUrl->PosY() - 20;
     rctBt1.x = _p_homeUrl->PosX();
-    _p_LabelVersion->Initialize(&rctBt1, _p_ScreenBackbuffer, _p_font2);
+    _p_LabelVersion->Initialize(&rctBt1, _p_ScreenBackbuffer, _p_fontVera);
     _p_LabelVersion->SetState(LabelGfx::INVISIBLE);
     _p_LabelVersion->SetWindowText(lpszVersion);
 
@@ -145,8 +128,6 @@ LPErrInApp MenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
 
     return NULL;
 }
-
-void MenuMgr::LabelClicked(int iButID) {}
 
 void MenuMgr::drawStaticSpriteEx(int src_x, int src_y, int src_dx, int src_dy,
                                  int dst_x, int dst_y, SDL_Surface* sprite) {
@@ -196,17 +177,17 @@ void MenuMgr::fillRect(int x0, int y0, int width, int height, Uint32 color) {
 
 void MenuMgr::drawBackground() {
     SDL_Rect rctTarget;
-    rctTarget.x = (_p_ScreenBackbuffer->w - _p_Scene_background->w) / 2;
-    rctTarget.y = (_p_ScreenBackbuffer->h - _p_Scene_background->h) / 2;
-    rctTarget.w = _p_Scene_background->w;
-    rctTarget.h = _p_Scene_background->h;
+    rctTarget.x = (_p_ScreenBackbuffer->w - _p_SceneBackground->w) / 2;
+    rctTarget.y = (_p_ScreenBackbuffer->h - _p_SceneBackground->h) / 2;
+    rctTarget.w = _p_SceneBackground->w;
+    rctTarget.h = _p_SceneBackground->h;
 
-    SDL_BlitSurface(_p_Scene_background, NULL, _p_ScreenBackbuffer, &rctTarget);
+    SDL_BlitSurface(_p_SceneBackground, NULL, _p_ScreenBackbuffer, &rctTarget);
 
-    _iSx = _p_ScreenBackbuffer->clip_rect.w;
-    _iDebx = _iSx / 6;
-    _iSy = _p_ScreenBackbuffer->clip_rect.h;
-    _iDeby = _iSy / 5;
+    _screenW = _p_ScreenBackbuffer->clip_rect.w;
+    _box_X = _screenW / 6;
+    _screenH = _p_ScreenBackbuffer->clip_rect.h;
+    _box_Y = _screenH / 5;
 
     Uint32 c_redfg = SDL_MapRGB(_p_ScreenBackbuffer->format, 153, 202, 51);
 
@@ -217,14 +198,15 @@ void MenuMgr::drawBackground() {
                                  _p_MenuBox);
 
     // header bar
-    fillRect(_iDebx, _iDeby - 2, _iSx - _iDebx * 2, 38, c_redfg);
+    fillRect(_box_X, _box_Y - 2, _screenW - _box_X * 2, 38, c_redfg);
 
-    drawRect(_iDebx - 1, _iDeby - 1, _iSx - _iDebx + 1, _iSy - _iDeby + 1,
-             staColor_gray);
-    drawRect(_iDebx - 2, _iDeby - 2, _iSx - _iDebx + 2, _iSy - _iDeby + 2,
-             staColor_black);
-    drawRect(_iDebx, _iDeby, _iSx - _iDebx, _iSy - _iDeby, staColor_white);
-    drawRect(_iDebx, _iDeby, _iSx - _iDebx, _iDeby + 36, staColor_white);
+    drawRect(_box_X - 1, _box_Y - 1, _screenW - _box_X + 1,
+             _screenH - _box_Y + 1, staColor_gray);
+    drawRect(_box_X - 2, _box_Y - 2, _screenW - _box_X + 2,
+             _screenH - _box_Y + 2, staColor_black);
+    drawRect(_box_X, _box_Y, _screenW - _box_X, _screenH - _box_Y,
+             staColor_white);
+    drawRect(_box_X, _box_Y, _screenW - _box_X, _box_Y + 36, staColor_white);
 }
 
 LPErrInApp MenuMgr::drawStringSH(const char* tmp, int x, int y,
@@ -261,66 +243,66 @@ LPErrInApp MenuMgr::HandleRootMenu() {
     // Draw title bar
     err = drawStringSH(
         _p_Languages->GetStringId(Languages::ID_WELCOMETITLEBAR).c_str(),
-        _iDebx + 10, _iDeby + 5, c, _p_font1);
+        _box_X + 10, _box_Y + 5, c, _p_fontAriblk);
     if (err != NULL) {
         return err;
     }
 
     // Play
-    if (_ifocus_valuesM_A != 0) {
+    if (_focusedMenuItem != 0) {
         c = staColor_off;
     } else {
         c = staColor_on;
     }
     err = drawStringSH(_p_Languages->GetStringId(Languages::ID_START).c_str(),
-                       _iDebx + 10, _iDeby + 50, c, _p_font1);
+                       _box_X + 10, _box_Y + 50, c, _p_fontAriblk);
     if (err != NULL) {
         return err;
     }
     // Options
-    if (_ifocus_valuesM_A != 1) {
+    if (_focusedMenuItem != 1) {
         c = staColor_off;
     } else {
         c = staColor_on;
     }
     err = drawStringSH(
         _p_Languages->GetStringId(Languages::ID_MEN_OPTIONS).c_str(),
-        _iDebx + 10, _iDeby + 90, c, _p_font1);
+        _box_X + 10, _box_Y + 90, c, _p_fontAriblk);
     if (err != NULL) {
         return err;
     }
     // Credits
-    if (_ifocus_valuesM_A != 2) {
+    if (_focusedMenuItem != 2) {
         c = staColor_off;
     } else {
         c = staColor_on;
     }
     err = drawStringSH(_p_Languages->GetStringId(Languages::ID_CREDITS).c_str(),
-                       _iDebx + 10, _iDeby + 130, c, _p_font1);
+                       _box_X + 10, _box_Y + 130, c, _p_fontAriblk);
     if (err != NULL) {
         return err;
     }
 
     // Help
-    if (_ifocus_valuesM_A != 3) {
+    if (_focusedMenuItem != 3) {
         c = staColor_off;
     } else {
         c = staColor_on;
     }
     err = drawStringSH(_p_Languages->GetStringId(Languages::ID_MN_HELP).c_str(),
-                       _iDebx + 10, _iDeby + 170, c, _p_font1);
+                       _box_X + 10, _box_Y + 170, c, _p_fontAriblk);
     if (err != NULL) {
         return err;
     }
 
     // Quit
-    if (_ifocus_valuesM_A != 4) {
+    if (_focusedMenuItem != 4) {
         c = staColor_off;
     } else {
         c = staColor_on;
     }
     err = drawStringSH(_p_Languages->GetStringId(Languages::ID_EXIT).c_str(),
-                       _iDebx + 10, _iSy - _iDeby - 40, c, _p_font1);
+                       _box_X + 10, _screenH - _box_Y - 40, c, _p_fontAriblk);
     if (err != NULL) {
         return err;
     }
@@ -336,15 +318,15 @@ LPErrInApp MenuMgr::HandleRootMenu() {
 
         if (event.type == SDL_KEYDOWN) {
             if (event.key.keysym.sym == SDLK_UP) {
-                _ifocus_valuesM_A--;
-                if (_ifocus_valuesM_A < 0) {
-                    _ifocus_valuesM_A = 0;
+                _focusedMenuItem--;
+                if (_focusedMenuItem < 0) {
+                    _focusedMenuItem = 0;
                 }
             }
             if (event.key.keysym.sym == SDLK_DOWN) {
-                _ifocus_valuesM_A++;
-                if (_ifocus_valuesM_A > iNumItemInMenu) {
-                    _ifocus_valuesM_A = iNumItemInMenu;
+                _focusedMenuItem++;
+                if (_focusedMenuItem > iNumItemInMenu) {
+                    _focusedMenuItem = iNumItemInMenu;
                 }
             }
             if (event.key.keysym.sym == SDLK_RETURN) {
@@ -360,19 +342,19 @@ LPErrInApp MenuMgr::HandleRootMenu() {
                 event.motion.y >= _rctPanel.y &&
                 event.motion.y <= _rctPanel.y + _rctPanel.h) {
                 // mouse is inner to the box
-                if (event.motion.y >= _iDeby + 90 &&
-                    event.motion.y < _iDeby + 130) {
-                    _ifocus_valuesM_A = 1;
-                } else if (event.motion.y >= _iDeby + 130 &&
-                           event.motion.y < _iDeby + 170) {
-                    _ifocus_valuesM_A = 2;
-                } else if (event.motion.y < _iDeby + 90) {
-                    _ifocus_valuesM_A = 0;
-                } else if (event.motion.y >= _iDeby + 170 &&
-                           event.motion.y < _iDeby + 230) {
-                    _ifocus_valuesM_A = 3;
-                } else if (event.motion.y >= _iSy - _iDeby - 40) {
-                    _ifocus_valuesM_A = 4;
+                if (event.motion.y >= _box_Y + 90 &&
+                    event.motion.y < _box_Y + 130) {
+                    _focusedMenuItem = 1;
+                } else if (event.motion.y >= _box_Y + 130 &&
+                           event.motion.y < _box_Y + 170) {
+                    _focusedMenuItem = 2;
+                } else if (event.motion.y < _box_Y + 90) {
+                    _focusedMenuItem = 0;
+                } else if (event.motion.y >= _box_Y + 170 &&
+                           event.motion.y < _box_Y + 230) {
+                    _focusedMenuItem = 3;
+                } else if (event.motion.y >= _screenH - _box_Y - 40) {
+                    _focusedMenuItem = 4;
                 }
                 _bMouseInside = true;
             } else {
@@ -406,8 +388,8 @@ void MenuMgr::updateTextureAsFlipScreen() {
 }
 
 void MenuMgr::rootMenuNext() {
-    TRACE_DEBUG("Menu selected %d\n", _ifocus_valuesM_A);
-    switch (_ifocus_valuesM_A) {
+    TRACE_DEBUG("Menu selected %d\n", _focusedMenuItem);
+    switch (_focusedMenuItem) {
         case 0:  // Play
             (_menuDlgt.tc)->SetNextMenu(_menuDlgt.self, MENU_GAME);
             break;
