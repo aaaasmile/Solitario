@@ -4,7 +4,7 @@
 
 #include "WinTypeGlobal.h"
 
-const char *lpszDeckDir = DATA_PREFIX "mazzi/";
+const char *g_lpszDeckDir = DATA_PREFIX "mazzi/";
 
 SDL_Color GFX_UTIL_COLOR::White = {255, 255, 255, 0};
 SDL_Color GFX_UTIL_COLOR::Gray = {128, 128, 128, 0};
@@ -213,7 +213,7 @@ LPErrInApp GFX_UTIL::LoadCardPac(SDL_Surface **pp_Deck, DeckType &deckType,
     Uint16 w, h;
     Uint16 frames;
 
-    std::string strFileName = lpszDeckDir;
+    std::string strFileName = g_lpszDeckDir;
     strFileName += deckType.GetResFileName();
 
     SDL_RWops *src = SDL_RWFromFile(strFileName.c_str(), "rb");

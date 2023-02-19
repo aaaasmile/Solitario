@@ -24,9 +24,8 @@ int g_SymbolHeight = 144;
 #define FRAMETICKS (1000 / FPS)
 #define THINKINGS_PER_TICK 1
 
-static const char *lpszBackgroundImgFile = DATA_PREFIX "images/im001537.jpg";
-static const char *lpszSymbDir = DATA_PREFIX "images/";
-extern const char *lpszDeckDir;
+static const char *g_lpszSymbDir = DATA_PREFIX "images/";
+extern const char *g_lpszDeckDir;
 
 const int MYIDQUIT = 0;
 const int MYIDNEWGAME = 1;
@@ -91,8 +90,8 @@ ClickCb SolitarioGfx::prepClickNewGameCb() {
 
 LPErrInApp SolitarioGfx::Initialize(SDL_Surface *s, SDL_Renderer *r,
                                     SDL_Window *w, DeckType &dt,
-                                    LPLanguages planguages,
-                                    TTF_Font *pfontText) {
+                                    LPLanguages planguages, TTF_Font *pfontText,
+                                    SDL_Surface *pSceneBackground) {
     TRACE("Initialize Solitario\n");
     setDeckType(dt);
     _p_Languages = planguages;
@@ -110,12 +109,8 @@ LPErrInApp SolitarioGfx::Initialize(SDL_Surface *s, SDL_Renderer *r,
 
     _p_ScreenBackbuffer = SDL_CreateRGBSurface(SDL_SWSURFACE, _p_Screen->w,
                                                _p_Screen->h, 32, 0, 0, 0, 0);
-    SDL_RWops *srcBack = SDL_RWFromFile(lpszBackgroundImgFile, "rb");
-    if (srcBack == 0) {
-        return ERR_UTIL::ErrorCreate("Error in SDL_RWFromFile: %s\n",
-                                     SDL_GetError());
-    }
-    _p_SceneBackground = IMG_LoadJPG_RW(srcBack);
+
+    _p_SceneBackground = pSceneBackground;
     if (_p_SceneBackground == 0) {
         return ERR_UTIL::ErrorCreate("Cannot create scene background: %s\n",
                                      SDL_GetError());
@@ -803,7 +798,7 @@ LPErrInApp SolitarioGfx::LoadDeckFromSingleFile() {
     char buff[128];
 
     for (int k = 0; k < 4; k++) {
-        std::string strFileName = lpszDeckDir;
+        std::string strFileName = g_lpszDeckDir;
         switch (k) {
             case 0:
                 strSuffix = "bastoni";
@@ -862,9 +857,9 @@ LPErrInApp SolitarioGfx::LoadSymbolsFromSingleFile() {
     }
 
     for (int i = 0; i < NUM_SYMBOLS; i++) {
-        std::string strDir = lpszDeckDir;
+        std::string strDir = g_lpszDeckDir;
         std::string strFileSymbName;
-        strFileSymbName = lpszDeckDir + vct_Strings[i];
+        strFileSymbName = g_lpszDeckDir + vct_Strings[i];
         SDL_RWops *srcBack = SDL_RWFromFile(strFileSymbName.c_str(), "rb");
         if (!srcBack) {
             return ERR_UTIL::ErrorCreate(
@@ -893,7 +888,7 @@ LPErrInApp SolitarioGfx::LoadCardPac() {
 }
 
 LPErrInApp SolitarioGfx::LoadSymbolsForPac() {
-    std::string strFileSymbName = lpszSymbDir;
+    std::string strFileSymbName = g_lpszSymbDir;
     strFileSymbName += _DeckType.GetSymbolFileName();
 
     _p_Symbols = SDL_LoadBMP(strFileSymbName.c_str());

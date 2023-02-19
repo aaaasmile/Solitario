@@ -36,12 +36,15 @@ static const char *g_lpszSectAll = "global";
 static const char *g_lpszKeyLang = "Language";
 static const char *g_lpszKeyDeck = "DeckCurrent";
 static const char *g_lpszKeyMusic = "Musicenabled";
+static const char *g_lpszKeyBackground = "Background";
 
 static const char *g_lpszIconProgFile = DATA_PREFIX "images/icona_asso.bmp";
 static const char *g_lpszTitleFile = DATA_PREFIX "images/title.png";
 static const char *g_lpszIniFontAriblk = DATA_PREFIX "font/ariblk.ttf";
 static const char *g_lpszIniFontVera = DATA_PREFIX "font/vera.ttf";
-static const char *g_lpszImageSplash = DATA_PREFIX "images/im001537.jpg";
+static const char *g_lpszImageSplashComm =
+    DATA_PREFIX "images/commessaggio.jpg";
+static const char *g_lpszImageSplashMantova = DATA_PREFIX "images/mantova.jpg";
 
 AppGfx::AppGfx() {
     _p_Window = NULL;
@@ -143,17 +146,34 @@ LPErrInApp AppGfx::Init() {
 }
 
 LPErrInApp AppGfx::loadSceneBackground() {
-    std::string strFileName = g_lpszImageSplash;
+    if (_p_GameSettings->BackgroundType != BackgroundTypeEnum::Empty) {
+        std::string strFileName;
+        if (_p_GameSettings->BackgroundType ==
+            BackgroundTypeEnum::Commessaggio) {
+            strFileName = g_lpszImageSplashComm;
+        } else if (_p_GameSettings->BackgroundType ==
+                   BackgroundTypeEnum::Mantova) {
+            strFileName = g_lpszImageSplashMantova;
+        } else {
+            return ERR_UTIL::ErrorCreate("Backgound Type %d not supported\n",
+                                         _p_GameSettings->BackgroundType);
+        }
+        SDL_RWops *srcBack = SDL_RWFromFile(strFileName.c_str(), "rb");
+        if (srcBack == 0) {
+            return ERR_UTIL::ErrorCreate("Unable to load %s background image\n",
+                                         strFileName.c_str());
+        }
+        _p_SceneBackground = IMG_LoadJPG_RW(srcBack);
+        if (_p_SceneBackground == 0) {
+            return ERR_UTIL::ErrorCreate("Unable to create splash");
+        }
+    } else {
+        _p_SceneBackground = SDL_CreateRGBSurface(SDL_SWSURFACE, _p_Screen->w,
+                                                  _p_Screen->h, 32, 0, 0, 0, 0);
+        SDL_FillRect(_p_SceneBackground, &_p_SceneBackground->clip_rect,
+                     SDL_MapRGBA(_p_SceneBackground->format, 0, 0, 0, 0));
+    }
 
-    SDL_RWops *srcBack = SDL_RWFromFile(strFileName.c_str(), "rb");
-    if (srcBack == 0) {
-        return ERR_UTIL::ErrorCreate("Unable to load %s background image\n",
-                                     strFileName.c_str());
-    }
-    _p_SceneBackground = IMG_LoadJPG_RW(srcBack);
-    if (_p_SceneBackground == 0) {
-        return ERR_UTIL::ErrorCreate("Unable to create splash");
-    }
     return NULL;
 }
 
@@ -222,7 +242,7 @@ LPErrInApp AppGfx::startGameLoop() {
 
     err = _p_SolitarioGfx->Initialize(_p_Screen, _p_sdlRenderer, _p_Window,
                                       _p_GameSettings->DeckTypeVal, &_Languages,
-                                      _p_fontAriblk);
+                                      _p_fontAriblk, _p_SceneBackground);
     if (err != NULL)
         return err;
 
@@ -354,6 +374,14 @@ LPErrInApp AppGfx::loadProfile() {
     if (!_bOverride) {
         _p_GameSettings->MusicEnabled = iVal;
     }
+    // background
+    iVal = _p_GameSettings->BackgroundType;
+    if (pIni) {
+        ini_locateHeading(pIni, g_lpszSectAll);
+        ini_locateKey(pIni, g_lpszKeyBackground);
+        ini_readInt(pIni, &iVal);
+    }
+    _p_GameSettings->BackgroundType = (BackgroundTypeEnum)iVal;
 
     ini_close(pIni);
     return NULL;
@@ -382,6 +410,11 @@ void AppGfx::writeProfile() {
     ini_locateHeading(pIni, g_lpszSectAll);
     ini_locateKey(pIni, g_lpszKeyMusic);
     ini_writeInt(pIni, _p_GameSettings->MusicEnabled);
+
+    // background
+    ini_locateHeading(pIni, g_lpszSectAll);
+    ini_locateKey(pIni, g_lpszKeyBackground);
+    ini_writeInt(pIni, (int)_p_GameSettings->BackgroundType);
 
     ini_close(pIni);
     TRACE("Settings file %s written\n", filepath);

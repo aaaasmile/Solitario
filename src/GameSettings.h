@@ -7,6 +7,8 @@
 #include "ErrorInfo.h"
 #include "Languages.h"
 
+enum BackgroundTypeEnum { Commessaggio = 0, Mantova = 1, Empty = 2 };
+
 class GameSettings {
 public:
     std::string PlayerName;
@@ -15,6 +17,7 @@ public:
     Languages::eLangId CurrentLanguage;
     bool MusicEnabled;
     std::string SettingsDir;
+    BackgroundTypeEnum BackgroundType;
 
 public:
     GameSettings() {
@@ -24,6 +27,7 @@ public:
         CurrentLanguage = Languages::LANG_ITA;
         MusicEnabled = false;
         SettingsDir = "";
+        BackgroundType = BackgroundTypeEnum::Commessaggio;
     }
 };
 
