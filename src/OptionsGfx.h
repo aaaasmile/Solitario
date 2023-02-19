@@ -26,7 +26,8 @@ class OptionsGfx {
         MYIDCANCEL = 1,
         MYIDMUSICCHK = 2,
         MYIDCOMBOLANG = 3,
-        MYIDCOMBODECK = 4
+        MYIDCOMBODECK = 4,
+        MYIDCOMBOBACK = 5
     };
 
 public:
@@ -63,6 +64,7 @@ private:
     CheckBoxGfx* _p_checkMusic;
     ComboGfx* _p_comboLang;
     ComboGfx* _p_comboDeck;
+    ComboGfx* _p_comboBackground;
     SDL_Surface* _p_deckAll[DeckType::NUM_OF_DECK];
     CardGfx _cardOnEachDeck[3][DeckType::NUM_OF_DECK];
 

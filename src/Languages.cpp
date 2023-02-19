@@ -5,7 +5,7 @@
 Languages::Languages() {
     for (int i = 0; i < TOT_STRINGS; i++) {
         for (int j = 0; j < TOT_LANG; j++) {
-            _mtxLangString[j][i] = "No TRanslation!";
+            _mtxLangString[j][i] = "No Translation!";
         }
     }
     _eLangid = LANG_ITA;
@@ -68,6 +68,10 @@ Languages::Languages() {
     _mtxLangString[LANG_DIAL_BREDA][ID_OK] = "Ukei";
     _mtxLangString[LANG_DIAL_BREDA][ID_CANCEL] = "Cancèla";
     _mtxLangString[LANG_DIAL_BREDA][ID_NEWGAME] = "Natra";
+    _mtxLangString[LANG_DIAL_BREDA][ID_CHOOSEBACKGROUND] = "Sfont";
+    _mtxLangString[LANG_DIAL_BREDA][ID_COMMESSAGGIO] = "Cumsas";
+    _mtxLangString[LANG_DIAL_BREDA][ID_MANTOVA] = "Mantua";
+    _mtxLangString[LANG_DIAL_BREDA][ID_BLACK] = "Negar";
 
     // italiano
     _mtxLangString[LANG_ITA][ID_START] = "Inizia";
@@ -123,6 +127,10 @@ Languages::Languages() {
     _mtxLangString[LANG_ITA][ID_OK] = "OK";
     _mtxLangString[LANG_ITA][ID_CANCEL] = "Cancella";
     _mtxLangString[LANG_ITA][ID_NEWGAME] = "Nuova";
+    _mtxLangString[LANG_ITA][ID_CHOOSEBACKGROUND] = "Sfondo";
+    _mtxLangString[LANG_ITA][ID_COMMESSAGGIO] = "Commessaggio";
+    _mtxLangString[LANG_ITA][ID_MANTOVA] = "Mantova";
+    _mtxLangString[LANG_ITA][ID_BLACK] = "Nero";
 
     // English
     _mtxLangString[LANG_ENG][ID_START] = "Start";
@@ -178,6 +186,10 @@ Languages::Languages() {
     _mtxLangString[LANG_ENG][ID_OK] = "OK";
     _mtxLangString[LANG_ENG][ID_CANCEL] = "Cancel";
     _mtxLangString[LANG_ENG][ID_NEWGAME] = "New Game";
+    _mtxLangString[LANG_ENG][ID_CHOOSEBACKGROUND] = "Background";
+    _mtxLangString[LANG_ENG][ID_COMMESSAGGIO] = "Commessaggio";
+    _mtxLangString[LANG_ENG][ID_MANTOVA] = "Mantova";
+    _mtxLangString[LANG_ENG][ID_BLACK] = "Black";
 }
 
 std::string Languages::GetStringId(eStringID eId) {

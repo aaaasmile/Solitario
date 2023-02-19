@@ -63,6 +63,10 @@ public:
         ID_OK,
         ID_CANCEL,
         ID_NEWGAME,
+        ID_CHOOSEBACKGROUND,
+        ID_COMMESSAGGIO,
+        ID_MANTOVA,
+        ID_BLACK,
         TOT_STRINGS  // it mus be always on the last place
     };
 

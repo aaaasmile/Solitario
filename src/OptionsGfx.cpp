@@ -29,6 +29,7 @@ OptionsGfx::~OptionsGfx() {
     delete _p_comboLang;
     delete _p_checkMusic;
     delete _p_comboDeck;
+    delete _p_comboBackground;
     for (int i = 0; i < DeckType::NUM_OF_DECK; i++) {
         if (_p_deckAll[i]) {
             SDL_FreeSurface(_p_deckAll[i]);
@@ -125,7 +126,7 @@ LPErrInApp OptionsGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
     _p_buttonOK = new ButtonGfx;
     rctBt1.w = 120;
     rctBt1.h = 28;
-    rctBt1.y = _rctOptBox.y + _rctOptBox.h - 10 - rctBt1.h;
+    rctBt1.y = _rctOptBox.y + _rctOptBox.h - 30 - rctBt1.h;
     rctBt1.x =
         (_rctOptBox.w - rctBt1.w) / 2 + _rctOptBox.x + rctBt1.w + iSpace2bt;
     _p_buttonOK->Initialize(&rctBt1, pScreen, _p_fontText, MYIDOK, cbBtOK);
@@ -151,14 +152,23 @@ LPErrInApp OptionsGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
     _p_checkMusic->Initialize(&rctBt1, pScreen, _p_fontText, MYIDMUSICCHK,
                               cbCheckboxMusic);
     _p_checkMusic->SetVisibleState(CheckBoxGfx::INVISIBLE);
+    // background
+    _p_comboBackground = new ComboGfx;
+    rctBt1.w = 180;
+    rctBt1.h = 26;
+    rctBt1.y = _p_checkMusic->PosY() + _p_checkMusic->Height() + 20;
+    rctBt1.x = _p_checkMusic->PosX();
+    _p_comboBackground->Initialize(&rctBt1, pScreen, _p_fontText, MYIDCOMBOBACK,
+                                   pRenderer, nullCb);
+    _p_comboBackground->SetVisibleState(ComboGfx::INVISIBLE);
     // Deck
     // combo deck selection
     ClickCb deckSelCb = prepSelectionDeckCb();
     _p_comboDeck = new ComboGfx;
     rctBt1.w = 180;
     rctBt1.h = 26;
-    rctBt1.y = _p_checkMusic->PosY() + _p_checkMusic->Height() + 20;
-    rctBt1.x = _p_checkMusic->PosX();
+    rctBt1.y = _p_comboBackground->PosY() + _p_comboBackground->Height() + 30;
+    rctBt1.x = _p_comboBackground->PosX();
 
     _p_comboDeck->Initialize(&rctBt1, pScreen, _p_fontText, MYIDCOMBODECK,
                              pRenderer, deckSelCb);
@@ -177,7 +187,7 @@ LPErrInApp OptionsGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
         int ww = pac_w / 4;
         int hh = pac_h / 10;
         int x_pos = rctBt1.x;
-        int y_pos = rctBt1.y + rctBt1.h + 50;
+        int y_pos = rctBt1.y + rctBt1.h + 20;
 
         _cardOnEachDeck[0][i].SetIdx(9);
         _cardOnEachDeck[0][i].SetWidth(ww);
@@ -235,6 +245,18 @@ void OptionsGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
     _p_checkMusic->SetVisibleState(CheckBoxGfx::VISIBLE);
     _p_checkMusic->SetCheckState(_p_GameSettings->MusicEnabled);
 
+    // combobox background selection
+    STRING strSelectBackGround =
+        _p_languages->GetStringId(Languages::ID_CHOOSEBACKGROUND);
+    strTextBt = _p_languages->GetStringId(Languages::ID_COMMESSAGGIO);
+    _p_comboBackground->AddLineText(strTextBt.c_str());
+    strTextBt = _p_languages->GetStringId(Languages::ID_MANTOVA);
+    _p_comboBackground->AddLineText(strTextBt.c_str());
+    strTextBt = _p_languages->GetStringId(Languages::ID_BLACK);
+    _p_comboBackground->AddLineText(strTextBt.c_str());
+    _p_comboBackground->SetVisibleState(ComboGfx::VISIBLE);
+    _p_comboBackground->SelectIndex(_p_GameSettings->BackgroundType);
+
     // combobox deck selection
     STRING strDeckSelectTitle =
         _p_languages->GetStringId(Languages::ID_CHOOSEMAZZO);
@@ -281,6 +303,7 @@ void OptionsGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
                 _p_buttonOK->MouseUp(event);
                 _p_comboLang->MouseUp(event);
                 _p_checkMusic->MouseUp(event);
+                _p_comboBackground->MouseUp(event);
                 _p_comboDeck->MouseUp(event);
             }
         }
@@ -331,7 +354,14 @@ void OptionsGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
         // Checkbox music
         _p_checkMusic->DrawButton(pShadowSrf);
 
-        // Combo Deck: Label and crontrol
+        // Combo Background: Label and control
+        GFX_UTIL::DrawString(pShadowSrf, strSelectBackGround.c_str(),
+                             _p_comboBackground->PosX(),
+                             _p_comboBackground->PosY() - 20,
+                             GFX_UTIL_COLOR::Orange, _p_fontText);
+        _p_comboBackground->DrawButton(pShadowSrf);
+
+        // Combo Deck: Label and control
         GFX_UTIL::DrawString(pShadowSrf, strDeckSelectTitle.c_str(),
                              _p_comboDeck->PosX(), _p_comboDeck->PosY() - 20,
                              GFX_UTIL_COLOR::Orange, _p_fontText);
@@ -369,6 +399,8 @@ void OptionsGfx::ButEndOPtClicked(int iButID) {
     Languages::eLangId prevLangId = _p_GameSettings->CurrentLanguage;
     DeckType::eDeckType prevDeckType = _p_GameSettings->DeckTypeVal.GetType();
     bool prevMusicEnabled = _p_GameSettings->MusicEnabled;
+    BackgroundTypeEnum prevBackgroundType = _p_GameSettings->BackgroundType;
+
     switch (_p_comboLang->GetSlectedIndex()) {
         case 0:
             _p_GameSettings->CurrentLanguage = Languages::eLangId::LANG_ITA;
@@ -383,12 +415,28 @@ void OptionsGfx::ButEndOPtClicked(int iButID) {
         default:
             break;
     }
+
+    switch (_p_comboBackground->GetSlectedIndex()) {
+        case 0:
+            _p_GameSettings->BackgroundType = BackgroundTypeEnum::Commessaggio;
+            break;
+        case 1:
+            _p_GameSettings->BackgroundType = BackgroundTypeEnum::Mantova;
+            break;
+        case 2:
+            _p_GameSettings->BackgroundType = BackgroundTypeEnum::Black;
+            break;
+        default:
+            break;
+    }
+
     DeckType dt;
     dt.SetTypeIndex(_p_comboDeck->GetSlectedIndex());
     _p_GameSettings->DeckTypeVal.CopyFrom(dt);
     _p_GameSettings->MusicEnabled = _p_checkMusic->GetCheckState();
     if ((_p_GameSettings->MusicEnabled != prevMusicEnabled) ||
         (_p_GameSettings->DeckTypeVal.GetType() != prevDeckType) ||
+        (_p_GameSettings->BackgroundType != prevBackgroundType) ||
         (_p_GameSettings->CurrentLanguage != prevLangId)) {
         TRACE("Settings are changed, save it\n");
         _menuDlgt.tc->PersistSettings(_menuDlgt.self);
