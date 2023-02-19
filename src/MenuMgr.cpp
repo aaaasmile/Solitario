@@ -18,7 +18,7 @@ static const char* g_lpszMsgUrl = "Go to invido.it";
 static const char* g_lpszVersion = VERSION "20230131";
 static const char* g_lpszIniFontVera = DATA_PREFIX "font/vera.ttf";
 
-static const SDL_Color g_staColor_on = {253, 252, 250};
+static const SDL_Color g_color_on = {253, 252, 250};
 static const SDL_Color g_color_off = {128, 128, 128};
 static const SDL_Color g_color_white = {255, 255, 255};
 static const SDL_Color g_color_ombre = {87, 87, 87, 50};
@@ -30,7 +30,7 @@ MenuMgr::MenuMgr() {
     _p_fontVera = 0;
     _p_fontVeraUnderscore = 0;
     _p_ScreenBackbuffer = 0;
-    _focusedMenuItem = 0;
+    _focusedMenuItem = MenuItemEnum::MENU_GAME;
     _p_Languages = 0;
     _p_MenuBox = 0;
     _p_SceneBackground = 0;
@@ -172,85 +172,117 @@ LPErrInApp MenuMgr::drawMenuText(SDL_Surface* psurf, const char* text, int x,
     return NULL;
 }
 
+MenuItemEnum previousMenu(MenuItemEnum currMenu) {
+    switch (currMenu) {
+        case MenuItemEnum::MENU_GAME:
+            return MenuItemEnum::MENU_GAME;
+        case MenuItemEnum::MENU_OPTIONS:
+            return MenuItemEnum::MENU_GAME;
+        case MenuItemEnum::MENU_CREDITS:
+            return MenuItemEnum::MENU_OPTIONS;
+        case MenuItemEnum::MENU_HELP:
+            return MenuItemEnum::MENU_CREDITS;
+        case MenuItemEnum::QUIT:
+            return MenuItemEnum::MENU_HELP;
+    }
+    return currMenu;
+}
+
+MenuItemEnum nextMenu(MenuItemEnum currMenu) {
+    switch (currMenu) {
+        case MenuItemEnum::MENU_GAME:
+            return MenuItemEnum::MENU_OPTIONS;
+        case MenuItemEnum::MENU_OPTIONS:
+            return MenuItemEnum::MENU_CREDITS;
+        case MenuItemEnum::MENU_CREDITS:
+            return MenuItemEnum::MENU_HELP;
+        case MenuItemEnum::MENU_HELP:
+            return MenuItemEnum::QUIT;
+        case MenuItemEnum::QUIT:
+            return MenuItemEnum::QUIT;
+    }
+    return currMenu;
+}
+
 LPErrInApp MenuMgr::HandleRootMenu() {
     LPErrInApp err;
     // show the link url label
     _p_homeUrl->SetState(LabelLinkGfx::VISIBLE);
     _p_LabelVersion->SetState(LabelGfx::VISIBLE);
 
-    SDL_Color c = g_color_white;
+    SDL_Color color = g_color_white;
     drawBackground(_p_ScreenBackbuffer);
-    int iNumItemInMenu = 4;
 
     // Draw title bar
     err = drawMenuText(
         _p_ScreenBackbuffer,
         _p_Languages->GetStringId(Languages::ID_WELCOMETITLEBAR).c_str(),
-        _box_X + 10, _box_Y + 5, c, _p_fontAriblk);
+        _box_X + 10, _box_Y + 5, color, _p_fontAriblk);
     if (err != NULL) {
         return err;
     }
 
     // Play
-    if (_focusedMenuItem != 0) {
-        c = g_color_off;
+    if (_focusedMenuItem != MenuItemEnum::MENU_GAME) {
+        color = g_color_off;
     } else {
-        c = g_staColor_on;
+        color = g_color_on;
     }
     err = drawMenuText(_p_ScreenBackbuffer,
                        _p_Languages->GetStringId(Languages::ID_START).c_str(),
-                       _box_X + 10, _box_Y + 50, c, _p_fontAriblk);
+                       _box_X + 10, _box_Y + 50, color, _p_fontAriblk);
     if (err != NULL) {
         return err;
     }
     // Options
-    if (_focusedMenuItem != 1) {
-        c = g_color_off;
+    if (_focusedMenuItem != MenuItemEnum::MENU_OPTIONS) {
+        color = g_color_off;
     } else {
-        c = g_staColor_on;
+        color = g_color_on;
     }
     err = drawMenuText(
         _p_ScreenBackbuffer,
         _p_Languages->GetStringId(Languages::ID_MEN_OPTIONS).c_str(),
-        _box_X + 10, _box_Y + 90, c, _p_fontAriblk);
+        _box_X + 10, _box_Y + 90, color, _p_fontAriblk);
     if (err != NULL) {
         return err;
     }
     // Credits
-    if (_focusedMenuItem != 2) {
-        c = g_color_off;
+    if (_focusedMenuItem != MenuItemEnum::MENU_CREDITS) {
+        color = g_color_off;
     } else {
-        c = g_staColor_on;
+        color = g_color_on;
     }
     err = drawMenuText(_p_ScreenBackbuffer,
                        _p_Languages->GetStringId(Languages::ID_CREDITS).c_str(),
-                       _box_X + 10, _box_Y + 130, c, _p_fontAriblk);
+                       _box_X + 10, _box_Y + 130, color, _p_fontAriblk);
     if (err != NULL) {
         return err;
     }
 
     // Help
-    if (_focusedMenuItem != 3) {
-        c = g_color_off;
+    if (_focusedMenuItem != MenuItemEnum::MENU_HELP) {
+        color = g_color_off;
     } else {
-        c = g_staColor_on;
+        color = g_color_on;
     }
     err = drawMenuText(_p_ScreenBackbuffer,
                        _p_Languages->GetStringId(Languages::ID_MN_HELP).c_str(),
-                       _box_X + 10, _box_Y + 170, c, _p_fontAriblk);
+                       _box_X + 10, _box_Y + 170, color, _p_fontAriblk);
     if (err != NULL) {
         return err;
     }
 
     // Quit
-    if (_focusedMenuItem != 4) {
-        c = g_color_off;
+    if (_focusedMenuItem != MenuItemEnum::QUIT) {
+        color = g_color_off;
     } else {
-        c = g_staColor_on;
+        color = g_color_on;
     }
-    err = drawMenuText(_p_ScreenBackbuffer,
-                       _p_Languages->GetStringId(Languages::ID_EXIT).c_str(),
-                       _box_X + 10, _screenH - _box_Y - 40, c, _p_fontAriblk);
+    err =
+        drawMenuText(_p_ScreenBackbuffer,
+                     _p_Languages->GetStringId(Languages::ID_EXIT).c_str(),
+                     _box_X + 10, _screenH - _box_Y - 40, color, _p_fontAriblk);
     if (err != NULL) {
         return err;
     }
@@ -266,16 +298,10 @@ LPErrInApp MenuMgr::HandleRootMenu() {
 
         if (event.type == SDL_KEYDOWN) {
             if (event.key.keysym.sym == SDLK_UP) {
-                _focusedMenuItem--;
-                if (_focusedMenuItem < 0) {
-                    _focusedMenuItem = 0;
-                }
+                _focusedMenuItem = previousMenu(_focusedMenuItem);
             }
             if (event.key.keysym.sym == SDLK_DOWN) {
-                _focusedMenuItem++;
-                if (_focusedMenuItem > iNumItemInMenu) {
-                    _focusedMenuItem = iNumItemInMenu;
-                }
+                _focusedMenuItem = nextMenu(_focusedMenuItem);
             }
             if (event.key.keysym.sym == SDLK_RETURN) {
                 rootMenuNext();
@@ -290,19 +316,19 @@ LPErrInApp MenuMgr::HandleRootMenu() {
                 event.motion.y >= _rctPanel.y &&
                 event.motion.y <= _rctPanel.y + _rctPanel.h) {
                 // mouse is inner to the box
-                if (event.motion.y >= _box_Y + 90 &&
-                    event.motion.y < _box_Y + 130) {
-                    _focusedMenuItem = 1;
+                if (event.motion.y < _box_Y + 90) {
+                    _focusedMenuItem = MenuItemEnum::MENU_GAME;
+                } else if (event.motion.y >= _box_Y + 90 &&
+                           event.motion.y < _box_Y + 130) {
+                    _focusedMenuItem = MenuItemEnum::MENU_OPTIONS;
                 } else if (event.motion.y >= _box_Y + 130 &&
                            event.motion.y < _box_Y + 170) {
-                    _focusedMenuItem = 2;
-                } else if (event.motion.y < _box_Y + 90) {
-                    _focusedMenuItem = 0;
+                    _focusedMenuItem = MenuItemEnum::MENU_CREDITS;
                 } else if (event.motion.y >= _box_Y + 170 &&
                            event.motion.y < _box_Y + 230) {
-                    _focusedMenuItem = 3;
+                    _focusedMenuItem = MenuItemEnum::MENU_HELP;
                 } else if (event.motion.y >= _screenH - _box_Y - 40) {
-                    _focusedMenuItem = 4;
+                    _focusedMenuItem = MenuItemEnum::QUIT;
                 }
                 _bMouseInside = true;
             } else {
@@ -337,21 +363,9 @@ void MenuMgr::updateTextureAsFlipScreen() {
 
 void MenuMgr::rootMenuNext() {
     TRACE_DEBUG("Menu selected %d\n", _focusedMenuItem);
-    switch (_focusedMenuItem) {
-        case 0:  // Play
-            (_menuDlgt.tc)->SetNextMenu(_menuDlgt.self, MENU_GAME);
-            break;
-        case 1:  // Options
-            (_menuDlgt.tc)->SetNextMenu(_menuDlgt.self, MENU_OPTIONS);
-            break;
-        case 2:  // Credits
-            (_menuDlgt.tc)->SetNextMenu(_menuDlgt.self, MENU_CREDITS);
-            break;
-        case 3:  // Help
-            (_menuDlgt.tc)->SetNextMenu(_menuDlgt.self, MENU_HELP);
-            break;
-        case 4:  // Quit
-            (_menuDlgt.tc)->LeaveMenu(_menuDlgt.self);
-            break;
+    if (_focusedMenuItem == MenuItemEnum::QUIT) {
+        (_menuDlgt.tc)->LeaveMenu(_menuDlgt.self);
+    } else {
+        (_menuDlgt.tc)->SetNextMenu(_menuDlgt.self, _focusedMenuItem);
     }
 }

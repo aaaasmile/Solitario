@@ -407,9 +407,9 @@ void fncBind_LeaveMenu(void *self) {
     pApp->LeaveMenu();
 }
 
-void fncBind_SetNextMenu(void *self, int iVal) {
+void fncBind_SetNextMenu(void *self, MenuItemEnum menuItem) {
     AppGfx *pApp = (AppGfx *)self;
-    pApp->SetNextMenu(iVal);
+    pApp->SetNextMenu(menuItem);
 }
 
 void fncBind_PersistSettings(void *self) {
@@ -441,7 +441,7 @@ MenuDelegator AppGfx::prepMenuDelegator() {
 
 void AppGfx::LeaveMenu() {
     drawSceneBackground();
-    _Histmenu.pop();
+    _histMenu.pop();
 }
 
 void AppGfx::PersistSettings() {
@@ -473,14 +473,14 @@ LPErrInApp AppGfx::MainLoop() {
     pMenuMgr->Initialize(_p_Screen, _p_sdlRenderer, delegator);
 
     // set main menu
-    _Histmenu.push(MenuMgr::QUITAPP);
-    _Histmenu.push(MenuMgr::MENU_ROOT);
+    _histMenu.push(MenuItemEnum::QUIT);
+    _histMenu.push(MenuItemEnum::MENU_ROOT);
 
     pMenuMgr->SetBackground(_p_SceneBackground);
 
-    while (!bquit && !_Histmenu.empty()) {
-        switch (_Histmenu.top()) {
-            case MenuMgr::MENU_ROOT:
+    while (!bquit && !_histMenu.empty()) {
+        switch (_histMenu.top()) {
+            case MenuItemEnum::MENU_ROOT:
                 if (_p_GameSettings->MusicEnabled &&
                     !_p_MusicManager->IsPLayingMusic()) {
                     _p_MusicManager->PlayMusic(MusicManager::MUSIC_INIT_SND,
@@ -488,36 +488,35 @@ LPErrInApp AppGfx::MainLoop() {
                 }
                 err = pMenuMgr->HandleRootMenu();
                 if (err != NULL)
-                    return err;
-
+                    goto error;
                 break;
 
-            case MenuMgr::MENU_GAME:
+            case MenuItemEnum::MENU_GAME:
                 err = startGameLoop();
                 if (err != NULL)
-                    return err;
+                    goto error;
                 LeaveMenu();
                 break;
 
-            case MenuMgr::MENU_HELP:
+            case MenuItemEnum::MENU_HELP:
                 err = showHelp();
                 if (err != NULL)
-                    return err;
+                    goto error;
                 break;
 
-            case MenuMgr::MENU_CREDITS:
+            case MenuItemEnum::MENU_CREDITS:
                 err = showCredits();
                 if (err != NULL)
-                    return err;
+                    goto error;
                 break;
 
-            case MenuMgr::MENU_OPTIONS:
+            case MenuItemEnum::MENU_OPTIONS:
                 err = showOptionGeneral();
                 if (err != NULL)
-                    return err;
+                    goto error;
                 break;
 
-            case MenuMgr::QUITAPP:
+            case MenuItemEnum::QUIT:
             default:
                 bquit = true;
                 break;
@@ -527,6 +526,9 @@ LPErrInApp AppGfx::MainLoop() {
     }
     delete pMenuMgr;
     return NULL;
+error:
+    delete pMenuMgr;
+    return err;
 }
 
 LPErrInApp AppGfx::showHelp() {

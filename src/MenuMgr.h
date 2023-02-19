@@ -19,14 +19,6 @@ using namespace traits;
 
 class MenuMgr {
 public:
-    enum {
-        MENU_ROOT,
-        MENU_OPTIONS,
-        MENU_CREDITS,
-        MENU_GAME,
-        MENU_HELP,
-        QUITAPP
-    };
     enum { MYIDLABELURL = 0 };
 
     MenuMgr();
@@ -55,7 +47,7 @@ private:
     SDL_Surface* _p_SceneBackground;
     SDL_Texture* _p_ScreenTexture;
     SDL_Renderer* _p_sdlRenderer;
-    int _focusedMenuItem;
+    MenuItemEnum _focusedMenuItem;
     int _box_Y;
     int _box_X;
     int _screenW;

@@ -5,6 +5,15 @@
 
 #include "Languages.h"
 
+enum MenuItemEnum {
+    MENU_GAME = 0,
+    MENU_OPTIONS = 1,
+    MENU_CREDITS = 2,
+    MENU_HELP = 3,
+    QUIT = 4,
+    MENU_ROOT = 5,
+};
+
 namespace traits {
     // trait for menu
     typedef struct {
@@ -12,7 +21,7 @@ namespace traits {
         TTF_Font* (*const GetFontAriblk)(void* self);
         Languages* (*const GetLanguageMan)(void* self);
         void (*const LeaveMenu)(void* self);
-        void (*const SetNextMenu)(void* self, int iVal);
+        void (*const SetNextMenu)(void* self, MenuItemEnum menuItem);
         void (*const PersistSettings)(void* self);
     } VMenuDelegator, *LPVMenuDelegator;
 

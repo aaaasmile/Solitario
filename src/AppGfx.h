@@ -40,7 +40,7 @@ public:
         return _p_fontAriblk;
     }  // text for big command on menu
     void LeaveMenu();
-    void SetNextMenu(int iVal) { _Histmenu.push(iVal); }
+    void SetNextMenu(MenuItemEnum menuItem) { _histMenu.push(menuItem); }
     void PersistSettings();
 
 private:
@@ -82,7 +82,7 @@ private:
     bool _bFullScreen;
     bool _bOverride;
 
-    std::stack<int> _Histmenu;
+    std::stack<MenuItemEnum> _histMenu;
 };
 
 #endif
