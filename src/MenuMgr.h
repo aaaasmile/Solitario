@@ -38,18 +38,10 @@ public:
 
 private:
     void drawBackground();
-    LPErrInApp drawStringSH(const char* tmp, int x, int y, SDL_Color& color,
+    LPErrInApp drawMenuText(const char* text, int x, int y, SDL_Color& color,
                             TTF_Font* customfont);
     void rootMenuNext();
     void updateTextureAsFlipScreen();
-
-private:
-    static const SDL_Color staColor_on;
-    static const SDL_Color staColor_off;
-    static const SDL_Color staColor_white;
-    static const SDL_Color staColor_ombre;
-    static const SDL_Color staColor_black;
-    static const SDL_Color staColor_gray;
 
 private:
     MenuDelegator _menuDlgt;

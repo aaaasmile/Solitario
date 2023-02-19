@@ -14,16 +14,16 @@
 #include "GfxUtil.h"
 #include "WinTypeGlobal.h"
 
-static const char* lpszMsgUrl = "Go to invido.it";
-static const char* lpszVersion = VERSION "20230131";
+static const char* g_lpszMsgUrl = "Go to invido.it";
+static const char* g_lpszVersion = VERSION "20230131";
 static const char* g_lpszIniFontVera = DATA_PREFIX "font/vera.ttf";
 
-const SDL_Color MenuMgr::staColor_on = {253, 252, 250};
-const SDL_Color MenuMgr::staColor_off = {128, 128, 128};
-const SDL_Color MenuMgr::staColor_white = {255, 255, 255};
-const SDL_Color MenuMgr::staColor_ombre = {87, 87, 87, 50};
-const SDL_Color MenuMgr::staColor_black = {0, 0, 0};
-const SDL_Color MenuMgr::staColor_gray = {128, 128, 128};
+static const SDL_Color g_staColor_on = {253, 252, 250};
+static const SDL_Color g_color_off = {128, 128, 128};
+static const SDL_Color g_color_white = {255, 255, 255};
+static const SDL_Color g_color_ombre = {87, 87, 87, 50};
+static const SDL_Color g_color_black = {0, 0, 0};
+static const SDL_Color g_color_gray = {128, 128, 128};
 
 MenuMgr::MenuMgr() {
     _p_fontAriblk = 0;
@@ -110,7 +110,7 @@ LPErrInApp MenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
                            MYIDLABELURL, cbNUll);
     _p_homeUrl->SetState(LabelLinkGfx::INVISIBLE);
     _p_homeUrl->SetUrl(PACKAGE_URL);
-    _p_homeUrl->SetWindowText(lpszMsgUrl);
+    _p_homeUrl->SetWindowText(g_lpszMsgUrl);
 
     // label version
     _p_LabelVersion = new LabelGfx;
@@ -120,7 +120,7 @@ LPErrInApp MenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
     rctBt1.x = _p_homeUrl->PosX();
     _p_LabelVersion->Initialize(&rctBt1, _p_ScreenBackbuffer, _p_fontVera);
     _p_LabelVersion->SetState(LabelGfx::INVISIBLE);
-    _p_LabelVersion->SetWindowText(lpszVersion);
+    _p_LabelVersion->SetWindowText(g_lpszVersion);
 
     SDL_FillRect(_p_ScreenBackbuffer, &_p_ScreenBackbuffer->clip_rect,
                  SDL_MapRGBA(_p_ScreenBackbuffer->format, 0, 0, 0, 0));
@@ -145,7 +145,6 @@ void MenuMgr::drawBackground() {
 
     Uint32 c_redfg = SDL_MapRGB(_p_ScreenBackbuffer->format, 153, 202, 51);
 
-    // don't invert, because content overwrite header
     // content
     GFX_UTIL::DrawStaticSpriteEx(_p_ScreenBackbuffer, 0, 0, _rctPanel.w,
                                  _rctPanel.h, _rctPanel.x, _rctPanel.y,
@@ -157,20 +156,20 @@ void MenuMgr::drawBackground() {
 
     GFX_UTIL::DrawRect(_p_ScreenBackbuffer, _box_X - 1, _box_Y - 1,
                        _screenW - _box_X + 1, _screenH - _box_Y + 1,
-                       staColor_gray);
+                       g_color_gray);
     GFX_UTIL::DrawRect(_p_ScreenBackbuffer, _box_X - 2, _box_Y - 2,
                        _screenW - _box_X + 2, _screenH - _box_Y + 2,
-                       staColor_black);
+                       g_color_black);
     GFX_UTIL::DrawRect(_p_ScreenBackbuffer, _box_X, _box_Y, _screenW - _box_X,
-                       _screenH - _box_Y, staColor_white);
+                       _screenH - _box_Y, g_color_white);
     GFX_UTIL::DrawRect(_p_ScreenBackbuffer, _box_X, _box_Y, _screenW - _box_X,
-                       _box_Y + 36, staColor_white);
+                       _box_Y + 36, g_color_white);
 }
 
-LPErrInApp MenuMgr::drawStringSH(const char* text, int x, int y,
+LPErrInApp MenuMgr::drawMenuText(const char* text, int x, int y,
                                  SDL_Color& color, TTF_Font* customfont) {
-    GFX_UTIL::DrawString(_p_ScreenBackbuffer, text, x + 2, y + 2,
-                         staColor_ombre, customfont, true);
+    GFX_UTIL::DrawString(_p_ScreenBackbuffer, text, x + 2, y + 2, g_color_ombre,
+                         customfont, true);
     GFX_UTIL::DrawString(_p_ScreenBackbuffer, text, x, y, color, customfont,
                          true);
     return NULL;
@@ -182,12 +181,12 @@ LPErrInApp MenuMgr::HandleRootMenu() {
     _p_homeUrl->SetState(LabelLinkGfx::VISIBLE);
     _p_LabelVersion->SetState(LabelGfx::VISIBLE);
 
-    SDL_Color c = staColor_white;
+    SDL_Color c = g_color_white;
     drawBackground();
     int iNumItemInMenu = 4;
 
     // Draw title bar
-    err = drawStringSH(
+    err = drawMenuText(
         _p_Languages->GetStringId(Languages::ID_WELCOMETITLEBAR).c_str(),
         _box_X + 10, _box_Y + 5, c, _p_fontAriblk);
     if (err != NULL) {
@@ -196,22 +195,22 @@ LPErrInApp MenuMgr::HandleRootMenu() {
 
     // Play
     if (_focusedMenuItem != 0) {
-        c = staColor_off;
+        c = g_color_off;
     } else {
-        c = staColor_on;
+        c = g_staColor_on;
     }
-    err = drawStringSH(_p_Languages->GetStringId(Languages::ID_START).c_str(),
+    err = drawMenuText(_p_Languages->GetStringId(Languages::ID_START).c_str(),
                        _box_X + 10, _box_Y + 50, c, _p_fontAriblk);
     if (err != NULL) {
         return err;
     }
     // Options
     if (_focusedMenuItem != 1) {
-        c = staColor_off;
+        c = g_color_off;
     } else {
-        c = staColor_on;
+        c = g_staColor_on;
     }
-    err = drawStringSH(
+    err = drawMenuText(
         _p_Languages->GetStringId(Languages::ID_MEN_OPTIONS).c_str(),
         _box_X + 10, _box_Y + 90, c, _p_fontAriblk);
     if (err != NULL) {
@@ -219,11 +218,11 @@ LPErrInApp MenuMgr::HandleRootMenu() {
     }
     // Credits
     if (_focusedMenuItem != 2) {
-        c = staColor_off;
+        c = g_color_off;
     } else {
-        c = staColor_on;
+        c = g_staColor_on;
     }
-    err = drawStringSH(_p_Languages->GetStringId(Languages::ID_CREDITS).c_str(),
+    err = drawMenuText(_p_Languages->GetStringId(Languages::ID_CREDITS).c_str(),
                        _box_X + 10, _box_Y + 130, c, _p_fontAriblk);
     if (err != NULL) {
         return err;
@@ -231,11 +230,11 @@ LPErrInApp MenuMgr::HandleRootMenu() {
 
     // Help
     if (_focusedMenuItem != 3) {
-        c = staColor_off;
+        c = g_color_off;
     } else {
-        c = staColor_on;
+        c = g_staColor_on;
     }
-    err = drawStringSH(_p_Languages->GetStringId(Languages::ID_MN_HELP).c_str(),
+    err = drawMenuText(_p_Languages->GetStringId(Languages::ID_MN_HELP).c_str(),
                        _box_X + 10, _box_Y + 170, c, _p_fontAriblk);
     if (err != NULL) {
         return err;
@@ -243,11 +242,11 @@ LPErrInApp MenuMgr::HandleRootMenu() {
 
     // Quit
     if (_focusedMenuItem != 4) {
-        c = staColor_off;
+        c = g_color_off;
     } else {
-        c = staColor_on;
+        c = g_staColor_on;
     }
-    err = drawStringSH(_p_Languages->GetStringId(Languages::ID_EXIT).c_str(),
+    err = drawMenuText(_p_Languages->GetStringId(Languages::ID_EXIT).c_str(),
                        _box_X + 10, _screenH - _box_Y - 40, c, _p_fontAriblk);
     if (err != NULL) {
         return err;
