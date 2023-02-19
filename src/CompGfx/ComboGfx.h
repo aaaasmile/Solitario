@@ -8,7 +8,7 @@ using namespace traits;
 
 class ComboGfx {
 public:
-    enum eSate { VISIBLE, INVISIBLE, PRESSED };
+    enum VisbleState { VISIBLE, INVISIBLE, PRESSED };
 
     ComboGfx();
     virtual ~ComboGfx();
@@ -16,42 +16,41 @@ public:
     void Initialize(SDL_Rect* pRect, SDL_Surface* pScreen, TTF_Font* pFont,
                     int iButID, SDL_Renderer* psdlRenderer,
                     ClickCb& fncbClickEvent);
-    void SetWindowText(LPCSTR strCaption) { m_strButText = strCaption; }
+    void SetButtonText(LPCSTR strCaption) { _buttonText = strCaption; }
     void MouseMove(SDL_Event& event, SDL_Surface* pScreen,
                    SDL_Texture* pScene_background, SDL_Texture* pScreenTexture);
     void MouseUp(SDL_Event& event);
     void DrawButton(SDL_Surface* pScreen);
-    void EnableWindow(bool bVal) { m_bIsEnabled = bVal; }
-    void SetState(eSate eVal);
+    void EnableWindow(bool bVal) { _enabled = bVal; }
+    void SetVisibleState(VisbleState eVal);
     void RedrawButton(SDL_Surface* pScreen, SDL_Texture* pScene_background,
                       SDL_Texture* pScreenTexture);
     void AddLineText(LPCSTR strLine);
     void SelectIndex(int iIndex);
-    int GetSlectedIndex() { return m_iCurrDataIndex; }
-    LPCSTR GetSelectedText() {
-        return m_vctDataStrings[m_iCurrDataIndex].c_str();
-    }
-
-public:
-    eSate m_eState;
-    SDL_Rect m_rctButt;
-    SDL_Rect m_rctText;
-    SDL_Rect m_rctBoxUp;
-    SDL_Rect m_rctBoxDown;
-    STRING m_strButText;
-    bool m_bIsEnabled;
-    ClickCb m_fncbClickEvent;
+    int GetSlectedIndex() { return _currDataIndex; }
+    LPCSTR GetSelectedText() { return _vctDataStrings[_currDataIndex].c_str(); }
+    int PosX() { return _rctCtrl.x; }
+    int PosY() { return _rctCtrl.y; }
+    int Height() { return _rctCtrl.h; }
 
 private:
-    SDL_Renderer* m_psdlRenderer;
-    SDL_Surface* m_pSurf_Bar;
-    SDL_Surface* m_pSurf_BoxSel;
-    SDL_Surface* m_pSurf_BoxUNSel;
-    TTF_Font* m_pFontText;
-    SDL_Color m_colCurrent;
-    int m_iButID;
-    VCT_STRING m_vctDataStrings;
-    int m_iCurrDataIndex;
+    VisbleState _visibleState;
+    SDL_Rect _rctCtrl;
+    SDL_Rect _rctText;
+    SDL_Rect _rctBoxUp;
+    SDL_Rect _rctBoxDown;
+    STRING _buttonText;
+    bool _enabled;
+    ClickCb _fncbClickEvent;
+    SDL_Renderer* _p_sdlRenderer;
+    SDL_Surface* _p_surfBar;
+    SDL_Surface* _p_surfBoxSel;
+    SDL_Surface* _p_surfBoxUNSel;
+    TTF_Font* _p_fontText;
+    SDL_Color _color;
+    int _butID;
+    VCT_STRING _vctDataStrings;
+    int _currDataIndex;
 };
 
 #endif

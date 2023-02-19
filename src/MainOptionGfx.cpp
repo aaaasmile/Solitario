@@ -140,15 +140,15 @@ LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
     rctBt1.x = _rctOptBox.x + 50;
     _p_comboLang->Initialize(&rctBt1, pScreen, _p_fontText, MYIDCOMBOLANG,
                              pRenderer, nullCb);
-    _p_comboLang->SetState(ComboGfx::INVISIBLE);
+    _p_comboLang->SetVisibleState(ComboGfx::INVISIBLE);
     // Music
     // check box music
     CheckboxClickCb cbCheckboxMusic = prepCheckBoxClickMusic();
     _p_checkMusic = new CheckBoxGfx;
     rctBt1.w = 180;
     rctBt1.h = 28;
-    rctBt1.y = _p_comboLang->m_rctButt.y + _p_comboLang->m_rctButt.h + 20;
-    rctBt1.x = _p_comboLang->m_rctButt.x;
+    rctBt1.y = _p_comboLang->PosY() + _p_comboLang->Height() + 20;
+    rctBt1.x = _p_comboLang->PosX();
     _p_checkMusic->Initialize(&rctBt1, pScreen, _p_fontText, MYIDMUSICCHK,
                               cbCheckboxMusic);
     _p_checkMusic->SetVisibleState(CheckBoxGfx::INVISIBLE);
@@ -163,7 +163,7 @@ LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
 
     _p_comboDeck->Initialize(&rctBt1, pScreen, _p_fontText, MYIDCOMBODECK,
                              pRenderer, deckSelCb);
-    _p_comboDeck->SetState(ComboGfx::INVISIBLE);
+    _p_comboDeck->SetVisibleState(ComboGfx::INVISIBLE);
 
     // init surfaces with all pac decks
     Uint16 pac_w, pac_h;
@@ -227,7 +227,7 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
     strTextBt = _p_languages->GetStringId(Languages::ID_ENGLISH);
     _p_comboLang->AddLineText(strTextBt.c_str());
 
-    _p_comboLang->SetState(ComboGfx::VISIBLE);
+    _p_comboLang->SetVisibleState(ComboGfx::VISIBLE);
     _p_comboLang->SelectIndex(_p_GameSettings->CurrentLanguage);
 
     // checkbox music
@@ -245,7 +245,7 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
         strTextBt = dt.GetDeckName();
         _p_comboDeck->AddLineText(strTextBt.c_str());
     }
-    _p_comboDeck->SetState(ComboGfx::VISIBLE);
+    _p_comboDeck->SetVisibleState(ComboGfx::VISIBLE);
     _p_comboDeck->SelectIndex(_p_GameSettings->DeckTypeVal.GetTypeIndex());
 
     SDL_Surface* pShadowSrf = SDL_CreateRGBSurface(
@@ -324,8 +324,7 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
 
         // Combo Language: Label and crontrol
         GFX_UTIL::DrawString(pShadowSrf, strSelectLanguage.c_str(),
-                             _p_comboLang->m_rctButt.x,
-                             _p_comboLang->m_rctButt.y - 20,
+                             _p_comboLang->PosX(), _p_comboLang->PosY() - 20,
                              GFX_UTIL_COLOR::Orange, _p_fontText);
 
         _p_comboLang->DrawButton(pShadowSrf);
@@ -335,8 +334,7 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
 
         // Combo Deck: Label and crontrol
         GFX_UTIL::DrawString(pShadowSrf, strDeckSelectTitle.c_str(),
-                             _p_comboDeck->m_rctButt.x,
-                             _p_comboDeck->m_rctButt.y - 20,
+                             _p_comboDeck->PosX(), _p_comboDeck->PosY() - 20,
                              GFX_UTIL_COLOR::Orange, _p_fontText);
 
         _p_comboDeck->DrawButton(pShadowSrf);
