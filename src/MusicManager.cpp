@@ -81,12 +81,12 @@ LPErrInApp MusicManager::LoadMusicRes() {
     return NULL;
 }
 
-void MusicManager::StopMusic() {
-    Mix_FadeOutMusic(100);
+void MusicManager::StopMusic(int fadingMs) {
+    Mix_FadeOutMusic(fadingMs);
     Mix_HaltMusic();
 }
 
-bool MusicManager::IsPLayingMusic() { return Mix_PlayingMusic(); }
+bool MusicManager::IsPlayingMusic() { return Mix_PlayingMusic(); }
 
 bool MusicManager::PlayMusic(int iID, eLoopType eVal) {
     if (iID < 0 || iID >= NUM_OF_SOUNDS || !_isMusicAvailable) {

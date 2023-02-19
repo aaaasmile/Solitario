@@ -14,12 +14,12 @@ public:
     virtual ~MusicManager();
 
     void Init();
-    void StopMusic();
+    void StopMusic(int fadingMs);
     bool PlayMusic(int iID, eLoopType eVal);
     void PlayCurrentMusic();
     bool PlayEffect(int iID);
     LPErrInApp LoadMusicRes();
-    bool IsPLayingMusic();
+    bool IsPlayingMusic();
     void SetVolumeMusic(int iVal);
 
 private:

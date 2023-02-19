@@ -29,7 +29,7 @@ set(SOURCES src/GameGfx/CardRegionGfx.cpp
             src/Languages.cpp
             src/Main.cpp
             src/Fading.c
-            src/Credits.c
+            src/Credits.cpp
             src/ErrorInfo.cpp
             src/MenuMgr.cpp
             src/MainOptionGfx.cpp

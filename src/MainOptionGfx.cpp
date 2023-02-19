@@ -400,7 +400,7 @@ void MainOptionGfx::CheckboxMusicClicked(bool state) {
     if (state) {
         _p_MusicManager->PlayCurrentMusic();
     } else {
-        _p_MusicManager->StopMusic();
+        _p_MusicManager->StopMusic(500);
     }
 }
 

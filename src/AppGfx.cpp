@@ -212,7 +212,7 @@ LPErrInApp AppGfx::createWindow() {
 
 LPErrInApp AppGfx::startGameLoop() {
     TRACE("Start Game Loop\n");
-    _p_MusicManager->StopMusic();
+    _p_MusicManager->StopMusic(700);
 
     LPErrInApp err;
     if (_p_SolitarioGfx != NULL) {
@@ -482,7 +482,7 @@ LPErrInApp AppGfx::MainLoop() {
         switch (_histMenu.top()) {
             case MenuItemEnum::MENU_ROOT:
                 if (_p_GameSettings->MusicEnabled &&
-                    !_p_MusicManager->IsPLayingMusic()) {
+                    !_p_MusicManager->IsPlayingMusic()) {
                     _p_MusicManager->PlayMusic(MusicManager::MUSIC_INIT_SND,
                                                MusicManager::LOOP_ON);
                 }
@@ -549,16 +549,16 @@ LPErrInApp AppGfx::showHelp() {
 }
 
 LPErrInApp AppGfx::showCredits() {
-    if (_p_MusicManager->IsPLayingMusic()) {
-        _p_MusicManager->StopMusic();
-        _p_MusicManager->PlayMusic(MusicManager::MUSIC_GAME_SND,
-                                   MusicManager::LOOP_ON);
+    MusicManager *pMusicManager = NULL;
+    if (_p_MusicManager->IsPlayingMusic()) {
+        _p_MusicManager->StopMusic(600);
+        pMusicManager = _p_MusicManager;
     }
 
-    credits(_p_Screen, _p_CreditTitle, _p_sdlRenderer);
+    credits(_p_Screen, _p_CreditTitle, _p_sdlRenderer, pMusicManager);
     LeaveMenu();
-    if (_p_MusicManager->IsPLayingMusic()) {
-        _p_MusicManager->StopMusic();
+    if (_p_MusicManager->IsPlayingMusic()) {
+        _p_MusicManager->StopMusic(300);
         _p_MusicManager->PlayMusic(MusicManager::MUSIC_INIT_SND,
                                    MusicManager::LOOP_ON);
     }

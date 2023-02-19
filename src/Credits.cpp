@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "Fading.h"
+#include "MusicManager.h"
 
 char const* credit_text[] = {
     "-SOLITARIO", /* '-' at beginning makes highlighted: */
@@ -135,12 +136,12 @@ char const chars[38][5][6] = {{".###.", "#..##", "#.#.#", "##..#", ".###."},
 
                               {"..#..", "..#..", ".....", ".....", "....."}};
 
-void draw_text(const char* str, int offset, SDL_Surface* screen);
+static void draw_text(const char* str, int offset, SDL_Surface* screen);
 
-int line;
+static int g_line = 0;
 
 int credits(SDL_Surface* p_surf_screen, SDL_Surface* pSurfTitle,
-            SDL_Renderer* psdlRenderer) {
+            SDL_Renderer* psdlRenderer, MusicManager* pMusicManager) {
     int done, quit, scroll;
     SDL_Rect src, dest;
     SDL_Event event;
@@ -151,6 +152,10 @@ int credits(SDL_Surface* p_surf_screen, SDL_Surface* pSurfTitle,
         SDL_CreateTextureFromSurface(psdlRenderer, p_surf_screen);
 
     fade(p_surf_screen, p_surf_screen, 2, 1, psdlRenderer, NULL);
+    if (pMusicManager != NULL) {
+        pMusicManager->PlayMusic(MusicManager::MUSIC_GAME_SND,
+                                 MusicManager::LOOP_ON);
+    }
 
     dest.x = (p_surf_screen->w - pSurfTitle->w) / 2;
     dest.y = 0;
@@ -164,7 +169,7 @@ int credits(SDL_Surface* p_surf_screen, SDL_Surface* pSurfTitle,
     done = 0;
     quit = 0;
     scroll = 0;
-    line = 0;
+    g_line = 0;
 
     do {
         last_time = SDL_GetTicks();
@@ -212,13 +217,13 @@ int credits(SDL_Surface* p_surf_screen, SDL_Surface* pSurfTitle,
 
         scroll++;
 
-        draw_text(credit_text[line], scroll, p_surf_screen);
+        draw_text(credit_text[g_line], scroll, p_surf_screen);
 
         if (scroll >= 9) {
             scroll = 0;
-            line++;
+            g_line++;
 
-            if (credit_text[line] == NULL)
+            if (credit_text[g_line] == NULL)
                 done = 1;
         }
 
@@ -241,7 +246,7 @@ int credits(SDL_Surface* p_surf_screen, SDL_Surface* pSurfTitle,
     return quit;
 }
 
-void draw_text(char const* str, int offset, SDL_Surface* screen) {
+static void draw_text(char const* str, int offset, SDL_Surface* screen) {
     int i, c, x, y, cur_x, start, hilite;
     SDL_Rect dest;
     Uint8 r, g, b;
@@ -271,9 +276,9 @@ void draw_text(char const* str, int offset, SDL_Surface* screen) {
         if (c != -1) {
             for (y = 0; y < 5; y++) {
                 if (hilite == 0) {
-                    r = 255 - ((line * y) % 256);
+                    r = 255 - ((g_line * y) % 256);
                     g = 255 / (y + 2);
-                    b = (line * line * 2) % 256;
+                    b = (g_line * g_line * 2) % 256;
                 } else {
                     r = 128;
                     g = 192;
