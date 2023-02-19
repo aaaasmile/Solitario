@@ -1,5 +1,4 @@
-
-#include "MainOptionGfx.h"
+#include "OptionsGfx.h"
 
 #include <SDL_endian.h>
 #include <SDL_image.h>
@@ -10,7 +9,7 @@
 #include "GfxUtil.h"
 #include "MusicManager.h"
 
-MainOptionGfx::MainOptionGfx() {
+OptionsGfx::OptionsGfx() {
     _p_screen = 0;
     _p_fontText = 0;
     _p_surfBar = 0;
@@ -21,7 +20,7 @@ MainOptionGfx::MainOptionGfx() {
     _p_GameSettings = GAMESET::GetSettings();
 }
 
-MainOptionGfx::~MainOptionGfx() {
+OptionsGfx::~OptionsGfx() {
     if (_p_surfBar) {
         SDL_FreeSurface(_p_surfBar);
         _p_surfBar = NULL;
@@ -39,12 +38,12 @@ MainOptionGfx::~MainOptionGfx() {
 
 // Prepare the Click() trait
 void fncBind_ButtonClicked(void* self, int iVal) {
-    MainOptionGfx* pApp = (MainOptionGfx*)self;
-    pApp->ButEndOPtClicked(iVal);
+    OptionsGfx* pOptionsGfx = (OptionsGfx*)self;
+    pOptionsGfx->ButEndOPtClicked(iVal);
 }
 
 // Buttons, ok and cancel
-ClickCb MainOptionGfx::prepClickCb() {
+ClickCb OptionsGfx::prepClickCb() {
 #ifndef _MSC_VER
     static VClickCb const tc = {.Click = (&fncBind_ButtonClicked)};
 
@@ -57,12 +56,12 @@ ClickCb MainOptionGfx::prepClickCb() {
 }
 
 void fncBind_CheckboxMusicClicked(void* self, bool state) {
-    MainOptionGfx* pApp = (MainOptionGfx*)self;
-    pApp->CheckboxMusicClicked(state);
+    OptionsGfx* pOptionsGfx = (OptionsGfx*)self;
+    pOptionsGfx->CheckboxMusicClicked(state);
 }
 
 // Checkbox music
-CheckboxClickCb MainOptionGfx::prepCheckBoxClickMusic() {
+CheckboxClickCb OptionsGfx::prepCheckBoxClickMusic() {
 #ifndef _MSC_VER
     static VCheckboxClickCb const tc = {.Click =
                                             (&fncBind_CheckboxMusicClicked)};
@@ -77,11 +76,11 @@ CheckboxClickCb MainOptionGfx::prepCheckBoxClickMusic() {
 
 // deck selection
 void fncBind_ComboDeckClicked(void* self, int index) {
-    MainOptionGfx* pApp = (MainOptionGfx*)self;
-    pApp->DeckSelectionClicked(index);
+    OptionsGfx* pOptionsGfx = (OptionsGfx*)self;
+    pOptionsGfx->DeckSelectionClicked(index);
 }
 
-ClickCb MainOptionGfx::prepSelectionDeckCb() {
+ClickCb OptionsGfx::prepSelectionDeckCb() {
 #ifndef _MSC_VER
     static VClickCb const tc = {.Click = (&fncBind_ComboDeckClicked)};
     return (ClickCb){.tc = &tc, .self = this};
@@ -92,10 +91,10 @@ ClickCb MainOptionGfx::prepSelectionDeckCb() {
 #endif
 }
 
-LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
-                                     SDL_Renderer* pRenderer,
-                                     MusicManager* pMusicMgr,
-                                     MenuDelegator& menuDlg) {
+LPErrInApp OptionsGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
+                                  SDL_Renderer* pRenderer,
+                                  MusicManager* pMusicMgr,
+                                  MenuDelegator& menuDlg) {
     if (pRect == NULL) {
         return ERR_UTIL::ErrorCreate("Rect is null");
     }
@@ -204,7 +203,7 @@ LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
     return NULL;
 }
 
-void MainOptionGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
+void OptionsGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
     _headerText = strCaption;
     _terminated = false;
     Uint32 uiInitialTick = SDL_GetTicks();
@@ -363,7 +362,7 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
     SDL_DestroyTexture(pScreenTexture);
 }
 
-void MainOptionGfx::ButEndOPtClicked(int iButID) {
+void OptionsGfx::ButEndOPtClicked(int iButID) {
     _terminated = true;
     _result = iButID;
     TRACE("OK options\n");
@@ -396,7 +395,7 @@ void MainOptionGfx::ButEndOPtClicked(int iButID) {
     }
 }
 
-void MainOptionGfx::CheckboxMusicClicked(bool state) {
+void OptionsGfx::CheckboxMusicClicked(bool state) {
     if (state) {
         _p_MusicManager->PlayCurrentMusic();
     } else {
@@ -404,4 +403,4 @@ void MainOptionGfx::CheckboxMusicClicked(bool state) {
     }
 }
 
-void MainOptionGfx::DeckSelectionClicked(int indexSel) {}
+void OptionsGfx::DeckSelectionClicked(int indexSel) {}

@@ -32,7 +32,7 @@ set(SOURCES src/GameGfx/CardRegionGfx.cpp
             src/Credits.cpp
             src/ErrorInfo.cpp
             src/MenuMgr.cpp
-            src/MainOptionGfx.cpp
+            src/OptionsGfx.cpp
             src/TraceService.cpp
             src/WhereAmI.c
             src/CompGfx/LabelLinkGfx.cpp

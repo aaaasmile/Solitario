@@ -17,9 +17,9 @@
 #include "Config.h"
 #include "ErrorInfo.h"
 #include "GfxUtil.h"
-#include "MainOptionGfx.h"
 #include "MenuMgr.h"
 #include "MusicManager.h"
+#include "OptionsGfx.h"
 #include "WinTypeGlobal.h"
 
 #define OPT_WIN_GENERAL_WIDTH 500
@@ -601,7 +601,7 @@ LPErrInApp AppGfx::showCredits() {
 
 LPErrInApp AppGfx::showOptionGeneral() {
     TRACE("Show option general\n");
-    MainOptionGfx optGfx;
+    OptionsGfx optGfx;
 
     SDL_Rect rctOptionWin;
     rctOptionWin.w = OPT_WIN_GENERAL_WIDTH;

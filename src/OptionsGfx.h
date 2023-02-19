@@ -20,7 +20,7 @@ class MusicManager;
 
 using namespace traits;
 
-class MainOptionGfx {
+class OptionsGfx {
     enum {
         MYIDOK = 0,
         MYIDCANCEL = 1,
@@ -30,8 +30,8 @@ class MainOptionGfx {
     };
 
 public:
-    MainOptionGfx();
-    ~MainOptionGfx();
+    OptionsGfx();
+    ~OptionsGfx();
 
     LPErrInApp Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
                           SDL_Renderer* pRenderer, MusicManager* pMusicMgr,

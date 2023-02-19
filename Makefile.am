@@ -40,7 +40,7 @@ solitario_SOURCES = \
 	src/Credits.cpp\
 	src/ErrorInfo.cpp\
 	src/MenuMgr.cpp\
-	src/MainOptionGfx.cpp\
+	src/OptionsGfx.cpp\
 	src/WhereAmI.c\
 	src/CompGfx/LabelLinkGfx.cpp\
 	src/CompGfx/ButtonGfx.cpp\
