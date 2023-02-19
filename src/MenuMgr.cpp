@@ -133,8 +133,8 @@ LPErrInApp MenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
     _p_LabelVersion = new LabelGfx;
     rctBt1.h = 28;
     rctBt1.w = 150;
-    rctBt1.y = _p_homeUrl->m_rctButt.y - 20;
-    rctBt1.x = _p_homeUrl->m_rctButt.x;
+    rctBt1.y = _p_homeUrl->PosY() - 20;
+    rctBt1.x = _p_homeUrl->PosX();
     _p_LabelVersion->Initialize(&rctBt1, _p_ScreenBackbuffer, _p_font2);
     _p_LabelVersion->SetState(LabelGfx::INVISIBLE);
     _p_LabelVersion->SetWindowText(lpszVersion);

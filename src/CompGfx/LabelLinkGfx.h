@@ -22,27 +22,27 @@ public:
 
     void Initialize(SDL_Rect* pRect, SDL_Surface* pScreen, TTF_Font* pFont,
                     int iButID, ClickCb& fncbClickEvent);
-    void SetWindowText(LPCSTR strCaption) { m_strButText = strCaption; }
+    void SetWindowText(LPCSTR strCaption) { _ctrlText = strCaption; }
     void MouseMove(SDL_Event& event);
     void MouseUp(SDL_Event& event);
     virtual void Draw(SDL_Surface* pScreen);
-    void EnableWindow(bool bVal) { m_bIsEnabled = bVal; }
+    void EnableWindow(bool bVal) { _isEnabled = bVal; }
     void SetState(eSate eVal);
-    void SetUrl(LPCSTR lpszUrl) { m_strUrl = lpszUrl; }
-
-public:
-    eSate m_eState;
-    SDL_Rect m_rctButt;
-    STRING m_strButText;
-    bool m_bIsEnabled;
-    ClickCb m_fncbClickEvent;
+    void SetUrl(LPCSTR lpszUrl) { _url = lpszUrl; }
+    int PosX() { return _rctCtrl.x; }
+    int PosY() { return _rctCtrl.y; }
 
 protected:
-    SDL_Surface* m_pSurf_Bar;
-    TTF_Font* m_pFontText;
-    SDL_Color m_colCurrent;
-    int m_iButID;
-    STRING m_strUrl;
+    eSate _stateGfx;
+    SDL_Rect _rctCtrl;
+    STRING _ctrlText;
+    bool _isEnabled;
+    ClickCb _fncbClickEvent;
+    SDL_Surface* _p_SurfBar;
+    TTF_Font* _p_FontText;
+    SDL_Color _color;
+    int _CtrlID;
+    STRING _url;
     bool _isDirty;
     bool _mouseOuside;
 };
