@@ -56,8 +56,8 @@ MenuMgr::~MenuMgr() {
 }
 
 LPErrInApp MenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
-                               MenuDelegator& pmenuDelegator) {
-    _menuDlgt = pmenuDelegator;
+                               MenuDelegator& menuDelegator) {
+    _menuDlgt = menuDelegator;
     _p_Screen = pScreen;
     _p_sdlRenderer = pRenderer;
 
@@ -129,45 +129,6 @@ LPErrInApp MenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
     return NULL;
 }
 
-void MenuMgr::drawRect(int x, int y, int dx, int dy, SDL_Color c) {
-    drawStaticLine(x, y, dx, y, c);
-    drawStaticLine(x, y, x, dy, c);
-    drawStaticLine(dx, y, dx, dy, c);
-    drawStaticLine(x, dy, dx, dy, c);
-}
-
-void MenuMgr::drawStaticLine(int x0, int y0, int x1, int y1, SDL_Color color) {
-    int d =
-        (int)sqrtf(pow((float)(x1 - x0), 2.0f) + pow((float)(y1 - y0), 2.0f));
-    static int x = 0, y = 0;
-    static int w = _p_ScreenBackbuffer->w;
-    static int h = _p_ScreenBackbuffer->h;
-    for (int t = 0; t < d; t++) {
-        x = x0 + (x1 - x0) * t / d;
-        y = y0 + (y1 - y0) * t / d;
-        if ((x >= 0) && (y >= 0) && (x < w) && (y < h)) {
-            setPixel(_p_ScreenBackbuffer, x, y, color);
-        }
-    }
-}
-
-void MenuMgr::setPixel(SDL_Surface* pSurface, int x, int y, SDL_Color color) {
-    Uint32 col = SDL_MapRGB(pSurface->format, color.r, color.g, color.b);
-
-    char* pPosition = (char*)pSurface->pixels;
-
-    pPosition += (pSurface->pitch * y);
-
-    pPosition += (pSurface->format->BytesPerPixel * x);
-
-    memcpy(pPosition, &col, pSurface->format->BytesPerPixel);
-}
-
-void MenuMgr::fillRect(int x0, int y0, int width, int height, Uint32 color) {
-    SDL_Rect rect = {x0, y0, width, height};
-    SDL_FillRect(_p_ScreenBackbuffer, &rect, color);
-}
-
 void MenuMgr::drawBackground() {
     SDL_Rect rctTarget;
     rctTarget.x = (_p_ScreenBackbuffer->w - _p_SceneBackground->w) / 2;
@@ -191,40 +152,27 @@ void MenuMgr::drawBackground() {
                                  _p_MenuBox);
 
     // header bar
-    fillRect(_box_X, _box_Y - 2, _screenW - _box_X * 2, 38, c_redfg);
+    GFX_UTIL::FillRect(_p_ScreenBackbuffer, _box_X, _box_Y - 2,
+                       _screenW - _box_X * 2, 38, c_redfg);
 
-    drawRect(_box_X - 1, _box_Y - 1, _screenW - _box_X + 1,
-             _screenH - _box_Y + 1, staColor_gray);
-    drawRect(_box_X - 2, _box_Y - 2, _screenW - _box_X + 2,
-             _screenH - _box_Y + 2, staColor_black);
-    drawRect(_box_X, _box_Y, _screenW - _box_X, _screenH - _box_Y,
-             staColor_white);
-    drawRect(_box_X, _box_Y, _screenW - _box_X, _box_Y + 36, staColor_white);
+    GFX_UTIL::DrawRect(_p_ScreenBackbuffer, _box_X - 1, _box_Y - 1,
+                       _screenW - _box_X + 1, _screenH - _box_Y + 1,
+                       staColor_gray);
+    GFX_UTIL::DrawRect(_p_ScreenBackbuffer, _box_X - 2, _box_Y - 2,
+                       _screenW - _box_X + 2, _screenH - _box_Y + 2,
+                       staColor_black);
+    GFX_UTIL::DrawRect(_p_ScreenBackbuffer, _box_X, _box_Y, _screenW - _box_X,
+                       _screenH - _box_Y, staColor_white);
+    GFX_UTIL::DrawRect(_p_ScreenBackbuffer, _box_X, _box_Y, _screenW - _box_X,
+                       _box_Y + 36, staColor_white);
 }
 
 LPErrInApp MenuMgr::drawStringSH(const char* text, int x, int y,
                                  SDL_Color& color, TTF_Font* customfont) {
-    int width, height;
-    TTF_SizeText(customfont, text, &width, &height);
-    SDL_Surface* surfTTF =
-        TTF_RenderText_Blended(customfont, text, staColor_ombre);
-    if (surfTTF == NULL) {
-        return ERR_UTIL::ErrorCreate("Error TTF_RenderText_Blended: %s\n",
-                                     SDL_GetError());
-    }
-    GFX_UTIL::DrawStaticSpriteEx(_p_ScreenBackbuffer, 0, 0, width, height,
-                                 x + 2, y + 2, surfTTF);
-    SDL_FreeSurface(surfTTF);
-
-    surfTTF = TTF_RenderText_Blended(customfont, text, color);
-    if (surfTTF == NULL) {
-        return ERR_UTIL::ErrorCreate("Error TTF_RenderText_Blended: %s\n",
-                                     SDL_GetError());
-    }
-    GFX_UTIL::DrawStaticSpriteEx(_p_ScreenBackbuffer, 0, 0, width, height, x, y,
-                                 surfTTF);
-
-    SDL_FreeSurface(surfTTF);
+    GFX_UTIL::DrawString(_p_ScreenBackbuffer, text, x + 2, y + 2,
+                         staColor_ombre, customfont, true);
+    GFX_UTIL::DrawString(_p_ScreenBackbuffer, text, x, y, color, customfont,
+                         true);
     return NULL;
 }
 

@@ -32,7 +32,7 @@ public:
     MenuMgr();
     virtual ~MenuMgr();
     LPErrInApp Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
-                          MenuDelegator& pmenuDelegator);
+                          MenuDelegator& menuDelegator);
     LPErrInApp HandleRootMenu();
     void SetBackground(SDL_Surface* pVal) { _p_SceneBackground = pVal; }
 
@@ -40,10 +40,6 @@ private:
     void drawBackground();
     LPErrInApp drawStringSH(const char* tmp, int x, int y, SDL_Color& color,
                             TTF_Font* customfont);
-    void drawRect(int x, int y, int dx, int dy, SDL_Color c);
-    void drawStaticLine(int x0, int y0, int x1, int y1, SDL_Color color);
-    void setPixel(SDL_Surface* pSurface, int x, int y, SDL_Color color);
-    void fillRect(int x0, int y0, int width, int height, Uint32 color);
     void rootMenuNext();
     void updateTextureAsFlipScreen();
 

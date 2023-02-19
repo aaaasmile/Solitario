@@ -22,8 +22,9 @@ namespace GFX_UTIL {
 
     void ScreenShade(SDL_Surface *surface, SDL_Rect *rect, float opacity,
                      unsigned char r, unsigned char g, unsigned char b);
-    void DrawString(SDL_Surface *screen, const char *strText, int x, int y,
-                    SDL_Color color, TTF_Font *customfont, bool isUtf8);
+    LPErrInApp DrawString(SDL_Surface *screen, const char *strText, int x,
+                          int y, SDL_Color color, TTF_Font *customfont,
+                          bool isUtf8);
     void DrawStaticSpriteEx(SDL_Surface *screen, int src_x, int src_y,
                             int src_dx, int src_dy, int dst_x, int dst_y,
                             SDL_Surface *sprite);
@@ -34,6 +35,8 @@ namespace GFX_UTIL {
                               const SDL_Color *color2, int break_size);
     void DrawRect(SDL_Surface *screen, int x, int y, int dx, int dy,
                   SDL_Color c);
+    void FillRect(SDL_Surface *screen, int x0, int y0, int width, int height,
+                  Uint32 color);
     LPErrInApp LoadCardPac(SDL_Surface **pp_Deck, DeckType &deckType,
                            Uint16 *pac_w, Uint16 *pac_h);
 };

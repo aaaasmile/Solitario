@@ -149,19 +149,28 @@ void inline GFX_UTIL::SetPixel(SDL_Surface *surface, int x, int y,
     }
 }
 
-void GFX_UTIL::DrawString(SDL_Surface *screen, const char *strText, int x,
-                          int y, SDL_Color color, TTF_Font *customfont,
-                          bool isUtf8) {
-    int tx, ty;
-    TTF_SizeText(customfont, strText, &tx, &ty);
+LPErrInApp GFX_UTIL::DrawString(SDL_Surface *screen, const char *strText, int x,
+                                int y, SDL_Color color, TTF_Font *customfont,
+                                bool isUtf8) {
+    int width, height;
+    TTF_SizeText(customfont, strText, &width, &height);
     SDL_Surface *surFont;
     if (isUtf8) {
         surFont = TTF_RenderUTF8_Blended(customfont, strText, color);
+        if (surFont == NULL) {
+            return ERR_UTIL::ErrorCreate("Error TTF_RenderUTF8_Blended: %s\n",
+                                         SDL_GetError());
+        }
     } else {
         surFont = TTF_RenderText_Blended(customfont, strText, color);
+        if (surFont == NULL) {
+            return ERR_UTIL::ErrorCreate("Error TTF_RenderText_Blended: %s\n",
+                                         SDL_GetError());
+        }
     }
-    GFX_UTIL::DrawStaticSpriteEx(screen, 0, 0, tx, ty, x, y, surFont);
+    GFX_UTIL::DrawStaticSpriteEx(screen, 0, 0, width, height, x, y, surFont);
     SDL_FreeSurface(surFont);
+    return NULL;
 }
 
 void GFX_UTIL::DrawStaticSpriteEx(SDL_Surface *screen, int src_x, int src_y,
@@ -196,6 +205,12 @@ void GFX_UTIL::DrawRect(SDL_Surface *screen, int x, int y, int dx, int dy,
     DrawStaticLine(screen, x, y, x, dy, color);
     DrawStaticLine(screen, dx, y, dx, dy, color);
     DrawStaticLine(screen, x, dy, dx, dy, color);
+}
+
+void GFX_UTIL::FillRect(SDL_Surface *screen, int x0, int y0, int width,
+                        int height, Uint32 color) {
+    SDL_Rect rect = {x0, y0, width, height};
+    SDL_FillRect(screen, &rect, color);
 }
 
 LPErrInApp GFX_UTIL::LoadCardPac(SDL_Surface **pp_Deck, DeckType &deckType,
