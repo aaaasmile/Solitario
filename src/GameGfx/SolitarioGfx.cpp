@@ -1027,19 +1027,26 @@ LPErrInApp SolitarioGfx::handleRightMouseDown(SDL_Event &event) {
     if (srcReg == NULL)
         return NULL;
     LPCardGfx pCard = srcReg->GetCard(srcReg->Size() - 1);
+    if (pCard == NULL) {
+        return NULL;
+    }
 
     if (((srcReg->Id == CRD_FOUNDATION) || (srcReg->Id == CRD_DECK_FACEUP)) &&
         pCard->IsFaceUp() && srcReg->PtOnTop(event.button.x, event.button.y)) {
         LPCardRegionGfx pDropRegion = FindDropRegion(CRD_ACE, pCard);
-        if (pDropRegion != NULL) {
-            LPCardStackGfx pCardStack = srcReg->PopStack(1);
-            err = InitDrag(pCardStack, -1, -1, isInitDrag);
-            if (err != NULL) {
-                return err;
-            }
-            DoDrop(pDropRegion);
-            delete pCardStack;
+        if (pDropRegion == NULL) {
+            return NULL;
         }
+        LPCardStackGfx pCardStack = srcReg->PopStack(1);
+        if (pCardStack == NULL) {
+            return NULL;
+        }
+        err = InitDrag(pCardStack, -1, -1, isInitDrag);
+        if (err != NULL) {
+            return err;
+        }
+        DoDrop(pDropRegion);
+        delete pCardStack;
     }
     return NULL;
 }
