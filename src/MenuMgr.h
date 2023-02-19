@@ -40,8 +40,6 @@ private:
     void drawBackground();
     LPErrInApp drawStringSH(const char* tmp, int x, int y, SDL_Color& color,
                             TTF_Font* customfont);
-    void drawStaticSpriteEx(int src_x, int src_y, int src_dx, int src_dy,
-                            int dst_x, int dst_y, SDL_Surface* sprite);
     void drawRect(int x, int y, int dx, int dy, SDL_Color c);
     void drawStaticLine(int x0, int y0, int x1, int y1, SDL_Color color);
     void setPixel(SDL_Surface* pSurface, int x, int y, SDL_Color color);

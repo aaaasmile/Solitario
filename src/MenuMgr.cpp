@@ -129,13 +129,6 @@ LPErrInApp MenuMgr::Initialize(SDL_Surface* pScreen, SDL_Renderer* pRenderer,
     return NULL;
 }
 
-void MenuMgr::drawStaticSpriteEx(int src_x, int src_y, int src_dx, int src_dy,
-                                 int dst_x, int dst_y, SDL_Surface* sprite) {
-    SDL_Rect src_rec = {src_x, src_y, src_dx, src_dy};
-    SDL_Rect dst_rec = {dst_x, dst_y, 0, 0};
-    SDL_BlitSurface(sprite, &src_rec, _p_ScreenBackbuffer, &dst_rec);
-}
-
 void MenuMgr::drawRect(int x, int y, int dx, int dy, SDL_Color c) {
     drawStaticLine(x, y, dx, y, c);
     drawStaticLine(x, y, x, dy, c);
@@ -209,24 +202,29 @@ void MenuMgr::drawBackground() {
     drawRect(_box_X, _box_Y, _screenW - _box_X, _box_Y + 36, staColor_white);
 }
 
-LPErrInApp MenuMgr::drawStringSH(const char* tmp, int x, int y,
+LPErrInApp MenuMgr::drawStringSH(const char* text, int x, int y,
                                  SDL_Color& color, TTF_Font* customfont) {
-    int tx, ty;
-    TTF_SizeText(customfont, tmp, &tx, &ty);
-    SDL_Surface* s = TTF_RenderText_Blended(customfont, tmp, staColor_ombre);
-    if (s == NULL) {
+    int width, height;
+    TTF_SizeText(customfont, text, &width, &height);
+    SDL_Surface* surfTTF =
+        TTF_RenderText_Blended(customfont, text, staColor_ombre);
+    if (surfTTF == NULL) {
         return ERR_UTIL::ErrorCreate("Error TTF_RenderText_Blended: %s\n",
                                      SDL_GetError());
     }
-    drawStaticSpriteEx(0, 0, tx, ty, x + 2, y + 2, s);
-    SDL_FreeSurface(s);
-    s = TTF_RenderText_Blended(customfont, tmp, color);
-    if (s == NULL) {
+    GFX_UTIL::DrawStaticSpriteEx(_p_ScreenBackbuffer, 0, 0, width, height,
+                                 x + 2, y + 2, surfTTF);
+    SDL_FreeSurface(surfTTF);
+
+    surfTTF = TTF_RenderText_Blended(customfont, text, color);
+    if (surfTTF == NULL) {
         return ERR_UTIL::ErrorCreate("Error TTF_RenderText_Blended: %s\n",
                                      SDL_GetError());
     }
-    drawStaticSpriteEx(0, 0, tx, ty, x, y, s);
-    SDL_FreeSurface(s);
+    GFX_UTIL::DrawStaticSpriteEx(_p_ScreenBackbuffer, 0, 0, width, height, x, y,
+                                 surfTTF);
+
+    SDL_FreeSurface(surfTTF);
     return NULL;
 }
 
