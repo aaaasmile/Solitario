@@ -18,37 +18,38 @@ public:
     virtual ~CheckBoxGfx();
 
 public:
-    enum eSate {
+    enum VisbleState {
         VISIBLE,
         INVISIBLE,
     };
 
     void Initialize(SDL_Rect* pRect, SDL_Surface* pScreen, TTF_Font* pFont,
                     int iButID, CheckboxClickCb& fncbClickEvent);
-    void SetWindowText(LPCSTR strCaption) { m_strButText = strCaption; }
+    void SetWindowText(LPCSTR strCaption) { _buttonText = strCaption; }
     void MouseMove(SDL_Event& event, SDL_Surface* pScreen,
                    SDL_Surface* pScene_background);
     void MouseUp(SDL_Event& event);
     void DrawButton(SDL_Surface* pScreen);
-    void EnableWindow(bool bVal) { m_bIsEnabled = bVal; }
-    void SetState(eSate eVal);
+    void EnableWindow(bool bVal) { _enabled = bVal; }
+    void SetVisibleState(VisbleState eVal);
     void RedrawButton(SDL_Surface* pScreen, SDL_Surface* pScene_background);
-    bool GetCheckState() { return m_bClickState; }
-    void SetCheckState(bool bVal) { m_bClickState = bVal; }
-
-public:
-    eSate m_eState;
-    SDL_Rect m_rctButt;
-    STRING m_strButText;
-    bool m_bIsEnabled;
-    CheckboxClickCb m_fncbClickEvent;
+    bool GetCheckState() { return _clicked; }
+    void SetCheckState(bool bVal) { _clicked = bVal; }
+    int PosX() { return _rctCtrl.x; }
+    int PosY() { return _rctCtrl.y; }
+    int Height() { return _rctCtrl.h; }
 
 private:
-    TTF_Font* m_pFontText;
-    SDL_Color m_colCurrent;
-    bool m_bClickState;
-    int m_iButID;
-    SDL_Color m_colBorder;
+    VisbleState _visibleState;
+    SDL_Rect _rctCtrl;
+    STRING _buttonText;
+    bool _enabled;
+    CheckboxClickCb _fncbClickEvent;
+    TTF_Font* _p_FontText;
+    SDL_Color _color;
+    bool _clicked;
+    int _buttonID;
+    SDL_Color _colorBorder;
 };
 
 #endif

@@ -15,7 +15,7 @@
 #include "WinTypeGlobal.h"
 
 static const char* g_lpszMsgUrl = "Go to invido.it";
-static const char* g_lpszVersion = VERSION "20230131";
+static const char* g_lpszVersion = VERSION "20230219";
 static const char* g_lpszIniFontVera = DATA_PREFIX "font/vera.ttf";
 
 static const SDL_Color g_color_on = {253, 252, 250};
@@ -166,10 +166,11 @@ void MenuMgr::drawBackground(SDL_Surface* psurf) {
 LPErrInApp MenuMgr::drawMenuText(SDL_Surface* psurf, const char* text, int x,
                                  int y, SDL_Color& color,
                                  TTF_Font* customfont) {
-    GFX_UTIL::DrawString(psurf, text, x + 2, y + 2, g_color_ombre, customfont,
-                         true);
-    GFX_UTIL::DrawString(psurf, text, x, y, color, customfont, true);
-    return NULL;
+    LPErrInApp err = GFX_UTIL::DrawString(psurf, text, x + 2, y + 2,
+                                          g_color_ombre, customfont, true);
+    if (err != NULL)
+        return err;
+    return GFX_UTIL::DrawString(psurf, text, x, y, color, customfont, true);
 }
 
 MenuItemEnum previousMenu(MenuItemEnum currMenu) {

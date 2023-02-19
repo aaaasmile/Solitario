@@ -151,15 +151,15 @@ LPErrInApp MainOptionGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
     rctBt1.x = m_pComboLang->m_rctButt.x;
     m_pCheckMusic->Initialize(&rctBt1, pScreen, m_pFontText, MYIDMUSICCHK,
                               cbCheckboxMusic);
-    m_pCheckMusic->SetState(CheckBoxGfx::INVISIBLE);
+    m_pCheckMusic->SetVisibleState(CheckBoxGfx::INVISIBLE);
     // Deck
     // combo deck selection
     ClickCb deckSelCb = prepSelectionDeckCb();
     m_pComboDeck = new ComboGfx;
     rctBt1.w = 180;
     rctBt1.h = 26;
-    rctBt1.y = m_pCheckMusic->m_rctButt.y + m_pCheckMusic->m_rctButt.h + 20;
-    rctBt1.x = m_pCheckMusic->m_rctButt.x;
+    rctBt1.y = m_pCheckMusic->PosY() + m_pCheckMusic->Height() + 20;
+    rctBt1.x = m_pCheckMusic->PosX();
 
     m_pComboDeck->Initialize(&rctBt1, pScreen, m_pFontText, MYIDCOMBODECK,
                              pRenderer, deckSelCb);
@@ -233,7 +233,7 @@ void MainOptionGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
     // checkbox music
     strTextBt = _p_Languages->GetStringId(Languages::ID_SOUNDOPT);
     m_pCheckMusic->SetWindowText(strTextBt.c_str());
-    m_pCheckMusic->SetState(CheckBoxGfx::VISIBLE);
+    m_pCheckMusic->SetVisibleState(CheckBoxGfx::VISIBLE);
     m_pCheckMusic->SetCheckState(_p_GameSettings->MusicEnabled);
 
     // combobox deck selection

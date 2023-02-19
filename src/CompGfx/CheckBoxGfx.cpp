@@ -3,10 +3,10 @@
 #include "GfxUtil.h"
 
 CheckBoxGfx::CheckBoxGfx() {
-    m_eState = INVISIBLE;
-    m_pFontText = 0;
-    m_bIsEnabled = true;
-    m_iButID = -1;
+    _visibleState = INVISIBLE;
+    _p_FontText = 0;
+    _enabled = true;
+    _buttonID = -1;
 }
 
 CheckBoxGfx::~CheckBoxGfx() {}
@@ -14,24 +14,24 @@ CheckBoxGfx::~CheckBoxGfx() {}
 void CheckBoxGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
                              TTF_Font* pFont, int iButID,
                              CheckboxClickCb& fncbClickEvent) {
-    m_fncbClickEvent = fncbClickEvent;
-    m_rctButt = *pRect;
+    _fncbClickEvent = fncbClickEvent;
+    _rctCtrl = *pRect;
 
-    m_pFontText = pFont;
+    _p_FontText = pFont;
 
-    m_colCurrent = GFX_UTIL_COLOR::White;
-    m_colBorder = m_colCurrent;
+    _color = GFX_UTIL_COLOR::White;
+    _colorBorder = _color;
 
-    m_bClickState = false;
+    _clicked = false;
 
-    m_iButID = iButID;
+    _buttonID = iButID;
 }
 
-void CheckBoxGfx::SetState(eSate eVal) {
-    eSate eOldState = m_eState;
-    m_eState = eVal;
-    if (eOldState != m_eState && m_eState == VISIBLE) {
-        m_colCurrent = GFX_UTIL_COLOR::White;
+void CheckBoxGfx::SetVisibleState(VisbleState eVal) {
+    VisbleState eOldState = _visibleState;
+    _visibleState = eVal;
+    if (eOldState != _visibleState && _visibleState == VISIBLE) {
+        _color = GFX_UTIL_COLOR::White;
     }
 }
 
@@ -39,33 +39,32 @@ void CheckBoxGfx::MouseMove(SDL_Event& event, SDL_Surface* pScreen,
                             SDL_Surface* pScene_background) {}
 
 void CheckBoxGfx::MouseUp(SDL_Event& event) {
-    if (m_eState == VISIBLE && m_bIsEnabled) {
-        if (event.motion.x >= m_rctButt.x &&
-            event.motion.x <= m_rctButt.x + m_rctButt.w &&
-            event.motion.y >= m_rctButt.y &&
-            event.motion.y <= m_rctButt.y + m_rctButt.h) {
-            if (m_bClickState) {
-                m_bClickState = false;
+    if (_visibleState == VISIBLE && _enabled) {
+        if (event.motion.x >= _rctCtrl.x &&
+            event.motion.x <= _rctCtrl.x + _rctCtrl.w &&
+            event.motion.y >= _rctCtrl.y &&
+            event.motion.y <= _rctCtrl.y + _rctCtrl.h) {
+            if (_clicked) {
+                _clicked = false;
             } else {
-                m_bClickState = true;
+                _clicked = true;
             }
-            if ((m_fncbClickEvent.tc) != NULL)
-                (m_fncbClickEvent.tc)
-                    ->Click(m_fncbClickEvent.self, m_bClickState);
+            if ((_fncbClickEvent.tc) != NULL)
+                (_fncbClickEvent.tc)->Click(_fncbClickEvent.self, _clicked);
         }
     }
 }
 
 void CheckBoxGfx::DrawButton(SDL_Surface* pScreen) {
-    if (m_eState != INVISIBLE) {
-        if (m_bIsEnabled) {
+    if (_visibleState != INVISIBLE) {
+        if (_enabled) {
             int iXOffSet = 0;
             int iYOffset = 0;
 
-            if (m_bClickState) {
+            if (_clicked) {
                 SDL_Rect rctCheck;
-                rctCheck.x = m_rctButt.x;
-                rctCheck.y = m_rctButt.y;
+                rctCheck.x = _rctCtrl.x;
+                rctCheck.y = _rctCtrl.y;
                 rctCheck.w = CHECK_W;
                 rctCheck.h = CHECK_H;
 
@@ -89,8 +88,8 @@ void CheckBoxGfx::DrawButton(SDL_Surface* pScreen) {
 
             } else {
                 SDL_Rect rctCheck;
-                rctCheck.x = m_rctButt.x;
-                rctCheck.y = m_rctButt.y;
+                rctCheck.x = _rctCtrl.x;
+                rctCheck.y = _rctCtrl.y;
                 rctCheck.w = CHECK_W;
                 rctCheck.h = CHECK_H;
 
@@ -108,14 +107,14 @@ void CheckBoxGfx::DrawButton(SDL_Surface* pScreen) {
             }
 
             int tx, ty;
-            TTF_SizeText(m_pFontText, m_strButText.c_str(), &tx, &ty);
+            TTF_SizeText(_p_FontText, _buttonText.c_str(), &tx, &ty);
 
             if (iXOffSet < 0) {
                 iXOffSet = 1;
             }
             GFX_UTIL::DrawString(
-                pScreen, m_strButText.c_str(), m_rctButt.x + iXOffSet,
-                m_rctButt.y + iYOffset - ty, m_colCurrent, m_pFontText, false);
+                pScreen, _buttonText.c_str(), _rctCtrl.x + iXOffSet,
+                _rctCtrl.y + iYOffset - ty, _color, _p_FontText, false);
         }
     }
 }
@@ -123,7 +122,7 @@ void CheckBoxGfx::DrawButton(SDL_Surface* pScreen) {
 void CheckBoxGfx::RedrawButton(SDL_Surface* pScreen,
                                SDL_Surface* pScene_background) {
     if (pScene_background) {
-        SDL_BlitSurface(pScene_background, &m_rctButt, pScreen, &m_rctButt);
+        SDL_BlitSurface(pScene_background, &_rctCtrl, pScreen, &_rctCtrl);
     }
     DrawButton(pScreen);
 }
