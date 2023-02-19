@@ -167,10 +167,10 @@ LPErrInApp MenuMgr::drawMenuText(SDL_Surface* psurf, const char* text, int x,
                                  int y, SDL_Color& color,
                                  TTF_Font* customfont) {
     LPErrInApp err = GFX_UTIL::DrawString(psurf, text, x + 2, y + 2,
-                                          g_color_ombre, customfont, true);
+                                          g_color_ombre, customfont);
     if (err != NULL)
         return err;
-    return GFX_UTIL::DrawString(psurf, text, x, y, color, customfont, true);
+    return GFX_UTIL::DrawString(psurf, text, x, y, color, customfont);
 }
 
 MenuItemEnum previousMenu(MenuItemEnum currMenu) {

@@ -114,7 +114,7 @@ void CheckBoxGfx::DrawButton(SDL_Surface* pScreen) {
             }
             GFX_UTIL::DrawString(
                 pScreen, _buttonText.c_str(), _rctCtrl.x + iXOffSet,
-                _rctCtrl.y + iYOffset - ty, _color, _p_FontText, false);
+                _rctCtrl.y + iYOffset - ty, _color, _p_FontText);
         }
     }
 }

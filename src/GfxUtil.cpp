@@ -150,23 +150,14 @@ void inline GFX_UTIL::SetPixel(SDL_Surface *surface, int x, int y,
 }
 
 LPErrInApp GFX_UTIL::DrawString(SDL_Surface *screen, const char *strText, int x,
-                                int y, SDL_Color color, TTF_Font *customfont,
-                                bool isUtf8) {
+                                int y, SDL_Color color, TTF_Font *customfont) {
     int width, height;
     TTF_SizeText(customfont, strText, &width, &height);
     SDL_Surface *surFont;
-    if (isUtf8) {
-        surFont = TTF_RenderUTF8_Blended(customfont, strText, color);
-        if (surFont == NULL) {
-            return ERR_UTIL::ErrorCreate("Error TTF_RenderUTF8_Blended: %s\n",
-                                         SDL_GetError());
-        }
-    } else {
-        surFont = TTF_RenderText_Blended(customfont, strText, color);
-        if (surFont == NULL) {
-            return ERR_UTIL::ErrorCreate("Error TTF_RenderText_Blended: %s\n",
-                                         SDL_GetError());
-        }
+    surFont = TTF_RenderUTF8_Blended(customfont, strText, color);
+    if (surFont == NULL) {
+        return ERR_UTIL::ErrorCreate("Error TTF_RenderUTF8_Blended: %s\n",
+                                     SDL_GetError());
     }
     GFX_UTIL::DrawStaticSpriteEx(screen, 0, 0, width, height, x, y, surFont);
     SDL_FreeSurface(surFont);

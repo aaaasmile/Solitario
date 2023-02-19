@@ -35,9 +35,9 @@ public:
 
     LPErrInApp Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
                           SDL_Renderer* pRenderer, MusicManager* pMusicMgr,
-                          MenuDelegator& pApp);
+                          MenuDelegator& menuDlg);
     void Show(SDL_Surface* pScene_background, STRING& strCaption);
-    void SetCaption(STRING& strCaption) { m_strHeaderText = strCaption; }
+    void SetCaption(STRING& strCaption) { _headerText = strCaption; }
     void ButEndOPtClicked(int iButID);
     void CheckboxMusicClicked(bool state);
     void DeckSelectionClicked(int indexSel);
@@ -49,24 +49,24 @@ private:
     ClickCb prepSelectionDeckCb();
 
 private:
-    SDL_Renderer* m_psdlRenderer;
-    SDL_Rect m_rctOptBox;
-    SDL_Surface* m_pSurf_Bar;
-    SDL_Surface* m_pScreen;
-    TTF_Font* m_pFontText;
-    TTF_Font* m_pFontCtrl;
-    SDL_Color m_colCurrent;
-    ButtonGfx* m_pBtOK;
-    bool m_bTerminated;
-    int m_iResult;
-    STRING m_strHeaderText;
-    CheckBoxGfx* m_pCheckMusic;
-    ComboGfx* m_pComboLang;
-    ComboGfx* m_pComboDeck;
-    SDL_Surface* m_pDeckAll[DeckType::NUM_OF_DECK];
-    CardGfx m_CardOnEachDeck[3][DeckType::NUM_OF_DECK];
+    SDL_Renderer* _p_sdlRenderer;
+    SDL_Rect _rctOptBox;
+    SDL_Surface* _p_surfBar;
+    SDL_Surface* _p_screen;
+    TTF_Font* _p_fontText;
+    TTF_Font* _p_fontCtrl;
+    SDL_Color _color;
+    ButtonGfx* _p_buttonOK;
+    bool _terminated;
+    int _result;
+    STRING _headerText;
+    CheckBoxGfx* _p_checkMusic;
+    ComboGfx* _p_comboLang;
+    ComboGfx* _p_comboDeck;
+    SDL_Surface* _p_deckAll[DeckType::NUM_OF_DECK];
+    CardGfx _cardOnEachDeck[3][DeckType::NUM_OF_DECK];
 
-    Languages* _p_Languages;
+    Languages* _p_languages;
     MenuDelegator _menuDlgt;
     GameSettings* _p_GameSettings;
     MusicManager* _p_MusicManager;

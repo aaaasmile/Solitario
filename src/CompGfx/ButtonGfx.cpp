@@ -120,8 +120,7 @@ void ButtonGfx::DrawButton(SDL_Surface* pScreen) {
     }
     int iYOffset = (_rctButton.h - ty) / 2;
     GFX_UTIL::DrawString(pScreen, _buttonText.c_str(), _rctButton.x + iXOffSet,
-                         _rctButton.y + iYOffset, colorText, _p_fontText,
-                         false);
+                         _rctButton.y + iYOffset, colorText, _p_fontText);
 
     // draw border
     GFX_UTIL::DrawRect(pScreen, _rctButton.x - 1, _rctButton.y - 1,

@@ -23,8 +23,7 @@ namespace GFX_UTIL {
     void ScreenShade(SDL_Surface *surface, SDL_Rect *rect, float opacity,
                      unsigned char r, unsigned char g, unsigned char b);
     LPErrInApp DrawString(SDL_Surface *screen, const char *strText, int x,
-                          int y, SDL_Color color, TTF_Font *customfont,
-                          bool isUtf8);
+                          int y, SDL_Color color, TTF_Font *customfont);
     void DrawStaticSpriteEx(SDL_Surface *screen, int src_x, int src_y,
                             int src_dx, int src_dy, int dst_x, int dst_y,
                             SDL_Surface *sprite);

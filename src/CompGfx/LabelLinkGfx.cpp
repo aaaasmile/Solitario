@@ -121,7 +121,7 @@ void LabelLinkGfx::Draw(SDL_Surface* pScreen) {
             iXOffSet = 0;
             GFX_UTIL::DrawString(pScreen, _ctrlText.c_str(),
                                  _rctCtrl.x + iXOffSet, _rctCtrl.y + iYOffset,
-                                 _color, _p_FontText, false);
+                                 _color, _p_FontText);
             _isDirty = false;
         }
     }

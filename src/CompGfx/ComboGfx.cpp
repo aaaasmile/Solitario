@@ -210,7 +210,7 @@ void ComboGfx::DrawButton(SDL_Surface* pScreen) {
             m_strButText = m_vctDataStrings[m_iCurrDataIndex];
             GFX_UTIL::DrawString(pScreen, m_strButText.c_str(),
                                  m_rctText.x + iXOffSet, m_rctText.y + iYOffset,
-                                 GFX_UTIL_COLOR::White, m_pFontText, false);
+                                 GFX_UTIL_COLOR::White, m_pFontText);
 
             // draw text upper box
             TTF_SizeText(m_pFontText, LP_PLUS, &tx, &ty);
@@ -226,7 +226,7 @@ void ComboGfx::DrawButton(SDL_Surface* pScreen) {
             }
             GFX_UTIL::DrawString(pScreen, LP_PLUS, m_rctBoxUp.x + iXOffSet,
                                  m_rctBoxUp.y + iYOffset, m_colCurrent,
-                                 m_pFontText, false);
+                                 m_pFontText);
 
             // draw text down box
             TTF_SizeText(m_pFontText, LP_MINUS, &tx, &ty);
@@ -241,7 +241,7 @@ void ComboGfx::DrawButton(SDL_Surface* pScreen) {
             }
             GFX_UTIL::DrawString(pScreen, LP_MINUS, m_rctBoxDown.x + iXOffSet,
                                  m_rctBoxDown.y + iYOffset, m_colCurrent,
-                                 m_pFontText, false);
+                                 m_pFontText);
 
             // draw borders
             GFX_UTIL::DrawRect(pScreen, m_rctButt.x - 1, m_rctButt.y - 1,

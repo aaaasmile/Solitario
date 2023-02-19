@@ -54,7 +54,7 @@ void LabelGfx::Draw(SDL_Surface* pScreen) {
             iXOffSet = 0;
             GFX_UTIL::DrawString(pScreen, _CtrlText.c_str(),
                                  _rctCtrl.x + iXOffSet, _rctCtrl.y + iYOffset,
-                                 _color, _p_FontText, false);
+                                 _color, _p_FontText);
         }
     }
 }
