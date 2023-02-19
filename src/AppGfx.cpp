@@ -146,7 +146,7 @@ LPErrInApp AppGfx::Init() {
 }
 
 LPErrInApp AppGfx::loadSceneBackground() {
-    if (_p_GameSettings->BackgroundType != BackgroundTypeEnum::Empty) {
+    if (_p_GameSettings->BackgroundType != BackgroundTypeEnum::Black) {
         std::string strFileName;
         if (_p_GameSettings->BackgroundType ==
             BackgroundTypeEnum::Commessaggio) {
@@ -240,9 +240,10 @@ LPErrInApp AppGfx::startGameLoop() {
     }
     _p_SolitarioGfx = new SolitarioGfx();
 
-    err = _p_SolitarioGfx->Initialize(_p_Screen, _p_sdlRenderer, _p_Window,
-                                      _p_GameSettings->DeckTypeVal, &_Languages,
-                                      _p_fontAriblk, _p_SceneBackground);
+    err = _p_SolitarioGfx->Initialize(
+        _p_Screen, _p_sdlRenderer, _p_Window, _p_GameSettings->DeckTypeVal,
+        &_Languages, _p_fontAriblk, _p_SceneBackground,
+        _p_GameSettings->BackgroundType == BackgroundTypeEnum::Black);
     if (err != NULL)
         return err;
 

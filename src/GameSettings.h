@@ -7,7 +7,7 @@
 #include "ErrorInfo.h"
 #include "Languages.h"
 
-enum BackgroundTypeEnum { Commessaggio = 0, Mantova = 1, Empty = 2 };
+enum BackgroundTypeEnum { Commessaggio = 0, Mantova = 1, Black = 2 };
 
 class GameSettings {
 public:

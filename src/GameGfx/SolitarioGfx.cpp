@@ -91,9 +91,11 @@ ClickCb SolitarioGfx::prepClickNewGameCb() {
 LPErrInApp SolitarioGfx::Initialize(SDL_Surface *s, SDL_Renderer *r,
                                     SDL_Window *w, DeckType &dt,
                                     LPLanguages planguages, TTF_Font *pfontText,
-                                    SDL_Surface *pSceneBackground) {
+                                    SDL_Surface *pSceneBackground,
+                                    bool isBlack) {
     TRACE("Initialize Solitario\n");
     setDeckType(dt);
+    _sceneBackgroundIsBlack = isBlack;
     _p_Languages = planguages;
     _p_FontText = pfontText;
     LPErrInApp err;
@@ -482,8 +484,10 @@ LPErrInApp SolitarioGfx::DrawInitialScene() {
     rctTarget.y = (_p_Screen->h - _p_SceneBackground->h) / 2;
     rctTarget.w = _p_SceneBackground->w;
     rctTarget.h = _p_SceneBackground->h;
+    if (!_sceneBackgroundIsBlack) {
+        fade(_p_Screen, _p_SceneBackground, 2, 0, _p_sdlRenderer, &rctTarget);
+    }
 
-    fade(_p_Screen, _p_SceneBackground, 2, 0, _p_sdlRenderer, &rctTarget);
     SDL_Rect rctBt1;
     // button Quit
     ClickCb cbBtQuit = prepClickQuitCb();

@@ -287,8 +287,6 @@ LPErrInApp MenuMgr::HandleRootMenu() {
     if (err != NULL) {
         return err;
     }
-    SDL_BlitSurface(_p_ScreenBackbuffer, NULL, _p_Screen, NULL);
-    updateTextureAsFlipScreen();
 
     SDL_Event event;
     while (SDL_PollEvent(&event)) {

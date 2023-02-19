@@ -51,7 +51,8 @@ public:
 
     LPErrInApp Initialize(SDL_Surface *s, SDL_Renderer *r, SDL_Window *w,
                           DeckType &dt, LPLanguages planguages,
-                          TTF_Font *pfontText, SDL_Surface *pSceneBackground);
+                          TTF_Font *pfontText, SDL_Surface *pSceneBackground,
+                          bool isBlack);
     LPErrInApp StartGameLoop();
 
     int Size(int regionNo) { return _cardRegionList[regionNo].Size(); }
@@ -192,6 +193,7 @@ private:
     bool _newgamerequest;
     ButtonGfx *_p_BtQuit;
     ButtonGfx *_p_BtNewGame;
+    bool _sceneBackgroundIsBlack;
 };
 
 #endif
