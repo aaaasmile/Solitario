@@ -50,6 +50,7 @@ AppGfx::AppGfx() {
     _p_Window = NULL;
     _p_ScreenTexture = NULL;
     _p_SolitarioGfx = NULL;
+    _p_SceneBackground = NULL;
     _p_Screen = NULL;
     _iScreenW = 1024;
     _iScreenH = 768;
@@ -146,6 +147,10 @@ LPErrInApp AppGfx::Init() {
 }
 
 LPErrInApp AppGfx::loadSceneBackground() {
+    if (_p_SceneBackground != NULL) {
+        SDL_FreeSurface(_p_SceneBackground);
+        _p_SceneBackground = NULL;
+    }
     if (_p_GameSettings->BackgroundType != BackgroundTypeEnum::Black) {
         std::string strFileName;
         if (_p_GameSettings->BackgroundType ==
@@ -388,14 +393,15 @@ LPErrInApp AppGfx::loadProfile() {
     return NULL;
 }
 
-void AppGfx::writeProfile() {
+LPErrInApp AppGfx::writeProfile() {
     char filepath[PATH_MAX];
     snprintf(filepath, PATH_MAX, "%s/%s", GAMESET::GetHomeSolitarioFolder(),
              g_lpszIniFileName);
 
     ini_fd_t pIni = ini_open(filepath, "w", "#");
     if (pIni == 0)
-        return;
+        return ERR_UTIL::ErrorCreate("Unable to openfile ror write %s\n",
+                                     filepath);
 
     // deck type
     ini_locateHeading(pIni, g_lpszSectAll);
@@ -419,6 +425,7 @@ void AppGfx::writeProfile() {
 
     ini_close(pIni);
     TRACE("Settings file %s written\n", filepath);
+    return NULL;
 }
 
 TTF_Font *fncBind_GetFontVera(void *self) {
@@ -446,31 +453,23 @@ void fncBind_SetNextMenu(void *self, MenuItemEnum menuItem) {
     pApp->SetNextMenu(menuItem);
 }
 
-void fncBind_PersistSettings(void *self) {
+LPErrInApp fncBind_SettingsChanged(void *self, bool backGroundChanged,
+                                   bool languageChanged) {
     AppGfx *pApp = (AppGfx *)self;
-    pApp->PersistSettings();
+    return pApp->SettingsChanged(backGroundChanged, languageChanged);
 }
 
 MenuDelegator AppGfx::prepMenuDelegator() {
     // Use only static otherwise you loose it
-#ifndef _MSC_VER
     static VMenuDelegator const tc = {
         .GetFontVera = (&fncBind_GetFontVera),
         .GetFontAriblk = (&fncBind_GetFontAriblk),
         .GetLanguageMan = (&fncBind_GetLanguageMan),
         .LeaveMenu = (&fncBind_LeaveMenu),
         .SetNextMenu = (&fncBind_SetNextMenu),
-        .PersistSettings = (&fncBind_PersistSettings)};
+        .SettingsChanged = (&fncBind_SettingsChanged)};
 
     return (MenuDelegator){.tc = &tc, .self = this};
-#else
-    static VMenuDelegator const tc = {
-        (&fncBind_GetFontVera),    (&fncBind_GetFontAriblk),
-        (&fncBind_GetLanguageMan), (&fncBind_LeaveMenu),
-        (&fncBind_SetNextMenu),    (&fncBind_PersistSettings)};
-    MenuDelegator md = {&tc, this};
-    return md;
-#endif
 }
 
 void AppGfx::LeaveMenu() {
@@ -478,9 +477,13 @@ void AppGfx::LeaveMenu() {
     _histMenu.pop();
 }
 
-void AppGfx::PersistSettings() {
+LPErrInApp AppGfx::SettingsChanged(bool backGroundChanged,
+                                   bool languageChanged) {
     TRACE("Persist settings\n");
-    writeProfile();
+    if (backGroundChanged) {
+        _backGroundChanged = true;
+    }
+    return writeProfile();
 }
 
 void AppGfx::drawSceneBackground() {
@@ -545,9 +548,16 @@ LPErrInApp AppGfx::MainLoop() {
                 break;
 
             case MenuItemEnum::MENU_OPTIONS:
+                _backGroundChanged = false;
                 err = showOptionGeneral();
                 if (err != NULL)
                     goto error;
+                if (_backGroundChanged) {
+                    err = loadSceneBackground();
+                    if (err)
+                        goto error;
+                    pMenuMgr->SetBackground(_p_SceneBackground);
+                }
                 break;
 
             case MenuItemEnum::QUIT:
@@ -615,7 +625,10 @@ LPErrInApp AppGfx::showOptionGeneral() {
     if (err) {
         return err;
     }
-    optGfx.Show(_p_SceneBackground, caption);
+    err = optGfx.Show(_p_SceneBackground, caption);
+    if (err) {
+        return err;
+    }
 
     LeaveMenu();
     return NULL;

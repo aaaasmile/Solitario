@@ -55,12 +55,6 @@ void SolitarioGfx::clearSurface() {
         SDL_FreeSurface(_p_ScreenBackbuffer);
         _p_ScreenBackbuffer = NULL;
     }
-
-    if (_p_SceneBackground != NULL) {
-        SDL_FreeSurface(_p_SceneBackground);
-        _p_SceneBackground = NULL;
-    }
-
     if (_p_ScreenTexture != NULL) {
         SDL_DestroyTexture(_p_ScreenTexture);
         _p_ScreenTexture = NULL;
@@ -495,7 +489,7 @@ LPErrInApp SolitarioGfx::DrawInitialScene() {
     rctBt1.w = 120;
     rctBt1.h = 28;
     rctBt1.y = _p_Screen->h - 70;
-    rctBt1.x = 30;
+    rctBt1.x = 150;
     _p_BtQuit->Initialize(&rctBt1, _p_Screen, _p_FontText, MYIDQUIT, cbBtQuit);
     _p_BtQuit->SetVisibleState(ButtonGfx::INVISIBLE);
 

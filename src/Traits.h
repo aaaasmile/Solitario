@@ -3,6 +3,7 @@
 
 #include <SDL_ttf.h>
 
+#include "ErrorInfo.h"
 #include "Languages.h"
 
 enum MenuItemEnum {
@@ -22,7 +23,8 @@ namespace traits {
         Languages* (*const GetLanguageMan)(void* self);
         void (*const LeaveMenu)(void* self);
         void (*const SetNextMenu)(void* self, MenuItemEnum menuItem);
-        void (*const PersistSettings)(void* self);
+        LPErrInApp (*const SettingsChanged)(void* self, bool backGroundChanged,
+                                            bool languageChanged);
     } VMenuDelegator, *LPVMenuDelegator;
 
     typedef struct {

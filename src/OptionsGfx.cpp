@@ -213,7 +213,8 @@ LPErrInApp OptionsGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
     return NULL;
 }
 
-void OptionsGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
+LPErrInApp OptionsGfx::Show(SDL_Surface* pScene_background,
+                            STRING& strCaption) {
     _headerText = strCaption;
     _terminated = false;
     Uint32 uiInitialTick = SDL_GetTicks();
@@ -273,6 +274,7 @@ void OptionsGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
         SDL_SWSURFACE, _p_screen->w, _p_screen->h, 32, 0, 0, 0, 0);
     SDL_Texture* pScreenTexture =
         SDL_CreateTextureFromSurface(_p_sdlRenderer, pShadowSrf);
+    LPErrInApp err = NULL;
     while (!_terminated) {
         // center the background
         SDL_FillRect(pShadowSrf, &pShadowSrf->clip_rect,
@@ -292,10 +294,14 @@ void OptionsGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
             }
             if (event.type == SDL_KEYDOWN) {
                 if (event.key.keysym.sym == SDLK_RETURN) {
-                    ButEndOPtClicked(MYIDOK);
+                    err = ButEndOPtClicked(MYIDOK);
+                    if (err)
+                        return err;
                     break;
                 } else if (event.key.keysym.sym == SDLK_ESCAPE) {
-                    ButEndOPtClicked(MYIDCANCEL);
+                    err = ButEndOPtClicked(MYIDCANCEL);
+                    if (err)
+                        return err;
                     break;
                 }
             }
@@ -390,9 +396,10 @@ void OptionsGfx::Show(SDL_Surface* pScene_background, STRING& strCaption) {
     }
     SDL_FreeSurface(pShadowSrf);
     SDL_DestroyTexture(pScreenTexture);
+    return NULL;
 }
 
-void OptionsGfx::ButEndOPtClicked(int iButID) {
+LPErrInApp OptionsGfx::ButEndOPtClicked(int iButID) {
     _terminated = true;
     _result = iButID;
     TRACE("OK options\n");
@@ -400,6 +407,10 @@ void OptionsGfx::ButEndOPtClicked(int iButID) {
     DeckType::eDeckType prevDeckType = _p_GameSettings->DeckTypeVal.GetType();
     bool prevMusicEnabled = _p_GameSettings->MusicEnabled;
     BackgroundTypeEnum prevBackgroundType = _p_GameSettings->BackgroundType;
+    if (_result == MYIDCANCEL) {
+        CheckboxMusicClicked(prevMusicEnabled);
+        return NULL;
+    }
 
     switch (_p_comboLang->GetSlectedIndex()) {
         case 0:
@@ -439,8 +450,15 @@ void OptionsGfx::ButEndOPtClicked(int iButID) {
         (_p_GameSettings->BackgroundType != prevBackgroundType) ||
         (_p_GameSettings->CurrentLanguage != prevLangId)) {
         TRACE("Settings are changed, save it\n");
-        _menuDlgt.tc->PersistSettings(_menuDlgt.self);
+        LPErrInApp err = _menuDlgt.tc->SettingsChanged(
+            _menuDlgt.self,
+            (_p_GameSettings->BackgroundType != prevBackgroundType),
+            (_p_GameSettings->CurrentLanguage != prevLangId));
+        if (err) {
+            return err;
+        }
     }
+    return NULL;
 }
 
 void OptionsGfx::CheckboxMusicClicked(bool state) {

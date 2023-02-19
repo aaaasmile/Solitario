@@ -37,9 +37,9 @@ public:
     LPErrInApp Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
                           SDL_Renderer* pRenderer, MusicManager* pMusicMgr,
                           MenuDelegator& menuDlg);
-    void Show(SDL_Surface* pScene_background, STRING& strCaption);
+    LPErrInApp Show(SDL_Surface* pScene_background, STRING& strCaption);
     void SetCaption(STRING& strCaption) { _headerText = strCaption; }
-    void ButEndOPtClicked(int iButID);
+    LPErrInApp ButEndOPtClicked(int iButID);
     void CheckboxMusicClicked(bool state);
     void DeckSelectionClicked(int indexSel);
 

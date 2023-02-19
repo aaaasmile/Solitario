@@ -41,7 +41,7 @@ public:
     }  // text for big command on menu
     void LeaveMenu();
     void SetNextMenu(MenuItemEnum menuItem) { _histMenu.push(menuItem); }
-    void PersistSettings();
+    LPErrInApp SettingsChanged(bool backGroundChanged, bool languageChanged);
 
 private:
     int waitKeyLoop();
@@ -49,7 +49,7 @@ private:
     LPErrInApp createWindow();
     void terminate();
     LPErrInApp loadProfile();
-    void writeProfile();
+    LPErrInApp writeProfile();
     void usage(int errOut, char* cmd);
     bool parseScreenSize(LPCSTR strOpz);
     void updateScreenTexture();
@@ -81,6 +81,7 @@ private:
 
     bool _bFullScreen;
     bool _bOverride;
+    bool _backGroundChanged;
 
     std::stack<MenuItemEnum> _histMenu;
 };
