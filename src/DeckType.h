@@ -22,6 +22,7 @@ public:
         TRENTO,
         TREVISO,
         TRIESTE,
+        TAROCK_PIEMONT,
         NUM_OF_DECK
     };
     enum ePacType { PacTypePac, PacTypeSingleFile };

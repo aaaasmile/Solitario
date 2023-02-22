@@ -87,6 +87,12 @@ LPErrInApp DeckType::SetType(eDeckType eType) {
             _strSymbolFileName = "symb_320.bmp";
             _ePacType = PacTypePac;
             break;
+        case TAROCK_PIEMONT:
+            _strDeckName = "Tarock";
+            _strResFileName = "tarock_piemonte.pac";
+            _strSymbolFileName = "symb_320.bmp";
+            _ePacType = PacTypePac;
+            break;
         default:
             return ERR_UTIL::ErrorCreate("Error deck type %d not supported",
                                          eType);
@@ -146,6 +152,8 @@ void DeckType::SetTypeIndex(int iVal) {
         case 13:
             SetType(TRIESTE);
             break;
+        case 14:
+            SetType(TAROCK_PIEMONT);
         default:
             SetType(PIACENTINA);
             break;
