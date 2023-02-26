@@ -32,13 +32,10 @@ const int MYIDNEWGAME = 1;
 
 SolitarioGfx::SolitarioGfx() {
     _p_ScreenBackbuffer = 0;
-    _bStartdrag = false;
+    _startdrag = false;
     _p_Dragface = 0;
     _p_SceneBackground = 0;
     _p_ScreenTexture = 0;
-    for (int i = 0; i < NUM_CARDS_ONDECK; i++) {
-        _p_CardsSurf[i] = 0;
-    }
     _p_BtQuit = NULL;
     _p_BtNewGame = NULL;
 }
@@ -111,7 +108,7 @@ LPErrInApp SolitarioGfx::Initialize(SDL_Surface *s, SDL_Renderer *r,
         return ERR_UTIL::ErrorCreate("Cannot create scene background: %s\n",
                                      SDL_GetError());
     }
-    if (_DeckType.IsPacType()) {
+    if (_deckType.IsPacType()) {
         TRACE("Deck Pac stuff\n");
         err = LoadCardPac();
         if (err != NULL) {
@@ -527,31 +524,7 @@ LPErrInApp SolitarioGfx::DrawCard(int x, int y, int nCdIndex, SDL_Surface *s) {
         return ERR_UTIL::ErrorCreate(
             "Draw a card on NULL surface. This is wrong");
     }
-    if (_DeckType.IsPacType()) {
-        return DrawCardPac(x, y, nCdIndex, s);
-    }
-    if (nCdIndex < 0)
-        nCdIndex = 0;
-    if (nCdIndex > NUM_CARDS)
-        nCdIndex = NUM_CARDS - 1;
-
-    int iSegnoIx = nCdIndex / 10;
-    int iCartaIx = nCdIndex % 10;
-    TRACE_DEBUG("Suit %d, card: %d\n", iSegnoIx, iCartaIx);
-
-    _rctSrcCard.x = 0;
-    _rctSrcCard.y = 0;
-    _rctSrcCard.w = _p_CardsSurf[nCdIndex]->clip_rect.w;
-    _rctSrcCard.h = _p_CardsSurf[nCdIndex]->clip_rect.h;
-
-    SDL_Rect dest;
-    dest.x = x;
-    dest.y = y;
-    if (SDL_BlitSurface(_p_CardsSurf[nCdIndex], &_rctSrcCard, s, &dest) == -1) {
-        return ERR_UTIL::ErrorCreate("SDL_BlitSurface in draw card error: %s\n",
-                                     SDL_GetError());
-    }
-    return NULL;
+    return DrawCardPac(x, y, nCdIndex, s);
 }
 
 LPErrInApp SolitarioGfx::DrawCardPac(int x, int y, int nCdIndex,
@@ -589,31 +562,7 @@ LPErrInApp SolitarioGfx::DrawCard(LPCardGfx pCard, SDL_Surface *s) {
     }
     // TRACE("Draw card ix = %d, suit = %s, rank %d, x,y %d,%d", pCard->Index(),
     //       pCard->SuitStr(), pCard->Rank(), pCard->X(), pCard->Y());
-
-    if (_DeckType.IsPacType()) {
-        return DrawCardPac(pCard, s);
-    }
-    int nCdIndex = pCard->Index();
-
-    if (nCdIndex < 0)
-        nCdIndex = 0;
-    if (nCdIndex > NUM_CARDS)
-        nCdIndex = NUM_CARDS - 1;
-
-    _rctSrcCard.x = 0;
-    _rctSrcCard.y = 0;
-    _rctSrcCard.w = _p_CardsSurf[nCdIndex]->clip_rect.w;
-    _rctSrcCard.h = _p_CardsSurf[nCdIndex]->clip_rect.h;
-
-    SDL_Rect dest;
-    dest.x = pCard->X();
-    dest.y = pCard->Y();
-
-    if (SDL_BlitSurface(_p_CardsSurf[nCdIndex], &_rctSrcCard, s, &dest) == -1) {
-        return ERR_UTIL::ErrorCreate("SDL_BlitSurface in draw card error: %s\n",
-                                     SDL_GetError());
-    }
-    return NULL;
+    return DrawCardPac(pCard, s);
 }
 
 LPErrInApp SolitarioGfx::DrawCardPac(LPCardGfx pCard, SDL_Surface *s) {
@@ -634,23 +583,7 @@ LPErrInApp SolitarioGfx::DrawCardBack(int x, int y, SDL_Surface *s) {
             "Error in DrawCardBack, surface is NULL\n");
     }
 
-    if (_DeckType.IsPacType()) {
-        return DrawCardBackPac(x, y, s);
-    }
-
-    _rctSrcCard.x = 0;
-    _rctSrcCard.y = 0;
-    _rctSrcCard.w = _p_SymbolsSurf[0]->clip_rect.w;
-    _rctSrcCard.h = _p_SymbolsSurf[0]->clip_rect.h;
-
-    SDL_Rect dest;
-    dest.x = x;
-    dest.y = y;
-    if (SDL_BlitSurface(_p_SymbolsSurf[0], &_rctSrcCard, s, &dest) == -1) {
-        return ERR_UTIL::ErrorCreate(
-            "SDL_BlitSurface in DrawCardBack error: %s\n", SDL_GetError());
-    }
-    return NULL;
+    return DrawCardBackPac(x, y, s);
 }
 
 LPErrInApp SolitarioGfx::DrawCardBackPac(int x, int y, SDL_Surface *s) {
@@ -682,24 +615,7 @@ LPErrInApp SolitarioGfx::DrawSymbol(int x, int y, int nSymbol, SDL_Surface *s) {
     if (nSymbol > 3)
         nSymbol = 3;
 
-    if (_DeckType.IsPacType()) {
-        return DrawSymbolPac(x, y, nSymbol, s);
-    }
-
-    _rctSrcCard.x = 0;
-    _rctSrcCard.y = 0;
-    _rctSrcCard.w = _p_SymbolsSurf[nSymbol]->clip_rect.w;
-    _rctSrcCard.h = _p_SymbolsSurf[nSymbol]->clip_rect.h;
-
-    SDL_Rect dest;
-    dest.x = x;
-    dest.y = y;
-    if (SDL_BlitSurface(_p_SymbolsSurf[nSymbol], &_rctSrcCard, s, &dest) ==
-        -1) {
-        return ERR_UTIL::ErrorCreate(
-            "SDL_BlitSurface in DrawSymbol error: %s\n", SDL_GetError());
-    }
-    return NULL;
+    return DrawSymbolPac(x, y, nSymbol, s);
 }
 
 LPErrInApp SolitarioGfx::DrawSymbolPac(int x, int y, int nSymbol,
@@ -784,17 +700,17 @@ LPErrInApp SolitarioGfx::VictoryAnimation() {
 
 LPErrInApp SolitarioGfx::LoadCardPac() {
     Uint16 w, h;
-    GFX_UTIL::LoadCardPac(&_p_Deck, _DeckType, &w, &h);
+    GFX_UTIL::LoadCardPac(&_p_Deck, _deckType, &w, &h);
     TRACE("Pac size  w = %d, h = %d\n", w, h);
     g_CardWidth = w / 4;
-    g_CardHeight = h / _DeckType.GetNumCardInSuit();
+    g_CardHeight = h / _deckType.GetNumCardInSuit();
     return NULL;
 }
 
 LPErrInApp SolitarioGfx::LoadSymbolsForPac() {
     std::string strFileSymbName = g_lpszSymbDir;
-    strFileSymbName += _DeckType.GetSymbolFileName();
-    if (_DeckType.GetType() == eDeckType::TAROCK_PIEMONT) {
+    strFileSymbName += _deckType.GetSymbolFileName();
+    if (_deckType.GetType() == eDeckType::TAROCK_PIEMONT) {
         SDL_RWops *srcSymb = SDL_RWFromFile(strFileSymbName.c_str(), "rb");
         if (srcSymb == NULL) {
             return ERR_UTIL::ErrorCreate(
@@ -808,21 +724,20 @@ LPErrInApp SolitarioGfx::LoadSymbolsForPac() {
         }
         SDL_SetColorKey(_p_Symbols, true,
                         SDL_MapRGB(_p_Symbols->format, 248, 0, 241));
-        return NULL;
-    }
-
-    _p_Symbols = SDL_LoadBMP(strFileSymbName.c_str());
-    if (_p_Symbols == 0) {
-        return ERR_UTIL::ErrorCreate("Load bitmap failed: %s\n",
-                                     SDL_GetError());
-    }
-
-    if (_DeckType.GetSymbolFileName() == "symb_336.bmp") {
-        SDL_SetColorKey(_p_Symbols, true,
-                        SDL_MapRGB(_p_Symbols->format, 242, 30, 206));
     } else {
-        SDL_SetColorKey(_p_Symbols, true,
-                        SDL_MapRGB(_p_Symbols->format, 0, 128, 0));
+        _p_Symbols = SDL_LoadBMP(strFileSymbName.c_str());
+        if (_p_Symbols == 0) {
+            return ERR_UTIL::ErrorCreate("Load bitmap failed: %s\n",
+                                         SDL_GetError());
+        }
+
+        if (_deckType.GetSymbolFileName() == "symb_336.bmp") {
+            SDL_SetColorKey(_p_Symbols, true,
+                            SDL_MapRGB(_p_Symbols->format, 242, 30, 206));
+        } else {
+            SDL_SetColorKey(_p_Symbols, true,
+                            SDL_MapRGB(_p_Symbols->format, 0, 128, 0));
+        }
     }
 
     g_SymbolWidth = _p_Symbols->w / 4;
@@ -906,7 +821,7 @@ LPErrInApp SolitarioGfx::handleLeftMouseDown(SDL_Event &event) {
             return err;
         }
         if (isInitDrag) {
-            _bStartdrag = true;
+            _startdrag = true;
             SDL_ShowCursor(SDL_DISABLE);
             SDL_SetWindowGrab(_p_Window, SDL_TRUE);
         }
@@ -974,7 +889,7 @@ LPErrInApp SolitarioGfx::handleRightMouseDown(SDL_Event &event) {
 }
 
 void SolitarioGfx::handleGameLoopMouseMoveEvent(SDL_Event &event) {
-    if (event.motion.state == SDL_BUTTON(1) && _bStartdrag) {
+    if (event.motion.state == SDL_BUTTON(1) && _startdrag) {
         DoDrag(event.motion.x, event.motion.y);
     }
     bool statusChanged = _p_BtNewGame->MouseMove(event);
@@ -988,8 +903,8 @@ LPErrInApp SolitarioGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
     _p_BtQuit->MouseUp(event);
     _p_BtNewGame->MouseUp(event);
 
-    if (_bStartdrag) {
-        _bStartdrag = false;
+    if (_startdrag) {
+        _startdrag = false;
         DoDrop();
         SDL_ShowCursor(SDL_ENABLE);
         SDL_SetWindowGrab(_p_Window, SDL_FALSE);

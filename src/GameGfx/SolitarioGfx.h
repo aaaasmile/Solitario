@@ -147,7 +147,7 @@ public:
 private:
     void updateTextureAsFlipScreen();
     void zoomDropCard(int &sx, int &sy, LPCardGfx pCard, int width, int height);
-    void setDeckType(DeckType &dt) { _DeckType.CopyFrom(dt); }
+    void setDeckType(DeckType &dt) { _deckType.CopyFrom(dt); }
     void clearSurface();
     LPErrInApp newGame();
     LPErrInApp handleGameLoopKeyDownEvent(SDL_Event &event);
@@ -177,15 +177,11 @@ private:
     int _oldx;
     int _oldy;
 
-    SDL_Surface *_p_Deck;  // for pac
+    SDL_Surface *_p_Deck;
     SDL_Surface *_p_Symbols;
-    DeckType _DeckType;
-    SDL_Surface *_p_CardsSurf[NUM_CARDS_ONDECK];  // for single file
-    SDL_Surface *_p_SymbolsSurf[NUM_SYMBOLS];
-    bool _bStartdrag;
-
+    DeckType _deckType;
+    bool _startdrag;
     SDL_Rect _rctSrcCard;
-
     std::vector<CardRegionGfx> _cardRegionList;
     bool _terminated;
     bool _newgamerequest;
