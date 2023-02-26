@@ -31,6 +31,7 @@ public:
     bool IsFaceUp() const { return _faceUp; }
     bool IsFaceDown() const { return !_faceUp; }
     LPCSTR Name() { return _name.c_str(); }
+    LPCSTR String();
 
     void SetFaceUp(bool bval) { _faceUp = bval; }
     LPErrInApp DrawCardPac(SDL_Surface* s);
@@ -65,6 +66,7 @@ private:
     SDL_Surface* _pPacDeck;
     DeckType _deckType;
     STRING _name;
+    STRING _nameFull;
 };
 
 typedef CardGfx* LPCardGfx;

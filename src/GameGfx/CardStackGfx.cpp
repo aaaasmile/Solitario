@@ -2,11 +2,16 @@
 
 #include "WinTypeGlobal.h"
 
-LPErrInApp CardStackGfx::NewDeck(DeckType& deckType) {
+LPErrInApp CardStackGfx::NewDeck(DeckType& deckType, int widthEmpty,
+                                 int heightEmpty) {
     LPErrInApp err;
     _deckType = deckType;
+    _widthEmpty = widthEmpty;
+    _heightEmpty = heightEmpty;
     for (size_t i = 0; i < _deckType.GetNumCards(); i++) {
         LPCardGfx pCard = new CardGfx();
+        pCard->SetWidth(_widthEmpty);
+        pCard->SetHeight(_heightEmpty);
         err = pCard->SetIdx(i, _deckType);
         if (err != NULL) {
             return err;

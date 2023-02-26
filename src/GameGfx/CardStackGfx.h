@@ -13,7 +13,7 @@
 
 class CardStackGfx {
 public:
-    LPErrInApp NewDeck(DeckType& deckType);
+    LPErrInApp NewDeck(DeckType& deckType, int widthEmpty, int heightEmpty);
     void Shuffle();
     void Clear() { _vct_lpCardGfx.clear(); }
     void CleanUp();
@@ -42,6 +42,8 @@ public:
 private:
     std::vector<LPCardGfx> _vct_lpCardGfx;
     DeckType _deckType;
+    int _widthEmpty;
+    int _heightEmpty;
 };
 
 typedef CardStackGfx* LPCardStackGfx;

@@ -173,7 +173,6 @@ LPErrInApp OptionsGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
         int hh = pac_h / dt.GetNumCardInSuit();
         int x_pos = rctBt1.x;
         int y_pos = rctBt1.y + rctBt1.h + 20;
-
         _cardOnEachDeck[0][i].SetIdx(9, dt);
         _cardOnEachDeck[0][i].SetWidth(ww);
         _cardOnEachDeck[0][i].SetHeight(hh);

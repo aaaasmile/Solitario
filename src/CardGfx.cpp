@@ -26,11 +26,37 @@ CardGfx::CardGfx() {
     _pPacDeck = 0;
 }
 
+LPCSTR CardGfx::String() {
+    STRING res;
+    switch (_eSuit) {
+        case eSUIT::BASTONI:
+            res = _name + " Bastoni";
+            break;
+        case eSUIT::COPPE:
+            res = _name + " Coppe";
+            break;
+        case eSUIT::DENARI:
+            res = _name + " Denari";
+            break;
+        case eSUIT::SPADE:
+            res = _name + " Spade";
+            break;
+        default:
+            break;
+    }
+    char dest[256];
+    snprintf(dest, sizeof(dest), "%s-ix(%d)-rank(%d)-faceUP(%s)", res.c_str(),
+             _idx, _rank, _faceUp ? "yes" : "no");
+    _nameFull = dest;
+    return _nameFull.c_str();
+}
+
 LPErrInApp CardGfx::SetIdx(int ix, DeckType& deckType) {
     _idx = ix;
     _deckType = deckType;
     _rank = _deckType.GetRank(ix);
     if (deckType.GetType() == eDeckType::TAROCK_PIEMONT) {
+        _name = g_nameTarock[_idx];
         if (_idx >= 0 && _idx <= 13)
             _eSuit = BASTONI;
         else if (_idx > 13 && _idx <= 27)
@@ -42,7 +68,7 @@ LPErrInApp CardGfx::SetIdx(int ix, DeckType& deckType) {
         else
             return ERR_UTIL::ErrorCreate("Error SetIdx %d is out of range", ix);
     } else {
-        _name = g_nameTarock[_idx];
+        _name = g_name[_idx];
         if (_idx >= 0 && _idx <= 9)
             _eSuit = BASTONI;
         else if (_idx > 9 && _idx <= 19)
@@ -77,6 +103,8 @@ const char* CardGfx::SuitStr() {
 LPErrInApp CardGfx::DrawCardPac(SDL_Surface* s) {
     int index = Index();
     int num_cards_insuit = _deckType.GetNumCardInSuit();
+    SDL_assert(_width != 0);
+    SDL_assert(_height != 0);
 
     if (index < 0 || index > _deckType.GetNumCards())
         return ERR_UTIL::ErrorCreate("Card index outside the range %d", index);

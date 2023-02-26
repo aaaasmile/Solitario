@@ -164,10 +164,8 @@ bool CardRegionGfx::CanDrop(LPCardStackGfx stack) {
         return true;
 
     LPCardGfx pLastCard = _internalStack.Last();
-    TRACE_DEBUG("CanDrop:  %s-%d-%d(faceUp %d) -> %s-%d-%d(faceUp %d)\n",
-                pStartCard->Name(), pStartCard->Index(), pStartCard->Rank(),
-                pStartCard->IsFaceUp(), pLastCard->Name(), pLastCard->Index(),
-                pLastCard->Rank(), pLastCard->IsFaceUp());
+    TRACE_DEBUG("CanDrop:  %s -> %s\n", pStartCard->String(),
+                pLastCard->String());
 
     if (pLastCard->IsFaceDown())
         return false;

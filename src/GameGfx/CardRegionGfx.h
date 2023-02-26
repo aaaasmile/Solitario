@@ -97,7 +97,9 @@ public:
     int GetStackWidth();
     int GetStackHeight();
 
-    LPErrInApp NewDeck() { return _internalStack.NewDeck(_deckType); }
+    LPErrInApp NewDeck() {
+        return _internalStack.NewDeck(_deckType, _widthEmpty, _heightEmpty);
+    }
     void Shuffle() { _internalStack.Shuffle(); }
     void Clear() { _internalStack.Clear(); }
     void CleanUp() { _internalStack.CleanUp(); }
