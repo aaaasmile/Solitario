@@ -12,8 +12,8 @@
 // card graphics
 int g_CardWidth = 0;
 int g_CardHeight = 0;
-int g_SymbolWidth = 84;
-int g_SymbolHeight = 144;
+int g_SymbolWidth = 0;
+int g_SymbolHeight = 0;
 
 #define CRD_DECKPILE 0
 #define CRD_FOUNDATION 1
@@ -38,6 +38,8 @@ SolitarioGfx::SolitarioGfx() {
     _p_ScreenTexture = 0;
     _p_BtQuit = NULL;
     _p_BtNewGame = NULL;
+    _newgamerequest = false;
+    _terminated = true;
 }
 
 SolitarioGfx::~SolitarioGfx() {
@@ -139,6 +141,11 @@ LPErrInApp SolitarioGfx::DrawCardStack(LPCardRegionGfx pcardRegion) {
 
 LPErrInApp SolitarioGfx::DrawCardStack(SDL_Surface *s,
                                        LPCardRegionGfx pcardRegion) {
+    if (pcardRegion == NULL) {
+        return ERR_UTIL::ErrorCreate("DrawCardStack region is NULL");
+    }
+    TRACE_DEBUG("Draw crad stack %d\n", pcardRegion->Id);
+
     LPErrInApp err;
     if (!(pcardRegion->Attributes & CRD_VISIBLE))
         return NULL;
@@ -529,10 +536,9 @@ LPErrInApp SolitarioGfx::DrawCard(int x, int y, int nCdIndex, SDL_Surface *s) {
 
 LPErrInApp SolitarioGfx::DrawCardPac(int x, int y, int nCdIndex,
                                      SDL_Surface *s) {
-    if (nCdIndex < 0)
-        nCdIndex = 0;
-    if (nCdIndex > _deckType.GetNumCards())
-        nCdIndex = _deckType.GetNumCards() - 1;
+    if (nCdIndex < 0 || nCdIndex >= _deckType.GetNumCards())
+        return ERR_UTIL::ErrorCreate("DrawCardPac %d index out of range",
+                                     nCdIndex);
 
     int iSegnoIx = nCdIndex / _deckType.GetNumCardInSuit();
     int iCartaIx = nCdIndex % _deckType.GetNumCardInSuit();

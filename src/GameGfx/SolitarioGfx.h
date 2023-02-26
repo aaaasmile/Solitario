@@ -28,7 +28,6 @@ const unsigned int CRD_OSYMBOL = 2;
 const unsigned int CRD_HSYMBOL = 3;
 
 class SolitarioGfx {
-    enum { NUM_CARDS_ONDECK = 40, NUM_SYMBOLS = 4 };
     enum eRegionIx {
         DeckPile_Ix = 0,
         Found_Ix1 = 1,

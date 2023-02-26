@@ -17,13 +17,7 @@ enum eSUIT { BASTONI = 0, COPPE = 1, DENARI = 2, SPADE = 3 };
 
 class CardGfx {
 public:
-    CardGfx() {
-        _idx = 0;
-        _faceUp = true;
-        _rank = 0;
-        _eSuit = eSUIT::BASTONI;
-    }
-
+    CardGfx();
     eSUIT Suit() const { return _eSuit; }
     const char* SuitStr();
     int Rank() const { return _rank; }

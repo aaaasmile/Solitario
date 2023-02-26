@@ -1,5 +1,14 @@
 #include "CardGfx.h"
 
+CardGfx::CardGfx() {
+    _idx = 0;
+    _faceUp = true;
+    _rank = 0;
+    _eSuit = eSUIT::BASTONI;
+    _x = _y = _width = _height = 0;
+    _pPacDeck = 0;
+}
+
 const char* CardGfx::SuitStr() {
     switch (_eSuit) {
         case BASTONI:
@@ -17,18 +26,18 @@ const char* CardGfx::SuitStr() {
 }
 
 LPErrInApp CardGfx::DrawCardPac(SDL_Surface* s) {
-    int nCdIndex = Index();
+    int index = Index();
+    int num_cards_insuit = _deckType.GetNumCardInSuit();
 
-    if (nCdIndex < 0 || nCdIndex > _deckType.GetNumCards())
-        return ERR_UTIL::ErrorCreate("Card index outside the range %d",
-                                     nCdIndex);
+    if (index < 0 || index > _deckType.GetNumCards())
+        return ERR_UTIL::ErrorCreate("Card index outside the range %d", index);
     if (_width == 0 || _height == 0) {
         return ERR_UTIL::ErrorCreate(
             "CardGfx - DrawCardPac size is not defined");
     }
 
-    int iSegnoIx = nCdIndex / 10;
-    int iCartaIx = nCdIndex % 10;
+    int iSegnoIx = index / num_cards_insuit;
+    int iCartaIx = index % num_cards_insuit;
     SDL_Rect srcCard;
 
     srcCard.x = iSegnoIx * _width;

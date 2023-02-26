@@ -122,11 +122,7 @@ LPErrInApp AppGfx::Init() {
     SDL_SetColorKey(psIcon, true, SDL_MapRGB(psIcon->format, 0, 128, 0));
     SDL_SetWindowIcon(_p_Window, psIcon);
 
-#ifdef _GLIBCPP_HAVE_DRAND48
-    srand48((unsigned)time(0));
-#else
     srand((unsigned)time(0));
-#endif
 
     _p_CreditTitle = IMG_Load(g_lpszTitleFile);
     if (_p_CreditTitle == 0) {

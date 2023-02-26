@@ -206,7 +206,7 @@ void GFX_UTIL::FillRect(SDL_Surface *screen, int x0, int y0, int width,
 
 LPErrInApp GFX_UTIL::LoadCardPac(SDL_Surface **pp_Deck, DeckType &deckType,
                                  Uint16 *pac_w, Uint16 *pac_h) {
-    TRACE("Load card Pac %s\n", deckType.GetDeckName());
+    TRACE("Load card Pac %s\n", deckType.GetDeckName().c_str());
     Uint32 timetag;
     char description[100];
     Uint8 num_anims;
