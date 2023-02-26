@@ -23,7 +23,7 @@
 #include "WinTypeGlobal.h"
 
 #define OPT_WIN_GENERAL_WIDTH 500
-#define OPT_WIN_GENERAL_HEIGHT 480
+#define OPT_WIN_GENERAL_HEIGHT 560
 
 #include "Credits.h"
 #include "Fading.h"

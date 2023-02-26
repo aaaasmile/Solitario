@@ -30,7 +30,7 @@ OptionsGfx::~OptionsGfx() {
     delete _p_checkMusic;
     delete _p_comboDeck;
     delete _p_comboBackground;
-    for (int i = 0; i < DeckType::NUM_OF_DECK; i++) {
+    for (int i = 0; i < eDeckType::NUM_OF_DECK; i++) {
         if (_p_deckAll[i]) {
             SDL_FreeSurface(_p_deckAll[i]);
         }
@@ -160,7 +160,7 @@ LPErrInApp OptionsGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
     Uint16 pac_w, pac_h;
     DeckType dt;
     LPErrInApp err;
-    for (int i = 0; i < DeckType::NUM_OF_DECK; i++) {
+    for (int i = 0; i < eDeckType::NUM_OF_DECK; i++) {
         err = dt.SetTypeIndex(i);
         if (err != NULL) {
             return err;
@@ -247,7 +247,7 @@ LPErrInApp OptionsGfx::Show(SDL_Surface* pScene_background,
     STRING strDeckSelectTitle =
         _p_languages->GetStringId(Languages::ID_CHOOSEMAZZO);
     DeckType dt;
-    for (int i = 0; i < DeckType::NUM_OF_DECK; i++) {
+    for (int i = 0; i < eDeckType::NUM_OF_DECK; i++) {
         dt.SetTypeIndex(i);
         strTextBt = dt.GetDeckName();
         _p_comboDeck->AddLineText(strTextBt.c_str());
@@ -389,7 +389,7 @@ LPErrInApp OptionsGfx::ButEndOPtClicked(int iButID) {
     _result = iButID;
     TRACE("OK options\n");
     Languages::eLangId prevLangId = _p_GameSettings->CurrentLanguage;
-    DeckType::eDeckType prevDeckType = _p_GameSettings->DeckTypeVal.GetType();
+    eDeckType prevDeckType = _p_GameSettings->DeckTypeVal.GetType();
     bool prevMusicEnabled = _p_GameSettings->MusicEnabled;
     BackgroundTypeEnum prevBackgroundType = _p_GameSettings->BackgroundType;
     if (_result == MYIDCANCEL) {

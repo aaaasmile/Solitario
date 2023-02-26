@@ -242,8 +242,15 @@ LPErrInApp GFX_UTIL::LoadCardPac(SDL_Surface **pp_Deck, DeckType &deckType,
             "IMG_LoadPNG_RW on pac file error (file %s): %s\n",
             strFileName.c_str(), SDL_GetError());
     }
-
-    SDL_SetColorKey(*pp_Deck, true, SDL_MapRGB((*pp_Deck)->format, 0, 128, 0));
+    Uint8 red_trasp = 0, green_trasp = 128, blue_trasp = 0;
+    if (deckType.GetType() == eDeckType::TAROCK_PIEMONT) {
+        red_trasp = 248;
+        green_trasp = 0;
+        blue_trasp = 241;
+    }
+    SDL_SetColorKey(
+        *pp_Deck, true,
+        SDL_MapRGB((*pp_Deck)->format, red_trasp, green_trasp, blue_trasp));
     *pac_h = h;
     *pac_w = w;
     return NULL;

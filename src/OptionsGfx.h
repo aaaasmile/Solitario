@@ -64,8 +64,8 @@ private:
     ComboGfx* _p_comboLang;
     ComboGfx* _p_comboDeck;
     ComboGfx* _p_comboBackground;
-    SDL_Surface* _p_deckAll[DeckType::NUM_OF_DECK];
-    CardGfx _cardOnEachDeck[3][DeckType::NUM_OF_DECK];
+    SDL_Surface* _p_deckAll[eDeckType::NUM_OF_DECK];
+    CardGfx _cardOnEachDeck[3][eDeckType::NUM_OF_DECK];
 
     Languages* _p_languages;
     MenuDelegator _menuDlgt;

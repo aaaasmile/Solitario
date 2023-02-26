@@ -23,7 +23,7 @@ public:
     GameSettings() {
         PlayerName = "Anonimo";
         Level = 1;
-        DeckTypeVal.SetType(DeckType::PIACENTINA);
+        DeckTypeVal.SetType(eDeckType::PIACENTINA);
         CurrentLanguage = Languages::LANG_ITA;
         MusicEnabled = false;
         SettingsDir = "";

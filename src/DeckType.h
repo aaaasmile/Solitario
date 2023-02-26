@@ -5,26 +5,27 @@
 
 #include "ErrorInfo.h"
 
+enum eDeckType {
+    PIACENTINA = 0,
+    BERGAMO,
+    BOLOGNA,
+    GENOVA,
+    MILANO,
+    NAPOLI,
+    PIEMONTE,
+    ROMAGNA,
+    SARDEGNA,
+    SICILIA,
+    TOSCANA,
+    TRENTO,
+    TREVISO,
+    TRIESTE,
+    TAROCK_PIEMONT,
+    NUM_OF_DECK
+};
+
 class DeckType {
 public:
-    enum eDeckType {
-        PIACENTINA = 0,
-        BERGAMO,
-        BOLOGNA,
-        GENOVA,
-        MILANO,
-        NAPOLI,
-        PIEMONTE,
-        ROMAGNA,
-        SARDEGNA,
-        SICILIA,
-        TOSCANA,
-        TRENTO,
-        TREVISO,
-        TRIESTE,
-        TAROCK_PIEMONT,
-        NUM_OF_DECK
-    };
     enum ePacType { PacTypePac, PacTypeSingleFile };
 
     DeckType() {}
