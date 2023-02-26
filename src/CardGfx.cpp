@@ -9,13 +9,13 @@ static STRING g_name[] = {
     "Sei",     "Sette",   "Fante",   "Cavallo", "Re"};
 static STRING g_nameTarock[] = {
     "Asso", "Due",  "Tre",   "Quattro", "Cinque", "Sei",   "Sette",
-    "Otto", "Nove", "Dieci", "Jack",    "Fante",  "Donna", "Re",
+    "Otto", "Nove", "Dieci", "Fante",   "Cav",    "Donna", "Re",
     "Asso", "Due",  "Tre",   "Quattro", "Cinque", "Sei",   "Sette",
-    "Otto", "Nove", "Dieci", "Jack",    "Fante",  "Donna", "Re",
+    "Otto", "Nove", "Dieci", "Fante",   "Cav",    "Donna", "Re",
     "Asso", "Due",  "Tre",   "Quattro", "Cinque", "Sei",   "Sette",
-    "Otto", "Nove", "Dieci", "Jack",    "Fante",  "Donna", "Re",
+    "Otto", "Nove", "Dieci", "Fante",   "Cav",    "Donna", "Re",
     "Asso", "Due",  "Tre",   "Quattro", "Cinque", "Sei",   "Sette",
-    "Otto", "Nove", "Dieci", "Jack",    "Fante",  "Donna", "Re"};
+    "Otto", "Nove", "Dieci", "Fante",   "Cav",    "Donna", "Re"};
 
 CardGfx::CardGfx() {
     _idx = 0;

@@ -922,8 +922,9 @@ LPErrInApp SolitarioGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
     }
     // victory
     LPErrInApp err;
-    if ((Size(Ace_Ix1) == 10) && (Size(Ace_Ix2) == 10) &&
-        (Size(Ace_Ix3) == 10) && (Size(Ace_Ix4) == 10)) {
+    int numCardOnSUit = _deckType.GetNumCardInSuit();
+    if ((Size(Ace_Ix1) == numCardOnSUit) && (Size(Ace_Ix2) == numCardOnSUit) &&
+        (Size(Ace_Ix3) == numCardOnSUit) && (Size(Ace_Ix4) == numCardOnSUit)) {
         VictoryAnimation();
         err = newGame();
         if (err != NULL) {
