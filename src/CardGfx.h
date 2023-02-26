@@ -7,11 +7,7 @@
 
 #include "DeckType.h"
 #include "ErrorInfo.h"
-
-extern int g_CardWidth;
-extern int g_CardHeight;
-extern int g_SymbolWidth;
-extern int g_SymbolHeight;
+#include "WinTypeGlobal.h"
 
 enum eSUIT { BASTONI = 0, COPPE = 1, DENARI = 2, SPADE = 3 };
 
@@ -34,52 +30,22 @@ public:
 
     bool IsFaceUp() const { return _faceUp; }
     bool IsFaceDown() const { return !_faceUp; }
+    LPCSTR Name() { return _name.c_str(); }
 
     void SetFaceUp(bool bval) { _faceUp = bval; }
     LPErrInApp DrawCardPac(SDL_Surface* s);
 
     int Index() { return _idx; }
-    LPErrInApp SetIdx(int nIdx, DeckType& deckType) {
-        _idx = nIdx;
-        _deckType = deckType;
-        _rank = _deckType.GetRank(nIdx);
-        if (deckType.GetType() == eDeckType::TAROCK_PIEMONT) {
-            if (_idx >= 0 && _idx <= 13)
-                _eSuit = BASTONI;
-            else if (_idx > 13 && _idx <= 27)
-                _eSuit = COPPE;
-            else if (_idx > 27 && _idx <= 41)
-                _eSuit = DENARI;
-            else if (_idx > 41 && _idx <= 55)
-                _eSuit = SPADE;
-            else
-                return ERR_UTIL::ErrorCreate("Error SetIdx %d is out of range",
-                                             nIdx);
-        } else {
-            if (_idx >= 0 && _idx <= 9)
-                _eSuit = BASTONI;
-            else if (_idx > 9 && _idx <= 19)
-                _eSuit = COPPE;
-            else if (_idx > 19 && _idx <= 29)
-                _eSuit = DENARI;
-            else if (_idx > 29 && _idx <= 39)
-                _eSuit = SPADE;
-            else
-                return ERR_UTIL::ErrorCreate("Error SetIdx %d is out of range",
-                                             nIdx);
-        }
-
-        return NULL;
-    }
-
+    LPErrInApp SetIdx(int nIdx, DeckType& deckType);
     void SetCardLoc(int lx, int ly) {
         _x = lx;
         _y = ly;
     }
 
     bool PtInCard(int lx, int ly) {
-        if (lx >= _x && lx <= g_CardWidth + _x && ly >= _y &&
-            ly <= g_CardHeight + _y)
+        SDL_assert(_width != 0);
+        SDL_assert(_height != 0);
+        if (lx >= _x && lx <= _width + _x && ly >= _y && ly <= _height + _y)
             return true;
         else
             return false;
@@ -98,6 +64,7 @@ private:
 
     SDL_Surface* _pPacDeck;
     DeckType _deckType;
+    STRING _name;
 };
 
 typedef CardGfx* LPCardGfx;

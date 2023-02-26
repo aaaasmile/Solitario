@@ -144,15 +144,15 @@ LPErrInApp SolitarioGfx::DrawCardStack(SDL_Surface *s,
     if (pcardRegion == NULL) {
         return ERR_UTIL::ErrorCreate("DrawCardStack region is NULL");
     }
-    TRACE_DEBUG("Draw crad stack %d\n", pcardRegion->Id);
+    TRACE_DEBUG("Draw crad stack %d\n", pcardRegion->Id());
 
     LPErrInApp err;
-    if (!(pcardRegion->Attributes & CRD_VISIBLE))
+    if (!pcardRegion->IsVisible())
         return NULL;
 
-    DrawSymbol(pcardRegion->XCoord, pcardRegion->YCoord, pcardRegion->Symbol);
-    for (int i = 0; i < pcardRegion->InternalStack.Size(); i++) {
-        LPCardGfx pCard = pcardRegion->InternalStack.Item(i);
+    DrawSymbol(pcardRegion->X(), pcardRegion->Y(), pcardRegion->Symbol());
+    for (int i = 0; i < pcardRegion->Size(); i++) {
+        LPCardGfx pCard = pcardRegion->Item(i);
         if (pCard->IsFaceUp()) {
             err = DrawCard(pCard, s);
         } else {
@@ -168,8 +168,9 @@ LPErrInApp SolitarioGfx::DrawCardStack(SDL_Surface *s,
 void SolitarioGfx::CreateRegion(int id, unsigned int attribs,
                                 unsigned int amode, int dmode, int symbol,
                                 int x, int y, int xoffset, int yoffset) {
-    CardRegionGfx *cr = new CardRegionGfx(id, attribs, amode, dmode, symbol, x,
-                                          y, xoffset, yoffset, _deckType);
+    CardRegionGfx *cr =
+        new CardRegionGfx(id, attribs, amode, dmode, symbol, x, y, xoffset,
+                          yoffset, _deckType, g_CardWidth, g_CardHeight);
     _cardRegionList.push_back(*cr);
 }
 
@@ -252,7 +253,8 @@ LPErrInApp SolitarioGfx::InitDrag(LPCardStackGfx pCargoStack, int x, int y,
     CardRegionGfx DragRegion(
         0, _p_selectedCardRegion->GetAttributes() | CRD_FACEUP, 0, 0, 0, 0, 0,
         _p_selectedCardRegion->GetxOffset(),
-        _p_selectedCardRegion->GetyOffset(), _deckType);
+        _p_selectedCardRegion->GetyOffset(), _deckType, g_CardWidth,
+        g_CardHeight);
     DragRegion.PushStack(&_dragStack);
 
     _dragCard.x = _dragStack.First()->X();
@@ -430,7 +432,7 @@ LPCardRegionGfx SolitarioGfx::FindDropRegion(int id, LPCardGfx pCard) {
 LPCardRegionGfx SolitarioGfx::FindDropRegion(int id, LPCardStackGfx pStack) {
     for (regionVI vir = _cardRegionList.begin(); vir != _cardRegionList.end();
          ++vir) {
-        if ((vir->Id == id) && vir->CanDrop(pStack))
+        if ((vir->Id() == id) && vir->CanDrop(pStack))
             return &(*vir);
     }
     return NULL;
@@ -814,13 +816,13 @@ LPErrInApp SolitarioGfx::handleLeftMouseDown(SDL_Event &event) {
     srcReg = SelectRegionOnPoint(event.button.x, event.button.y);
     if (srcReg == NULL)
         return NULL;
-    if ((srcReg->Id == CRD_FOUNDATION) &&
+    if ((srcReg->Id() == CRD_FOUNDATION) &&
         srcReg->PtOnTop(event.button.x, event.button.y)) {
         srcReg->SetCardFaceUp(true, srcReg->Size() - 1);
     }
 
-    if ((srcReg->Id == CRD_FOUNDATION) || (srcReg->Id == CRD_DECK_FACEUP) ||
-        (srcReg->Id == CRD_ACE)) {
+    if ((srcReg->Id() == CRD_FOUNDATION) || (srcReg->Id() == CRD_DECK_FACEUP) ||
+        (srcReg->Id() == CRD_ACE)) {
         // clicked on region that can do dragging
         err = InitDrag(event.button.x, event.button.y, isInitDrag);
         if (err != NULL) {
@@ -831,7 +833,7 @@ LPErrInApp SolitarioGfx::handleLeftMouseDown(SDL_Event &event) {
             SDL_ShowCursor(SDL_DISABLE);
             SDL_SetWindowGrab(_p_Window, SDL_TRUE);
         }
-    } else if (srcReg->Id == CRD_DECKPILE) {
+    } else if (srcReg->Id() == CRD_DECKPILE) {
         if (srcReg->IsEmpty() && !IsRegionEmpty(DeckFaceUp)) {
             // Bring back the cards on the deck
             LPCardStackGfx pCardStack =
@@ -874,7 +876,8 @@ LPErrInApp SolitarioGfx::handleRightMouseDown(SDL_Event &event) {
         return NULL;
     }
 
-    if (((srcReg->Id == CRD_FOUNDATION) || (srcReg->Id == CRD_DECK_FACEUP)) &&
+    if (((srcReg->Id() == CRD_FOUNDATION) ||
+         (srcReg->Id() == CRD_DECK_FACEUP)) &&
         pCard->IsFaceUp() && srcReg->PtOnTop(event.button.x, event.button.y)) {
         LPCardRegionGfx pDropRegion = FindDropRegion(CRD_ACE, pCard);
         if (pDropRegion == NULL) {

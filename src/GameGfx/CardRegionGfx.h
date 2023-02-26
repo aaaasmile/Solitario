@@ -48,41 +48,43 @@ class CardRegionGfx {
 public:
     CardRegionGfx(int id, unsigned int attribs, unsigned int amode, int dmode,
                   int symbol, int x, int y, int xoff, int yoff,
-                  DeckType &deckType)
-        : Id(id),
-          Attributes(attribs),
+                  DeckType &deckType, int width, int height)
+        : _id(id),
+          _attributes(attribs),
           _acceptMode(amode),
           _dragMode(dmode),
-          Symbol(symbol),
-          XCoord(x),
-          YCoord(y),
+          _symbol(symbol),
+          _xCoord(x),
+          _yCoord(y),
           _xOffset(xoff),
           _yOffset(yoff),
-          _deckType(deckType) {}
+          _deckType(deckType),
+          _widthEmpty(width),
+          _heightEmpty(height) {}
 
     ~CardRegionGfx() {}
 
-    LPCardStackGfx GetCardStack() { return &InternalStack; }
+    LPCardStackGfx GetCardStack() { return &_internalStack; }
 
     int GetxOffset() { return _xOffset; }
     int GetyOffset() { return _yOffset; }
 
     void InitCardFaces() {
-        InternalStack.SetCardsFaceUp(Attributes & CRD_FACEUP);
+        _internalStack.SetCardsFaceUp(_attributes & CRD_FACEUP);
     }
 
     void SetCardFaceUp(bool bVal, int idx) {
-        InternalStack.Item(idx)->SetFaceUp(bVal);
+        _internalStack.Item(idx)->SetFaceUp(bVal);
     }
-    bool IsCardFaceUp(int idx) { return InternalStack.Item(idx)->IsFaceUp(); }
+    bool IsCardFaceUp(int idx) { return _internalStack.Item(idx)->IsFaceUp(); }
 
     int GetDragMode() const { return _dragMode; }
 
-    void SetSymbol(int symbol) { Symbol = symbol; }
+    void SetSymbol(int symbol) { _symbol = symbol; }
 
     void SetAcceptMode(unsigned int mode) { _acceptMode = mode; }
-    void SetAttributes(unsigned int attr) { Attributes = attr; }
-    int GetAttributes() { return Attributes; }
+    void SetAttributes(unsigned int attr) { _attributes = attr; }
+    int GetAttributes() { return _attributes; }
 
     bool CanDrop(LPCardStackGfx stack);
 
@@ -95,41 +97,47 @@ public:
     int GetStackWidth();
     int GetStackHeight();
 
-    LPErrInApp NewDeck() { return InternalStack.NewDeck(_deckType); }
-    void Shuffle() { InternalStack.Shuffle(); }
-    void Clear() { InternalStack.Clear(); }
-    void CleanUp() { InternalStack.CleanUp(); }
-    void Reverse() { InternalStack.Reverse(); }
+    LPErrInApp NewDeck() { return _internalStack.NewDeck(_deckType); }
+    void Shuffle() { _internalStack.Shuffle(); }
+    void Clear() { _internalStack.Clear(); }
+    void CleanUp() { _internalStack.CleanUp(); }
+    void Reverse() { _internalStack.Reverse(); }
 
-    void PushCard(LPCardGfx pCard) { InternalStack.PushCard(pCard); }
-    void PushStack(LPCardStackGfx pStack) { InternalStack.PushStack(pStack); }
+    void PushCard(LPCardGfx pCard) { _internalStack.PushCard(pCard); }
+    void PushStack(LPCardStackGfx pStack) { _internalStack.PushStack(pStack); }
 
-    bool IsEmpty() { return InternalStack.IsEmpty(); }
-    int Size() { return InternalStack.Size(); }
+    bool IsEmpty() { return _internalStack.IsEmpty(); }
+    int Size() { return _internalStack.Size(); }
+    LPCardGfx Item(int ix) { return _internalStack.Item(ix); }
+    LPCardGfx PopCard() { return _internalStack.PopCard(); }
+    LPCardStackGfx PopStack(int items) {
+        return _internalStack.PopStack(items);
+    }
 
-    LPCardGfx PopCard() { return InternalStack.PopCard(); }
-    LPCardStackGfx PopStack(int items) { return InternalStack.PopStack(items); }
-
-    LPCardGfx RemoveCard(int index) { return InternalStack.RemoveCard(index); }
+    LPCardGfx RemoveCard(int index) { return _internalStack.RemoveCard(index); }
 
     int GetClickedCard(int x, int y) {
-        return InternalStack.GetCardWherePointIsInside(x, y);
+        return _internalStack.GetCardWherePointIsInside(x, y);
     }
-    LPCardGfx GetCard(int index) { return InternalStack.GetCard(index); }
-
-    int Id;
-    unsigned int Attributes;
-    CardStackGfx InternalStack;
-    int XCoord;
-    int YCoord;
-    int Symbol;
+    LPCardGfx GetCard(int index) { return _internalStack.GetCard(index); }
+    bool IsVisible() { return _attributes & CRD_VISIBLE; }
+    int X() { return _xCoord; }
+    int Y() { return _yCoord; }
+    int Symbol() { return _symbol; }
+    int Id() { return _id; }
 
 private:
+    int _id;
+    unsigned int _attributes;
+    CardStackGfx _internalStack;
+    int _xCoord;
+    int _yCoord;
+    int _symbol;
     int _xOffset;
     int _yOffset;
-
+    int _widthEmpty;
+    int _heightEmpty;
     int _dragMode;
-
     unsigned int _acceptMode;
     DeckType _deckType;
 };

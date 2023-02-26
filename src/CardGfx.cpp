@@ -1,5 +1,22 @@
 #include "CardGfx.h"
 
+static STRING g_name[] = {
+    "Asso",    "Due",     "Tre",     "Quattro", "Cinque",  "Sei",     "Sette",
+    "Fante",   "Cavallo", "Re",      "Asso",    "Due",     "Tre",     "Quattro",
+    "Cinque",  "Sei",     "Sette",   "Fante",   "Cavallo", "Re",      "Asso",
+    "Due",     "Tre",     "Quattro", "Cinque",  "Sei",     "Sette",   "Fante",
+    "Cavallo", "Re",      "Asso",    "Due",     "Tre",     "Quattro", "Cinque",
+    "Sei",     "Sette",   "Fante",   "Cavallo", "Re"};
+static STRING g_nameTarock[] = {
+    "Asso", "Due",  "Tre",   "Quattro", "Cinque", "Sei",   "Sette",
+    "Otto", "Nove", "Dieci", "Jack",    "Fante",  "Donna", "Re",
+    "Asso", "Due",  "Tre",   "Quattro", "Cinque", "Sei",   "Sette",
+    "Otto", "Nove", "Dieci", "Jack",    "Fante",  "Donna", "Re",
+    "Asso", "Due",  "Tre",   "Quattro", "Cinque", "Sei",   "Sette",
+    "Otto", "Nove", "Dieci", "Jack",    "Fante",  "Donna", "Re",
+    "Asso", "Due",  "Tre",   "Quattro", "Cinque", "Sei",   "Sette",
+    "Otto", "Nove", "Dieci", "Jack",    "Fante",  "Donna", "Re"};
+
 CardGfx::CardGfx() {
     _idx = 0;
     _faceUp = true;
@@ -7,6 +24,38 @@ CardGfx::CardGfx() {
     _eSuit = eSUIT::BASTONI;
     _x = _y = _width = _height = 0;
     _pPacDeck = 0;
+}
+
+LPErrInApp CardGfx::SetIdx(int ix, DeckType& deckType) {
+    _idx = ix;
+    _deckType = deckType;
+    _rank = _deckType.GetRank(ix);
+    if (deckType.GetType() == eDeckType::TAROCK_PIEMONT) {
+        if (_idx >= 0 && _idx <= 13)
+            _eSuit = BASTONI;
+        else if (_idx > 13 && _idx <= 27)
+            _eSuit = COPPE;
+        else if (_idx > 27 && _idx <= 41)
+            _eSuit = DENARI;
+        else if (_idx > 41 && _idx <= 55)
+            _eSuit = SPADE;
+        else
+            return ERR_UTIL::ErrorCreate("Error SetIdx %d is out of range", ix);
+    } else {
+        _name = g_nameTarock[_idx];
+        if (_idx >= 0 && _idx <= 9)
+            _eSuit = BASTONI;
+        else if (_idx > 9 && _idx <= 19)
+            _eSuit = COPPE;
+        else if (_idx > 19 && _idx <= 29)
+            _eSuit = DENARI;
+        else if (_idx > 29 && _idx <= 39)
+            _eSuit = SPADE;
+        else
+            return ERR_UTIL::ErrorCreate("Error SetIdx %d is out of range", ix);
+    }
+
+    return NULL;
 }
 
 const char* CardGfx::SuitStr() {

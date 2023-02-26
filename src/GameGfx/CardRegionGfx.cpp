@@ -1,23 +1,25 @@
 #include "CardRegionGfx.h"
 
+#include "WinTypeGlobal.h"
+
 void CardRegionGfx::InitCardCoords() {
-    if (InternalStack.IsEmpty())
+    if (_internalStack.IsEmpty())
         return;
 
-    int x = XCoord;
-    int y = YCoord;
+    int x = _xCoord;
+    int y = _yCoord;
 
     int pos = 0;
     int it = 0;
 
-    for (int i = 0; i < InternalStack.Size(); i++) {
-        LPCardGfx pCard = InternalStack.Item(i);
+    for (int i = 0; i < _internalStack.Size(); i++) {
+        LPCardGfx pCard = _internalStack.Item(i);
         pCard->SetCardLoc(x, y);
-        if (Attributes & CRD_3D) {
+        if (_attributes & CRD_3D) {
             if (!((it++) % 4))
                 pos++;
-            x = (pos * 2) + XCoord;
-            y = pos + YCoord;
+            x = (pos * 2) + _xCoord;
+            y = pos + _yCoord;
         } else {
             x += _xOffset;
             y += _yOffset;
@@ -31,31 +33,31 @@ void CardRegionGfx::InitCardCoords() {
 |_________________________________________________________*/
 
 bool CardRegionGfx::PtInStack(int x, int y) {
-    if (!(Attributes & CRD_VISIBLE))
+    if (!(_attributes & CRD_VISIBLE))
         return false;
 
-    if (Attributes & CRD_3D && !IsEmpty()) {
-        LPCardGfx pLastCard = InternalStack.Last();
+    if (_attributes & CRD_3D && !IsEmpty()) {
+        LPCardGfx pLastCard = _internalStack.Last();
         return pLastCard->PtInCard(x, y);
     }
 
     int StackWidth = GetStackWidth();
     int StackHeight = GetStackHeight();
 
-    return (x >= XCoord && x <= XCoord + StackWidth && y >= YCoord &&
-            y <= YCoord + StackHeight);
+    return (x >= _xCoord && x <= _xCoord + StackWidth && y >= _yCoord &&
+            y <= _yCoord + StackHeight);
 }
 
 bool CardRegionGfx::PtOnTop(int x, int y) {
     if (IsEmpty())
         return false;
 
-    LPCardGfx pLastCard = InternalStack.Last();
+    LPCardGfx pLastCard = _internalStack.Last();
     return pLastCard->PtInCard(x, y);
 }
 
 int CardRegionGfx::GetOverlapRatio(int x, int y, int w, int h) {
-    if (!(Attributes & CRD_DODROP))
+    if (!(_attributes & CRD_DODROP))
         return 0;
 
     int StackWidth = GetStackWidth();
@@ -74,12 +76,12 @@ int CardRegionGfx::GetOverlapRatio(int x, int y, int w, int h) {
                 |_______|
     */
     if (PtInStack(x, y)) {
-        if (XCoord + StackWidth > x + w)
+        if (_xCoord + StackWidth > x + w)
             wi = w;
         else
-            wi = (XCoord + StackWidth) - x;
+            wi = (_xCoord + StackWidth) - x;
 
-        hi = (YCoord + StackHeight) - y;
+        hi = (_yCoord + StackHeight) - y;
     }
     /*
          _______________________________
@@ -92,8 +94,8 @@ int CardRegionGfx::GetOverlapRatio(int x, int y, int w, int h) {
     |_______|
     */
     else if (PtInStack(x + w, y)) {
-        wi = (x + w) - XCoord;
-        hi = (YCoord + StackHeight) - y;
+        wi = (x + w) - _xCoord;
+        hi = (_yCoord + StackHeight) - y;
     }
     /*
                  _______
@@ -106,12 +108,12 @@ int CardRegionGfx::GetOverlapRatio(int x, int y, int w, int h) {
     |_______________________________|
     */
     else if (PtInStack(x, y + h)) {
-        if (XCoord + StackWidth > x + w)
+        if (_xCoord + StackWidth > x + w)
             wi = w;
         else
-            wi = (XCoord + StackWidth) - x;
+            wi = (_xCoord + StackWidth) - x;
 
-        hi = (y + h) - YCoord;
+        hi = (y + h) - _yCoord;
     }
     /*
      _______
@@ -124,8 +126,8 @@ int CardRegionGfx::GetOverlapRatio(int x, int y, int w, int h) {
         |_______________________________|
     */
     else if (PtInStack(x + w, y + h)) {
-        wi = (x + w) - XCoord;
-        hi = (y + h) - YCoord;
+        wi = (x + w) - _xCoord;
+        hi = (y + h) - _yCoord;
     }
     /*
      _______________________________
@@ -142,7 +144,7 @@ int CardRegionGfx::GetOverlapRatio(int x, int y, int w, int h) {
 }
 
 bool CardRegionGfx::CanDrop(LPCardStackGfx stack) {
-    if (InternalStack.IsEmpty() &&
+    if (_internalStack.IsEmpty() &&
         (!(_acceptMode & CRD_DOKING) && !(_acceptMode & CRD_DOACE)))
         return false;
     if (stack->Size() == 0)
@@ -152,21 +154,25 @@ bool CardRegionGfx::CanDrop(LPCardStackGfx stack) {
     // StartCard is the dragging card that is dropping
     LPCardGfx pStartCard = stack->First();
 
-    if (InternalStack.IsEmpty() && (_acceptMode & CRD_DOKING) &&
+    if (_internalStack.IsEmpty() && (_acceptMode & CRD_DOKING) &&
         (pStartCard->Rank() != _deckType.GetMaxRank()))
         return false;
-    else if (InternalStack.IsEmpty() && (_acceptMode & CRD_DOACE) &&
+    else if (_internalStack.IsEmpty() && (_acceptMode & CRD_DOACE) &&
              (pStartCard->Rank() != 1))
         return false;
-    else if (InternalStack.IsEmpty())
+    else if (_internalStack.IsEmpty())
         return true;
 
-    LPCardGfx pLastCard = InternalStack.Last();
+    LPCardGfx pLastCard = _internalStack.Last();
+    TRACE_DEBUG("CanDrop:  %s-%d-%d(faceUp %d) -> %s-%d-%d(faceUp %d)\n",
+                pStartCard->Name(), pStartCard->Index(), pStartCard->Rank(),
+                pStartCard->IsFaceUp(), pLastCard->Name(), pLastCard->Index(),
+                pLastCard->Rank(), pLastCard->IsFaceUp());
 
     if (pLastCard->IsFaceDown())
         return false;
 
-    if (!(Attributes & CRD_DODROP))
+    if (!(_attributes & CRD_DODROP))
         return false;
 
     if (_acceptMode & CRD_DOALL)
@@ -207,20 +213,20 @@ bool CardRegionGfx::CanDrop(LPCardStackGfx stack) {
 }
 
 int CardRegionGfx::GetStackWidth() {
-    if (InternalStack.IsEmpty())
-        return g_CardWidth;
-    LPCardGfx pStartCard = InternalStack.First();
-    LPCardGfx pLastCard = InternalStack.Last();
+    if (_internalStack.IsEmpty())
+        return _widthEmpty;
+    LPCardGfx pStartCard = _internalStack.First();
+    LPCardGfx pLastCard = _internalStack.Last();
 
-    return pLastCard->X() + g_CardWidth - pStartCard->X();
+    return pLastCard->X() + pLastCard->Width() - pStartCard->X();
 }
 
 int CardRegionGfx::GetStackHeight() {
-    if (InternalStack.IsEmpty())
-        return g_CardHeight;
+    if (_internalStack.IsEmpty())
+        return _heightEmpty;
 
-    LPCardGfx pStartCard = InternalStack.First();
-    LPCardGfx pLastCard = InternalStack.Last();
+    LPCardGfx pStartCard = _internalStack.First();
+    LPCardGfx pLastCard = _internalStack.Last();
 
-    return pLastCard->Y() + g_CardHeight - pStartCard->Y();
+    return pLastCard->Y() + pLastCard->Height() - pStartCard->Y();
 }

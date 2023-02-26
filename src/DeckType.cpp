@@ -1,6 +1,6 @@
 #include "DeckType.h"
 
-int g_PointsSolitario[] = {
+static int g_PointsSolitario[] = {
     /*Asso*/ 1, /*Due*/ 2,   /*Tre*/ 3,   /*Quattro*/ 4, /*cinque*/ 5,
     /*Sei*/ 6,  /*Sette*/ 7, /*Fante*/ 8, /*Cavallo*/ 9, /*Re*/ 10,
     /*Asso*/ 1, /*Due*/ 2,   /*Tre*/ 3,   /*Quattro*/ 4, /*cinque*/ 5,
@@ -10,7 +10,7 @@ int g_PointsSolitario[] = {
     /*Asso*/ 1, /*Due*/ 2,   /*Tre*/ 3,   /*Quattro*/ 4, /*cinque*/ 5,
     /*Sei*/ 6,  /*Sette*/ 7, /*Fante*/ 8, /*Cavallo*/ 9, /*Re*/ 10};
 
-int g_PointsSolitarioTarock[] = {
+static int g_PointsSolitarioTarock[] = {
     /*Asso*/ 1,
     /*Due*/ 2,
     /*Tre*/ 3,
@@ -21,8 +21,8 @@ int g_PointsSolitarioTarock[] = {
     /*otto*/ 8,
     /*nove*/ 9,
     /*dieci*/ 10,
-    /*fante*/ 11,
-    /*jack*/ 12,
+    /*jack*/ 11,
+    /*fante*/ 12,
     /*donna*/ 13,
     /*re*/ 14,
     /*Asso*/ 1,
@@ -35,8 +35,8 @@ int g_PointsSolitarioTarock[] = {
     /*otto*/ 8,
     /*nove*/ 9,
     /*dieci*/ 10,
-    /*fante*/ 11,
-    /*jack*/ 12,
+    /*jack*/ 11,
+    /*fante*/ 12,
     /*donna*/ 13,
     /*re*/ 14,
     /*Asso*/ 1,
@@ -49,8 +49,8 @@ int g_PointsSolitarioTarock[] = {
     /*otto*/ 8,
     /*nove*/ 9,
     /*dieci*/ 10,
-    /*fante*/ 11,
-    /*jack*/ 12,
+    /*jack*/ 11,
+    /*fante*/ 12,
     /*donna*/ 13,
     /*re*/ 14,
     /*Asso*/ 1,
@@ -59,8 +59,8 @@ int g_PointsSolitarioTarock[] = {
     /*Quattro*/ 4,
     /*cinque*/ 5,
     /*Sei*/ 6,
-    /*Sette*/ 7,   /*otto*/ 8,  /*nove*/ 9,   /*dieci*/ 10,
-    /*fante*/ 11,  /*jack*/ 12, /*donna*/ 13, /*re*/ 14};
+    /*Sette*/ 7,   /*otto*/ 8,   /*nove*/ 9,   /*dieci*/ 10,
+    /*jack*/ 11,   /*fante*/ 12, /*donna*/ 13, /*re*/ 14};
 
 LPErrInApp DeckType::SetType(eDeckType eType) {
     _eType = eType;
