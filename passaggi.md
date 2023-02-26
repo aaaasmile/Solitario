@@ -300,6 +300,7 @@ oltre alla powershell con ninja in build, mi funziona la icona Build nella statu
 - Score
 - Effetto sonoro quando si manda una carta nella pila degli assi e magari alla fine del drag
 - windows setup
+- Merge con Italian Special Solitaire [DONE]
 - Rimuovere in git i file automake generati [DONE]
 - Il codice taget di supporto del trace service si può implementare una sola volta mentre su ogni target
     si implementa solo la configurazione
