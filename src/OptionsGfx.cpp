@@ -75,23 +75,6 @@ CheckboxClickCb OptionsGfx::prepCheckBoxClickMusic() {
 #endif
 }
 
-// deck selection
-void fncBind_ComboDeckClicked(void* self, int index) {
-    OptionsGfx* pOptionsGfx = (OptionsGfx*)self;
-    pOptionsGfx->DeckSelectionClicked(index);
-}
-
-ClickCb OptionsGfx::prepSelectionDeckCb() {
-#ifndef _MSC_VER
-    static VClickCb const tc = {.Click = (&fncBind_ComboDeckClicked)};
-    return (ClickCb){.tc = &tc, .self = this};
-#else
-    static VClickCb const tc = {(&fncBind_ComboDeckClicked)};
-    ClickCb cb = {&tc, this};
-    return cb;
-#endif
-}
-
 LPErrInApp OptionsGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
                                   SDL_Renderer* pRenderer,
                                   MusicManager* pMusicMgr,
@@ -163,7 +146,6 @@ LPErrInApp OptionsGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
     _p_comboBackground->SetVisibleState(ComboGfx::INVISIBLE);
     // Deck
     // combo deck selection
-    ClickCb deckSelCb = prepSelectionDeckCb();
     _p_comboDeck = new ComboGfx;
     rctBt1.w = 180;
     rctBt1.h = 26;
@@ -171,7 +153,7 @@ LPErrInApp OptionsGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
     rctBt1.x = _p_comboBackground->PosX();
 
     _p_comboDeck->Initialize(&rctBt1, pScreen, _p_fontText, MYIDCOMBODECK,
-                             pRenderer, deckSelCb);
+                             pRenderer, nullCb);
     _p_comboDeck->SetVisibleState(ComboGfx::INVISIBLE);
 
     // init surfaces with all pac decks
@@ -179,13 +161,16 @@ LPErrInApp OptionsGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
     DeckType dt;
     LPErrInApp err;
     for (int i = 0; i < DeckType::NUM_OF_DECK; i++) {
-        dt.SetTypeIndex(i);
+        err = dt.SetTypeIndex(i);
+        if (err != NULL) {
+            return err;
+        }
         err = GFX_UTIL::LoadCardPac(&_p_deckAll[i], dt, &pac_w, &pac_h);
         if (err != NULL) {
             return err;
         }
         int ww = pac_w / 4;
-        int hh = pac_h / 10;
+        int hh = pac_h / dt.GetNumCardInSuit();
         int x_pos = rctBt1.x;
         int y_pos = rctBt1.y + rctBt1.h + 20;
 
@@ -468,5 +453,3 @@ void OptionsGfx::CheckboxMusicClicked(bool state) {
         _p_MusicManager->StopMusic(500);
     }
 }
-
-void OptionsGfx::DeckSelectionClicked(int indexSel) {}

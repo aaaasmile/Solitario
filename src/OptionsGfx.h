@@ -41,7 +41,6 @@ public:
     void SetCaption(STRING& strCaption) { _headerText = strCaption; }
     LPErrInApp ButEndOPtClicked(int iButID);
     void CheckboxMusicClicked(bool state);
-    void DeckSelectionClicked(int indexSel);
 
 private:
     ClickCb prepClickCb();

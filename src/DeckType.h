@@ -37,8 +37,9 @@ public:
     ePacType GetPacType() { return _ePacType; }
     bool IsPacType() { return _ePacType == PacTypePac; }
     void CopyFrom(DeckType& Val);
-    void SetTypeIndex(int iVal);
+    LPErrInApp SetTypeIndex(int iVal);
     int GetTypeIndex() { return (int)_eType; }
+    int GetNumCardInSuit();
 
 private:
     eDeckType _eType;

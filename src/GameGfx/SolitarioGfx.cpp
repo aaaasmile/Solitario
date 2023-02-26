@@ -122,15 +122,7 @@ LPErrInApp SolitarioGfx::Initialize(SDL_Surface *s, SDL_Renderer *r,
             return err;
         }
     } else {
-        TRACE("Single deck file stuff\n");
-        err = LoadDeckFromSingleFile();
-        if (err != NULL) {
-            return err;
-        }
-        err = LoadSymbolsFromSingleFile();
-        if (err != NULL) {
-            return err;
-        }
+        return ERR_UTIL::ErrorCreate("Only pac file supported");
     }
 
     return DrawInitialScene();
@@ -790,98 +782,12 @@ LPErrInApp SolitarioGfx::VictoryAnimation() {
     return NULL;
 }
 
-LPErrInApp SolitarioGfx::LoadDeckFromSingleFile() {
-    std::string strTmp;
-    std::string strSuffix;
-    char buff[128];
-
-    for (int k = 0; k < 4; k++) {
-        std::string strFileName = g_lpszDeckDir;
-        switch (k) {
-            case 0:
-                strSuffix = "bastoni";
-                strFileName += "bastoni/";
-                break;
-            case 1:
-                strSuffix = "coppe";
-                strFileName += "coppe/";
-                break;
-            case 2:
-                strSuffix = "denari";
-                strFileName += "denari/";
-                break;
-            case 3:
-                strSuffix = "spade";
-                strFileName += "spade/";
-                break;
-        }
-        for (int i = 0; i < 10; i++) {
-            sprintf(buff, "%02d_%s.jpg", i + 1, strSuffix.c_str());
-            strTmp = buff;
-            std::string strComplete = strFileName + strTmp;
-            SDL_RWops *srcBack = SDL_RWFromFile(strComplete.c_str(), "rb");
-
-            if (srcBack == NULL) {
-                return ERR_UTIL::ErrorCreate(
-                    "SDL_RWFromFile in LoadDeckFromSingleFile error: "
-                    "%s\n",
-                    SDL_GetError());
-            }
-            _p_CardsSurf[i + k * 10] = IMG_LoadJPG_RW(srcBack);
-            if (_p_CardsSurf[i + k * 10] == NULL) {
-                return ERR_UTIL::ErrorCreate(
-                    "IMG_LoadJPG_RW in LoadDeckFromSingleFile error: "
-                    "%s\n",
-                    SDL_GetError());
-            }
-        }
-    }
-    g_CardWidth = _p_CardsSurf[0]->clip_rect.w;
-    g_CardHeight = _p_CardsSurf[0]->clip_rect.h;
-
-    return NULL;
-}
-
-LPErrInApp SolitarioGfx::LoadSymbolsFromSingleFile() {
-    VCT_STRING vct_Strings;
-    vct_Strings.push_back("dorso.jpg");
-    vct_Strings.push_back("fine_1.jpg");
-    vct_Strings.push_back("fine_2.jpg");
-    vct_Strings.push_back("fine_3.jpg");
-
-    if (NUM_SYMBOLS != vct_Strings.size()) {
-        return ERR_UTIL::ErrorCreate(
-            "Error: NUM_SYMBOLS is not the symbol vector size\n");
-    }
-
-    for (int i = 0; i < NUM_SYMBOLS; i++) {
-        std::string strDir = g_lpszDeckDir;
-        std::string strFileSymbName;
-        strFileSymbName = g_lpszDeckDir + vct_Strings[i];
-        SDL_RWops *srcBack = SDL_RWFromFile(strFileSymbName.c_str(), "rb");
-        if (!srcBack) {
-            return ERR_UTIL::ErrorCreate(
-                "SDL_RWFromFile in LoadSymbolsFromSingleFile error: "
-                "%s\n",
-                SDL_GetError());
-        }
-        _p_SymbolsSurf[i] = IMG_LoadJPG_RW(srcBack);
-        if (_p_SymbolsSurf[i] == NULL) {
-            return ERR_UTIL::ErrorCreate(
-                "IMG_LoadJPG_RW in LoadSymbolsFromSingleFile error: "
-                "%s\n",
-                SDL_GetError());
-        }
-    }
-    return NULL;
-}
-
 LPErrInApp SolitarioGfx::LoadCardPac() {
     Uint16 w, h;
     GFX_UTIL::LoadCardPac(&_p_Deck, _DeckType, &w, &h);
     TRACE("Pac size  w = %d, h = %d\n", w, h);
     g_CardWidth = w / 4;
-    g_CardHeight = h / 10;
+    g_CardHeight = h / _DeckType.GetNumCardInSuit();
     return NULL;
 }
 

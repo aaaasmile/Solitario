@@ -108,54 +108,63 @@ void DeckType::CopyFrom(DeckType& Val) {
     _strSymbolFileName = Val.GetSymbolFileName();
 }
 
-void DeckType::SetTypeIndex(int iVal) {
-    switch (iVal) {
+LPErrInApp DeckType::SetTypeIndex(int index) {
+    LPErrInApp err;
+    switch (index) {
         case 0:
-            SetType(PIACENTINA);
+            err = SetType(PIACENTINA);
             break;
         case 1:
-            SetType(BERGAMO);
+            err = SetType(BERGAMO);
             break;
         case 2:
-            SetType(BOLOGNA);
+            err = SetType(BOLOGNA);
             break;
         case 3:
-            SetType(GENOVA);
+            err = SetType(GENOVA);
             break;
         case 4:
-            SetType(MILANO);
+            err = SetType(MILANO);
             break;
         case 5:
-            SetType(NAPOLI);
+            err = SetType(NAPOLI);
             break;
         case 6:
-            SetType(PIEMONTE);
+            err = SetType(PIEMONTE);
             break;
         case 7:
-            SetType(ROMAGNA);
+            err = SetType(ROMAGNA);
             break;
         case 8:
-            SetType(SARDEGNA);
+            err = SetType(SARDEGNA);
             break;
         case 9:
-            SetType(SICILIA);
+            err = SetType(SICILIA);
             break;
         case 10:
-            SetType(TOSCANA);
+            err = SetType(TOSCANA);
             break;
         case 11:
-            SetType(TRENTO);
+            err = SetType(TRENTO);
             break;
         case 12:
-            SetType(TREVISO);
+            err = SetType(TREVISO);
             break;
         case 13:
-            SetType(TRIESTE);
+            err = SetType(TRIESTE);
             break;
         case 14:
-            SetType(TAROCK_PIEMONT);
+            err = SetType(TAROCK_PIEMONT);
+            break;
         default:
-            SetType(PIACENTINA);
+            err = ERR_UTIL::ErrorCreate("Deck Type Index %d not found", index);
             break;
     }
+    return err;
+}
+
+int DeckType::GetNumCardInSuit() {
+    if (_eType == eDeckType::TAROCK_PIEMONT)
+        return 14;
+    return 10;
 }

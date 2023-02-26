@@ -107,8 +107,6 @@ public:
 
     LPErrInApp LoadCardPac();
     LPErrInApp LoadSymbolsForPac();
-    LPErrInApp LoadDeckFromSingleFile();
-    LPErrInApp LoadSymbolsFromSingleFile();
 
     void SetSymbol(int regionNo, int symbol) {
         _cardRegionList[regionNo].SetSymbol(symbol);
