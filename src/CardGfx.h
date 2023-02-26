@@ -5,41 +5,28 @@
 
 #include <vector>
 
+#include "DeckType.h"
 #include "ErrorInfo.h"
 
-// if will be using custom cards then these should be initialized outside
 extern int g_CardWidth;
 extern int g_CardHeight;
 extern int g_SymbolWidth;
 extern int g_SymbolHeight;
 
-enum eSUIT { BASTONI = 0, COPPE = 1, DENARI = 2, SPADE = 3, UNDEF = 4 };
-
-enum { PLAYER_ME = 0, NUM_CARDS = 40, NOT_VALID_INDEX = -1 };
-
-extern int g_PointsSolitario[];
+enum eSUIT { BASTONI = 0, COPPE = 1, DENARI = 2, SPADE = 3 };
 
 class CardGfx {
 public:
     CardGfx() {
-        _idx = NOT_VALID_INDEX;
+        _idx = 0;
         _faceUp = true;
-        _iValue = 0;
-        _eSuit = UNDEF;
-    }
-    CardGfx(int index) {
-        if (index < 0)
-            index = 0;
-
-        _idx = index;
-        _faceUp = true;
-        _iValue = 0;
-        _eSuit = UNDEF;
+        _rank = 0;
+        _eSuit = eSUIT::BASTONI;
     }
 
     eSUIT Suit() const { return _eSuit; }
     const char* SuitStr();
-    int Rank() const { return _iValue; }
+    int Rank() const { return _rank; }
 
     bool IsBlack() const { return _eSuit == BASTONI || _eSuit == SPADE; }
     bool IsRed() const { return !IsBlack(); }
@@ -58,24 +45,35 @@ public:
     LPErrInApp DrawCardPac(SDL_Surface* s);
 
     int Index() { return _idx; }
-    LPErrInApp SetIdx(int nIdx) {
-        if (nIdx >= NUM_CARDS || nIdx < 0) {
-            return ERR_UTIL::ErrorCreate("Error SetIdx %d is out of range",
-                                         nIdx);
-        }
-
+    LPErrInApp SetIdx(int nIdx, DeckType& deckType) {
         _idx = nIdx;
-        _iValue = g_PointsSolitario[nIdx];
-        if (_idx >= 0 && _idx <= 9)
-            _eSuit = BASTONI;
-        else if (_idx > 9 && _idx <= 19)
-            _eSuit = COPPE;
-        else if (_idx > 19 && _idx <= 29)
-            _eSuit = DENARI;
-        else if (_idx > 29 && _idx <= 39)
-            _eSuit = SPADE;
-        else
-            _eSuit = UNDEF;
+        _deckType = deckType;
+        _rank = _deckType.GetRank(nIdx);
+        if (deckType.GetType() == eDeckType::TAROCK_PIEMONT) {
+            if (_idx >= 0 && _idx <= 13)
+                _eSuit = BASTONI;
+            else if (_idx > 13 && _idx <= 27)
+                _eSuit = COPPE;
+            else if (_idx > 27 && _idx <= 41)
+                _eSuit = DENARI;
+            else if (_idx > 41 && _idx <= 55)
+                _eSuit = SPADE;
+            else
+                return ERR_UTIL::ErrorCreate("Error SetIdx %d is out of range",
+                                             nIdx);
+        } else {
+            if (_idx >= 0 && _idx <= 9)
+                _eSuit = BASTONI;
+            else if (_idx > 9 && _idx <= 19)
+                _eSuit = COPPE;
+            else if (_idx > 19 && _idx <= 29)
+                _eSuit = DENARI;
+            else if (_idx > 29 && _idx <= 39)
+                _eSuit = SPADE;
+            else
+                return ERR_UTIL::ErrorCreate("Error SetIdx %d is out of range",
+                                             nIdx);
+        }
 
         return NULL;
     }
@@ -96,7 +94,7 @@ public:
 private:
     bool _faceUp;
     eSUIT _eSuit;
-    int _iValue;
+    int _rank;
 
     int _x;
     int _y;
@@ -105,6 +103,7 @@ private:
     int _height;
 
     SDL_Surface* _pPacDeck;
+    DeckType _deckType;
 };
 
 typedef CardGfx* LPCardGfx;

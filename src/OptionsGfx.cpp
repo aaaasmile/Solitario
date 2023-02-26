@@ -174,20 +174,20 @@ LPErrInApp OptionsGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
         int x_pos = rctBt1.x;
         int y_pos = rctBt1.y + rctBt1.h + 20;
 
-        _cardOnEachDeck[0][i].SetIdx(9);
+        _cardOnEachDeck[0][i].SetIdx(9, dt);
         _cardOnEachDeck[0][i].SetWidth(ww);
         _cardOnEachDeck[0][i].SetHeight(hh);
         _cardOnEachDeck[0][i].SetCardLoc(x_pos, y_pos);
         _cardOnEachDeck[0][i].SetDeckSurface(_p_deckAll[i]);
 
-        _cardOnEachDeck[1][i].SetIdx(7);
+        _cardOnEachDeck[1][i].SetIdx(7, dt);
         _cardOnEachDeck[1][i].SetWidth(ww);
         _cardOnEachDeck[1][i].SetHeight(hh);
         _cardOnEachDeck[1][i].SetCardLoc(_cardOnEachDeck[0][i].X() + 10 + ww,
                                          y_pos);
         _cardOnEachDeck[1][i].SetDeckSurface(_p_deckAll[i]);
 
-        _cardOnEachDeck[2][i].SetIdx(5);
+        _cardOnEachDeck[2][i].SetIdx(5, dt);
         _cardOnEachDeck[2][i].SetWidth(ww);
         _cardOnEachDeck[2][i].SetHeight(hh);
         _cardOnEachDeck[2][i].SetCardLoc(_cardOnEachDeck[1][i].X() + 10 + ww,

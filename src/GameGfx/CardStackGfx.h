@@ -8,11 +8,12 @@
 #include <vector>
 
 #include "CardGfx.h"
+#include "DeckType.h"
 #include "ErrorInfo.h"
 
 class CardStackGfx {
 public:
-    LPErrInApp NewDeck();
+    LPErrInApp NewDeck(DeckType& deckType);
     void Shuffle();
     void Clear() { _vct_lpCardGfx.clear(); }
     void CleanUp();
@@ -40,6 +41,7 @@ public:
 
 private:
     std::vector<LPCardGfx> _vct_lpCardGfx;
+    DeckType _deckType;
 };
 
 typedef CardStackGfx* LPCardStackGfx;

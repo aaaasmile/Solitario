@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 
 #include "CardStackGfx.h"
+#include "DeckType.h"
 #include "ErrorInfo.h"
 
 // Drag Modes
@@ -46,7 +47,8 @@ const unsigned int CRD_DOKING =
 class CardRegionGfx {
 public:
     CardRegionGfx(int id, unsigned int attribs, unsigned int amode, int dmode,
-                  int symbol, int x, int y, int xoff, int yoff)
+                  int symbol, int x, int y, int xoff, int yoff,
+                  DeckType &deckType)
         : Id(id),
           Attributes(attribs),
           _acceptMode(amode),
@@ -55,9 +57,9 @@ public:
           XCoord(x),
           YCoord(y),
           _xOffset(xoff),
-          _yOffset(yoff) {}
+          _yOffset(yoff),
+          _deckType(deckType) {}
 
-    CardRegionGfx() {}
     ~CardRegionGfx() {}
 
     LPCardStackGfx GetCardStack() { return &InternalStack; }
@@ -93,7 +95,7 @@ public:
     int GetStackWidth();
     int GetStackHeight();
 
-    LPErrInApp NewDeck() { return InternalStack.NewDeck(); }
+    LPErrInApp NewDeck() { return InternalStack.NewDeck(_deckType); }
     void Shuffle() { InternalStack.Shuffle(); }
     void Clear() { InternalStack.Clear(); }
     void CleanUp() { InternalStack.CleanUp(); }
@@ -129,6 +131,7 @@ private:
     int _dragMode;
 
     unsigned int _acceptMode;
+    DeckType _deckType;
 };
 
 typedef CardRegionGfx *LPCardRegionGfx;

@@ -2,31 +2,12 @@
 
 #include "WinTypeGlobal.h"
 
-int g_PointsBriscola[] = {
-    /*Asso*/ 11, /*Due*/ 0,   /*Tre*/ 10,  /*Quattro*/ 0, /*cinque*/ 0,
-    /*Sei*/ 0,   /*Sette*/ 0, /*Fante*/ 2, /*Cavallo*/ 3, /*Re*/ 4,
-    /*Asso*/ 11, /*Due*/ 0,   /*Tre*/ 10,  /*Quattro*/ 0, /*cinque*/ 0,
-    /*Sei*/ 0,   /*Sette*/ 0, /*Fante*/ 2, /*Cavallo*/ 3, /*Re*/ 4,
-    /*Asso*/ 11, /*Due*/ 0,   /*Tre*/ 10,  /*Quattro*/ 0, /*cinque*/ 0,
-    /*Sei*/ 0,   /*Sette*/ 0, /*Fante*/ 2, /*Cavallo*/ 3, /*Re*/ 4,
-    /*Asso*/ 11, /*Due*/ 0,   /*Tre*/ 10,  /*Quattro*/ 0, /*cinque*/ 0,
-    /*Sei*/ 0,   /*Sette*/ 0, /*Fante*/ 2, /*Cavallo*/ 3, /*Re*/ 4};
-
-int g_PointsSolitario[] = {
-    /*Asso*/ 1, /*Due*/ 2,   /*Tre*/ 3,   /*Quattro*/ 4, /*cinque*/ 5,
-    /*Sei*/ 6,  /*Sette*/ 7, /*Fante*/ 8, /*Cavallo*/ 9, /*Re*/ 10,
-    /*Asso*/ 1, /*Due*/ 2,   /*Tre*/ 3,   /*Quattro*/ 4, /*cinque*/ 5,
-    /*Sei*/ 6,  /*Sette*/ 7, /*Fante*/ 8, /*Cavallo*/ 9, /*Re*/ 10,
-    /*Asso*/ 1, /*Due*/ 2,   /*Tre*/ 3,   /*Quattro*/ 4, /*cinque*/ 5,
-    /*Sei*/ 6,  /*Sette*/ 7, /*Fante*/ 8, /*Cavallo*/ 9, /*Re*/ 10,
-    /*Asso*/ 1, /*Due*/ 2,   /*Tre*/ 3,   /*Quattro*/ 4, /*cinque*/ 5,
-    /*Sei*/ 6,  /*Sette*/ 7, /*Fante*/ 8, /*Cavallo*/ 9, /*Re*/ 10};
-
-LPErrInApp CardStackGfx::NewDeck() {
+LPErrInApp CardStackGfx::NewDeck(DeckType& deckType) {
     LPErrInApp err;
-    for (size_t i = 0; i < NUM_CARDS; i++) {
-        LPCardGfx pCard = new CardGfx;
-        err = pCard->SetIdx(i);
+    _deckType = deckType;
+    for (size_t i = 0; i < _deckType.GetNumCards(); i++) {
+        LPCardGfx pCard = new CardGfx();
+        err = pCard->SetIdx(i, _deckType);
         if (err != NULL) {
             return err;
         }

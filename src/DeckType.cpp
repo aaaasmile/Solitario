@@ -1,5 +1,67 @@
 #include "DeckType.h"
 
+int g_PointsSolitario[] = {
+    /*Asso*/ 1, /*Due*/ 2,   /*Tre*/ 3,   /*Quattro*/ 4, /*cinque*/ 5,
+    /*Sei*/ 6,  /*Sette*/ 7, /*Fante*/ 8, /*Cavallo*/ 9, /*Re*/ 10,
+    /*Asso*/ 1, /*Due*/ 2,   /*Tre*/ 3,   /*Quattro*/ 4, /*cinque*/ 5,
+    /*Sei*/ 6,  /*Sette*/ 7, /*Fante*/ 8, /*Cavallo*/ 9, /*Re*/ 10,
+    /*Asso*/ 1, /*Due*/ 2,   /*Tre*/ 3,   /*Quattro*/ 4, /*cinque*/ 5,
+    /*Sei*/ 6,  /*Sette*/ 7, /*Fante*/ 8, /*Cavallo*/ 9, /*Re*/ 10,
+    /*Asso*/ 1, /*Due*/ 2,   /*Tre*/ 3,   /*Quattro*/ 4, /*cinque*/ 5,
+    /*Sei*/ 6,  /*Sette*/ 7, /*Fante*/ 8, /*Cavallo*/ 9, /*Re*/ 10};
+
+int g_PointsSolitarioTarock[] = {
+    /*Asso*/ 1,
+    /*Due*/ 2,
+    /*Tre*/ 3,
+    /*Quattro*/ 4,
+    /*cinque*/ 5,
+    /*Sei*/ 6,
+    /*Sette*/ 7,
+    /*otto*/ 8,
+    /*nove*/ 9,
+    /*dieci*/ 10,
+    /*fante*/ 11,
+    /*jack*/ 12,
+    /*donna*/ 13,
+    /*re*/ 14,
+    /*Asso*/ 1,
+    /*Due*/ 2,
+    /*Tre*/ 3,
+    /*Quattro*/ 4,
+    /*cinque*/ 5,
+    /*Sei*/ 6,
+    /*Sette*/ 7,
+    /*otto*/ 8,
+    /*nove*/ 9,
+    /*dieci*/ 10,
+    /*fante*/ 11,
+    /*jack*/ 12,
+    /*donna*/ 13,
+    /*re*/ 14,
+    /*Asso*/ 1,
+    /*Due*/ 2,
+    /*Tre*/ 3,
+    /*Quattro*/ 4,
+    /*cinque*/ 5,
+    /*Sei*/ 6,
+    /*Sette*/ 7,
+    /*otto*/ 8,
+    /*nove*/ 9,
+    /*dieci*/ 10,
+    /*fante*/ 11,
+    /*jack*/ 12,
+    /*donna*/ 13,
+    /*re*/ 14,
+    /*Asso*/ 1,
+    /*Due*/ 2,
+    /*Tre*/ 3,
+    /*Quattro*/ 4,
+    /*cinque*/ 5,
+    /*Sei*/ 6,
+    /*Sette*/ 7,   /*otto*/ 8,  /*nove*/ 9,   /*dieci*/ 10,
+    /*fante*/ 11,  /*jack*/ 12, /*donna*/ 13, /*re*/ 14};
+
 LPErrInApp DeckType::SetType(eDeckType eType) {
     _eType = eType;
     switch (eType) {
@@ -167,4 +229,32 @@ int DeckType::GetNumCardInSuit() {
     if (_eType == eDeckType::TAROCK_PIEMONT)
         return 14;
     return 10;
+}
+
+int DeckType::GetNumCards() {
+    if (_eType == eDeckType::TAROCK_PIEMONT)
+        return 14 * 4;
+    return 10 * 4;
+}
+
+int DeckType::GetMaxRank() {
+    if (_eType == eDeckType::TAROCK_PIEMONT)
+        return 14;
+    return 10;
+}
+
+int DeckType::GetRank(int ix) {
+    if (ix < 0) {
+        return 0;
+    }
+    if (_eType == eDeckType::TAROCK_PIEMONT) {
+        if (ix > 55) {
+            return 0;
+        }
+        return g_PointsSolitarioTarock[ix];
+    }
+    if (ix > 39) {
+        return 0;
+    }
+    return g_PointsSolitario[ix];
 }

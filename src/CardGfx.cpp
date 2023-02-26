@@ -19,11 +19,9 @@ const char* CardGfx::SuitStr() {
 LPErrInApp CardGfx::DrawCardPac(SDL_Surface* s) {
     int nCdIndex = Index();
 
-    if (nCdIndex < 0)
-        nCdIndex = 0;
-    if (nCdIndex > NUM_CARDS)
-        nCdIndex = NUM_CARDS - 1;
-
+    if (nCdIndex < 0 || nCdIndex > _deckType.GetNumCards())
+        return ERR_UTIL::ErrorCreate("Card index outside the range %d",
+                                     nCdIndex);
     if (_width == 0 || _height == 0) {
         return ERR_UTIL::ErrorCreate(
             "CardGfx - DrawCardPac size is not defined");

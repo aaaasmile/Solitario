@@ -162,7 +162,7 @@ void SolitarioGfx::CreateRegion(int id, unsigned int attribs,
                                 unsigned int amode, int dmode, int symbol,
                                 int x, int y, int xoffset, int yoffset) {
     CardRegionGfx *cr = new CardRegionGfx(id, attribs, amode, dmode, symbol, x,
-                                          y, xoffset, yoffset);
+                                          y, xoffset, yoffset, _deckType);
     _cardRegionList.push_back(*cr);
 }
 
@@ -245,7 +245,7 @@ LPErrInApp SolitarioGfx::InitDrag(LPCardStackGfx pCargoStack, int x, int y,
     CardRegionGfx DragRegion(
         0, _p_selectedCardRegion->GetAttributes() | CRD_FACEUP, 0, 0, 0, 0, 0,
         _p_selectedCardRegion->GetxOffset(),
-        _p_selectedCardRegion->GetyOffset());
+        _p_selectedCardRegion->GetyOffset(), _deckType);
     DragRegion.PushStack(&_dragStack);
 
     _dragCard.x = _dragStack.First()->X();
@@ -531,11 +531,11 @@ LPErrInApp SolitarioGfx::DrawCardPac(int x, int y, int nCdIndex,
                                      SDL_Surface *s) {
     if (nCdIndex < 0)
         nCdIndex = 0;
-    if (nCdIndex > NUM_CARDS)
-        nCdIndex = NUM_CARDS - 1;
+    if (nCdIndex > _deckType.GetNumCards())
+        nCdIndex = _deckType.GetNumCards() - 1;
 
-    int iSegnoIx = nCdIndex / 10;
-    int iCartaIx = nCdIndex % 10;
+    int iSegnoIx = nCdIndex / _deckType.GetNumCardInSuit();
+    int iCartaIx = nCdIndex % _deckType.GetNumCardInSuit();
     TRACE_DEBUG("Suit %d, card: %d\n", iSegnoIx, iCartaIx);
 
     SDL_Rect srcCard;
@@ -655,7 +655,7 @@ LPErrInApp SolitarioGfx::VictoryAnimation() {
 
     while (1) {
         rot = rand() % 2;
-        id = rand() % NUM_CARDS;
+        id = rand() % _deckType.GetNumCards();
         x = rand() % _p_Screen->w;
         y = rand() % _p_Screen->h / 2;
 

@@ -153,7 +153,7 @@ bool CardRegionGfx::CanDrop(LPCardStackGfx stack) {
     LPCardGfx pStartCard = stack->First();
 
     if (InternalStack.IsEmpty() && (_acceptMode & CRD_DOKING) &&
-        (pStartCard->Rank() != 10))
+        (pStartCard->Rank() != _deckType.GetMaxRank()))
         return false;
     else if (InternalStack.IsEmpty() && (_acceptMode & CRD_DOACE) &&
              (pStartCard->Rank() != 1))

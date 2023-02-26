@@ -41,6 +41,9 @@ public:
     LPErrInApp SetTypeIndex(int iVal);
     int GetTypeIndex() { return (int)_eType; }
     int GetNumCardInSuit();
+    int GetNumCards();
+    int GetMaxRank();
+    int GetRank(int ix);
 
 private:
     eDeckType _eType;
