@@ -53,7 +53,7 @@ if(CMAKE_SYSTEM MATCHES Windows)
         message(STATUS "OK MySys on Windows is a supported target") 
         # all following commands are additions, specific for the target MySys, to previous definitions
         target_sources(${PROJECT_NAME} PRIVATE mysys2/Util-mysys.cpp)
-        target_compile_definitions(${PROJECT_NAME} PRIVATE main=SDL_main TRACEINSERVICE _DEBUG)
+        target_compile_definitions(${PROJECT_NAME} PRIVATE main=SDL_main TRACEINSERVICE)
         target_include_directories(${PROJECT_NAME}  PRIVATE C:/msys64/ucrt64/include/SDL2)
         target_link_libraries(${PROJECT_NAME} mingw32 -mwindows SDL2main SDL2 SDL2_image SDL2_mixer SDL2_ttf)
     endif()       

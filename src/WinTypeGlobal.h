@@ -45,6 +45,7 @@ inline void TRACE(const char* fmt, ...) {
     vsprintf(myBuff, fmt, args);
     TraceInServiceINFO(myBuff);
 }
+#ifdef _DEBUG
 inline void TRACE_DEBUG(const char* fmt, ...) {
     char myBuff[1024];
     va_list args;
@@ -52,6 +53,9 @@ inline void TRACE_DEBUG(const char* fmt, ...) {
     vsprintf(myBuff, fmt, args);
     TraceInServiceDEBUG(myBuff);
 }
+#else
+inline void TRACE_DEBUG(const char* fmt, ...) {}
+#endif
 #else
 #ifdef TRACEINSTD
 #include <stdio.h>
