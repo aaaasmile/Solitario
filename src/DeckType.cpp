@@ -90,7 +90,7 @@ LPErrInApp DeckType::SetType(eDeckType eType) {
         case TAROCK_PIEMONT:
             _strDeckName = "Tarock";
             _strResFileName = "tarock_piemonte.pac";
-            _strSymbolFileName = "symb_320.bmp";
+            _strSymbolFileName = "symbols_tarock.png";
             _ePacType = PacTypePac;
             break;
         default:

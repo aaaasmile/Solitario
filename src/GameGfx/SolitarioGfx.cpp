@@ -794,10 +794,26 @@ LPErrInApp SolitarioGfx::LoadCardPac() {
 LPErrInApp SolitarioGfx::LoadSymbolsForPac() {
     std::string strFileSymbName = g_lpszSymbDir;
     strFileSymbName += _DeckType.GetSymbolFileName();
+    if (_DeckType.GetType() == eDeckType::TAROCK_PIEMONT) {
+        SDL_RWops *srcSymb = SDL_RWFromFile(strFileSymbName.c_str(), "rb");
+        if (srcSymb == NULL) {
+            return ERR_UTIL::ErrorCreate(
+                "SDL_RWFromFile on symbols failed: %s\n", SDL_GetError());
+        }
+        _p_Symbols = IMG_LoadPNG_RW(srcSymb);
+        if (_p_Symbols == NULL) {
+            return ERR_UTIL::ErrorCreate(
+                "IMG_LoadPNG_RW on symbols file error (file %s): %s\n",
+                strFileSymbName.c_str(), SDL_GetError());
+        }
+        SDL_SetColorKey(_p_Symbols, true,
+                        SDL_MapRGB(_p_Symbols->format, 248, 0, 241));
+        return NULL;
+    }
 
     _p_Symbols = SDL_LoadBMP(strFileSymbName.c_str());
     if (_p_Symbols == 0) {
-        return ERR_UTIL::ErrorCreate("LOad bitmap failed: %s\n",
+        return ERR_UTIL::ErrorCreate("Load bitmap failed: %s\n",
                                      SDL_GetError());
     }
 
