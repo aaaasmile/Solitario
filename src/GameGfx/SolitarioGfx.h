@@ -160,6 +160,9 @@ private:
     LPErrInApp drawScore(SDL_Surface *pScreen);
     LPErrInApp updateScoreOnTimeOrChange();
     void updateScoreOnAce(int sizeAce, int oldSizeAce);
+    void updateScoreOnTurnOverFaceDown();
+    void clearScore();
+    void bonusScore();
 
 private:
     CardStackGfx _dragStack;

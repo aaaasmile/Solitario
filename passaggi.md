@@ -297,7 +297,15 @@ oltre alla powershell con ninja in build, mi funziona la icona Build nella statu
 ### TODO
 
 - Domanda (msgbox) quando vuole uscire o cominciare una nuova partita
-- Score
+- Score (http://www.solitairecity.com/Help/Klondike_Scoring.shtml)
+    - Playing a card from stock to tableau (+45)
+    - Turning over a face down tableau card (+25) [DONE]
+    - Transferring a card to the foundations (+60) [DONE]
+    Bad Score
+        - Moving a foundation card back to the tableau (-75)
+        - Each re-deal after the first pass through the stock (-175)
+        - Every second of elapsed time (-1) [DONE]
+    
 - Effetto sonoro quando si manda una carta nella pila degli assi e magari alla fine del drag
 - windows setup
 - Merge con Italian Special Solitaire [DONE]

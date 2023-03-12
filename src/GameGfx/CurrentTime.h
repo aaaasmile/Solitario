@@ -11,14 +11,14 @@ public:
     bool IsMoreThenOneSecElapsed();
     void Reset();
     int GetNumOfSeconds() { return _hour * 3600 + _min * 60 + _sec; };
-    int GetDeltaFromLastUpdate() { return _deltaSec; }
+    uint32_t GetDeltaFromLastUpdate() { return _deltaSec; }
     void StopTimer() { _updateStopped = true; }
 
 private:
     int _sec;
     int _min;
     int _hour;
-    int _deltaSec;
+    uint32_t _deltaSec;
     uint32_t _startSecondTick;
     bool _updateStopped;
 };

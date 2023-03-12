@@ -45,11 +45,13 @@ const unsigned int CRD_DOKING =
     (1 << 12);  // true:accept only kings				false:don't accept king
 
 enum RegionType {
-    CRD_DECKPILE = 0,
-    CRD_FOUNDATION = 1,
-    CRD_DECK_FACEUP = 2,
-    CRD_ACE = 3,
-    CRD_DRAG_REGION = 4
+    CRD_DECKPILE = 0,  // Mazzo coperto che la carte restanti (1)
+    CRD_FOUNDATION =
+        1,  // Le pile delle carte verticali sul tavolo (regione da 1 a 7)
+    CRD_DECK_FACEUP =
+        2,        // La pila dove si scopre il mazzo delle carte restanti (1)
+    CRD_ACE = 3,  // Le pile che partono dagli assi per ogni segno (4)
+    CRD_DRAG_REGION = 4  // Pila temporanea che contiene le carte nel drag (1)
 };
 
 class CardRegionGfx {

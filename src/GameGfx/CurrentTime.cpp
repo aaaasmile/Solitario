@@ -20,6 +20,7 @@ STRING CurrentTime::ToStringMinSec() {
 
 bool CurrentTime::IsMoreThenOneSecElapsed() {
     if (_updateStopped) {
+        _deltaSec = 0;
         return false;
     }
     bool res = false;
