@@ -18,7 +18,10 @@ STRING CurrentTime::ToStringMinSec() {
     return strOut;
 }
 
-bool CurrentTime::Update() {
+bool CurrentTime::IsMoreThenOneSecElapsed() {
+    if (_updateStopped) {
+        return false;
+    }
     bool res = false;
     Uint32 currTick = SDL_GetTicks();
     Uint32 diff = currTick - _startSecondTick;
@@ -46,5 +49,6 @@ bool CurrentTime::Update() {
 
 void CurrentTime::Reset() {
     _sec = _min = _hour = 0;
+    _updateStopped = false;
     _startSecondTick = SDL_GetTicks();
 }

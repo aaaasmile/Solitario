@@ -767,6 +767,11 @@ LPErrInApp SolitarioGfx::newGame() {
     CleanUpRegion();
     _p_currentTime->Reset();
     _scoreGame = 0;
+    _scoreChanged = false;
+    _startdragSizeAce1 = 0;
+    _startdragSizeAce2 = 0;
+    _startdragSizeAce3 = 0;
+    _startdragSizeAce4 = 0;
 
     err = NewDeck(DeckPile_Ix);
     if (err != NULL) {
@@ -827,6 +832,7 @@ LPErrInApp SolitarioGfx::handleLeftMouseDown(SDL_Event &event) {
         if (!srcReg->IsCardFaceUp(id)) {
             srcReg->SetCardFaceUp(true, id);
             _scoreGame += 25;
+            _scoreChanged = true;
         }
     }
 
@@ -839,6 +845,10 @@ LPErrInApp SolitarioGfx::handleLeftMouseDown(SDL_Event &event) {
         }
         if (isInitDrag) {
             _startdrag = true;
+            _startdragSizeAce1 = Size(Ace_Ix1);
+            _startdragSizeAce2 = Size(Ace_Ix2);
+            _startdragSizeAce3 = Size(Ace_Ix3);
+            _startdragSizeAce4 = Size(Ace_Ix4);
             SDL_ShowCursor(SDL_DISABLE);
             SDL_SetWindowGrab(_p_Window, SDL_TRUE);
         }
@@ -892,6 +902,7 @@ LPErrInApp SolitarioGfx::handleRightMouseDown(SDL_Event &event) {
         if (pDropRegion == NULL) {
             return NULL;
         }
+        int oldSize = pDropRegion->Size();
         LPCardStackGfx pCardStack = srcReg->PopStack(1);
         if (pCardStack == NULL) {
             return NULL;
@@ -900,7 +911,10 @@ LPErrInApp SolitarioGfx::handleRightMouseDown(SDL_Event &event) {
         if (err != NULL) {
             return err;
         }
+
         DoDrop(pDropRegion);
+        int newSize = pDropRegion->Size();
+        updateScoreOnAce(newSize, oldSize);
         delete pCardStack;
     }
     return NULL;
@@ -920,25 +934,45 @@ void SolitarioGfx::handleGameLoopMouseMoveEvent(SDL_Event &event) {
 LPErrInApp SolitarioGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
     _p_BtQuit->MouseUp(event);
     _p_BtNewGame->MouseUp(event);
+    int sizeAce1 = Size(Ace_Ix1);
+    int sizeAce2 = Size(Ace_Ix2);
+    int sizeAce3 = Size(Ace_Ix3);
+    int sizeAce4 = Size(Ace_Ix4);
 
     if (_startdrag) {
         _startdrag = false;
         DoDrop();
         SDL_ShowCursor(SDL_ENABLE);
         SDL_SetWindowGrab(_p_Window, SDL_FALSE);
+        sizeAce1 = Size(Ace_Ix1);
+        sizeAce2 = Size(Ace_Ix2);
+        sizeAce3 = Size(Ace_Ix3);
+        sizeAce4 = Size(Ace_Ix4);
+        updateScoreOnAce(sizeAce1, _startdragSizeAce1);
+        updateScoreOnAce(sizeAce2, _startdragSizeAce2);
+        updateScoreOnAce(sizeAce3, _startdragSizeAce3);
+        updateScoreOnAce(sizeAce4, _startdragSizeAce4);
+
+        _startdragSizeAce1 = Size(Ace_Ix1);
+        _startdragSizeAce2 = Size(Ace_Ix2);
+        _startdragSizeAce3 = Size(Ace_Ix3);
+        _startdragSizeAce4 = Size(Ace_Ix4);
     }
     if (IsRegionEmpty(DeckPile_Ix) && IsRegionEmpty(DeckFaceUp)) {
         SetSymbol(DeckPile_Ix, CRD_XSYMBOL);
         DrawStaticScene();
     }
+
     // victory
     LPErrInApp err;
     int numCardOnSUit = _deckType.GetNumCardInSuit();
-    if ((Size(Ace_Ix1) == numCardOnSUit) && (Size(Ace_Ix2) == numCardOnSUit) &&
-        (Size(Ace_Ix3) == numCardOnSUit) && (Size(Ace_Ix4) == numCardOnSUit)) {
+    if ((sizeAce1 == numCardOnSUit) && (sizeAce2 == numCardOnSUit) &&
+        (sizeAce3 == numCardOnSUit) && (sizeAce4 == numCardOnSUit)) {
+        _p_currentTime->StopTimer();
         int bonus = (2 * _scoreGame) - (_p_currentTime->GetNumOfSeconds() * 10);
         if (bonus > 0) {
             _scoreGame += bonus;
+            _scoreChanged = true;
         }
 
         VictoryAnimation();
@@ -1044,7 +1078,7 @@ LPErrInApp SolitarioGfx::StartGameLoop() {
                     break;
             }
         }
-        err = updateScoreOnTime();
+        err = updateScoreOnTimeOrChange();
         if (err != NULL)
             return err;
         if (_newgamerequest) {
@@ -1093,8 +1127,8 @@ LPErrInApp SolitarioGfx::drawScore(SDL_Surface *pScreen) {
     return err;
 }
 
-LPErrInApp SolitarioGfx::updateScoreOnTime() {
-    if (_p_currentTime->Update()) {
+LPErrInApp SolitarioGfx::updateScoreOnTimeOrChange() {
+    if (_p_currentTime->IsMoreThenOneSecElapsed() || _scoreChanged) {
         // write direct into the screen because it could be that a dragging is
         // in action and the screen for a back buffer is dirty
         int deltaSec = _p_currentTime->GetDeltaFromLastUpdate();
@@ -1103,7 +1137,15 @@ LPErrInApp SolitarioGfx::updateScoreOnTime() {
         if (err != NULL) {
             return err;
         }
+        _scoreChanged = false;
         updateTextureAsFlipScreen();
     }
     return NULL;
+}
+
+void SolitarioGfx::updateScoreOnAce(int sizeAce, int oldSizeAce) {
+    if (sizeAce > oldSizeAce) {
+        _scoreGame += 45 * (sizeAce - oldSizeAce);
+        _scoreChanged = true;
+    }
 }

@@ -159,7 +159,8 @@ private:
     ClickCb prepClickQuitCb();
     ClickCb prepClickNewGameCb();
     LPErrInApp drawScore(SDL_Surface *pScreen);
-    LPErrInApp updateScoreOnTime();
+    LPErrInApp updateScoreOnTimeOrChange();
+    void updateScoreOnAce(int sizeAce, int oldSizeAce);
 
 private:
     CardStackGfx _dragStack;
@@ -182,7 +183,13 @@ private:
     SDL_Surface *_p_Deck;
     SDL_Surface *_p_Symbols;
     DeckType _deckType;
+
     bool _startdrag;
+    int _startdragSizeAce1;
+    int _startdragSizeAce2;
+    int _startdragSizeAce3;
+    int _startdragSizeAce4;
+
     SDL_Rect _rctSrcCard;
     std::vector<CardRegionGfx> _cardRegionList;
     bool _terminated;
@@ -191,6 +198,7 @@ private:
     ButtonGfx *_p_BtNewGame;
     bool _sceneBackgroundIsBlack;
     int _scoreGame;
+    bool _scoreChanged;
     CurrentTime *_p_currentTime;
 };
 
