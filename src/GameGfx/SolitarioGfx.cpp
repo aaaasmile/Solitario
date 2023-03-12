@@ -802,9 +802,6 @@ LPErrInApp SolitarioGfx::handleGameLoopKeyDownEvent(SDL_Event &event) {
         }
         DrawStaticScene();
     }
-    if (event.key.keysym.sym == SDLK_r) {
-        DrawStaticScene();
-    }
     return NULL;
 }
 
@@ -826,7 +823,11 @@ LPErrInApp SolitarioGfx::handleLeftMouseDown(SDL_Event &event) {
         return NULL;
     if ((srcReg->Id() == CRD_FOUNDATION) &&
         srcReg->PtOnTop(event.button.x, event.button.y)) {
-        srcReg->SetCardFaceUp(true, srcReg->Size() - 1);
+        int id = srcReg->Size() - 1;
+        if (!srcReg->IsCardFaceUp(id)) {
+            srcReg->SetCardFaceUp(true, id);
+            _scoreGame += 25;
+        }
     }
 
     if ((srcReg->Id() == CRD_FOUNDATION) || (srcReg->Id() == CRD_DECK_FACEUP) ||
