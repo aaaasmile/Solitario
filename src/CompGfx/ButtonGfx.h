@@ -30,16 +30,7 @@ public:
     void DrawButton(SDL_Surface* pScreen);
     void Enable(bool bVal) { _enabled = bVal; }
     void SetVisibleState(VisbleState eVal) { _visibleState = eVal; }
-    void SetBitmapSurfaces(SDL_Surface* pS1, SDL_Surface* pS2,
-                           SDL_Surface* pS3) {
-        _p_bitmap_Act1 = pS1;
-        _p_bitmap_MOv2 = pS2;
-        _p_bitmap_Pus3 = pS3;
-        _buttonType = ButtonType::BITMAP_BUTTON;
-    }
-
-private:
-    void drawBtAsBitmap(SDL_Surface* pScreen);
+    void GetRect(SDL_Rect& rect) { rect = _rctButton; }
 
 private:
     SDL_Surface* _p_buttonSurface;
@@ -48,9 +39,6 @@ private:
     int _butID;
     bool _mouseIsDown;
     ButtonType _buttonType;
-    SDL_Surface* _p_bitmap_Act1;
-    SDL_Surface* _p_bitmap_MOv2;
-    SDL_Surface* _p_bitmap_Pus3;
     MouseState _mouseState;
     VisbleState _visibleState;
     SDL_Rect _rctButton;

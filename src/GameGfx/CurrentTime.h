@@ -11,12 +11,14 @@ public:
     bool Update();
     void Reset();
     int GetNumOfSeconds() { return _hour * 3600 + _min * 60 + _sec; };
+    int GetDeltaFromLastUpdate() { return _deltaSec; }
 
 private:
     int _sec;
     int _min;
     int _hour;
-    uint32_t _startTick;
+    int _deltaSec;
+    uint32_t _startSecondTick;
 };
 
 #endif

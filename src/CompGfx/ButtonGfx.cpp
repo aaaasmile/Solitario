@@ -10,9 +10,6 @@ ButtonGfx::ButtonGfx() {
     _p_buttonSurface = 0;
     _mouseIsDown = false;
     _buttonType = TEXT_BUTTON;
-    _p_bitmap_Act1 = 0;
-    _p_bitmap_MOv2 = 0;
-    _p_bitmap_Pus3 = 0;
     _mouseState = MouseState::OUTSIDE;
 }
 
@@ -94,10 +91,7 @@ void ButtonGfx::DrawButton(SDL_Surface* pScreen) {
     if (!_enabled) {
         return;
     }
-    if (_buttonType == BITMAP_BUTTON) {
-        drawBtAsBitmap(pScreen);
-        return;
-    }
+
     int mx, my;
     SDL_Color colorText;
     SDL_GetMouseState(&mx, &my);
@@ -132,24 +126,4 @@ void ButtonGfx::DrawButton(SDL_Surface* pScreen) {
     GFX_UTIL::DrawRect(pScreen, _rctButton.x, _rctButton.y,
                        _rctButton.x + _rctButton.w, _rctButton.y + _rctButton.h,
                        colorText);
-}
-
-void ButtonGfx::drawBtAsBitmap(SDL_Surface* pScreen) {
-    SDL_Surface* pSurfToDraw = 0;
-    int mx, my;
-    SDL_GetMouseState(&mx, &my);
-    if (mx >= _rctButton.x && mx <= _rctButton.x + _rctButton.w &&
-        my >= _rctButton.y && my <= _rctButton.y + _rctButton.h) {
-        pSurfToDraw = _p_bitmap_MOv2;
-
-    } else {
-        pSurfToDraw = _p_bitmap_Act1;
-    }
-    if (_mouseIsDown) {
-        pSurfToDraw = _p_bitmap_Pus3;
-    }
-    SDL_SetSurfaceBlendMode(pSurfToDraw, SDL_BLENDMODE_BLEND);
-    SDL_SetSurfaceAlphaMod(pSurfToDraw, 180);  // SDL 2.0
-    GFX_UTIL::DrawStaticSpriteEx(pScreen, 0, 0, _rctButton.w, _rctButton.h,
-                                 _rctButton.x, _rctButton.y, pSurfToDraw);
 }

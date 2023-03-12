@@ -12,6 +12,7 @@
 
 using namespace traits;
 class ButtonGfx;
+class CurrentTime;
 
 typedef std::vector<CardRegionGfx>::iterator regionVI;
 
@@ -157,6 +158,7 @@ private:
     LPErrInApp handleRightMouseDown(SDL_Event &event);
     ClickCb prepClickQuitCb();
     ClickCb prepClickNewGameCb();
+    void drawScore(SDL_Surface *pScreen);
 
 private:
     CardStackGfx _dragStack;
@@ -188,7 +190,7 @@ private:
     ButtonGfx *_p_BtNewGame;
     bool _sceneBackgroundIsBlack;
     int _scoreGame;
-    int _secondsElapsed;
+    CurrentTime *_p_currentTime;
 };
 
 #endif

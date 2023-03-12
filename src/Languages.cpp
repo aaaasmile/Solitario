@@ -72,6 +72,7 @@ Languages::Languages() {
     _mtxLangString[LANG_DIAL_BREDA][ID_COMMESSAGGIO] = "Cumsas";
     _mtxLangString[LANG_DIAL_BREDA][ID_MANTOVA] = "Mantua";
     _mtxLangString[LANG_DIAL_BREDA][ID_BLACK] = "Negar";
+    _mtxLangString[LANG_DIAL_BREDA][ID_SCORE] = "Punt";
 
     // italiano
     _mtxLangString[LANG_ITA][ID_START] = "Inizia";
@@ -131,6 +132,7 @@ Languages::Languages() {
     _mtxLangString[LANG_ITA][ID_COMMESSAGGIO] = "Commessaggio";
     _mtxLangString[LANG_ITA][ID_MANTOVA] = "Mantova";
     _mtxLangString[LANG_ITA][ID_BLACK] = "Nero";
+    _mtxLangString[LANG_ITA][ID_SCORE] = "Punti";
 
     // English
     _mtxLangString[LANG_ENG][ID_START] = "Start";
@@ -190,6 +192,7 @@ Languages::Languages() {
     _mtxLangString[LANG_ENG][ID_COMMESSAGGIO] = "Commessaggio";
     _mtxLangString[LANG_ENG][ID_MANTOVA] = "Mantova";
     _mtxLangString[LANG_ENG][ID_BLACK] = "Black";
+    _mtxLangString[LANG_ENG][ID_SCORE] = "Score";
 }
 
 std::string Languages::GetStringId(eStringID eId) {

@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #include "CompGfx/ButtonGfx.h"
+#include "CurrentTime.h"
 #include "Fading.h"
 #include "GfxUtil.h"
 #include "WinTypeGlobal.h"
@@ -40,13 +41,19 @@ SolitarioGfx::SolitarioGfx() {
     _p_BtNewGame = NULL;
     _newgamerequest = false;
     _terminated = true;
+    _p_currentTime = new CurrentTime();
 }
 
 SolitarioGfx::~SolitarioGfx() {
     CleanUpRegion();
     clearSurface();
-    delete _p_BtNewGame;
-    delete _p_BtQuit;
+    if (_p_BtNewGame != NULL) {
+        delete _p_BtNewGame;
+    }
+    if (_p_BtQuit != NULL) {
+        delete _p_BtQuit;
+    }
+    delete _p_currentTime;
 }
 
 void SolitarioGfx::clearSurface() {
@@ -458,6 +465,7 @@ void SolitarioGfx::DrawStaticScene() {
     }
     _p_BtNewGame->DrawButton(_p_Screen);
     _p_BtQuit->DrawButton(_p_Screen);
+    drawScore(_p_Screen);
     // it seems here that SDL_BlitSurface copy only the bitmap and not the fill
     // rect, do it also into the backbuffer
     SDL_FillRect(_p_ScreenBackbuffer, &_p_ScreenBackbuffer->clip_rect,
@@ -757,7 +765,7 @@ LPErrInApp SolitarioGfx::newGame() {
     LPErrInApp err;
     SetSymbol(DeckPile_Ix, CRD_OSYMBOL);
     CleanUpRegion();
-    _secondsElapsed = 0;
+    _p_currentTime->Reset();
     _scoreGame = 0;
 
     err = NewDeck(DeckPile_Ix);
@@ -927,7 +935,7 @@ LPErrInApp SolitarioGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
     int numCardOnSUit = _deckType.GetNumCardInSuit();
     if ((Size(Ace_Ix1) == numCardOnSUit) && (Size(Ace_Ix2) == numCardOnSUit) &&
         (Size(Ace_Ix3) == numCardOnSUit) && (Size(Ace_Ix4) == numCardOnSUit)) {
-        int bonus = (2 * _scoreGame) - (_secondsElapsed * 10);
+        int bonus = (2 * _scoreGame) - (_p_currentTime->GetNumOfSeconds() * 10);
         if (bonus > 0) {
             _scoreGame += bonus;
         }
@@ -1035,6 +1043,13 @@ LPErrInApp SolitarioGfx::StartGameLoop() {
                     break;
             }
         }
+        if (_p_currentTime->Update()) {
+            int deltaSec = _p_currentTime->GetDeltaFromLastUpdate();
+            _scoreGame = _scoreGame - deltaSec;
+            drawScore(_p_ScreenBackbuffer);
+            SDL_BlitSurface(_p_ScreenBackbuffer, NULL, _p_Screen, NULL);
+            updateTextureAsFlipScreen();
+        }
         if (_newgamerequest) {
             _newgamerequest = false;
             err = newGame();
@@ -1055,4 +1070,28 @@ void SolitarioGfx::BtQuitClick() {
 void SolitarioGfx::BtNewGameClick() {
     TRACE("New Game with user button\n");
     _newgamerequest = true;
+}
+
+void SolitarioGfx::drawScore(SDL_Surface *pScreen) {
+    char buff[256];
+    snprintf(buff, sizeof(buff), "%s : %d",
+             _p_Languages->GetCStringId(Languages::ID_SCORE), _scoreGame);
+    SDL_Rect rctBt, rcs;
+    _p_BtNewGame->GetRect(rctBt);
+    int tx = rctBt.x + rctBt.w + 20;
+    int ty = rctBt.y + (rctBt.h / 2);
+    SDL_Color colorText = GFX_UTIL_COLOR::White;
+    if (_scoreGame < 0) {
+        colorText = GFX_UTIL_COLOR::Red;
+    }
+
+    rcs.x = tx - 2;
+    rcs.w = tx + 190;
+    rcs.y = ty - 2;
+    rcs.h = ty + 16;
+    // rcd = rcs;
+    GFX_UTIL::boxRGBA(_p_ScreenBackbuffer, rcs.x, rcs.y, rcs.w, rcs.h, 0, 0, 0,
+                      255);
+    GFX_UTIL::DrawString(_p_ScreenBackbuffer, buff, tx, ty, colorText,
+                         _p_FontText);
 }

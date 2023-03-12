@@ -67,6 +67,7 @@ public:
         ID_COMMESSAGGIO,
         ID_MANTOVA,
         ID_BLACK,
+        ID_SCORE,
         TOT_STRINGS  // it mus be always on the last place
     };
 

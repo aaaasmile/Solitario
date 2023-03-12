@@ -21,12 +21,13 @@ STRING CurrentTime::ToStringMinSec() {
 bool CurrentTime::Update() {
     bool res = false;
     Uint32 currTick = SDL_GetTicks();
-    Uint32 diff = currTick - _startTick;
+    Uint32 diff = currTick - _startSecondTick;
     Uint32 secGap = diff / 1000;
+    _deltaSec = secGap;
     if (secGap > 0) {
         res = true;
         Uint32 remaind = diff % 1000;
-        _startTick = currTick - remaind;
+        _startSecondTick = currTick - remaind;
         _sec += secGap;
         if (_sec > 59) {
             _sec = 0;
@@ -45,5 +46,5 @@ bool CurrentTime::Update() {
 
 void CurrentTime::Reset() {
     _sec = _min = _hour = 0;
-    _startTick = SDL_GetTicks();
+    _startSecondTick = SDL_GetTicks();
 }
