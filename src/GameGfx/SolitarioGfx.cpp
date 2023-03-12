@@ -1072,15 +1072,15 @@ LPErrInApp SolitarioGfx::drawScore(SDL_Surface *pScreen) {
     char buff[256];
     snprintf(buff, sizeof(buff), "%s : %d",
              _p_Languages->GetCStringId(Languages::ID_SCORE), _scoreGame);
-    SDL_Rect rctBt, rcs;
-    _p_BtNewGame->GetRect(rctBt);
-    int tx = rctBt.x + rctBt.w + 20;
-    int ty = rctBt.y;
+
+    int tx = 10;
+    int ty = pScreen->h - 30;
     SDL_Color colorText = GFX_UTIL_COLOR::White;
     if (_scoreGame < 0) {
         colorText = GFX_UTIL_COLOR::Red;
     }
 
+    SDL_Rect rcs;
     rcs.x = tx - 2;
     rcs.w = tx + 190;
     rcs.y = ty - 2;
