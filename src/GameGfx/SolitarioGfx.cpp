@@ -465,7 +465,7 @@ void SolitarioGfx::DrawStaticScene() {
     _p_BtQuit->DrawButton(_p_Screen);
     _scoreChanged = true;
     drawScore(_p_Screen);
-    // it seems here that SDL_BlitSurface copy only the bitmap and not the fill
+    // it seam here that SDL_BlitSurface copy only the bitmap and not the fill
     // rect, do it also into the backbuffer
     SDL_FillRect(_p_ScreenBackbufferDrag, &_p_ScreenBackbufferDrag->clip_rect,
                  SDL_MapRGBA(_p_ScreenBackbufferDrag->format, 0, 0, 0, 0));
