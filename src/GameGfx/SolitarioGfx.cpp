@@ -146,7 +146,7 @@ LPErrInApp SolitarioGfx::DrawCardStack(SDL_Surface *s,
     if (pcardRegion == NULL) {
         return ERR_UTIL::ErrorCreate("DrawCardStack region is NULL");
     }
-    TRACE_DEBUG("Draw card stack %d\n", pcardRegion->Id());
+    TRACE_DEBUG("Draw card stack %d\n", pcardRegion->RegionTypeId());
 
     LPErrInApp err;
     if (!pcardRegion->IsVisible())
@@ -167,11 +167,11 @@ LPErrInApp SolitarioGfx::DrawCardStack(SDL_Surface *s,
     return NULL;
 }
 
-void SolitarioGfx::CreateRegion(int id, unsigned int attribs,
+void SolitarioGfx::CreateRegion(RegionType rtid, unsigned int attribs,
                                 unsigned int amode, int dmode, int symbol,
                                 int x, int y, int xoffset, int yoffset) {
     CardRegionGfx *cr =
-        new CardRegionGfx(id, attribs, amode, dmode, symbol, x, y, xoffset,
+        new CardRegionGfx(rtid, attribs, amode, dmode, symbol, x, y, xoffset,
                           yoffset, _deckType, g_CardWidth, g_CardHeight);
     _cardRegionList.push_back(*cr);
 }
@@ -253,7 +253,8 @@ LPErrInApp SolitarioGfx::InitDrag(LPCardStackGfx pCargoStack, int x, int y,
 
     DrawStaticScene();
     CardRegionGfx DragRegion(
-        0, _p_selectedCardRegion->GetAttributes() | CRD_FACEUP, 0, 0, 0, 0, 0,
+        RegionType::CRD_DRAG_REGION,
+        _p_selectedCardRegion->GetAttributes() | CRD_FACEUP, 0, 0, 0, 0, 0,
         _p_selectedCardRegion->GetxOffset(),
         _p_selectedCardRegion->GetyOffset(), _deckType, g_CardWidth,
         g_CardHeight);
@@ -436,7 +437,7 @@ LPCardRegionGfx SolitarioGfx::FindDropRegion(int id, LPCardGfx pCard) {
 LPCardRegionGfx SolitarioGfx::FindDropRegion(int id, LPCardStackGfx pStack) {
     for (regionVI vir = _cardRegionList.begin(); vir != _cardRegionList.end();
          ++vir) {
-        if ((vir->Id() == id) && vir->CanDrop(pStack))
+        if ((vir->RegionTypeId() == id) && vir->CanDrop(pStack))
             return &(*vir);
     }
     return NULL;
@@ -819,7 +820,7 @@ LPErrInApp SolitarioGfx::handleLeftMouseDown(SDL_Event &event) {
     srcReg = SelectRegionOnPoint(event.button.x, event.button.y);
     if (srcReg == NULL)
         return NULL;
-    if ((srcReg->Id() == CRD_FOUNDATION) &&
+    if ((srcReg->RegionTypeId() == RegionType::CRD_FOUNDATION) &&
         srcReg->PtOnTop(event.button.x, event.button.y)) {
         int id = srcReg->Size() - 1;
         if (!srcReg->IsCardFaceUp(id)) {
@@ -829,8 +830,9 @@ LPErrInApp SolitarioGfx::handleLeftMouseDown(SDL_Event &event) {
         }
     }
 
-    if ((srcReg->Id() == CRD_FOUNDATION) || (srcReg->Id() == CRD_DECK_FACEUP) ||
-        (srcReg->Id() == CRD_ACE)) {
+    if ((srcReg->RegionTypeId() == RegionType::CRD_FOUNDATION) ||
+        (srcReg->RegionTypeId() == RegionType::CRD_DECK_FACEUP) ||
+        (srcReg->RegionTypeId() == RegionType::CRD_ACE)) {
         // clicked on region that can do dragging
         err = InitDrag(event.button.x, event.button.y, isInitDrag);
         if (err != NULL) {
@@ -841,7 +843,7 @@ LPErrInApp SolitarioGfx::handleLeftMouseDown(SDL_Event &event) {
             SDL_ShowCursor(SDL_DISABLE);
             SDL_SetWindowGrab(_p_Window, SDL_TRUE);
         }
-    } else if (srcReg->Id() == CRD_DECKPILE) {
+    } else if (srcReg->RegionTypeId() == RegionType::CRD_DECKPILE) {
         if (srcReg->IsEmpty() && !IsRegionEmpty(DeckFaceUp)) {
             // Bring back the cards on the deck
             LPCardStackGfx pCardStack =
@@ -884,8 +886,8 @@ LPErrInApp SolitarioGfx::handleRightMouseDown(SDL_Event &event) {
         return NULL;
     }
 
-    if (((srcReg->Id() == CRD_FOUNDATION) ||
-         (srcReg->Id() == CRD_DECK_FACEUP)) &&
+    if (((srcReg->RegionTypeId() == RegionType::CRD_FOUNDATION) ||
+         (srcReg->RegionTypeId() == RegionType::CRD_DECK_FACEUP)) &&
         pCard->IsFaceUp() && srcReg->PtOnTop(event.button.x, event.button.y)) {
         LPCardRegionGfx pDropRegion = FindDropRegion(CRD_ACE, pCard);
         if (pDropRegion == NULL) {
@@ -929,7 +931,7 @@ LPErrInApp SolitarioGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
         LPCardRegionGfx pDestReg = DoDrop();
         SDL_ShowCursor(SDL_ENABLE);
         SDL_SetWindowGrab(_p_Window, SDL_FALSE);
-        if (pDestReg->Id() == RegionType::CRD_ACE) {
+        if (pDestReg->RegionTypeId() == RegionType::CRD_ACE) {
             updateScoreOnAce(pDestReg->Size(), pDestReg->GetSavedSize());
         }
     }
@@ -941,8 +943,10 @@ LPErrInApp SolitarioGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
     // victory
     LPErrInApp err;
     int numCardOnSUit = _deckType.GetNumCardInSuit();
-    if ((Size(Ace_Ix1) == numCardOnSUit) && (Size(Ace_Ix2) == numCardOnSUit) &&
-        (Size(Ace_Ix3) == numCardOnSUit) && (Size(Ace_Ix4) == numCardOnSUit)) {
+    if ((RegionSize(Ace_Ix1) == numCardOnSUit) &&
+        (RegionSize(Ace_Ix2) == numCardOnSUit) &&
+        (RegionSize(Ace_Ix3) == numCardOnSUit) &&
+        (RegionSize(Ace_Ix4) == numCardOnSUit)) {
         _p_currentTime->StopTimer();
         int bonus = (2 * _scoreGame) - (_p_currentTime->GetNumOfSeconds() * 10);
         if (bonus > 0) {
@@ -982,7 +986,7 @@ LPErrInApp SolitarioGfx::StartGameLoop() {
     // index 1-7
     int i;
     for (i = 1; i <= 7; i++) {
-        CreateRegion(CRD_FOUNDATION,                         // ID
+        CreateRegion(RegionType::CRD_FOUNDATION,
                      CRD_VISIBLE | CRD_DODRAG | CRD_DODROP,  // attributes
                      CRD_DOOPCOLOR | CRD_DOLOWER | CRD_DOLOWERBY1 |
                          CRD_DOKING,  // accept mode
@@ -993,7 +997,7 @@ LPErrInApp SolitarioGfx::StartGameLoop() {
     }
 
     // index 8 (deck face up)
-    CreateRegion(CRD_DECK_FACEUP,                                 // ID
+    CreateRegion(RegionType::CRD_DECK_FACEUP,
                  CRD_VISIBLE | CRD_FACEUP | CRD_DODRAG | CRD_3D,  // Attributes
                  CRD_DOALL,                                       // accept mode
                  CRD_DRAGTOP,                                     // drag mode
@@ -1003,7 +1007,7 @@ LPErrInApp SolitarioGfx::StartGameLoop() {
     // index 9-12 (4 aces place on the top)
     for (i = 4; i <= 7; i++) {
         CreateRegion(
-            CRD_ACE,                                         // ID
+            RegionType::CRD_ACE,
             CRD_VISIBLE | CRD_3D | CRD_DODRAG | CRD_DODROP,  // Attributes
             CRD_DOSINGLE | CRD_DOHIGHER | CRD_DOHIGHERBY1 | CRD_DOACE |
                 CRD_DOSUIT,  // Accept mode

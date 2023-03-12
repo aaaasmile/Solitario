@@ -44,12 +44,6 @@ class SolitarioGfx {
         Ace_Ix3 = 11,
         Ace_Ix4 = 12
     };
-    enum RegionType {
-        CRD_DECKPILE = 0,
-        CRD_FOUNDATION = 1,
-        CRD_DECK_FACEUP = 2,
-        CRD_ACE = 3
-    };
 
 public:
     SolitarioGfx();
@@ -61,10 +55,10 @@ public:
                           bool isBlack);
     LPErrInApp StartGameLoop();
 
-    int Size(int regionNo) { return _cardRegionList[regionNo].Size(); }
+    int RegionSize(int regionNo) { return _cardRegionList[regionNo].Size(); }
     void CleanUpRegion();
 
-    void CreateRegion(int id, unsigned int attribs, unsigned int amode,
+    void CreateRegion(RegionType rtid, unsigned int attribs, unsigned int amode,
                       int dmode, int symbol, int x, int y, int xoffset,
                       int yoffset);
     bool DeleteRegion(LPCardRegionGfx pRegion);
@@ -139,7 +133,6 @@ public:
     void SetCardFaceUp(int regionNo, bool bVal, int idx) {
         _cardRegionList[regionNo].SetCardFaceUp(bVal, idx);
     }
-    int RegionSize(int regionNo) { return _cardRegionList[regionNo].Size(); }
     void Reverse(int regionNo) { _cardRegionList[regionNo].Reverse(); }
     void InitCardCoords(int regionNo) {
         _cardRegionList[regionNo].InitCardCoords();

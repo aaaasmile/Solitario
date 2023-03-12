@@ -44,12 +44,20 @@ const unsigned int CRD_DOACE =
 const unsigned int CRD_DOKING =
     (1 << 12);  // true:accept only kings				false:don't accept king
 
+enum RegionType {
+    CRD_DECKPILE = 0,
+    CRD_FOUNDATION = 1,
+    CRD_DECK_FACEUP = 2,
+    CRD_ACE = 3,
+    CRD_DRAG_REGION = 4
+};
+
 class CardRegionGfx {
 public:
-    CardRegionGfx(int id, unsigned int attribs, unsigned int amode, int dmode,
-                  int symbol, int x, int y, int xoff, int yoff,
+    CardRegionGfx(RegionType rt, unsigned int attribs, unsigned int amode,
+                  int dmode, int symbol, int x, int y, int xoff, int yoff,
                   DeckType &deckType, int width, int height)
-        : _id(id),
+        : _regionTypeid(rt),
           _attributes(attribs),
           _acceptMode(amode),
           _dragMode(dmode),
@@ -126,12 +134,12 @@ public:
     int X() { return _xCoord; }
     int Y() { return _yCoord; }
     int Symbol() { return _symbol; }
-    int Id() { return _id; }
+    int RegionTypeId() { return _regionTypeid; }
     int GetSavedSize() { return _savedSize; }
     void SaveSize() { _savedSize = _internalStack.Size(); }
 
 private:
-    int _id;
+    RegionType _regionTypeid;
     unsigned int _attributes;
     CardStackGfx _internalStack;
     int _xCoord;
