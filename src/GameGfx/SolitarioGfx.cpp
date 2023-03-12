@@ -1084,10 +1084,9 @@ LPErrInApp SolitarioGfx::drawScore(SDL_Surface *pScreen) {
     rcs.x = tx - 2;
     rcs.w = tx + 190;
     rcs.y = ty - 2;
-    rcs.h = ty + 26;
+    rcs.h = ty + 46;
     SDL_FillRect(_p_Screen, &rcs, SDL_MapRGBA(pScreen->format, 0, 0, 0, 0));
 
-    GFX_UTIL::boxRGBA(pScreen, rcs.x, rcs.y, rcs.w, rcs.h, 0, 0, 0, 255);
     LPErrInApp err =
         GFX_UTIL::DrawString(pScreen, buff, tx, ty, colorText, _p_FontText);
     return err;
