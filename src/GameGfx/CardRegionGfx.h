@@ -127,6 +127,8 @@ public:
     int Y() { return _yCoord; }
     int Symbol() { return _symbol; }
     int Id() { return _id; }
+    int GetSavedSize() { return _savedSize; }
+    void SaveSize() { _savedSize = _internalStack.Size(); }
 
 private:
     int _id;
@@ -142,6 +144,7 @@ private:
     int _dragMode;
     unsigned int _acceptMode;
     DeckType _deckType;
+    int _savedSize;
 };
 
 typedef CardRegionGfx *LPCardRegionGfx;

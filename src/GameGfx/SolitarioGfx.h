@@ -44,6 +44,12 @@ class SolitarioGfx {
         Ace_Ix3 = 11,
         Ace_Ix4 = 12
     };
+    enum RegionType {
+        CRD_DECKPILE = 0,
+        CRD_FOUNDATION = 1,
+        CRD_DECK_FACEUP = 2,
+        CRD_ACE = 3
+    };
 
 public:
     SolitarioGfx();
@@ -185,10 +191,6 @@ private:
     DeckType _deckType;
 
     bool _startdrag;
-    int _startdragSizeAce1;
-    int _startdragSizeAce2;
-    int _startdragSizeAce3;
-    int _startdragSizeAce4;
 
     SDL_Rect _rctSrcCard;
     std::vector<CardRegionGfx> _cardRegionList;

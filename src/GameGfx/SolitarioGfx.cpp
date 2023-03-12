@@ -16,11 +16,6 @@ int g_CardHeight = 0;
 int g_SymbolWidth = 0;
 int g_SymbolHeight = 0;
 
-#define CRD_DECKPILE 0
-#define CRD_FOUNDATION 1
-#define CRD_DECK_FACEUP 2
-#define CRD_ACE 3
-
 #define FPS 30
 #define FRAMETICKS (1000 / FPS)
 #define THINKINGS_PER_TICK 1
@@ -360,6 +355,7 @@ LPCardRegionGfx SolitarioGfx::DoDrop(LPCardRegionGfx pDestRegion) {
         pBestRegion = _p_selectedCardRegion;  // drop go back to the source, no
                                               // stack found to recive the drag
 
+    pBestRegion->SaveSize();
     pDestStack = pBestRegion->GetCardStack();
     pDestStack->PushStack(&_dragStack);
     pBestRegion->InitCardCoords();
@@ -769,10 +765,6 @@ LPErrInApp SolitarioGfx::newGame() {
     _p_currentTime->Reset();
     _scoreGame = 0;
     _scoreChanged = false;
-    _startdragSizeAce1 = 0;
-    _startdragSizeAce2 = 0;
-    _startdragSizeAce3 = 0;
-    _startdragSizeAce4 = 0;
 
     err = NewDeck(DeckPile_Ix);
     if (err != NULL) {
@@ -846,10 +838,6 @@ LPErrInApp SolitarioGfx::handleLeftMouseDown(SDL_Event &event) {
         }
         if (isInitDrag) {
             _startdrag = true;
-            _startdragSizeAce1 = Size(Ace_Ix1);
-            _startdragSizeAce2 = Size(Ace_Ix2);
-            _startdragSizeAce3 = Size(Ace_Ix3);
-            _startdragSizeAce4 = Size(Ace_Ix4);
             SDL_ShowCursor(SDL_DISABLE);
             SDL_SetWindowGrab(_p_Window, SDL_TRUE);
         }
@@ -935,35 +923,15 @@ void SolitarioGfx::handleGameLoopMouseMoveEvent(SDL_Event &event) {
 LPErrInApp SolitarioGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
     _p_BtQuit->MouseUp(event);
     _p_BtNewGame->MouseUp(event);
-    int sizeAce1 = Size(Ace_Ix1);
-    int sizeAce2 = Size(Ace_Ix2);
-    int sizeAce3 = Size(Ace_Ix3);
-    int sizeAce4 = Size(Ace_Ix4);
 
     if (_startdrag) {
         _startdrag = false;
         LPCardRegionGfx pDestReg = DoDrop();
         SDL_ShowCursor(SDL_ENABLE);
         SDL_SetWindowGrab(_p_Window, SDL_FALSE);
-        int oldsize;
-        if (pDestReg->Id() == Ace_Ix1) {
-            sizeAce1 = Size(Ace_Ix1);
-            oldsize = _startdragSizeAce1;
-            _startdragSizeAce1 = Size(Ace_Ix1);
-        } else if (pDestReg->Id() == Ace_Ix2) {
-            sizeAce2 = Size(Ace_Ix2);
-            oldsize = _startdragSizeAce2;
-            _startdragSizeAce2 = Size(Ace_Ix2);
-        } else if (pDestReg->Id() == Ace_Ix3) {
-            sizeAce3 = Size(Ace_Ix3);
-            oldsize = _startdragSizeAce3;
-            _startdragSizeAce3 = Size(Ace_Ix3);
-        } else if (pDestReg->Id() == Ace_Ix4) {
-            sizeAce4 = Size(Ace_Ix4);
-            oldsize = _startdragSizeAce4;
-            _startdragSizeAce4 = Size(Ace_Ix4);
+        if (pDestReg->Id() == RegionType::CRD_ACE) {
+            updateScoreOnAce(pDestReg->Size(), pDestReg->GetSavedSize());
         }
-        updateScoreOnAce(pDestReg->Size(), oldsize);
     }
     if (IsRegionEmpty(DeckPile_Ix) && IsRegionEmpty(DeckFaceUp)) {
         SetSymbol(DeckPile_Ix, CRD_XSYMBOL);
@@ -973,8 +941,8 @@ LPErrInApp SolitarioGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
     // victory
     LPErrInApp err;
     int numCardOnSUit = _deckType.GetNumCardInSuit();
-    if ((sizeAce1 == numCardOnSUit) && (sizeAce2 == numCardOnSUit) &&
-        (sizeAce3 == numCardOnSUit) && (sizeAce4 == numCardOnSUit)) {
+    if ((Size(Ace_Ix1) == numCardOnSUit) && (Size(Ace_Ix2) == numCardOnSUit) &&
+        (Size(Ace_Ix3) == numCardOnSUit) && (Size(Ace_Ix4) == numCardOnSUit)) {
         _p_currentTime->StopTimer();
         int bonus = (2 * _scoreGame) - (_p_currentTime->GetNumOfSeconds() * 10);
         if (bonus > 0) {
