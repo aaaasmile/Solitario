@@ -757,6 +757,8 @@ LPErrInApp SolitarioGfx::newGame() {
     LPErrInApp err;
     SetSymbol(DeckPile_Ix, CRD_OSYMBOL);
     CleanUpRegion();
+    _secondsElapsed = 0;
+    _scoreGame = 0;
 
     err = NewDeck(DeckPile_Ix);
     if (err != NULL) {
@@ -925,6 +927,11 @@ LPErrInApp SolitarioGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
     int numCardOnSUit = _deckType.GetNumCardInSuit();
     if ((Size(Ace_Ix1) == numCardOnSUit) && (Size(Ace_Ix2) == numCardOnSUit) &&
         (Size(Ace_Ix3) == numCardOnSUit) && (Size(Ace_Ix4) == numCardOnSUit)) {
+        int bonus = (2 * _scoreGame) - (_secondsElapsed * 10);
+        if (bonus > 0) {
+            _scoreGame += bonus;
+        }
+
         VictoryAnimation();
         err = newGame();
         if (err != NULL) {

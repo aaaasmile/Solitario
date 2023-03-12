@@ -187,6 +187,8 @@ private:
     ButtonGfx *_p_BtQuit;
     ButtonGfx *_p_BtNewGame;
     bool _sceneBackgroundIsBlack;
+    int _scoreGame;
+    int _secondsElapsed;
 };
 
 #endif
