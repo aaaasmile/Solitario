@@ -73,8 +73,8 @@ public:
 
     void DoDrag(int x, int y);
 
-    void DoDrop();
-    void DoDrop(LPCardRegionGfx pDestRegion);
+    LPCardRegionGfx DoDrop();
+    LPCardRegionGfx DoDrop(LPCardRegionGfx pDestRegion);
 
     LPCardRegionGfx FindDropRegion(int Id, LPCardGfx pCard);
     LPCardRegionGfx FindDropRegion(int Id, LPCardStackGfx pStack);

@@ -345,9 +345,9 @@ void SolitarioGfx::DoDrag(int x, int y) {
     updateTextureAsFlipScreen();
 }
 
-void SolitarioGfx::DoDrop() { DoDrop(NULL); }
+LPCardRegionGfx SolitarioGfx::DoDrop() { return DoDrop(NULL); }
 
-void SolitarioGfx::DoDrop(LPCardRegionGfx pDestRegion) {
+LPCardRegionGfx SolitarioGfx::DoDrop(LPCardRegionGfx pDestRegion) {
     LPCardStackGfx pDestStack;
     LPCardRegionGfx pBestRegion;
 
@@ -376,13 +376,14 @@ void SolitarioGfx::DoDrop(LPCardRegionGfx pDestRegion) {
     _dragStack.Clear();
 
     if (_dragCard.x == pCard->X() && _dragCard.y == pCard->Y())
-        return;  // when no movement
+        return pBestRegion;  // when no movement
 
     zoomDropCard(_dragCard.x, _dragCard.y, pCard, _dragCard.width,
                  _dragCard.height);
 
     SDL_FreeSurface(_p_Dragface);
     _p_Dragface = NULL;
+    return pBestRegion;
 }
 
 void calcPt(int x0, int y0, int x1, int y1, float t, int &xf, int &yf) {
@@ -941,22 +942,28 @@ LPErrInApp SolitarioGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
 
     if (_startdrag) {
         _startdrag = false;
-        DoDrop();
+        LPCardRegionGfx pDestReg = DoDrop();
         SDL_ShowCursor(SDL_ENABLE);
         SDL_SetWindowGrab(_p_Window, SDL_FALSE);
-        sizeAce1 = Size(Ace_Ix1);
-        sizeAce2 = Size(Ace_Ix2);
-        sizeAce3 = Size(Ace_Ix3);
-        sizeAce4 = Size(Ace_Ix4);
-        updateScoreOnAce(sizeAce1, _startdragSizeAce1);
-        updateScoreOnAce(sizeAce2, _startdragSizeAce2);
-        updateScoreOnAce(sizeAce3, _startdragSizeAce3);
-        updateScoreOnAce(sizeAce4, _startdragSizeAce4);
-
-        _startdragSizeAce1 = Size(Ace_Ix1);
-        _startdragSizeAce2 = Size(Ace_Ix2);
-        _startdragSizeAce3 = Size(Ace_Ix3);
-        _startdragSizeAce4 = Size(Ace_Ix4);
+        int oldsize;
+        if (pDestReg->Id() == Ace_Ix1) {
+            sizeAce1 = Size(Ace_Ix1);
+            oldsize = _startdragSizeAce1;
+            _startdragSizeAce1 = Size(Ace_Ix1);
+        } else if (pDestReg->Id() == Ace_Ix2) {
+            sizeAce2 = Size(Ace_Ix2);
+            oldsize = _startdragSizeAce2;
+            _startdragSizeAce2 = Size(Ace_Ix2);
+        } else if (pDestReg->Id() == Ace_Ix3) {
+            sizeAce3 = Size(Ace_Ix3);
+            oldsize = _startdragSizeAce3;
+            _startdragSizeAce3 = Size(Ace_Ix3);
+        } else if (pDestReg->Id() == Ace_Ix4) {
+            sizeAce4 = Size(Ace_Ix4);
+            oldsize = _startdragSizeAce4;
+            _startdragSizeAce4 = Size(Ace_Ix4);
+        }
+        updateScoreOnAce(pDestReg->Size(), oldsize);
     }
     if (IsRegionEmpty(DeckPile_Ix) && IsRegionEmpty(DeckFaceUp)) {
         SetSymbol(DeckPile_Ix, CRD_XSYMBOL);
