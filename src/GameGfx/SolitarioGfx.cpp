@@ -33,7 +33,6 @@ const int MYIDNEWGAME = 1;
 
 SolitarioGfx::SolitarioGfx() {
     _p_ScreenBackbufferDrag = 0;
-    _p_ScreenBackbufferTime = 0;
     _startdrag = false;
     _p_Dragface = 0;
     _p_SceneBackground = 0;
@@ -65,10 +64,6 @@ void SolitarioGfx::clearSurface() {
     if (_p_ScreenTexture != NULL) {
         SDL_DestroyTexture(_p_ScreenTexture);
         _p_ScreenTexture = NULL;
-    }
-    if (_p_ScreenBackbufferTime != NULL) {
-        SDL_FreeSurface(_p_ScreenBackbufferTime);
-        _p_ScreenBackbufferTime = NULL;
     }
 }
 
@@ -115,8 +110,6 @@ LPErrInApp SolitarioGfx::Initialize(SDL_Surface *s, SDL_Renderer *r,
     }
 
     _p_ScreenBackbufferDrag = SDL_CreateRGBSurface(
-        SDL_SWSURFACE, _p_Screen->w, _p_Screen->h, 32, 0, 0, 0, 0);
-    _p_ScreenBackbufferTime = SDL_CreateRGBSurface(
         SDL_SWSURFACE, _p_Screen->w, _p_Screen->h, 32, 0, 0, 0, 0);
 
     _p_SceneBackground = pSceneBackground;
@@ -1102,15 +1095,14 @@ LPErrInApp SolitarioGfx::drawScore(SDL_Surface *pScreen) {
 
 LPErrInApp SolitarioGfx::updateScoreOnTime() {
     if (_p_currentTime->Update()) {
+        // write direct into the screen because it could be that a dragging is
+        // in action and the screen for a back buffer is dirty
         int deltaSec = _p_currentTime->GetDeltaFromLastUpdate();
         _scoreGame = _scoreGame - deltaSec;
-        SDL_BlitSurface(_p_Screen, NULL, _p_ScreenBackbufferTime, NULL);
-
-        LPErrInApp err = drawScore(_p_ScreenBackbufferTime);
+        LPErrInApp err = drawScore(_p_Screen);
         if (err != NULL) {
             return err;
         }
-        SDL_BlitSurface(_p_ScreenBackbufferTime, NULL, _p_Screen, NULL);
         updateTextureAsFlipScreen();
     }
     return NULL;

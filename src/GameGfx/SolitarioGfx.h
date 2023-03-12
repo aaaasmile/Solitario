@@ -168,7 +168,6 @@ private:
 
     SDL_Surface *_p_Screen;
     SDL_Surface *_p_ScreenBackbufferDrag;
-    SDL_Surface *_p_ScreenBackbufferTime;
     SDL_Texture *_p_ScreenTexture;
     SDL_Surface *_p_Dragface;
     SDL_Surface *_p_SceneBackground;
