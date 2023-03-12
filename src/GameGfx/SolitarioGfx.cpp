@@ -889,11 +889,11 @@ LPErrInApp SolitarioGfx::handleRightMouseDown(SDL_Event &event) {
     if (((srcReg->RegionTypeId() == RegionType::CRD_FOUNDATION) ||
          (srcReg->RegionTypeId() == RegionType::CRD_DECK_FACEUP)) &&
         pCard->IsFaceUp() && srcReg->PtOnTop(event.button.x, event.button.y)) {
-        LPCardRegionGfx pDropRegion = FindDropRegion(CRD_ACE, pCard);
+        LPCardRegionGfx pDropRegion =
+            FindDropRegion(RegionType::CRD_ACE, pCard);
         if (pDropRegion == NULL) {
             return NULL;
         }
-        int oldSize = pDropRegion->Size();
         LPCardStackGfx pCardStack = srcReg->PopStack(1);
         if (pCardStack == NULL) {
             return NULL;
@@ -904,8 +904,7 @@ LPErrInApp SolitarioGfx::handleRightMouseDown(SDL_Event &event) {
         }
 
         DoDrop(pDropRegion);
-        int newSize = pDropRegion->Size();
-        updateScoreOnAce(newSize, oldSize);
+        updateScoreOnAce(pDropRegion->Size(), pDropRegion->GetSavedSize());
         delete pCardStack;
     }
     return NULL;
