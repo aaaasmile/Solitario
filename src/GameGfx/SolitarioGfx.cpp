@@ -32,7 +32,8 @@ const int MYIDQUIT = 0;
 const int MYIDNEWGAME = 1;
 
 SolitarioGfx::SolitarioGfx() {
-    _p_ScreenBackbuffer = 0;
+    _p_ScreenBackbufferDrag = 0;
+    _p_ScreenBackbufferTime = 0;
     _startdrag = false;
     _p_Dragface = 0;
     _p_SceneBackground = 0;
@@ -57,13 +58,17 @@ SolitarioGfx::~SolitarioGfx() {
 }
 
 void SolitarioGfx::clearSurface() {
-    if (_p_ScreenBackbuffer != NULL) {
-        SDL_FreeSurface(_p_ScreenBackbuffer);
-        _p_ScreenBackbuffer = NULL;
+    if (_p_ScreenBackbufferDrag != NULL) {
+        SDL_FreeSurface(_p_ScreenBackbufferDrag);
+        _p_ScreenBackbufferDrag = NULL;
     }
     if (_p_ScreenTexture != NULL) {
         SDL_DestroyTexture(_p_ScreenTexture);
         _p_ScreenTexture = NULL;
+    }
+    if (_p_ScreenBackbufferTime != NULL) {
+        SDL_FreeSurface(_p_ScreenBackbufferTime);
+        _p_ScreenBackbufferTime = NULL;
     }
 }
 
@@ -109,8 +114,10 @@ LPErrInApp SolitarioGfx::Initialize(SDL_Surface *s, SDL_Renderer *r,
                                      SDL_GetError());
     }
 
-    _p_ScreenBackbuffer = SDL_CreateRGBSurface(SDL_SWSURFACE, _p_Screen->w,
-                                               _p_Screen->h, 32, 0, 0, 0, 0);
+    _p_ScreenBackbufferDrag = SDL_CreateRGBSurface(
+        SDL_SWSURFACE, _p_Screen->w, _p_Screen->h, 32, 0, 0, 0, 0);
+    _p_ScreenBackbufferTime = SDL_CreateRGBSurface(
+        SDL_SWSURFACE, _p_Screen->w, _p_Screen->h, 32, 0, 0, 0, 0);
 
     _p_SceneBackground = pSceneBackground;
     if (_p_SceneBackground == 0) {
@@ -339,7 +346,7 @@ void SolitarioGfx::DoDrag(int x, int y) {
     dest.x = _dragCard.x;
     dest.y = _dragCard.y;
 
-    SDL_BlitSurface(_p_ScreenBackbuffer, &rcs, _p_Screen, &rcd);
+    SDL_BlitSurface(_p_ScreenBackbufferDrag, &rcs, _p_Screen, &rcd);
     SDL_BlitSurface(_p_Dragface, NULL, _p_Screen, &dest);
 
     updateTextureAsFlipScreen();
@@ -422,7 +429,7 @@ void SolitarioGfx::zoomDropCard(int &sx, int &sy, LPCardGfx pCard, int w,
         sx = dest.x = px;
         sy = dest.y = py;
 
-        SDL_BlitSurface(_p_ScreenBackbuffer, &rcs, _p_Screen, &rcd);
+        SDL_BlitSurface(_p_ScreenBackbufferDrag, &rcs, _p_Screen, &rcd);
         SDL_BlitSurface(_p_Dragface, NULL, _p_Screen, &dest);
 
         updateTextureAsFlipScreen();
@@ -468,9 +475,9 @@ void SolitarioGfx::DrawStaticScene() {
     drawScore(_p_Screen);
     // it seems here that SDL_BlitSurface copy only the bitmap and not the fill
     // rect, do it also into the backbuffer
-    SDL_FillRect(_p_ScreenBackbuffer, &_p_ScreenBackbuffer->clip_rect,
-                 SDL_MapRGBA(_p_ScreenBackbuffer->format, 0, 0, 0, 0));
-    SDL_BlitSurface(_p_Screen, NULL, _p_ScreenBackbuffer, NULL);
+    SDL_FillRect(_p_ScreenBackbufferDrag, &_p_ScreenBackbufferDrag->clip_rect,
+                 SDL_MapRGBA(_p_ScreenBackbufferDrag->format, 0, 0, 0, 0));
+    SDL_BlitSurface(_p_Screen, NULL, _p_ScreenBackbufferDrag, NULL);
 
     updateTextureAsFlipScreen();
 }
@@ -1043,13 +1050,9 @@ LPErrInApp SolitarioGfx::StartGameLoop() {
                     break;
             }
         }
-        if (_p_currentTime->Update()) {
-            int deltaSec = _p_currentTime->GetDeltaFromLastUpdate();
-            _scoreGame = _scoreGame - deltaSec;
-            drawScore(_p_ScreenBackbuffer);
-            SDL_BlitSurface(_p_ScreenBackbuffer, NULL, _p_Screen, NULL);
-            updateTextureAsFlipScreen();
-        }
+        err = updateScoreOnTime();
+        if (err != NULL)
+            return err;
         if (_newgamerequest) {
             _newgamerequest = false;
             err = newGame();
@@ -1072,14 +1075,14 @@ void SolitarioGfx::BtNewGameClick() {
     _newgamerequest = true;
 }
 
-void SolitarioGfx::drawScore(SDL_Surface *pScreen) {
+LPErrInApp SolitarioGfx::drawScore(SDL_Surface *pScreen) {
     char buff[256];
     snprintf(buff, sizeof(buff), "%s : %d",
              _p_Languages->GetCStringId(Languages::ID_SCORE), _scoreGame);
     SDL_Rect rctBt, rcs;
     _p_BtNewGame->GetRect(rctBt);
     int tx = rctBt.x + rctBt.w + 20;
-    int ty = rctBt.y + (rctBt.h / 2);
+    int ty = rctBt.y;
     SDL_Color colorText = GFX_UTIL_COLOR::White;
     if (_scoreGame < 0) {
         colorText = GFX_UTIL_COLOR::Red;
@@ -1088,10 +1091,27 @@ void SolitarioGfx::drawScore(SDL_Surface *pScreen) {
     rcs.x = tx - 2;
     rcs.w = tx + 190;
     rcs.y = ty - 2;
-    rcs.h = ty + 16;
-    // rcd = rcs;
-    GFX_UTIL::boxRGBA(_p_ScreenBackbuffer, rcs.x, rcs.y, rcs.w, rcs.h, 0, 0, 0,
-                      255);
-    GFX_UTIL::DrawString(_p_ScreenBackbuffer, buff, tx, ty, colorText,
-                         _p_FontText);
+    rcs.h = ty + 26;
+    SDL_FillRect(_p_Screen, &rcs, SDL_MapRGBA(pScreen->format, 0, 0, 0, 0));
+
+    GFX_UTIL::boxRGBA(pScreen, rcs.x, rcs.y, rcs.w, rcs.h, 0, 0, 0, 255);
+    LPErrInApp err =
+        GFX_UTIL::DrawString(pScreen, buff, tx, ty, colorText, _p_FontText);
+    return err;
+}
+
+LPErrInApp SolitarioGfx::updateScoreOnTime() {
+    if (_p_currentTime->Update()) {
+        int deltaSec = _p_currentTime->GetDeltaFromLastUpdate();
+        _scoreGame = _scoreGame - deltaSec;
+        SDL_BlitSurface(_p_Screen, NULL, _p_ScreenBackbufferTime, NULL);
+
+        LPErrInApp err = drawScore(_p_ScreenBackbufferTime);
+        if (err != NULL) {
+            return err;
+        }
+        SDL_BlitSurface(_p_ScreenBackbufferTime, NULL, _p_Screen, NULL);
+        updateTextureAsFlipScreen();
+    }
+    return NULL;
 }

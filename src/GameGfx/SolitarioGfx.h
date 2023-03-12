@@ -158,7 +158,8 @@ private:
     LPErrInApp handleRightMouseDown(SDL_Event &event);
     ClickCb prepClickQuitCb();
     ClickCb prepClickNewGameCb();
-    void drawScore(SDL_Surface *pScreen);
+    LPErrInApp drawScore(SDL_Surface *pScreen);
+    LPErrInApp updateScoreOnTime();
 
 private:
     CardStackGfx _dragStack;
@@ -166,7 +167,8 @@ private:
     LPCardRegionGfx _p_selectedCardRegion;
 
     SDL_Surface *_p_Screen;
-    SDL_Surface *_p_ScreenBackbuffer;
+    SDL_Surface *_p_ScreenBackbufferDrag;
+    SDL_Surface *_p_ScreenBackbufferTime;
     SDL_Texture *_p_ScreenTexture;
     SDL_Surface *_p_Dragface;
     SDL_Surface *_p_SceneBackground;
