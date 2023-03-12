@@ -158,7 +158,7 @@ private:
     ClickCb prepClickQuitCb();
     ClickCb prepClickNewGameCb();
     LPErrInApp drawScore(SDL_Surface *pScreen);
-    LPErrInApp updateScoreOnTimeOrChange();
+    void updateScoreOnTime();
     void updateScoreOnAce(int sizeAce, int oldSizeAce);
     void updateScoreOnTurnOverFaceDown();
     void clearScore();

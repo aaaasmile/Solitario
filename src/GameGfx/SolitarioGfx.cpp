@@ -463,6 +463,7 @@ void SolitarioGfx::DrawStaticScene() {
     }
     _p_BtNewGame->DrawButton(_p_Screen);
     _p_BtQuit->DrawButton(_p_Screen);
+    _scoreChanged = true;
     drawScore(_p_Screen);
     // it seems here that SDL_BlitSurface copy only the bitmap and not the fill
     // rect, do it also into the backbuffer
@@ -1049,7 +1050,10 @@ LPErrInApp SolitarioGfx::StartGameLoop() {
                     break;
             }
         }
-        err = updateScoreOnTimeOrChange();
+        updateScoreOnTime();
+        // write direct into the screen because it could be that a dragging is
+        // in action and the screen for a back buffer is dirty
+        err = drawScore(_p_Screen);
         if (err != NULL)
             return err;
         if (_newgamerequest) {
@@ -1075,6 +1079,9 @@ void SolitarioGfx::BtNewGameClick() {
 }
 
 LPErrInApp SolitarioGfx::drawScore(SDL_Surface *pScreen) {
+    if (!_scoreChanged) {
+        return NULL;
+    }
     char buff[256];
     snprintf(buff, sizeof(buff), "%s : %d",
              _p_Languages->GetCStringId(Languages::ID_SCORE), _scoreGame);
@@ -1095,26 +1102,22 @@ LPErrInApp SolitarioGfx::drawScore(SDL_Surface *pScreen) {
 
     LPErrInApp err =
         GFX_UTIL::DrawString(pScreen, buff, tx, ty, colorText, _p_FontText);
+    if (err != NULL) {
+        return err;
+    }
+
+    _scoreChanged = false;
+    updateTextureAsFlipScreen();
+
     return err;
 }
 
-LPErrInApp SolitarioGfx::updateScoreOnTimeOrChange() {
+void SolitarioGfx::updateScoreOnTime() {
     if (_p_currentTime->IsMoreThenOneSecElapsed()) {
-        // write direct into the screen because it could be that a dragging is
-        // in action and the screen for a back buffer is dirty
         int deltaSec = _p_currentTime->GetDeltaFromLastUpdate();
         _scoreGame = _scoreGame - deltaSec;
         _scoreChanged = true;
     }
-    if (_scoreChanged) {
-        LPErrInApp err = drawScore(_p_Screen);
-        if (err != NULL) {
-            return err;
-        }
-        _scoreChanged = false;
-        updateTextureAsFlipScreen();
-    }
-    return NULL;
 }
 
 void SolitarioGfx::updateScoreOnAce(int sizeAce, int oldSizeAce) {
@@ -1130,8 +1133,9 @@ void SolitarioGfx::updateScoreOnTurnOverFaceDown() {
 }
 
 void SolitarioGfx::clearScore() {
+    int oldScore = _scoreGame;
     _scoreGame = 0;
-    _scoreChanged = false;
+    _scoreChanged = (oldScore != _scoreGame);
 }
 
 void SolitarioGfx::bonusScore() {
