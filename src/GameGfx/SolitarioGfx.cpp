@@ -941,6 +941,10 @@ LPErrInApp SolitarioGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
                        RegionType::RT_DECKSTOCK_FACEUP &&
                    pDestReg->RegionTypeId() == RegionType::RT_TABLEAU) {
             updateScoreMoveDeckToTableau();
+        } else if (_dragPileInfo.pSrcRegion->RegionTypeId() ==
+                       RegionType::RT_ACE_FOUNDATION &&
+                   pDestReg->RegionTypeId() == RegionType::RT_TABLEAU) {
+            updateBadScoreAceToTableu();
         }
     }
     if (IsRegionEmpty(DeckPile_Ix) && IsRegionEmpty(DeckFaceUp)) {
@@ -1060,7 +1064,7 @@ LPErrInApp SolitarioGfx::StartGameLoop() {
                     break;
             }
         }
-        updateScoreOnTime();
+        updateBadScoreScoreOnTime();
         // write direct into the screen because it could be that a dragging is
         // in action and the screen for a back buffer is dirty
         err = drawScore(_p_Screen);
@@ -1122,7 +1126,7 @@ LPErrInApp SolitarioGfx::drawScore(SDL_Surface *pScreen) {
     return err;
 }
 
-void SolitarioGfx::updateScoreOnTime() {
+void SolitarioGfx::updateBadScoreScoreOnTime() {
     if (_p_currentTime->IsMoreThenOneSecElapsed()) {
         int deltaSec = _p_currentTime->GetDeltaFromLastUpdate();
         _scoreGame = _scoreGame - deltaSec;
@@ -1150,6 +1154,11 @@ void SolitarioGfx::updateScoreMoveDeckToTableau() {
 void SolitarioGfx::updateBadScoreRedial() {
     _scoreGame -= 175;
     _scoreChanged = true;
+}
+
+void SolitarioGfx::updateBadScoreAceToTableu() {
+    _scoreChanged = true;
+    _scoreGame -= 75;
 }
 
 void SolitarioGfx::clearScore() {

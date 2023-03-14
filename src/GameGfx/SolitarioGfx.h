@@ -160,11 +160,12 @@ private:
     ClickCb prepClickQuitCb();
     ClickCb prepClickNewGameCb();
     LPErrInApp drawScore(SDL_Surface *pScreen);
-    void updateScoreOnTime();
     void updateScoreOnAce(int sizeAce, int oldSizeAce);
     void updateScoreOnTurnOverFaceDown();
     void updateScoreMoveDeckToTableau();
+    void updateBadScoreScoreOnTime();
     void updateBadScoreRedial();
+    void updateBadScoreAceToTableu();
     void clearScore();
     void bonusScore();
 

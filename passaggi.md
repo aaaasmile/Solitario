@@ -300,8 +300,8 @@ oltre alla powershell con ninja in build, mi funziona la icona Build nella statu
     - Turning over a face down tableau card (+25) [DONE]
     - Transferring a card to the foundations (+60) [DONE]
     Bad Score
-        - Moving a foundation card back to the tableau (-75)
-        - Each re-deal after the first pass through the stock (-175)
+        - Moving a foundation card back to the tableau (-75) [DONE]
+        - Each re-deal after the first pass through the stock (-175) [DONE]
         - Every second of elapsed time (-1) [DONE]
     - Quando finisce si mostra il punteggio prima di cominciare una nuova partita
     - Menu "Punteggi"
