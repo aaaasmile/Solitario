@@ -164,6 +164,7 @@ private:
     void updateScoreOnAce(int sizeAce, int oldSizeAce);
     void updateScoreOnTurnOverFaceDown();
     void updateScoreMoveDeckToTableau();
+    void updateBadScoreRedial();
     void clearScore();
     void bonusScore();
 

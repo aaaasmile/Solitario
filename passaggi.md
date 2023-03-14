@@ -296,7 +296,7 @@ oltre alla powershell con ninja in build, mi funziona la icona Build nella statu
 
 ### TODO
 - Score (http://www.solitairecity.com/Help/Klondike_Scoring.shtml)
-    - Playing a card from stock to tableau (+45)
+    - Playing a card from stock to tableau (+45) [DONE]
     - Turning over a face down tableau card (+25) [DONE]
     - Transferring a card to the foundations (+60) [DONE]
     Bad Score

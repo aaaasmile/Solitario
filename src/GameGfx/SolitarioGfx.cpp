@@ -848,6 +848,7 @@ LPErrInApp SolitarioGfx::handleLeftMouseDown(SDL_Event &event) {
     } else if (srcReg->RegionTypeId() == RegionType::RT_DECKSTOCK) {
         if (srcReg->IsEmpty() && !IsRegionEmpty(DeckFaceUp)) {
             // from deckfaceup back to deckpile: drag and drop to deckpile
+            // (redial)
             LPCardStackGfx pCardStack = PopStackFromRegion(
                 eRegionIx::DeckFaceUp, RegionSize(eRegionIx::DeckFaceUp));
             pCardStack->SetCardsFaceUp(false);
@@ -859,6 +860,7 @@ LPErrInApp SolitarioGfx::handleLeftMouseDown(SDL_Event &event) {
             Reverse(DeckPile_Ix);
             InitCardCoords(DeckPile_Ix);
             delete pCardStack;
+            updateBadScoreRedial();
         } else if (!srcReg->IsEmpty()) {
             // the next card goes to the deck face up region: drag and drop to
             // deck face up
@@ -1142,6 +1144,11 @@ void SolitarioGfx::updateScoreOnTurnOverFaceDown() {
 
 void SolitarioGfx::updateScoreMoveDeckToTableau() {
     _scoreGame += 45;
+    _scoreChanged = true;
+}
+
+void SolitarioGfx::updateBadScoreRedial() {
+    _scoreGame -= 175;
     _scoreChanged = true;
 }
 
