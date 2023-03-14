@@ -305,8 +305,8 @@ oltre alla powershell con ninja in build, mi funziona la icona Build nella statu
         - Every second of elapsed time (-1) [DONE]
     - Quando finisce si mostra il punteggio prima di cominciare una nuova partita
     - Menu "Punteggi"
-    - Salva i dieci migliori punteggi con la data e il mnome dell'utente nel file ini
-    - Score dovrebbe essere un componente gfx
+    - Salva i dieci migliori punteggi con la data e il nome dell'utente nel file ini
+    - Score potrebbe essere un componente gfx
 - Domanda (msgbox) quando vuole uscire o cominciare una nuova partita
 - Effetto sonoro quando si manda una carta nella pila degli assi e magari alla fine del drag
 - windows setup
