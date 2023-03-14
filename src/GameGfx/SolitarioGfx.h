@@ -16,11 +16,12 @@ class CurrentTime;
 
 typedef std::vector<CardRegionGfx>::iterator regionVI;
 
-struct DRAGCARD {
+struct DragPileInfo {
     int x;
     int y;
     int width;
     int height;
+    LPCardRegionGfx pSrcRegion;
 };
 
 const unsigned int CRD_NSYMBOL = 0;
@@ -67,9 +68,10 @@ public:
 
     LPCardRegionGfx SelectRegionOnPoint(int x, int y);
 
-    LPErrInApp InitDrag(int x, int y, bool &isInitDrag);
+    LPErrInApp InitDrag(int x, int y, bool &isInitDrag,
+                        LPCardRegionGfx pSrcRegion);
     LPErrInApp InitDrag(LPCardStackGfx CargoStack, int x, int y,
-                        bool &isInitDrag);
+                        bool &isInitDrag, LPCardRegionGfx pSrcRegion);
 
     void DoDrag(int x, int y);
 
@@ -161,12 +163,13 @@ private:
     void updateScoreOnTime();
     void updateScoreOnAce(int sizeAce, int oldSizeAce);
     void updateScoreOnTurnOverFaceDown();
+    void updateScoreMoveDeckToTableau();
     void clearScore();
     void bonusScore();
 
 private:
     CardStackGfx _dragStack;
-    DRAGCARD _dragCard;
+    DragPileInfo _dragPileInfo;
     LPCardRegionGfx _p_selectedCardRegion;
 
     SDL_Surface *_p_Screen;

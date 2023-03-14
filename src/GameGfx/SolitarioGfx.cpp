@@ -206,12 +206,14 @@ void SolitarioGfx::CleanUpRegion() {
     }
 }
 
-LPErrInApp SolitarioGfx::InitDrag(int x, int y, bool &isInitDrag) {
-    return InitDrag(NULL, x, y, isInitDrag);
+LPErrInApp SolitarioGfx::InitDrag(int x, int y, bool &isInitDrag,
+                                  LPCardRegionGfx pSrcRegion) {
+    return InitDrag(NULL, x, y, isInitDrag, pSrcRegion);
 }
 
 LPErrInApp SolitarioGfx::InitDrag(LPCardStackGfx pCargoStack, int x, int y,
-                                  bool &isInitDrag) {
+                                  bool &isInitDrag,
+                                  LPCardRegionGfx pSrcRegion) {
     isInitDrag = false;
     LPErrInApp err;
     if (pCargoStack == NULL) {
@@ -252,35 +254,36 @@ LPErrInApp SolitarioGfx::InitDrag(LPCardStackGfx pCargoStack, int x, int y,
     _p_selectedCardRegion->InitCardCoords();
 
     DrawStaticScene();
-    CardRegionGfx DragRegion(
+    CardRegionGfx dragRegion(
         RegionType::RT_DRAG_REGION,
         _p_selectedCardRegion->GetAttributes() | CRD_FACEUP, 0, 0, 0, 0, 0,
         _p_selectedCardRegion->GetxOffset(),
         _p_selectedCardRegion->GetyOffset(), _deckType, g_CardWidth,
         g_CardHeight);
-    DragRegion.PushStack(&_dragStack);
+    dragRegion.PushStack(&_dragStack);
 
-    _dragCard.x = _dragStack.First()->X();
-    _dragCard.y = _dragStack.First()->Y();
-    _dragCard.width = DragRegion.GetStackWidth();
-    _dragCard.height = DragRegion.GetStackHeight();
+    _dragPileInfo.x = _dragStack.First()->X();
+    _dragPileInfo.y = _dragStack.First()->Y();
+    _dragPileInfo.width = dragRegion.GetStackWidth();
+    _dragPileInfo.height = dragRegion.GetStackHeight();
+    _dragPileInfo.pSrcRegion = pSrcRegion;
 
     if (_p_Dragface != NULL) {
         SDL_FreeSurface(_p_Dragface);
     }
 
-    _p_Dragface = SDL_CreateRGBSurface(SDL_SWSURFACE, _dragCard.width,
-                                       _dragCard.height, 32, 0, 0, 0, 0);
+    _p_Dragface = SDL_CreateRGBSurface(SDL_SWSURFACE, _dragPileInfo.width,
+                                       _dragPileInfo.height, 32, 0, 0, 0, 0);
     SDL_FillRect(_p_Dragface, NULL, SDL_MapRGB(_p_Dragface->format, 0, 255, 0));
     SDL_SetColorKey(_p_Dragface, true,
                     SDL_MapRGB(_p_Dragface->format, 0, 255, 0));
 
-    err = DrawCardStack(_p_Screen, &DragRegion);
+    err = DrawCardStack(_p_Screen, &dragRegion);
     if (err != NULL) {
         return err;
     }
-    DragRegion.InitCardCoords();
-    err = DrawCardStack(_p_Dragface, &DragRegion);
+    dragRegion.InitCardCoords();
+    err = DrawCardStack(_p_Dragface, &dragRegion);
     if (err != NULL) {
         return err;
     }
@@ -306,34 +309,34 @@ void SolitarioGfx::DoDrag(int x, int y) {
     SDL_Rect rcs;
     SDL_Rect rcd;
 
-    rcs.x = _dragCard.x - 2;
-    rcs.y = _dragCard.y - 2;
-    rcs.w = _dragCard.width + 4;
-    rcs.h = _dragCard.height + 4;
+    rcs.x = _dragPileInfo.x - 2;
+    rcs.y = _dragPileInfo.y - 2;
+    rcs.w = _dragPileInfo.width + 4;
+    rcs.h = _dragPileInfo.height + 4;
 
-    rcd.x = _dragCard.x - 2;
-    rcd.y = _dragCard.y - 2;
+    rcd.x = _dragPileInfo.x - 2;
+    rcd.y = _dragPileInfo.y - 2;
 
-    if (_dragCard.x < 0)
+    if (_dragPileInfo.x < 0)
         rcs.x = rcd.x = 0;
-    if (_dragCard.y < 0)
+    if (_dragPileInfo.y < 0)
         rcs.y = rcd.y = 0;
 
     if (x < _oldx)
-        _dragCard.x -= _oldx - x;
+        _dragPileInfo.x -= _oldx - x;
     else
-        _dragCard.x += x - _oldx;
+        _dragPileInfo.x += x - _oldx;
     if (y < _oldy)
-        _dragCard.y -= _oldy - y;
+        _dragPileInfo.y -= _oldy - y;
     else
-        _dragCard.y += y - _oldy;
+        _dragPileInfo.y += y - _oldy;
 
     _oldx = x;
     _oldy = y;
 
     SDL_Rect dest;
-    dest.x = _dragCard.x;
-    dest.y = _dragCard.y;
+    dest.x = _dragPileInfo.x;
+    dest.y = _dragPileInfo.y;
 
     SDL_BlitSurface(_p_ScreenBackbufferDrag, &rcs, _p_Screen, &rcd);
     SDL_BlitSurface(_p_Dragface, NULL, _p_Screen, &dest);
@@ -350,8 +353,8 @@ LPCardRegionGfx SolitarioGfx::DoDrop(LPCardRegionGfx pDestRegion) {
     if (pDestRegion != NULL)
         pBestRegion = pDestRegion;
     else
-        pBestRegion = GetBestStack(_dragCard.x, _dragCard.y, g_CardWidth,
-                                   g_CardHeight, &_dragStack);
+        pBestRegion = GetBestStack(_dragPileInfo.x, _dragPileInfo.y,
+                                   g_CardWidth, g_CardHeight, &_dragStack);
     if (pBestRegion == NULL)
         pBestRegion = _p_selectedCardRegion;  // drop go back to the source, no
                                               // stack found to recive the drag
@@ -372,11 +375,11 @@ LPCardRegionGfx SolitarioGfx::DoDrop(LPCardRegionGfx pDestRegion) {
 
     _dragStack.Clear();
 
-    if (_dragCard.x == pCard->X() && _dragCard.y == pCard->Y())
+    if (_dragPileInfo.x == pCard->X() && _dragPileInfo.y == pCard->Y())
         return pBestRegion;  // when no movement
 
-    zoomDropCard(_dragCard.x, _dragCard.y, pCard, _dragCard.width,
-                 _dragCard.height);
+    zoomDropCard(_dragPileInfo.x, _dragPileInfo.y, pCard, _dragPileInfo.width,
+                 _dragPileInfo.height);
 
     SDL_FreeSurface(_p_Dragface);
     _p_Dragface = NULL;
@@ -833,7 +836,7 @@ LPErrInApp SolitarioGfx::handleLeftMouseDown(SDL_Event &event) {
         (srcReg->RegionTypeId() == RegionType::RT_DECKSTOCK_FACEUP) ||
         (srcReg->RegionTypeId() == RegionType::RT_ACE_FOUNDATION)) {
         // clicked on region that can do dragging
-        err = InitDrag(event.button.x, event.button.y, isInitDrag);
+        err = InitDrag(event.button.x, event.button.y, isInitDrag, srcReg);
         if (err != NULL) {
             return err;
         }
@@ -844,11 +847,11 @@ LPErrInApp SolitarioGfx::handleLeftMouseDown(SDL_Event &event) {
         }
     } else if (srcReg->RegionTypeId() == RegionType::RT_DECKSTOCK) {
         if (srcReg->IsEmpty() && !IsRegionEmpty(DeckFaceUp)) {
-            // from deckfaceup back to deckpile
+            // from deckfaceup back to deckpile: drag and drop to deckpile
             LPCardStackGfx pCardStack = PopStackFromRegion(
                 eRegionIx::DeckFaceUp, RegionSize(eRegionIx::DeckFaceUp));
             pCardStack->SetCardsFaceUp(false);
-            err = InitDrag(pCardStack, -1, -1, isInitDrag);
+            err = InitDrag(pCardStack, -1, -1, isInitDrag, srcReg);
             if (err != NULL) {
                 return err;
             }
@@ -857,10 +860,11 @@ LPErrInApp SolitarioGfx::handleLeftMouseDown(SDL_Event &event) {
             InitCardCoords(DeckPile_Ix);
             delete pCardStack;
         } else if (!srcReg->IsEmpty()) {
-            // the next card goes to the deck face up region
+            // the next card goes to the deck face up region: drag and drop to
+            // deck face up
             LPCardStackGfx pCardStack = PopStackFromRegion(DeckPile_Ix, 1);
             pCardStack->SetCardsFaceUp(true);
-            err = InitDrag(pCardStack, -1, -1, isInitDrag);
+            err = InitDrag(pCardStack, -1, -1, isInitDrag, srcReg);
             if (err != NULL) {
                 return err;
             }
@@ -897,7 +901,7 @@ LPErrInApp SolitarioGfx::handleRightMouseDown(SDL_Event &event) {
         if (pCardStack == NULL) {
             return NULL;
         }
-        err = InitDrag(pCardStack, -1, -1, isInitDrag);
+        err = InitDrag(pCardStack, -1, -1, isInitDrag, srcReg);
         if (err != NULL) {
             return err;
         }
@@ -931,6 +935,10 @@ LPErrInApp SolitarioGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
         SDL_SetWindowGrab(_p_Window, SDL_FALSE);
         if (pDestReg->RegionTypeId() == RegionType::RT_ACE_FOUNDATION) {
             updateScoreOnAce(pDestReg->Size(), pDestReg->GetSavedSize());
+        } else if (_dragPileInfo.pSrcRegion->RegionTypeId() ==
+                       RegionType::RT_DECKSTOCK_FACEUP &&
+                   pDestReg->RegionTypeId() == RegionType::RT_TABLEAU) {
+            updateScoreMoveDeckToTableau();
         }
     }
     if (IsRegionEmpty(DeckPile_Ix) && IsRegionEmpty(DeckFaceUp)) {
@@ -1129,6 +1137,11 @@ void SolitarioGfx::updateScoreOnAce(int sizeAce, int oldSizeAce) {
 
 void SolitarioGfx::updateScoreOnTurnOverFaceDown() {
     _scoreGame += 25;
+    _scoreChanged = true;
+}
+
+void SolitarioGfx::updateScoreMoveDeckToTableau() {
+    _scoreGame += 45;
     _scoreChanged = true;
 }
 
