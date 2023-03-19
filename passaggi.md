@@ -296,24 +296,23 @@ oltre alla powershell con ninja in build, mi funziona la icona Build nella statu
 
 ### TODO
 - Score (http://www.solitairecity.com/Help/Klondike_Scoring.shtml)
-    - Playing a card from stock to tableau (+45) [DONE]
-    - Turning over a face down tableau card (+25) [DONE]
-    - Transferring a card to the foundations (+60) [DONE]
+    - Menu "Punteggi"
+    - Salva i dieci migliori punteggi con la data e il nome dell'utente nel file ini e il numero delle carte (56 o 40)
+    - Spiega il punteggio nell'help
+    Good Score
+        - Playing a card from stock to tableau (+45) [DONE]
+        - Turning over a face down tableau card (+25) [DONE]
+        - Transferring a card to the foundations (+60) [DONE]
     Bad Score
         - Moving a foundation card back to the tableau (-75) [DONE]
         - Each re-deal after the first pass through the stock (-175) [DONE]
         - Every second of elapsed time (-1) [DONE]
-    - Quando finisce si mostra il punteggio prima di cominciare una nuova partita
-    - Menu "Punteggi"
-    - Salva i dieci migliori punteggi con la data e il nome dell'utente nel file ini
-    - Score potrebbe essere un componente gfx
-- Domanda (msgbox) quando vuole uscire o cominciare una nuova partita [DONE]
-- Effetto sonoro quando si manda una carta nella pila degli assi e magari alla fine del drag
+    - Quando finisce si mostra il punteggio prima di cominciare una nuova partita [DONE]
 - windows setup
+
+- Domanda (msgbox) quando vuole uscire o cominciare una nuova partita [DONE]
 - Merge con Italian Special Solitaire [DONE]
 - Rimuovere in git i file automake generati [DONE]
-- Il codice taget di supporto del trace service si può implementare una sola volta mentre su ogni target
-    si implementa solo la configurazione
 - In windows manca il settaggio del path dove si trova l'exe per avere il path completo
   del caricamento delle resources. [DONE]
 - Deployment su Windows [DONE]
@@ -328,4 +327,10 @@ oltre alla powershell con ninja in build, mi funziona la icona Build nella statu
 - Il drag parte da x,y = 0,0 [DONE]
 - Il menu ha ancora bisogno di correzzioni sdl 1.2 -> sdl 2.0 [DONE]
 - Il rendering del gioco non usa le immagini in formato Pac ma quelle singole [DONE]
+
+### TODO Nice To Have
+    - Il codice taget di supporto del trace service si può implementare una sola volta mentre su ogni target
+        si implementa solo la configurazione
+    - Score potrebbe essere un componente gfx
+    - Effetto sonoro quando si manda una carta nella pila degli assi e magari alla fine del drag
 
