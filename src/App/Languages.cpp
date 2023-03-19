@@ -64,15 +64,19 @@ Languages::Languages() {
     _mtxLangString[LANG_DIAL_BREDA][ID_WELCOMETITLEBAR] =
         "At capiti giost al Sulitari";
     _mtxLangString[LANG_DIAL_BREDA][ID_MEN_OPTIONS] = "Upsion";
-    _mtxLangString[LANG_DIAL_BREDA][ID_MN_HELP] = "Ad du na man";
+    _mtxLangString[LANG_DIAL_BREDA][ID_MN_HELP] = "Ad du nà man";
     _mtxLangString[LANG_DIAL_BREDA][ID_OK] = "Ukei";
     _mtxLangString[LANG_DIAL_BREDA][ID_CANCEL] = "Cancèla";
     _mtxLangString[LANG_DIAL_BREDA][ID_NEWGAME] = "Natra";
-    _mtxLangString[LANG_DIAL_BREDA][ID_CHOOSEBACKGROUND] = "Sfont";
-    _mtxLangString[LANG_DIAL_BREDA][ID_COMMESSAGGIO] = "Cumsas";
+    _mtxLangString[LANG_DIAL_BREDA][ID_CHOOSEBACKGROUND] = "Sfond";
+    _mtxLangString[LANG_DIAL_BREDA][ID_COMMESSAGGIO] = "Cumsàs";
     _mtxLangString[LANG_DIAL_BREDA][ID_MANTOVA] = "Mantua";
-    _mtxLangString[LANG_DIAL_BREDA][ID_BLACK] = "Negar";
+    _mtxLangString[LANG_DIAL_BREDA][ID_BLACK] = "Negàr";
     _mtxLangString[LANG_DIAL_BREDA][ID_SCORE] = "Punt";
+    _mtxLangString[LANG_DIAL_BREDA][ID_YES] = "Si";
+    _mtxLangString[LANG_DIAL_BREDA][ID_NO] = "No";
+    _mtxLangString[LANG_DIAL_BREDA][ASK_NEWGAME] =
+        "Voet dabòn incumincià na partdia növa?";
 
     // italiano
     _mtxLangString[LANG_ITA][ID_START] = "Inizia";
@@ -133,6 +137,10 @@ Languages::Languages() {
     _mtxLangString[LANG_ITA][ID_MANTOVA] = "Mantova";
     _mtxLangString[LANG_ITA][ID_BLACK] = "Nero";
     _mtxLangString[LANG_ITA][ID_SCORE] = "Punti";
+    _mtxLangString[LANG_ITA][ID_YES] = "Si";
+    _mtxLangString[LANG_ITA][ID_NO] = "No";
+    _mtxLangString[LANG_ITA][ASK_NEWGAME] =
+        "Vuoi davvero cominciare una nuova partita?";
 
     // English
     _mtxLangString[LANG_ENG][ID_START] = "Start";
@@ -193,6 +201,10 @@ Languages::Languages() {
     _mtxLangString[LANG_ENG][ID_MANTOVA] = "Mantova";
     _mtxLangString[LANG_ENG][ID_BLACK] = "Black";
     _mtxLangString[LANG_ENG][ID_SCORE] = "Score";
+    _mtxLangString[LANG_ENG][ID_YES] = "Yes";
+    _mtxLangString[LANG_ENG][ID_NO] = "No";
+    _mtxLangString[LANG_ENG][ASK_NEWGAME] =
+        "Do you really want to start a new game?";
 }
 
 std::string Languages::GetStringId(eStringID eId) {

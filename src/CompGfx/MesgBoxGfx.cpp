@@ -9,6 +9,7 @@ MesgBoxGfx::MesgBoxGfx(void) {
     _p_Surf_Bar = 0;
     _p_BtButt1 = 0;
     _p_BtButt2 = 0;
+    _alpha = 70;
     _terminated = false;
 }
 
@@ -38,7 +39,7 @@ LPErrInApp MesgBoxGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
     SDL_FillRect(_p_Surf_Bar, NULL,
                  SDL_MapRGBA(pScreen->format, 30, 80, 157, 0));
     SDL_SetSurfaceBlendMode(_p_Surf_Bar, SDL_BLENDMODE_BLEND);
-    SDL_SetSurfaceAlphaMod(_p_Surf_Bar, 70);
+    SDL_SetSurfaceAlphaMod(_p_Surf_Bar, _alpha);
 
     _colCurrent = GFX_UTIL_COLOR::White;
     SDL_Rect rctBt1;

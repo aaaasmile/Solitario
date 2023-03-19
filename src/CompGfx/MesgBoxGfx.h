@@ -36,6 +36,8 @@ public:
              LPCSTR lpsBut2_txt, LPCSTR lpsMsg_txt);
     void ButCmdClicked(int iButID);
     void AddLineText(LPCSTR strLine) { _dataStrings.push_back(strLine); }
+    void ChangeTextColor(SDL_Color newColor) { _colCurrent = newColor; }
+    void ChangeAlpha(Uint8 newAlpha) { _alpha = newAlpha; }
 
 private:
     ClickCb prepClickBtCb();
@@ -54,6 +56,7 @@ private:
     bool _terminated;
     int _result;
     VCT_STRING _dataStrings;
+    Uint8 _alpha;
 };
 
 #endif

@@ -168,6 +168,7 @@ private:
     void updateBadScoreAceToTableu();
     void clearScore();
     void bonusScore();
+    int showYesNoMsgBox(LPCSTR strText);
 
 private:
     CardStackGfx _dragStack;
@@ -175,6 +176,7 @@ private:
     LPCardRegionGfx _p_selectedCardRegion;
 
     SDL_Surface *_p_Screen;
+    SDL_Surface *_p_AlphaDisplay;
     SDL_Surface *_p_ScreenBackbufferDrag;
     SDL_Texture *_p_ScreenTexture;
     SDL_Surface *_p_Dragface;

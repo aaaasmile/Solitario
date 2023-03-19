@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #include "CompGfx/ButtonGfx.h"
+#include "CompGfx/MesgBoxGfx.h"
 #include "CurrentTime.h"
 #include "Fading.h"
 #include "GfxUtil.h"
@@ -34,6 +35,7 @@ SolitarioGfx::SolitarioGfx() {
     _p_ScreenTexture = 0;
     _p_BtQuit = NULL;
     _p_BtNewGame = NULL;
+    _p_AlphaDisplay = NULL;
     _newgamerequest = false;
     _terminated = true;
     _p_currentTime = new CurrentTime();
@@ -59,6 +61,10 @@ void SolitarioGfx::clearSurface() {
     if (_p_ScreenTexture != NULL) {
         SDL_DestroyTexture(_p_ScreenTexture);
         _p_ScreenTexture = NULL;
+    }
+    if (_p_AlphaDisplay != NULL) {
+        SDL_FreeSurface(_p_AlphaDisplay);
+        _p_AlphaDisplay = NULL;
     }
 }
 
@@ -101,6 +107,13 @@ LPErrInApp SolitarioGfx::Initialize(SDL_Surface *s, SDL_Renderer *r,
         r, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, s->w, s->h);
     if (_p_ScreenTexture == NULL) {
         return ERR_UTIL::ErrorCreate("Cannot create texture: %s\n",
+                                     SDL_GetError());
+    }
+
+    _p_AlphaDisplay = SDL_CreateRGBSurface(SDL_SWSURFACE, _p_Screen->w,
+                                           _p_Screen->h, 32, 0, 0, 0, 0);
+    if (_p_AlphaDisplay == NULL) {
+        return ERR_UTIL::ErrorCreate("Cannot create alpha display: %s\n",
                                      SDL_GetError());
     }
 
@@ -1087,9 +1100,37 @@ void SolitarioGfx::BtQuitClick() {
     _terminated = true;
 }
 
+int SolitarioGfx::showYesNoMsgBox(LPCSTR strText) {
+    // prepare the size of the box
+    MesgBoxGfx MsgBox;
+    SDL_Rect rctBox;
+    rctBox.w = _p_Screen->w - 100;
+    rctBox.h = 130;
+    rctBox.y = (_p_Screen->h - rctBox.h) / 2;
+    rctBox.x = (_p_Screen->w - rctBox.w) / 2;
+
+    // show a mesage box
+    MsgBox.ChangeAlpha(150);
+    MsgBox.Initialize(&rctBox, _p_Screen, _p_FontText, MesgBoxGfx::MB_YES_NO,
+                      _p_sdlRenderer);
+    SDL_BlitSurface(_p_Screen, NULL, _p_AlphaDisplay, NULL);
+
+    STRING strTextYes = _p_Languages->GetStringId(Languages::ID_YES);
+    STRING strTextNo = _p_Languages->GetStringId(Languages::ID_NO);
+    // MsgBox.ChangeTextColor(GFX_UTIL_COLOR::Black);
+
+    int iRes = MsgBox.Show(_p_AlphaDisplay, strTextYes.c_str(),
+                           strTextNo.c_str(), strText);
+
+    return iRes;
+}
+
 void SolitarioGfx::BtNewGameClick() {
     TRACE("New Game with user button\n");
-    _newgamerequest = true;
+    if (showYesNoMsgBox(_p_Languages->GetCStringId(Languages::ASK_NEWGAME)) ==
+        MesgBoxGfx::MB_RES_YES) {
+        _newgamerequest = true;
+    }
 }
 
 LPErrInApp SolitarioGfx::drawScore(SDL_Surface *pScreen) {

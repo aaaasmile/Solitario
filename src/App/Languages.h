@@ -68,6 +68,9 @@ public:
         ID_MANTOVA,
         ID_BLACK,
         ID_SCORE,
+        ID_YES,
+        ID_NO,
+        ASK_NEWGAME,
         TOT_STRINGS  // it mus be always on the last place
     };
 
