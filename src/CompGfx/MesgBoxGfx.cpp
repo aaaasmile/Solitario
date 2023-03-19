@@ -45,7 +45,7 @@ LPErrInApp MesgBoxGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
     SDL_Rect rctBt1;
     ClickCb cbBt = prepClickBtCb();
 
-    if (_typeMsg == MB_YES_NO) {
+    if (_typeMsg == TY_MB_YES_NO) {
         int space2bt = 20;
         // button yes
         _p_BtButt1 = new ButtonGfx();
@@ -54,7 +54,7 @@ LPErrInApp MesgBoxGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
         rctBt1.y = _rctMsgBox.y + _rctMsgBox.h - 10 - rctBt1.h;
         rctBt1.x =
             (_rctMsgBox.w - (2 * rctBt1.w + space2bt)) / 2 + _rctMsgBox.x;
-        _p_BtButt1->Initialize(&rctBt1, pScreen, pFont, MB_ID_BUTT_YES, cbBt);
+        _p_BtButt1->Initialize(&rctBt1, pScreen, pFont, ID_BUTT_YES, cbBt);
         _p_BtButt1->SetVisibleState(ButtonGfx::INVISIBLE);
 
         // button no
@@ -65,16 +65,16 @@ LPErrInApp MesgBoxGfx::Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,
         rctBt1.h = 28;
         rctBt1.y = rctBt1.y;
         rctBt1.x = rctBt1.x + rctBt1.w + space2bt;
-        _p_BtButt2->Initialize(&rctBt1, pScreen, pFont, MB_ID_BUTT_NO, cbBt);
+        _p_BtButt2->Initialize(&rctBt1, pScreen, pFont, ID_BUTT_NO, cbBt);
         _p_BtButt2->SetVisibleState(ButtonGfx::INVISIBLE);
 
-    } else if (_typeMsg == MBOK) {
+    } else if (_typeMsg == TY_MBOK) {
         _p_BtButt1 = new ButtonGfx();
         rctBt1.w = 120;
         rctBt1.h = 28;
         rctBt1.y = _rctMsgBox.y + _rctMsgBox.h - 10 - rctBt1.h;
         rctBt1.x = (_rctMsgBox.w - rctBt1.w) / 2 + _rctMsgBox.x;
-        _p_BtButt1->Initialize(&rctBt1, pScreen, pFont, MB_ID_OK, cbBt);
+        _p_BtButt1->Initialize(&rctBt1, pScreen, pFont, ID_OK, cbBt);
         _p_BtButt1->SetVisibleState(ButtonGfx::INVISIBLE);
     } else {
         return ERR_UTIL::ErrorCreate("Msgbox type %d not supported", _typeMsg);
@@ -95,11 +95,11 @@ ClickCb MesgBoxGfx::prepClickBtCb() {
 void MesgBoxGfx::ButCmdClicked(int butID) {
     if (!_terminated) {
         _terminated = true;
-        if (_typeMsg == MB_YES_NO) {
-            if (MB_ID_BUTT_YES == butID) {
-                _result = MB_RES_YES;
-            } else if (MB_ID_BUTT_NO == butID) {
-                _result = MB_RES_NO;
+        if (_typeMsg == TY_MB_YES_NO) {
+            if (ID_BUTT_YES == butID) {
+                _result = RES_YES;
+            } else if (ID_BUTT_NO == butID) {
+                _result = RES_NO;
             }
         } else {
             _result = butID;
@@ -109,7 +109,7 @@ void MesgBoxGfx::ButCmdClicked(int butID) {
 
 int MesgBoxGfx::Show(SDL_Surface* pScene_background, LPCSTR lpsBut1Txt,
                      LPCSTR lpsBut2Txt, LPCSTR lpsMsgTxt) {
-    _result = MB_RES_YES;
+    _result = RES_YES;
     _terminated = false;
     Uint32 uiInitialTick = SDL_GetTicks();
     Uint32 uiLast_time = uiInitialTick;
@@ -120,7 +120,7 @@ int MesgBoxGfx::Show(SDL_Surface* pScene_background, LPCSTR lpsBut1Txt,
         _p_BtButt1->SetButtonText(lpsBut1Txt);
         _p_BtButt1->SetVisibleState(ButtonGfx::VISIBLE);
     }
-    if (_typeMsg == MB_YES_NO) {
+    if (_typeMsg == TY_MB_YES_NO) {
         _p_BtButt2->SetButtonText(lpsBut2Txt);
         _p_BtButt2->SetVisibleState(ButtonGfx::VISIBLE);
     }
@@ -140,9 +140,9 @@ int MesgBoxGfx::Show(SDL_Surface* pScene_background, LPCSTR lpsBut1Txt,
             if (event.type == SDL_KEYDOWN) {
                 if (event.key.keysym.sym == SDLK_RETURN) {
                     // key on focus
-                    if (_typeMsg == MB_YES_NO) {
+                    if (_typeMsg == TY_MB_YES_NO) {
                         // default key is yes
-                        ButCmdClicked(MB_ID_BUTT_YES);
+                        ButCmdClicked(ID_BUTT_YES);
                     } else {
                         ButCmdClicked(0);
                     }
@@ -215,7 +215,7 @@ int MesgBoxGfx::Show(SDL_Surface* pScene_background, LPCSTR lpsBut1Txt,
         if (_p_BtButt1) {
             _p_BtButt1->DrawButton(pShadowSrf);
         }
-        if (_typeMsg == MB_YES_NO) {
+        if (_typeMsg == TY_MB_YES_NO) {
             _p_BtButt2->DrawButton(pShadowSrf);
         }
 

@@ -307,7 +307,7 @@ oltre alla powershell con ninja in build, mi funziona la icona Build nella statu
     - Menu "Punteggi"
     - Salva i dieci migliori punteggi con la data e il nome dell'utente nel file ini
     - Score potrebbe essere un componente gfx
-- Domanda (msgbox) quando vuole uscire o cominciare una nuova partita
+- Domanda (msgbox) quando vuole uscire o cominciare una nuova partita [DONE]
 - Effetto sonoro quando si manda una carta nella pila degli assi e magari alla fine del drag
 - windows setup
 - Merge con Italian Special Solitaire [DONE]

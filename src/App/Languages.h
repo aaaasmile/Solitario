@@ -72,6 +72,7 @@ public:
         ID_NO,
         ASK_NEWGAME,
         ASK_QUIT,
+        FINAL_SCORE,
         TOT_STRINGS  // it mus be always on the last place
     };
 

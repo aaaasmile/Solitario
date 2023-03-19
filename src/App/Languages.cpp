@@ -78,6 +78,8 @@ Languages::Languages() {
     _mtxLangString[LANG_DIAL_BREDA][ASK_NEWGAME] =
         "Voet dabòn incumincià na partdia növa?";
     _mtxLangString[LANG_DIAL_BREDA][ASK_QUIT] = "Voet dabòn andà dal jeuq?";
+    _mtxLangString[LANG_DIAL_BREDA][FINAL_SCORE] =
+        "I me cumpliment, te riès al sulitari e tè fat %d punt";
 
     // italiano
     _mtxLangString[LANG_ITA][ID_START] = "Inizia";
@@ -143,6 +145,8 @@ Languages::Languages() {
     _mtxLangString[LANG_ITA][ASK_NEWGAME] =
         "Vuoi davvero cominciare una nuova partita?";
     _mtxLangString[LANG_ITA][ASK_QUIT] = "Vuoi davvero uscire dal gioco?";
+    _mtxLangString[LANG_ITA][FINAL_SCORE] =
+        "Congratulazioni, hai finito il solitario con %d punti";
 
     // English
     _mtxLangString[LANG_ENG][ID_START] = "Start";
@@ -209,6 +213,8 @@ Languages::Languages() {
         "Do you really want to start a new game?";
     _mtxLangString[LANG_ENG][ASK_QUIT] =
         "Do you really want to leave the game?";
+    _mtxLangString[LANG_ENG][FINAL_SCORE] =
+        "Congratulation, solitaire finished scoring: %d points";
 }
 
 std::string Languages::GetStringId(eStringID eId) {

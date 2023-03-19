@@ -169,6 +169,7 @@ private:
     void clearScore();
     void bonusScore();
     int showYesNoMsgBox(LPCSTR strText);
+    void showOkMsgBox(LPCSTR strText);
 
 private:
     CardStackGfx _dragStack;

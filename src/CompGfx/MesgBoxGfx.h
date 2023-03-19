@@ -20,13 +20,13 @@ public:
     MesgBoxGfx(void);
     ~MesgBoxGfx(void);
 
-    enum eMSGBOX_TYPE { MBOK, MB_YES_NO };
+    enum eMSGBOX_TYPE { TY_MBOK, TY_MB_YES_NO };
     enum {
-        MB_RES_NO = 0,
-        MB_RES_YES = 1,
-        MB_ID_BUTT_YES = 2,
-        MB_ID_BUTT_NO = 3,
-        MB_ID_OK = 4
+        RES_NO = 0,
+        RES_YES = 1,
+        ID_BUTT_YES = 2,
+        ID_BUTT_NO = 3,
+        ID_OK = 4
     };
 
     LPErrInApp Initialize(SDL_Rect* pRect, SDL_Surface* pScreen,

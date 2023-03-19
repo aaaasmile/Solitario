@@ -441,6 +441,7 @@ void SolitarioGfx::zoomDropCard(int &sx, int &sy, LPCardGfx pCard, int w,
 
         updateTextureAsFlipScreen();
     }
+    _scoreChanged = true;
     DrawStaticScene();
 }
 
@@ -974,6 +975,12 @@ LPErrInApp SolitarioGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
         (RegionSize(Ace_Ix4) == numCardOnSUit)) {
         _p_currentTime->StopTimer();
         bonusScore();
+        DrawStaticScene();
+        char buff[1024];
+        snprintf(buff, 1024, _p_Languages->GetCStringId(Languages::FINAL_SCORE),
+                 _scoreGame);
+        showOkMsgBox(buff);
+        DrawStaticScene();
         VictoryAnimation();
         err = newGame();
         if (err != NULL) {
@@ -1104,7 +1111,7 @@ int SolitarioGfx::showYesNoMsgBox(LPCSTR strText) {
     rctBox.x = (_p_Screen->w - rctBox.w) / 2;
 
     MsgBox.ChangeAlpha(150);
-    MsgBox.Initialize(&rctBox, _p_Screen, _p_FontText, MesgBoxGfx::MB_YES_NO,
+    MsgBox.Initialize(&rctBox, _p_Screen, _p_FontText, MesgBoxGfx::TY_MB_YES_NO,
                       _p_sdlRenderer);
     SDL_BlitSurface(_p_Screen, NULL, _p_AlphaDisplay, NULL);
 
@@ -1115,10 +1122,27 @@ int SolitarioGfx::showYesNoMsgBox(LPCSTR strText) {
                        strText);
 }
 
+void SolitarioGfx::showOkMsgBox(LPCSTR strText) {
+    MesgBoxGfx MsgBox;
+    SDL_Rect rctBox;
+    rctBox.w = _p_Screen->w - 100;
+    rctBox.h = 130;
+    rctBox.y = (_p_Screen->h - rctBox.h) / 2;
+    rctBox.x = (_p_Screen->w - rctBox.w) / 2;
+
+    MsgBox.ChangeAlpha(150);
+    MsgBox.Initialize(&rctBox, _p_Screen, _p_FontText, MesgBoxGfx::TY_MBOK,
+                      _p_sdlRenderer);
+    SDL_BlitSurface(_p_Screen, NULL, _p_AlphaDisplay, NULL);
+
+    STRING strTextOk = _p_Languages->GetStringId(Languages::ID_OK);
+    MsgBox.Show(_p_AlphaDisplay, strTextOk.c_str(), "", strText);
+}
+
 void SolitarioGfx::BtQuitClick() {
     TRACE("Quit with user button\n");
     if (showYesNoMsgBox(_p_Languages->GetCStringId(Languages::ASK_QUIT)) ==
-        MesgBoxGfx::MB_RES_YES) {
+        MesgBoxGfx::RES_YES) {
         _terminated = true;
     }
 }
@@ -1126,7 +1150,7 @@ void SolitarioGfx::BtQuitClick() {
 void SolitarioGfx::BtNewGameClick() {
     TRACE("New Game with user button\n");
     if (showYesNoMsgBox(_p_Languages->GetCStringId(Languages::ASK_NEWGAME)) ==
-        MesgBoxGfx::MB_RES_YES) {
+        MesgBoxGfx::RES_YES) {
         _newgamerequest = true;
     }
 }
