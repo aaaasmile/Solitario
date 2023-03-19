@@ -40,6 +40,7 @@ set(SOURCES src/GameGfx/CardRegionGfx.cpp
             src/CompGfx/ButtonGfx.cpp
             src/CompGfx/CheckBoxGfx.cpp
             src/CompGfx/ComboGfx.cpp
+            src/CompGfx/MesgBoxGfx.cpp
             src/CompGfx/LabelGfx.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
