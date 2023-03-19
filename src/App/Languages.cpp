@@ -77,6 +77,7 @@ Languages::Languages() {
     _mtxLangString[LANG_DIAL_BREDA][ID_NO] = "No";
     _mtxLangString[LANG_DIAL_BREDA][ASK_NEWGAME] =
         "Voet dabòn incumincià na partdia növa?";
+    _mtxLangString[LANG_DIAL_BREDA][ASK_QUIT] = "Voet dabòn andà dal jeuq?";
 
     // italiano
     _mtxLangString[LANG_ITA][ID_START] = "Inizia";
@@ -141,6 +142,7 @@ Languages::Languages() {
     _mtxLangString[LANG_ITA][ID_NO] = "No";
     _mtxLangString[LANG_ITA][ASK_NEWGAME] =
         "Vuoi davvero cominciare una nuova partita?";
+    _mtxLangString[LANG_ITA][ASK_QUIT] = "Vuoi davvero uscire dal gioco?";
 
     // English
     _mtxLangString[LANG_ENG][ID_START] = "Start";
@@ -205,6 +207,8 @@ Languages::Languages() {
     _mtxLangString[LANG_ENG][ID_NO] = "No";
     _mtxLangString[LANG_ENG][ASK_NEWGAME] =
         "Do you really want to start a new game?";
+    _mtxLangString[LANG_ENG][ASK_QUIT] =
+        "Do you really want to leave the game?";
 }
 
 std::string Languages::GetStringId(eStringID eId) {

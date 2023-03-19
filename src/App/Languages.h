@@ -71,6 +71,7 @@ public:
         ID_YES,
         ID_NO,
         ASK_NEWGAME,
+        ASK_QUIT,
         TOT_STRINGS  // it mus be always on the last place
     };
 

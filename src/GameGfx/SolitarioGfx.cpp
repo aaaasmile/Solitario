@@ -1095,13 +1095,7 @@ LPErrInApp SolitarioGfx::StartGameLoop() {
     return NULL;
 }
 
-void SolitarioGfx::BtQuitClick() {
-    TRACE("Quit with user button\n");
-    _terminated = true;
-}
-
 int SolitarioGfx::showYesNoMsgBox(LPCSTR strText) {
-    // prepare the size of the box
     MesgBoxGfx MsgBox;
     SDL_Rect rctBox;
     rctBox.w = _p_Screen->w - 100;
@@ -1109,7 +1103,6 @@ int SolitarioGfx::showYesNoMsgBox(LPCSTR strText) {
     rctBox.y = (_p_Screen->h - rctBox.h) / 2;
     rctBox.x = (_p_Screen->w - rctBox.w) / 2;
 
-    // show a mesage box
     MsgBox.ChangeAlpha(150);
     MsgBox.Initialize(&rctBox, _p_Screen, _p_FontText, MesgBoxGfx::MB_YES_NO,
                       _p_sdlRenderer);
@@ -1117,12 +1110,17 @@ int SolitarioGfx::showYesNoMsgBox(LPCSTR strText) {
 
     STRING strTextYes = _p_Languages->GetStringId(Languages::ID_YES);
     STRING strTextNo = _p_Languages->GetStringId(Languages::ID_NO);
-    // MsgBox.ChangeTextColor(GFX_UTIL_COLOR::Black);
 
-    int iRes = MsgBox.Show(_p_AlphaDisplay, strTextYes.c_str(),
-                           strTextNo.c_str(), strText);
+    return MsgBox.Show(_p_AlphaDisplay, strTextYes.c_str(), strTextNo.c_str(),
+                       strText);
+}
 
-    return iRes;
+void SolitarioGfx::BtQuitClick() {
+    TRACE("Quit with user button\n");
+    if (showYesNoMsgBox(_p_Languages->GetCStringId(Languages::ASK_QUIT)) ==
+        MesgBoxGfx::MB_RES_YES) {
+        _terminated = true;
+    }
 }
 
 void SolitarioGfx::BtNewGameClick() {
