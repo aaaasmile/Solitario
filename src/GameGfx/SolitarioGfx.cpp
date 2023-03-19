@@ -1113,6 +1113,9 @@ int SolitarioGfx::showYesNoMsgBox(LPCSTR strText) {
     MsgBox.ChangeAlpha(150);
     MsgBox.Initialize(&rctBox, _p_Screen, _p_FontText, MesgBoxGfx::TY_MB_YES_NO,
                       _p_sdlRenderer);
+    DrawStaticScene();
+    SDL_FillRect(_p_AlphaDisplay, &_p_AlphaDisplay->clip_rect,
+                 SDL_MapRGBA(_p_AlphaDisplay->format, 0, 0, 0, 0));
     SDL_BlitSurface(_p_Screen, NULL, _p_AlphaDisplay, NULL);
 
     STRING strTextYes = _p_Languages->GetStringId(Languages::ID_YES);
@@ -1133,6 +1136,9 @@ void SolitarioGfx::showOkMsgBox(LPCSTR strText) {
     MsgBox.ChangeAlpha(150);
     MsgBox.Initialize(&rctBox, _p_Screen, _p_FontText, MesgBoxGfx::TY_MBOK,
                       _p_sdlRenderer);
+    DrawStaticScene();
+    SDL_FillRect(_p_AlphaDisplay, &_p_AlphaDisplay->clip_rect,
+                 SDL_MapRGBA(_p_AlphaDisplay->format, 0, 0, 0, 0));
     SDL_BlitSurface(_p_Screen, NULL, _p_AlphaDisplay, NULL);
 
     STRING strTextOk = _p_Languages->GetStringId(Languages::ID_OK);
