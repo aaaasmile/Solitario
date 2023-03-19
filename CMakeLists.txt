@@ -21,21 +21,21 @@ set(SOURCES src/GameGfx/CardRegionGfx.cpp
             src/GameGfx/CardStackGfx.cpp
             src/GameGfx/SolitarioGfx.cpp
             src/GameGfx/CurrentTime.cpp
-            src/MusicManager.cpp
-            src/AppGfx.cpp
-            src/CardGfx.cpp
-            src/DeckType.cpp
-            src/GameSettings.cpp
-            src/GfxUtil.cpp
-            src/Languages.cpp
-            src/Main.cpp
-            src/Fading.c
-            src/Credits.cpp
-            src/ErrorInfo.cpp
-            src/MenuMgr.cpp
-            src/OptionsGfx.cpp
-            src/TraceService.cpp
-            src/WhereAmI.c
+            src/App/MusicManager.cpp
+            src/App/AppGfx.cpp
+            src/App/CardGfx.cpp
+            src/App/DeckType.cpp
+            src/App/GameSettings.cpp
+            src/App/GfxUtil.cpp
+            src/App/Languages.cpp
+            src/App/Main.cpp
+            src/App/Fading.c
+            src/App/Credits.cpp
+            src/App/ErrorInfo.cpp
+            src/App/MenuMgr.cpp
+            src/App/OptionsGfx.cpp
+            src/App/TraceService.cpp
+            src/App/WhereAmI.c
             src/CompGfx/LabelLinkGfx.cpp
             src/CompGfx/ButtonGfx.cpp
             src/CompGfx/CheckBoxGfx.cpp
@@ -45,7 +45,7 @@ set(SOURCES src/GameGfx/CardRegionGfx.cpp
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-target_include_directories(${PROJECT_NAME} PRIVATE src)
+target_include_directories(${PROJECT_NAME} PRIVATE src src/App src/GameGfx src/CompGfx)
 target_compile_definitions(${PROJECT_NAME} PRIVATE DATA_PREFIX="data/")
 target_compile_options(${PROJECT_NAME} PRIVATE $<$<NOT:$<C_COMPILER_ID:MSVC>>:-Wunused -g -O0>)
 
