@@ -35,6 +35,7 @@ set(SOURCES src/GameGfx/CardRegionGfx.cpp
             src/App/MenuMgr.cpp
             src/App/OptionsGfx.cpp
             src/App/TraceService.cpp
+            src/App/HighScore.cpp
             src/App/WhereAmI.c
             src/CompGfx/LabelLinkGfx.cpp
             src/CompGfx/ButtonGfx.cpp

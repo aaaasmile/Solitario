@@ -1,0 +1,81 @@
+#include "HighScore.h"
+
+#include <fcntl.h>
+#include <memory.h>
+#include <stdlib.h>
+
+#ifdef _WINDOWS
+#include <io.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#else
+#include <unistd.h>
+#endif
+
+using namespace std;
+
+static const char *g_lpszScore = "solitario_score.bin";
+
+HighscoreMgr::HighscoreMgr() {}
+
+HighscoreMgr::~HighscoreMgr() {}
+
+LPErrInApp HighscoreMgr::Save() {
+    int f;
+    char buffer[16];
+    unsigned int score, k, nb;
+    string name;
+
+    f = open(g_lpszScore, O_CREAT | O_WRONLY | O_TRUNC, O_WRONLY);
+
+    if (f > 0) {
+        for (k = 0; k < 10; k++) {
+            score = HS_Scores[k];
+            memset(buffer, 0, 16);
+            memcpy(buffer, HS_Names[k].c_str(), 15);
+            nb = write(f, &score, 4);
+            if (nb == -1) {
+                return ERR_UTIL::ErrorCreate("Error in write for score");
+            }
+            nb = write(f, buffer, 15);
+            if (nb == -1) {
+                return ERR_UTIL::ErrorCreate("Error in write for buffer");
+            }
+        }
+        close(f);
+    }
+    return NULL;
+}
+
+void HighscoreMgr::Load() {
+    int f;
+    char buffer[16];
+    unsigned int score, k;
+    string name;
+
+    char filepath[PATH_MAX + strlen(g_lpszScore)];
+
+    // snprintf(filepath, sizeof(filepath), "%s/%s",
+    // _p_GameSettings->SettingsDir,
+    //          g_lpszScore);
+
+    f = open(filepath, O_RDONLY);
+    if (f > 0) {
+        for (k = 0; k < 10; k++) {
+            if (read(f, &score, 4) == 0)
+                score = 0;
+            if (read(f, buffer, 15) == 0)
+                name = "";
+            else
+                name = buffer;
+            HS_Scores[k] = score;
+            HS_Names[k] = name;
+        }
+        close(f);
+    } else {
+        for (k = 0; k < 10; k++) {
+            HS_Scores[k] = (10 - k) * 500;
+            HS_Names[k] = "Re dal sulitari";
+        }
+    }
+}

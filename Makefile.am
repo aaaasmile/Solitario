@@ -42,6 +42,7 @@ solitario_SOURCES = \
 	src/App/ErrorInfo.cpp\
 	src/App/MenuMgr.cpp\
 	src/App/OptionsGfx.cpp\
+	src/App/HighScore.cpp\
 	src/App/WhereAmI.c\
 	src/CompGfx/LabelLinkGfx.cpp\
 	src/CompGfx/ButtonGfx.cpp\
