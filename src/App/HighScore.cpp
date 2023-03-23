@@ -16,24 +16,27 @@ using namespace std;
 
 static const char *g_lpszScore = "solitario_score.bin";
 
-HighscoreMgr::HighscoreMgr() {}
+HighScore::HighScore() {
+    for (int k = 0; k < 10; k++) {
+        _scoreInfo[k].Score = 3450 - (k * 150);
+        _scoreInfo[k].Name = "Re dal sulitari";
+        _scoreInfo[k].NumCard = 40;
+    }
+}
 
-HighscoreMgr::~HighscoreMgr() {}
-
-LPErrInApp HighscoreMgr::Save() {
+LPErrInApp HighScore::Save() {
     int f;
-    char buffer[16];
-    unsigned int score, k, nb;
-    string name;
+    char filepath[PATH_MAX + strlen(g_lpszScore)];
 
-    f = open(g_lpszScore, O_CREAT | O_WRONLY | O_TRUNC, O_WRONLY);
+    f = open(filepath, O_CREAT | O_WRONLY | O_TRUNC, O_WRONLY);
 
     if (f > 0) {
-        for (k = 0; k < 10; k++) {
-            score = HS_Scores[k];
+        for (int k = 0; k < 10; k++) {
+            char buffer[16];
+            uint16_t score = _scoreInfo[k].Score;
             memset(buffer, 0, 16);
-            memcpy(buffer, HS_Names[k].c_str(), 15);
-            nb = write(f, &score, 4);
+            memcpy(buffer, _scoreInfo[k].Name.c_str(), 15);
+            int nb = write(f, &score, 2);
             if (nb == -1) {
                 return ERR_UTIL::ErrorCreate("Error in write for score");
             }
@@ -43,39 +46,38 @@ LPErrInApp HighscoreMgr::Save() {
             }
         }
         close(f);
+    } else {
+        return ERR_UTIL::ErrorCreate(
+            "Unable to open for writing the score file '%s'", filepath);
     }
     return NULL;
 }
 
-void HighscoreMgr::Load() {
+LPErrInApp HighScore::Load() {
     int f;
-    char buffer[16];
-    unsigned int score, k;
-    string name;
-
     char filepath[PATH_MAX + strlen(g_lpszScore)];
 
     // snprintf(filepath, sizeof(filepath), "%s/%s",
-    // _p_GameSettings->SettingsDir,
+    // pGameSettings->SettingsDir,
     //          g_lpszScore);
 
     f = open(filepath, O_RDONLY);
     if (f > 0) {
-        for (k = 0; k < 10; k++) {
-            if (read(f, &score, 4) == 0)
-                score = 0;
-            if (read(f, buffer, 15) == 0)
-                name = "";
-            else
-                name = buffer;
-            HS_Scores[k] = score;
-            HS_Names[k] = name;
+        for (int k = 0; k < 10; k++) {
+            int score = 0;
+            char buffer[16];
+            read(f, &score, 4);
+            char buffer[16];
+            memset(buffer, 0, 16);
+            read(f, buffer, 15);
+            string name = buffer;
+            _scoreInfo[k].Name = name;
+            _scoreInfo[k].Score = score;
         }
         close(f);
     } else {
-        for (k = 0; k < 10; k++) {
-            HS_Scores[k] = (10 - k) * 500;
-            HS_Names[k] = "Re dal sulitari";
-        }
+        return ERR_UTIL::ErrorCreate(
+            "Unable to open for writing the score file '%s'", filepath);
     }
+    return NULL;
 }

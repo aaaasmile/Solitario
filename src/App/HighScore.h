@@ -5,16 +5,20 @@
 
 #include "ErrorInfo.h"
 
-class HighscoreMgr {
+typedef struct {
+    std::string Name;
+    uint16_t Score;
+    uint8_t NumCard;
+} ScoreInfo;
+
+class HighScore {
 public:
-    HighscoreMgr();
-    virtual ~HighscoreMgr();
-    void Load();
+    HighScore();
+    LPErrInApp Load();
     LPErrInApp Save();
 
-public:
-    std::string HS_Names[10];
-    unsigned int HS_Scores[10];
+private:
+    ScoreInfo _scoreInfo[10];
 };
 
 #endif
