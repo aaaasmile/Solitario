@@ -14,7 +14,7 @@ public:
     enum eStringID {
         ID_START = 0,
         ID_LANGUAGESEL,
-        ID_HISCORE,
+        ID_HIGHSCORE,
         ID_VIDEOSET,
         ID_MAINMENU,
         ID_EXIT,

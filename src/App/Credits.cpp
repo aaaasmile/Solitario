@@ -226,10 +226,8 @@ int credits(SDL_Surface* p_surf_screen, SDL_Surface* pSurfTitle,
             if (credit_text[g_line] == NULL)
                 done = 1;
         }
-
-        // SDL_Flip(p_surf_screen); //SDL 1.2
         SDL_UpdateTexture(pScreenTexture, NULL, p_surf_screen->pixels,
-                          p_surf_screen->pitch);  // sdl 2.0
+                          p_surf_screen->pitch);
         SDL_RenderCopy(psdlRenderer, pScreenTexture, NULL, NULL);
         SDL_RenderPresent(psdlRenderer);
 

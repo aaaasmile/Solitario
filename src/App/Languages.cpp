@@ -12,7 +12,7 @@ Languages::Languages() {
     // dialetto
     _mtxLangString[LANG_DIAL_BREDA][ID_START] = "Cümincia";
     _mtxLangString[LANG_DIAL_BREDA][ID_LANGUAGESEL] = "Lengui furesti";
-    _mtxLangString[LANG_DIAL_BREDA][ID_HISCORE] = "Al mèi di mèi";
+    _mtxLangString[LANG_DIAL_BREDA][ID_HIGHSCORE] = "Al mèi di mèi";
     _mtxLangString[LANG_DIAL_BREDA][ID_VIDEOSET] = "Giosta al display";
     _mtxLangString[LANG_DIAL_BREDA][ID_MAINMENU] = "Menu principal";
     _mtxLangString[LANG_DIAL_BREDA][ID_EXIT] = "Fnomla che";
@@ -84,7 +84,7 @@ Languages::Languages() {
     // italiano
     _mtxLangString[LANG_ITA][ID_START] = "Inizia";
     _mtxLangString[LANG_ITA][ID_LANGUAGESEL] = "Lingua";
-    _mtxLangString[LANG_ITA][ID_HISCORE] = "Hight Score";
+    _mtxLangString[LANG_ITA][ID_HIGHSCORE] = "High Score";
     _mtxLangString[LANG_ITA][ID_VIDEOSET] = "Settings Display";
     _mtxLangString[LANG_ITA][ID_MAINMENU] = "Menu principale";
     _mtxLangString[LANG_ITA][ID_EXIT] = "Esci";
@@ -151,7 +151,7 @@ Languages::Languages() {
     // English
     _mtxLangString[LANG_ENG][ID_START] = "Start";
     _mtxLangString[LANG_ENG][ID_LANGUAGESEL] = "Language";
-    _mtxLangString[LANG_ENG][ID_HISCORE] = "Hight Score";
+    _mtxLangString[LANG_ENG][ID_HIGHSCORE] = "High Score";
     _mtxLangString[LANG_ENG][ID_VIDEOSET] = "Settings Display";
     _mtxLangString[LANG_ENG][ID_MAINMENU] = "Main menu";
     _mtxLangString[LANG_ENG][ID_EXIT] = "Exit";

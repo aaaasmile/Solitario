@@ -17,6 +17,7 @@
 #include "Config.h"
 #include "ErrorInfo.h"
 #include "GfxUtil.h"
+#include "HighScore.h"
 #include "MenuMgr.h"
 #include "MusicManager.h"
 #include "OptionsGfx.h"
@@ -56,6 +57,7 @@ AppGfx::AppGfx() {
     _iScreenH = 768;
     _iBpp = 0;
     _p_MusicManager = 0;
+    _p_HighScore = 0;
     _p_CreditTitle = 0;
     _bFullScreen = false;
     _p_GameSettings = GAMESET::GetSettings();
@@ -93,6 +95,9 @@ LPErrInApp AppGfx::Init() {
 
     _p_MusicManager = new MusicManager;
     _p_MusicManager->Init();
+
+    _p_HighScore = new HighScore();
+    _p_HighScore->Load();
 
     _Languages.SetLang(_p_GameSettings->CurrentLanguage);
 
@@ -273,8 +278,10 @@ void AppGfx::terminate() {
 
     delete _p_MusicManager;
     delete _p_SolitarioGfx;
+    delete _p_HighScore;
     _p_SolitarioGfx = NULL;
     _p_MusicManager = NULL;
+    _p_HighScore = NULL;
 
     SDL_DestroyWindow(_p_Window);
     SDL_Quit();
@@ -341,7 +348,7 @@ LPErrInApp AppGfx::loadProfile() {
         }
         TRACE("Default ini file created in %s\n", filepath);
     }
-
+    TRACE("Load option %s\n", filepath);
     ini_fd_t pIni = ini_open(filepath, "r", "#");
 
     if (pIni == NULL)
@@ -543,6 +550,12 @@ LPErrInApp AppGfx::MainLoop() {
                     goto error;
                 break;
 
+            case MenuItemEnum::MENU_HIGHSCORE:
+                err = showHighScore();
+                if (err != NULL)
+                    goto error;
+                break;
+
             case MenuItemEnum::MENU_OPTIONS:
                 _backGroundChanged = false;
                 err = showOptionGeneral();
@@ -585,6 +598,26 @@ LPErrInApp AppGfx::showHelp() {
     system(cmdpath);
 
     LeaveMenu();
+    return NULL;
+}
+
+LPErrInApp AppGfx::showHighScore() {
+    MusicManager *pMusicManager = NULL;
+    if (_p_MusicManager->IsPlayingMusic()) {
+        _p_MusicManager->StopMusic(600);
+        pMusicManager = _p_MusicManager;
+    }
+    _p_HighScore->Show(_p_Screen, _p_CreditTitle, _p_sdlRenderer,
+                       pMusicManager);
+
+    LeaveMenu();
+
+    if (_p_MusicManager->IsPlayingMusic()) {
+        _p_MusicManager->StopMusic(300);
+        _p_MusicManager->PlayMusic(MusicManager::MUSIC_INIT_SND,
+                                   MusicManager::LOOP_ON);
+    }
+
     return NULL;
 }
 

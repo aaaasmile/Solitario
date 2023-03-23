@@ -4,16 +4,24 @@
 #include <memory.h>
 #include <stdlib.h>
 
+#include "Fading.h"
 #include "GameSettings.h"
+#include "MusicManager.h"
 #include "WinTypeGlobal.h"
 
 using namespace std;
 
-static const char *g_lpszScore = "solitario_score.bin";
+static const char* g_lpszScore = "solitario_score.bin";
 
 HighScore::HighScore() {
     for (int k = 0; k < 10; k++) {
-        _scoreInfo[k].Score = 3450 - (k * 150);
+        _scoreInfo[k].Score = 5940 - (k * 250);
+        if (k > 1) {
+            _scoreInfo[k].Score = _scoreInfo[k].Score - (k - 1) * 50;
+        }
+        if (k > 2) {
+            _scoreInfo[k].Score = _scoreInfo[k].Score - (k - 2) * 20;
+        }
         _scoreInfo[k].Name = "Re dal sulitari";
         _scoreInfo[k].NumCard = 40;
     }
@@ -25,9 +33,9 @@ LPErrInApp HighScore::Save() {
 
     snprintf(filepath, sizeof(filepath), "%s/%s", pGameSettings->SettingsDir,
              g_lpszScore);
-    TRACE("Save score file %s\n", filepath);
+    TRACE("Save high score file %s\n", filepath);
 
-    SDL_RWops *dst = SDL_RWFromFile(filepath, "rb");
+    SDL_RWops* dst = SDL_RWFromFile(filepath, "rb");
     if (dst == 0) {
         return ERR_UTIL::ErrorCreate("Unable to save high score file %s",
                                      filepath);
@@ -58,12 +66,13 @@ LPErrInApp HighScore::Load() {
     LPGameSettings pGameSettings = GAMESET::GetSettings();
     char filepath[PATH_MAX + strlen(g_lpszScore)];
 
-    snprintf(filepath, sizeof(filepath), "%s/%s", pGameSettings->SettingsDir,
-             g_lpszScore);
-    TRACE("Load score file %s\n", filepath);
-    SDL_RWops *src = SDL_RWFromFile(filepath, "rb");
+    snprintf(filepath, sizeof(filepath), "%s/%s",
+             pGameSettings->SettingsDir.c_str(), g_lpszScore);
+    TRACE("Load high score file %s\n", filepath);
+    SDL_RWops* src = SDL_RWFromFile(filepath, "rb");
     if (src == 0) {
-        TRACE("No score file found, ignore it\n");
+        TRACE("No score file found, ignore it and use default\n");
+        return NULL;
     }
 
     for (int k = 0; k < 10; k++) {
@@ -87,6 +96,64 @@ LPErrInApp HighScore::Load() {
         _scoreInfo[k].NumCard = numCard;
     }
     SDL_RWclose(src);
+
+    return NULL;
+}
+
+LPErrInApp HighScore::Show(SDL_Surface* p_surf_screen, SDL_Surface* pSurfTitle,
+                           SDL_Renderer* psdlRenderer,
+                           MusicManager* pMusicManager) {
+    bool done;
+    SDL_Rect dest;
+    SDL_Event event;
+    Uint32 last_time, now_time;
+    SDL_Keycode key;
+
+    SDL_Texture* pScreenTexture =
+        SDL_CreateTextureFromSurface(psdlRenderer, p_surf_screen);
+
+    fade(p_surf_screen, p_surf_screen, 2, 1, psdlRenderer, NULL);
+    if (pMusicManager != NULL) {
+        pMusicManager->PlayMusic(MusicManager::MUSIC_GAME_SND,
+                                 MusicManager::LOOP_ON);
+    }
+
+    dest.x = (p_surf_screen->w - pSurfTitle->w) / 2;
+    dest.y = 0;
+    dest.w = pSurfTitle->w;
+    dest.h = pSurfTitle->h;
+
+    SDL_BlitSurface(pSurfTitle, NULL, p_surf_screen, &dest);
+
+    done = false;
+
+    do {
+        last_time = SDL_GetTicks();
+
+        while (SDL_PollEvent(&event) > 0) {
+            if (event.type == SDL_QUIT) {
+                done = true;
+            } else if (event.type == SDL_KEYDOWN) {
+                key = event.key.keysym.sym;
+
+                if (key == SDLK_ESCAPE) {
+                    done = true;
+                }
+            }
+        }
+
+        SDL_UpdateTexture(pScreenTexture, NULL, p_surf_screen->pixels,
+                          p_surf_screen->pitch);
+        SDL_RenderCopy(psdlRenderer, pScreenTexture, NULL, NULL);
+        SDL_RenderPresent(psdlRenderer);
+
+        now_time = SDL_GetTicks();
+        if (now_time < last_time + (1000 / 20)) {
+            SDL_Delay(last_time + (1000 / 20) - now_time);
+        }
+    } while (!done);
+
+    fade(p_surf_screen, p_surf_screen, 1, 1, psdlRenderer, NULL);
 
     return NULL;
 }

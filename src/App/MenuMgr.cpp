@@ -15,7 +15,7 @@
 #include "WinTypeGlobal.h"
 
 static const char* g_lpszMsgUrl = "Go to invido.it";
-static const char* g_lpszVersion = VERSION "20230219";
+static const char* g_lpszVersion = VERSION "20230323";
 static const char* g_lpszIniFontVera = DATA_PREFIX "font/vera.ttf";
 
 static const SDL_Color g_color_on = {253, 252, 250};
@@ -183,8 +183,10 @@ MenuItemEnum previousMenu(MenuItemEnum currMenu) {
             return MenuItemEnum::MENU_OPTIONS;
         case MenuItemEnum::MENU_HELP:
             return MenuItemEnum::MENU_CREDITS;
-        case MenuItemEnum::QUIT:
+        case MenuItemEnum::MENU_HIGHSCORE:
             return MenuItemEnum::MENU_HELP;
+        case MenuItemEnum::QUIT:
+            return MenuItemEnum::MENU_HIGHSCORE;
     }
     return currMenu;
 }
@@ -198,6 +200,8 @@ MenuItemEnum nextMenu(MenuItemEnum currMenu) {
         case MenuItemEnum::MENU_CREDITS:
             return MenuItemEnum::MENU_HELP;
         case MenuItemEnum::MENU_HELP:
+            return MenuItemEnum::MENU_HIGHSCORE;
+        case MenuItemEnum::MENU_HIGHSCORE:
             return MenuItemEnum::QUIT;
         case MenuItemEnum::QUIT:
             return MenuItemEnum::QUIT;
@@ -274,6 +278,20 @@ LPErrInApp MenuMgr::HandleRootMenu() {
         return err;
     }
 
+    // highscore
+    if (_focusedMenuItem != MenuItemEnum::MENU_HIGHSCORE) {
+        color = g_color_off;
+    } else {
+        color = g_color_on;
+    }
+    err =
+        drawMenuText(_p_ScreenBackbuffer,
+                     _p_Languages->GetStringId(Languages::ID_HIGHSCORE).c_str(),
+                     _box_X + 10, _box_Y + 210, color, _p_fontAriblk);
+    if (err != NULL) {
+        return err;
+    }
+
     // Quit
     if (_focusedMenuItem != MenuItemEnum::QUIT) {
         color = g_color_off;
@@ -326,6 +344,9 @@ LPErrInApp MenuMgr::HandleRootMenu() {
                 } else if (event.motion.y >= _box_Y + 170 &&
                            event.motion.y < _box_Y + 230) {
                     _focusedMenuItem = MenuItemEnum::MENU_HELP;
+                } else if (event.motion.y >= _box_Y + 230 &&
+                           event.motion.y < _box_Y + 270) {
+                    _focusedMenuItem = MenuItemEnum::MENU_HIGHSCORE;
                 } else if (event.motion.y >= _screenH - _box_Y - 40) {
                     _focusedMenuItem = MenuItemEnum::QUIT;
                 }

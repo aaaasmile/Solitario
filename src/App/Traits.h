@@ -11,8 +11,9 @@ enum MenuItemEnum {
     MENU_OPTIONS = 1,
     MENU_CREDITS = 2,
     MENU_HELP = 3,
-    QUIT = 4,
-    MENU_ROOT = 5,
+    MENU_HIGHSCORE = 4,
+    QUIT = 5,
+    MENU_ROOT = 6,
 };
 
 namespace traits {

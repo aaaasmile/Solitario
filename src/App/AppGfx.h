@@ -18,7 +18,7 @@
 #include "WinTypeGlobal.h"
 
 class MusicManager;
-class MenuMgr;
+class HighScore;
 
 using namespace traits;
 
@@ -55,6 +55,7 @@ private:
     void updateScreenTexture();
     LPErrInApp showHelp();
     LPErrInApp showCredits();
+    LPErrInApp showHighScore();
     LPErrInApp showOptionGeneral();
 
     MenuDelegator prepMenuDelegator();
@@ -73,6 +74,7 @@ private:
     GameSettings* _p_GameSettings;
     SolitarioGfx* _p_SolitarioGfx;
     MusicManager* _p_MusicManager;
+    HighScore* _p_HighScore;
     Languages _Languages;
 
     int _iScreenW;
