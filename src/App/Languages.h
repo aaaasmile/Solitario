@@ -73,6 +73,9 @@ public:
         ASK_NEWGAME,
         ASK_QUIT,
         FINAL_SCORE,
+        POINTS,
+        NAME,
+        CARDDECK,
         TOT_STRINGS  // it mus be always on the last place
     };
 

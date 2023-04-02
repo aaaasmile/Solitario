@@ -80,6 +80,9 @@ Languages::Languages() {
     _mtxLangString[LANG_DIAL_BREDA][ASK_QUIT] = "Voet dabòn andà dal jeuq?";
     _mtxLangString[LANG_DIAL_BREDA][FINAL_SCORE] =
         "I me cumpliment, te riès al sulitari e tè fat %d punt";
+    _mtxLangString[LANG_DIAL_BREDA][NAME] = "Nom";
+    _mtxLangString[LANG_DIAL_BREDA][POINTS] = "Punt";
+    _mtxLangString[LANG_DIAL_BREDA][CARDDECK] = "Carti in dal mas";
 
     // italiano
     _mtxLangString[LANG_ITA][ID_START] = "Inizia";
@@ -147,6 +150,9 @@ Languages::Languages() {
     _mtxLangString[LANG_ITA][ASK_QUIT] = "Vuoi davvero uscire dal gioco?";
     _mtxLangString[LANG_ITA][FINAL_SCORE] =
         "Congratulazioni, hai finito il solitario con %d punti";
+    _mtxLangString[LANG_ITA][NAME] = "Nome";
+    _mtxLangString[LANG_ITA][POINTS] = "Punteggio";
+    _mtxLangString[LANG_ITA][CARDDECK] = "Carte Mazzo";
 
     // English
     _mtxLangString[LANG_ENG][ID_START] = "Start";
@@ -215,6 +221,9 @@ Languages::Languages() {
         "Do you really want to leave the game?";
     _mtxLangString[LANG_ENG][FINAL_SCORE] =
         "Congratulation, solitaire finished scoring: %d points";
+    _mtxLangString[LANG_ENG][NAME] = "Name";
+    _mtxLangString[LANG_ENG][POINTS] = "Points";
+    _mtxLangString[LANG_ENG][CARDDECK] = "Deck Cards";
 }
 
 std::string Languages::GetStringId(eStringID eId) {

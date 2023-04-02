@@ -7,6 +7,7 @@
 #include <string>
 
 #include "ErrorInfo.h"
+#include "Languages.h"
 
 class MusicManager;
 
@@ -25,7 +26,7 @@ public:
     LPErrInApp Save();
     LPErrInApp Show(SDL_Surface* screen, SDL_Surface* pSurfTitle,
                     SDL_Renderer* psdlRenderer, MusicManager* pMusicManager,
-                    TTF_Font* pFont);
+                    TTF_Font* pFont, TTF_Font* pFont2, Languages* pLanguages);
 
 private:
     ScoreInfo _scoreInfo[NUMOFSCORE];
