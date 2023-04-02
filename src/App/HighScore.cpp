@@ -142,7 +142,7 @@ LPErrInApp HighScore::Show(SDL_Surface* p_surf_screen, SDL_Surface* pSurfTitle,
                 }
             }
         }
-        int xIni = 90;
+        int xIni = (p_surf_screen->w - (70 + 300 + 100 + 30 + 50)) / 2;
         int yIni = 200;
         int xOff, yOff;
         char buff[256];
