@@ -1,11 +1,11 @@
 #include "HighScore.h"
 
-#include <SDL2/SDL.h>
 #include <memory.h>
 #include <stdlib.h>
 
 #include "Fading.h"
 #include "GameSettings.h"
+#include "GfxUtil.h"
 #include "MusicManager.h"
 #include "WinTypeGlobal.h"
 
@@ -102,7 +102,7 @@ LPErrInApp HighScore::Load() {
 
 LPErrInApp HighScore::Show(SDL_Surface* p_surf_screen, SDL_Surface* pSurfTitle,
                            SDL_Renderer* psdlRenderer,
-                           MusicManager* pMusicManager) {
+                           MusicManager* pMusicManager, TTF_Font* pFont) {
     bool done;
     SDL_Rect dest;
     SDL_Event event;
@@ -112,7 +112,7 @@ LPErrInApp HighScore::Show(SDL_Surface* p_surf_screen, SDL_Surface* pSurfTitle,
     SDL_Texture* pScreenTexture =
         SDL_CreateTextureFromSurface(psdlRenderer, p_surf_screen);
 
-    fade(p_surf_screen, p_surf_screen, 2, 1, psdlRenderer, NULL);
+    // fade(p_surf_screen, p_surf_screen, 2, 1, psdlRenderer, NULL);
     if (pMusicManager != NULL) {
         pMusicManager->PlayMusic(MusicManager::MUSIC_GAME_SND,
                                  MusicManager::LOOP_ON);
@@ -141,6 +141,31 @@ LPErrInApp HighScore::Show(SDL_Surface* p_surf_screen, SDL_Surface* pSurfTitle,
                 }
             }
         }
+        int xIni = 90;
+        int yIni = 220;
+        int xOff, yOff;
+        char buff[256];
+        xOff = 0;
+        yOff = 0;
+        for (int i = 0; i < NUMOFSCORE; i++) {
+            snprintf(buff, sizeof(buff), "#%d", i + 1);
+            GFX_UTIL::DrawString(p_surf_screen, buff, xIni + xOff, yIni + yOff,
+                                 GFX_UTIL_COLOR::White, pFont);
+            xOff += 70;
+            GFX_UTIL::DrawString(p_surf_screen, _scoreInfo[i].Name.c_str(),
+                                 xIni + xOff, yIni + yOff,
+                                 GFX_UTIL_COLOR::White, pFont);
+            xOff += 300;
+            snprintf(buff, sizeof(buff), "%d", _scoreInfo[i].Score);
+            GFX_UTIL::DrawString(p_surf_screen, buff, xIni + xOff, yIni + yOff,
+                                 GFX_UTIL_COLOR::White, pFont);
+            xOff += 100;
+            snprintf(buff, sizeof(buff), "%d", _scoreInfo[i].NumCard);
+            GFX_UTIL::DrawString(p_surf_screen, buff, xIni + xOff, yIni + yOff,
+                                 GFX_UTIL_COLOR::White, pFont);
+            yOff += 50;
+            xOff = 0;
+        }
 
         SDL_UpdateTexture(pScreenTexture, NULL, p_surf_screen->pixels,
                           p_surf_screen->pitch);
@@ -153,7 +178,7 @@ LPErrInApp HighScore::Show(SDL_Surface* p_surf_screen, SDL_Surface* pSurfTitle,
         }
     } while (!done);
 
-    fade(p_surf_screen, p_surf_screen, 1, 1, psdlRenderer, NULL);
+    // fade(p_surf_screen, p_surf_screen, 1, 1, psdlRenderer, NULL);
 
     return NULL;
 }

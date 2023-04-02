@@ -607,8 +607,8 @@ LPErrInApp AppGfx::showHighScore() {
         _p_MusicManager->StopMusic(600);
         pMusicManager = _p_MusicManager;
     }
-    _p_HighScore->Show(_p_Screen, _p_CreditTitle, _p_sdlRenderer,
-                       pMusicManager);
+    _p_HighScore->Show(_p_Screen, _p_CreditTitle, _p_sdlRenderer, pMusicManager,
+                       _p_fontAriblk);
 
     LeaveMenu();
 

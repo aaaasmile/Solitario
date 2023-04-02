@@ -1,7 +1,8 @@
 #ifndef _HIGHSCORE_H__
 #define _HIGHSCORE_H__
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
+#include <SDL_ttf.h>
 
 #include <string>
 
@@ -16,15 +17,18 @@ typedef struct {
 } ScoreInfo;
 
 class HighScore {
+    enum { NUMOFSCORE = 10 };
+
 public:
     HighScore();
     LPErrInApp Load();
     LPErrInApp Save();
     LPErrInApp Show(SDL_Surface* screen, SDL_Surface* pSurfTitle,
-                    SDL_Renderer* psdlRenderer, MusicManager* pMusicManager);
+                    SDL_Renderer* psdlRenderer, MusicManager* pMusicManager,
+                    TTF_Font* pFont);
 
 private:
-    ScoreInfo _scoreInfo[10];
+    ScoreInfo _scoreInfo[NUMOFSCORE];
 };
 
 #endif
