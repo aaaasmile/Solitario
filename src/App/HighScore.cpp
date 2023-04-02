@@ -31,21 +31,22 @@ LPErrInApp HighScore::Save() {
     LPGameSettings pGameSettings = GAMESET::GetSettings();
     char filepath[PATH_MAX + strlen(g_lpszScore)];
 
-    snprintf(filepath, sizeof(filepath), "%s/%s", pGameSettings->SettingsDir,
-             g_lpszScore);
+    snprintf(filepath, sizeof(filepath), "%s/%s",
+             pGameSettings->SettingsDir.c_str(), g_lpszScore);
     TRACE("Save high score file %s\n", filepath);
 
-    SDL_RWops* dst = SDL_RWFromFile(filepath, "rb");
+    SDL_RWops* dst = SDL_RWFromFile(filepath, "wb");
     if (dst == 0) {
         return ERR_UTIL::ErrorCreate("Unable to save high score file %s",
                                      filepath);
     }
 
-    for (int k = 0; k < 10; k++) {
+    for (int k = 0; k < NUMOFSCORE; k++) {
         char name[16];
         memset(name, 0, 16);
         memcpy(name, _scoreInfo[k].Name.c_str(), 15);
-        if (SDL_RWwrite(dst, name, 16, 1) < 16) {
+        int numWritten = SDL_RWwrite(dst, name, 16, 1);
+        if (numWritten < 1) {
             return ERR_UTIL::ErrorCreate("SDL_RWwrite name highscore %s\n",
                                          SDL_GetError());
         }
@@ -53,12 +54,46 @@ LPErrInApp HighScore::Save() {
             return ERR_UTIL::ErrorCreate("SDL_RWwrite score highscore %s\n",
                                          SDL_GetError());
         }
-        if (SDL_RWwrite(dst, &_scoreInfo[k].NumCard, 1, 1) < 1) {
+        numWritten = SDL_RWwrite(dst, &_scoreInfo[k].NumCard, 1, 1);
+        if (numWritten < 1) {
             return ERR_UTIL::ErrorCreate("SDL_RWwrite numCard highscore %s\n",
                                          SDL_GetError());
         }
     }
     SDL_RWclose(dst);
+    return NULL;
+}
+
+LPErrInApp HighScore::SaveScore(int score, int numCard) {
+    int j = -1;
+    for (int i = 0; i < NUMOFSCORE; i++) {
+        if (score > _scoreInfo[i].Score) {
+            j = i;
+            break;
+        }
+    }
+    if (j > -1) {
+        char bufName[256];
+#ifdef WIN32
+        sprintf(bufName, "%s", getenv("USERNAME"), getenv("HOMEPATH"));
+#else
+        sprintf(_settingsRootDir, "%s/.solitario", getenv("HOME"));
+#endif
+        ScoreInfo prev;
+        for (int i = j; i < NUMOFSCORE; i++) {
+            if (i == j) {
+                prev = _scoreInfo[i];
+                _scoreInfo[i].Name = bufName;
+                _scoreInfo[i].Score = score;
+                _scoreInfo[i].NumCard = numCard;
+            } else {
+                ScoreInfo temp = _scoreInfo[i];
+                _scoreInfo[i] = prev;
+                prev = temp;
+            }
+        }
+        return Save();
+    }
     return NULL;
 }
 

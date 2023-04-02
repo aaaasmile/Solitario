@@ -24,6 +24,7 @@ public:
     HighScore();
     LPErrInApp Load();
     LPErrInApp Save();
+    LPErrInApp SaveScore(int score, int numCard);
     LPErrInApp Show(SDL_Surface* screen, SDL_Surface* pSurfTitle,
                     SDL_Renderer* psdlRenderer, MusicManager* pMusicManager,
                     TTF_Font* pFont, TTF_Font* pFont2, Languages* pLanguages);

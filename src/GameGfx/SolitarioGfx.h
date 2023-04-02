@@ -13,6 +13,7 @@
 using namespace traits;
 class ButtonGfx;
 class CurrentTime;
+class HighScore;
 
 typedef std::vector<CardRegionGfx>::iterator regionVI;
 
@@ -53,7 +54,7 @@ public:
     LPErrInApp Initialize(SDL_Surface *s, SDL_Renderer *r, SDL_Window *w,
                           DeckType &dt, LPLanguages planguages,
                           TTF_Font *pfontText, SDL_Surface *pSceneBackground,
-                          bool isBlack);
+                          bool isBlack, HighScore *pHighScore);
     LPErrInApp StartGameLoop();
 
     int RegionSize(int regionNo) { return _cardRegionList[regionNo].Size(); }
@@ -186,6 +187,7 @@ private:
     SDL_Window *_p_Window;
     LPLanguages _p_Languages;
     TTF_Font *_p_FontText;
+    HighScore *_p_HighScore;
 
     int _oldx;
     int _oldy;

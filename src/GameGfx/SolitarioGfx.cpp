@@ -9,6 +9,7 @@
 #include "CurrentTime.h"
 #include "Fading.h"
 #include "GfxUtil.h"
+#include "HighScore.h"
 #include "WinTypeGlobal.h"
 
 // card graphics
@@ -92,10 +93,11 @@ ClickCb SolitarioGfx::prepClickNewGameCb() {
 LPErrInApp SolitarioGfx::Initialize(SDL_Surface *s, SDL_Renderer *r,
                                     SDL_Window *w, DeckType &dt,
                                     LPLanguages planguages, TTF_Font *pfontText,
-                                    SDL_Surface *pSceneBackground,
-                                    bool isBlack) {
+                                    SDL_Surface *pSceneBackground, bool isBlack,
+                                    HighScore *pHighScore) {
     TRACE("Initialize Solitario\n");
     setDeckType(dt);
+    _p_HighScore = pHighScore;
     _sceneBackgroundIsBlack = isBlack;
     _p_Languages = planguages;
     _p_FontText = pfontText;
@@ -980,6 +982,10 @@ LPErrInApp SolitarioGfx::handleGameLoopMouseUpEvent(SDL_Event &event) {
         snprintf(buff, 1024, _p_Languages->GetCStringId(Languages::FINAL_SCORE),
                  _scoreGame);
         showOkMsgBox(buff);
+        err = _p_HighScore->SaveScore(_scoreGame, _deckType.GetNumCards());
+        if (err != NULL) {
+            return err;
+        }
         DrawStaticScene();
         VictoryAnimation();
         err = newGame();
