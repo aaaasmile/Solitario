@@ -296,8 +296,8 @@ oltre alla powershell con ninja in build, mi funziona la icona Build nella statu
 
 ### TODO
 - Score (http://www.solitairecity.com/Help/Klondike_Scoring.shtml)
-    - Menu "Punteggi"
-    - Salva i dieci migliori punteggi con la data e il nome dell'utente nel file ini e il numero delle carte (56 o 40)
+    - Menu "Punteggi" [DONE]
+    - Salva i dieci migliori punteggi con la data e il nome dell'utente nel file ini e il numero delle carte (56 o 40) [DONE]
     - Spiega il punteggio nell'help
     Good Score
         - Playing a card from stock to tableau (+45) [DONE]

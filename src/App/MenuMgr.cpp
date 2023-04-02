@@ -15,7 +15,7 @@
 #include "WinTypeGlobal.h"
 
 static const char* g_lpszMsgUrl = "Go to invido.it";
-static const char* g_lpszVersion = VERSION "20230323";
+static const char* g_lpszVersion = VERSION "20230402";
 static const char* g_lpszIniFontVera = DATA_PREFIX "font/vera.ttf";
 
 static const SDL_Color g_color_on = {253, 252, 250};

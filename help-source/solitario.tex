@@ -60,7 +60,6 @@ Il Solitario si gioca con il mouse. Con la tastiera, invece, è possibile inviar
 \startitemize[1]
 \item Iniziare usa nuova partita (tasto {\bold n})
 \item Uscire dal gioco (tasto {\bold Escape})
-\item Mostrare un'animazione  (tasto {\bold a})
 \stopitemize
 Il tasto destro del mouse viene usato su una carta scoperta per essere mandata di colpo
 e automaticamente sul basamento degli Assi. Il tasto sinistro del mouse server per spostare le carte da una pila all'altra.
@@ -105,7 +104,203 @@ Il mazzo delle carte restanti può essere usato a ripetizione fino a quando si s
     {Mazzo di aiuto}
     {\externalfigure[mazzo.png][width=0.9\makeupwidth]}
 
-\subject{Informazioni}
+\subject{Punteggio}
+Mentre si gioca al solitario viene conteggiato un punteggio. Esso viene memorizzato
+nella graduatoria dei migliori dieci quando il solitario riesce ed è superiore ad uno dei punteggi della
+classifica. Il menu {\italic High Score} visualizza la classifica.
+
+\subsubject{Vantaggi}
+\startitemize[2]
+\item Per ogni carta portata dal mazzo alle pile del gioco: +45 punti
+\item Ogni carta girata: +25 punti
+\item Ogni carta portata sulle pile degli assi: +60 punti
+\stopitemize
+
+\subsubject{Penalità}
+\startitemize[2]
+\item Ogni secondo che passa: -1 Punto
+\item Ogni carta che dalle pile degli assi torna sul tavolo: -75 punti
+\item Quando il mazzo di supporto viene rigirato: -175 punti
+\stopitemize
+
+\subsubject{Bonus}
+Quando il solitario riesce viene aggiunto un bonus al punteggio finale:
+\startformula
+bonus = 2 * punteggio - (10 * tempoImpiegatoInSecondi)
+\stopformula
+\startformula
+punteggioFinale = bonus + punteggio
+\stopformula
+
+\subject{Tarocco Piemontese}
+Tra i vari mazzi supportati dal Solitario vie è anche lo splendido mazzo del Tarocco PIemontese.
+È un mazzo di 56 carte che consente, quando il solitario riesce, di conseguire un maggiore punteggio
+rispetto al mazzo da 40 carte della briscola. Ecco una sua spiegazione in lingua inglese che a cura di
+Domenico Starna.
+
+\subsubject{Piemontese Tarot, Tarocco Piemontese, Taròck.}
+Piemontése pronounced pee-é-mon-té-sé, é as in é french.
+
+ This Deck has 78 playing cards.
+ The symbols of the french suits are added left over and right under.
+ The latin names are added over.
+ The four suits are translated in latin
+
+\starttabulate[|l|l|l|]
+\HL
+\NC {\bf italian} \NC {\bf english} \NC {\bf latin}
+\NC \NR
+\HL
+ \NC Spade         \NC (Swords)        \NC Spathae   Spatha, ae, f.       (in french suits Spades) \NR
+ \NC Coppe        \NC (Cups)            \NC Calices     Calix, icis, m.      (in french suits Hearts)   \NR
+ \NC Denari         \NC (Coins)           \NC Denarii     Denarius, ii, m.    (in french suits Diamonds) \NR
+ \NC Bastoni       \NC (Batons)          \NC Bacula     Baculum, i, n.      (in french suits Clubs)  \NR
+\HL
+\stoptabulate
+
+ In the old french, XVII Century, they are called Espées, Couppes, Deniers and Bastons.
+ The other 22 cards are called Triomphes. In the modern french Tarot, Tarot  Nouveau
+ du 1890, there are Piques, Coeurs, Carreau et Trèfles. The other 21 cards are
+ Atouts, the Excuse is considered apart.
+   It is possible to translate with different words. For example Coin with Denarius, Aureum,
+ Nummus, Pecunia etcetera. I choosed  Denarii, because more similar to italian Denari
+ and french Denier. Chitarrella is a nickname of an author of XVIII Century. He writes in
+ latin the rules of 3 card games, Mediatore, Tressette and Scopone. He calls the Jack:
+ octo mulier. In the Sicilian Cards the Jack is a woman. In 1866 a neapolitan poet and
+ bookseller translates the rules in neapolitan dialect, with some little variations. Chitarrella
+ calls the suits at the beginning of the rule of the Mediatore:
+ Mucro, cuppa, nummus baculusque sunt ordines quattuor chartarum.
+ An example of the card games rules from De Regulis Scoponis, Chitarrella, is
+ the rule number 42:
+ \startitemize
+  \item  Qui memoriam non habet et continuae attentioni minime idoneus est scoponem
+  relinquat et eat jocatum ad nuces.
+  \item Who has no good memory and he is not able to continuous attention, he abandons
+  the card game Scopone and he goes to play with little balls.
+  In the Aces there are added latin mottos.
+ \item  Quisque faber fortunae suae. (Appius Claudius Caecus)
+                                                                        Every man is the artisan of his own fortune
+ \item  Carpe diem. (Horatius, Carmina I, 11)                Pluck the day
+    (...nec Babylonios temptaris numeros... sapias... fugerit invida aetas...)
+    (...nor attempt the horoscopes... be wise... envious time has passed...)
+ \item Gutta cavat lapidem. (Ovidius, Ex Ponto III,10)   The drop excavates the stone
+\stopitemize
+
+\subsubject{Deck Tarocco Piemontese}
+Deck Tarocco Piemontese (78 cards), dimension 62x106 mm, in piemontese dialect Taròck.
+ It is used in Torino and in other villages of the region Piemonte for playing Tarocchi (pronounced
+ taròkki) games. Nowadays the Tarocco Piemontese remains the only model of 78 cards Tarot
+ deck in Italy. The deck is similar to the other classic tarot decks, but the picture cards and the
+ Trionfi are double headed, double faced, they are divided horizontally in two symmetric halves.
+ The Fool, numbered zero, is catching a butterfly.
+ The Trionfo Triumph 15, The Devil, has an ironic image: the devils pull faces, showing their tongue out.
+ In the King of Batons, the baton is a mace, a club for representation as in the oldest tarot, not a cudgel.
+ The Batons are straight. The lateral Swords, in the cards from 2 to 10 Swords, are curved as sabres.
+ The Ace of Cups is a vase with the flowers.
+
+\subsubject{History}
+In the XV Century It was called the Game of the Triumphs, Ludus Triumphorum in latin. The name
+ Trionfi, Triumphs, means: they triumph, they win the cards of the other suits. The Triumphs beat the
+ remaining cards. The word trump, Trumpf in german, comes by trionfi, triumphs.
+ In the XVI Century it was called the game of the Tarocchi. Tarot comes from the Italian word tarocco.
+ The verb taroccare has many meanings, in the game it means to play, to reply with a tarocco,
+ stronger card.
+ With the meaning to dispute with an other, taroccare comes perhaps from the ancient italian word
+ altarocare, this from altarcare, altercari in latin, in italian altercare.
+ In modern italian the verb taroccare, adjective taroccato, word tarocco, means to falsify, to counterfeit.
+ Example: a taroccato high-quality watch.
+ The word Tarocchi is referred to the 22 Triumphs, sometimes also to all 78 cards together.
+ In Torino the players call tarocco, tarocchi the 22 Triumphs, as trumps, but the Fool does not take.
+ In Torino they call the Triumphs with its number, except The Fool called Folle, or Matto.
+ A modern simple italian card game is the Briscola, the Briscole are the stronger cards.
+ Trionfi, Triumphs, Tarocchi, Briscole, Atouts, Trumps have the same meaning, stronger cards.
+ The order of the Triumphs was also different in the year 1500.
+ The first Triumph is Il Bagatello, Il Bagatto. This word comes from bagattella or bagatella, thing not
+ important. Bagatelliere means player of bagattelle, magician, conjurer.
+ \starttabulate[|l|l|l|]
+ \NS[3] {\italic After there are the civil authority and the religious authorithy } \NR
+ \NC 2 \NC L' Imperatrice \NC The Empress \NR
+ \NC 3 \NC L' Imperatore \NC The Emperor \NR
+ \NC 4 \NC La Papessa \NC The Popess \NR
+ \NC 5 \NC Il Papa \NC  The Pope \NR
+ \NS[3]  {\italic After there are images about the human life } \NR
+ \NC 6 \NC La Temperanza \NC The Temperance \NR
+ \NC 7 \NC L' Amore \NC The Love \NR
+\NC 8 \NC Il Carro Trionfale \NC The Triumphal Chariot \NR
+\NC 9 \NC La Fortezza, La Forza \NC The Force \NR
+\NC 10 \NC La Ruota della Fortuna \NC The Wheel of Fortune \NR
+\NC 11 \NC Il Tempo \NC The Time \NR
+\NC 12 \NC L' Impiccato \NC The Hanged, the human impotence \NR
+\NC 13 \NC La Morte \NC The Death. \NR
+ \NS[3]  {\italic After there is the other world, the afterlife} \NR
+\NC 14 \NC the hell with Il Diavolo \NC The Devil \NR
+\NC 15 \NC La Saetta, Il Fulmine \NC The Lightning \NR
+\NC 16 \NC La Stella \NC The Star \NR
+\NC 17 \NC La Luna \NC The Moon \NR
+\NC 18 \NC Il Sole \NC The Sun \NR
+\NC 19 \NC Il Giudizio, L' Angelo \NC The Judgement, The Angel \NR
+\NC 20 \NC La Giustizia \NC The Justice \NR
+\NC 21 \NC Il Mondo \NC The World \NR
+\NC 22 \NC or without number Il Matto \NC The Fool \NR
+ \stoptabulate
+
+ \subsubject{Game of the Tarocco Piemontese}
+Taròck, in Torino. Resumé. \\
+They play Tarocchi for 4 players (Tarocchi in 4, or a 4). \\
+ In the game the players are in partnership, 2 against 2. \\
+ The dealer (mazziere, scartante) gives 19 cards to each player and
+ 21 to himself. He chooses 2 of them and put them apart, they are
+ the Scarto, the Discard; no K, no Tarocchi. But it is possible to discard
+ the Triumph 1 if it is the only triumph of the 21.
+ There are no Bids (Contrats).
+ The match (la partita) has 4 games (smazzata, 4 smazzate), so each
+ player is the dealer 1 time.
+ A complete session, a round, has 3 matches, so each player plays
+ with each of the 3 others 1 time in team. In total a session has
+ 12 games (3 matches x 4 games).
+ The long suits, Batons (Bastoni) and Swords (Spade) correspond to the
+ black french suits, Clubs and Spades. They rank normally from higher
+ to lower: \\
+         {\italic  K, Q, C, J, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 (Asso).} \\
+ The ranking is different from french tarot in the short suits, Coins (Denari)
+ and Cups (Coppe), correspondents to the red french suits, Diamonds
+ and Hearts. They rank, backwards in the numeral cards, from higher
+ to lower: \\
+           {\italic K, Q, C, J, 1 (Asso), 2, 3, 4, 5, 6, 7, 8, 9, 10.} \\
+ In Torino (but not in Milano in the old tarot) the trump 20, the Angel, is
+ stronger than the trump 21, the World.
+ There are the same 2 rules as in french tarot:
+ follow suit (fournir à la couleur, fournir la couleur demandé),
+ cut with a trump (couper),
+ but not the rule of to play with a higher trump (surcouper).
+ The Fool (il Matto or il Folle) is used as the Excuse in the french tarot.
+ It does not take and can not be taken. The player shows this card to the
+ others and put it in his tricks pile. So he is not obliged to play a trick
+ disadvantegeous for him. If the Fool is played first in a trick, the second
+ player leads the suit. \\
+ Scoring is based on counting the points for each trick.
+ 1 for each trick, 4 for The Fool , for Triumph 1 and for 20 (in Milan with
+ old tarot for 21 as in french tarot) and for K, 3 for Q, 2 for C, 1 for J;
+ Example 4 low cards are 1 point; 3 low cards and a K are 5 points;
+ 2 low cards, a Q and a C are 6 points (1 for the trick, 3 for Q, 2 for C).
+ The Fool is counted apart 4 points; the 3 cards of the same trick, if they
+ are low cards, value 1 point. \\
+ Also the Scarto, discard, with 2 cards, if they are low cards, is counted
+ 1 point, as a trick. \\
+ If the team of the dealer has taken no tricks, it loses also the Scarto.
+ If the team of the player with the Fool has taken no tricks, it loses
+ also the Fool. \\
+ The total points are 72 in a game; 40 for the 16 picture cards, 12 for three
+ Triumphs, 19 for the tricks and 1 for the Scarto. The average for the
+ two teams is 36 points (72:2) for each team. The scoring of each team
+ in a game is the difference between his points and 36, positive or negative.
+ In the game with 3 players, each plays for himself, the Scarto has 3 cards.
+ Total points in a game are 78 points because there are 25 tricks.
+
+Note. The man with a hourglass, The Time, has become the man with a lamp, The Hermit.
+The Lightning has become The Tower.
+
+\subject{Informazioni sul programma}
 Versione: 2.0\\
 Sorgenti: \from[uri:GithubSolitario]\\
 Licenza: GPL-2.0 \\
