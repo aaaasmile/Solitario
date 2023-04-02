@@ -248,7 +248,7 @@ LPErrInApp MenuMgr::HandleRootMenu() {
     err = drawMenuText(
         _p_ScreenBackbuffer,
         _p_Languages->GetStringId(Languages::ID_MEN_OPTIONS).c_str(),
-        _box_X + 10, _box_Y + 90, color, _p_fontAriblk);
+        _box_X + 10, _box_Y + 100, color, _p_fontAriblk);
     if (err != NULL) {
         return err;
     }
@@ -260,7 +260,7 @@ LPErrInApp MenuMgr::HandleRootMenu() {
     }
     err = drawMenuText(_p_ScreenBackbuffer,
                        _p_Languages->GetStringId(Languages::ID_CREDITS).c_str(),
-                       _box_X + 10, _box_Y + 130, color, _p_fontAriblk);
+                       _box_X + 10, _box_Y + 150, color, _p_fontAriblk);
     if (err != NULL) {
         return err;
     }
@@ -273,7 +273,7 @@ LPErrInApp MenuMgr::HandleRootMenu() {
     }
     err = drawMenuText(_p_ScreenBackbuffer,
                        _p_Languages->GetStringId(Languages::ID_MN_HELP).c_str(),
-                       _box_X + 10, _box_Y + 170, color, _p_fontAriblk);
+                       _box_X + 10, _box_Y + 200, color, _p_fontAriblk);
     if (err != NULL) {
         return err;
     }
@@ -287,7 +287,7 @@ LPErrInApp MenuMgr::HandleRootMenu() {
     err =
         drawMenuText(_p_ScreenBackbuffer,
                      _p_Languages->GetStringId(Languages::ID_HIGHSCORE).c_str(),
-                     _box_X + 10, _box_Y + 210, color, _p_fontAriblk);
+                     _box_X + 10, _box_Y + 250, color, _p_fontAriblk);
     if (err != NULL) {
         return err;
     }
@@ -333,19 +333,19 @@ LPErrInApp MenuMgr::HandleRootMenu() {
                 event.motion.y >= _rctPanel.y &&
                 event.motion.y <= _rctPanel.y + _rctPanel.h) {
                 // mouse is inner to the box
-                if (event.motion.y < _box_Y + 90) {
+                if (event.motion.y < _box_Y + 100) {
                     _focusedMenuItem = MenuItemEnum::MENU_GAME;
-                } else if (event.motion.y >= _box_Y + 90 &&
-                           event.motion.y < _box_Y + 130) {
+                } else if (event.motion.y >= _box_Y + 100 &&
+                           event.motion.y < _box_Y + 150) {
                     _focusedMenuItem = MenuItemEnum::MENU_OPTIONS;
-                } else if (event.motion.y >= _box_Y + 130 &&
-                           event.motion.y < _box_Y + 170) {
+                } else if (event.motion.y >= _box_Y + 150 &&
+                           event.motion.y < _box_Y + 200) {
                     _focusedMenuItem = MenuItemEnum::MENU_CREDITS;
-                } else if (event.motion.y >= _box_Y + 170 &&
-                           event.motion.y < _box_Y + 230) {
+                } else if (event.motion.y >= _box_Y + 200 &&
+                           event.motion.y < _box_Y + 250) {
                     _focusedMenuItem = MenuItemEnum::MENU_HELP;
-                } else if (event.motion.y >= _box_Y + 230 &&
-                           event.motion.y < _box_Y + 270) {
+                } else if (event.motion.y >= _box_Y + 250 &&
+                           event.motion.y < _box_Y + 300) {
                     _focusedMenuItem = MenuItemEnum::MENU_HIGHSCORE;
                 } else if (event.motion.y >= _screenH - _box_Y - 40) {
                     _focusedMenuItem = MenuItemEnum::QUIT;
