@@ -79,21 +79,34 @@ contengono tutte le carte oridinate dei quattro semi partendo dall'Asso fino al 
     {\externalfigure[fine.png][width=0.9\makeupwidth]}
 
 \subject{Movimenti delle carte}
-Una carta può  essere spostata da una pila all'altra cliccando una carta scoperta e trasportandola sopra
-un'altra carta scoperta di un'altra pila (Drag & Drop). La carta deve essere compatibile con la pila di destinazione.
-Per esempio, una coppa può essere sovrapposta solo ad una carta che è o spade o bastoni.
-Lo stesso vale per denari. I bastoni e le spade possono, invece, essere spostati solo sopra un denari o coppe.
+Una carta può  essere spostata da una pila all'altra. Come? Cliccando una carta scoperta e trasportandola sopra
+un'altra carta scoperta di un'altra pila (Drag & Drop).
+La carta deve essere compatibile con la pila di destinazione.
+Per esempio, una carta di coppe può essere sovrapposta solo ad una carta che è o spade o bastoni.
+Lo stesso vale per denari.
+I bastoni e le spade possono, invece, essere spostati solo sopra un denari o coppe.
 Così una spada non può essere messa sopra un bastoni o un'altra spada. Lo stesso vale per bastoni.
-Il denari non può essere messo sopra una coppa e neanche un altro denari. Lo stesso vale per coppe.
+Il denari non può essere messo sopra una coppa e neanche sopra un altro denari. Lo stesso vale per coppe.
+Questo è il vincolo di colore, dove spade e bastoni sono i semi neri, mentre coppe e denari sono i semi rossi.
+Un seme rosso va messo sopra un seme nero e viceversa.
 
-Non solo l'alternanza del seme è importante ma anche l'ordine, che deve essere decrescente.
+L'ordine, oltre al colore,  è anch'esso un vincolo e deve essere decrescente.
 
-Esempio: sotto un Fante ci va un Sette, sotto un Re un Cavallo e così via fino al Due.
-Lo spostamento delle carte constente di poter scoprire le carte coperte sulle varie pile.
+{\italic Esempio}: sotto un Fante ci va un Sette, sotto un Re un Cavallo e così via fino al Due.
+
+Col mazzo del Tarocco Piemontese, l'ordine è: Re (R), Donna (D), Cavallo (C), Fante (V), Dieci, Nove, Otto,
+Sette, Sei, Cinque, Quattro, Tre, Due, Asso.
+
+Lo spostamento delle carte constente di poter scoprire le carte coperte sulle varie pile (basta cliccare sul dorso coperto).
+
+Solo un Re può essere spostato sui basamenti delle pile del tavolo di gioco.
 
 Quando si scopre un Asso allora lo si può mettere su uno dei quattro basamenti in alto a destra
 (per esempio con il tasto destro del mouse).
 Poi si passa al Due e così via fino al Re (vedi \in{figura}[fig:assobase]).
+Il gioco termina quando i quattro basamenti degli assi sono completi, oppure quando il giocatore rinuncia a
+continuare la partita perché è bloccato e non riesce più a continuare.
+
 
 \placefigure
     [][fig:assobase]
@@ -101,8 +114,10 @@ Poi si passa al Due e così via fino al Re (vedi \in{figura}[fig:assobase]).
     {\externalfigure[basamento.png][width=0.9\makeupwidth]}
 
 Quando lo spostamento delle carte tra le pile o sul basamento degli Assi non è più possibile,
-allora si può cliccare il mazzo di carte restanti in alto a destra (vedi \in{figura}[fig:mazzo]).
+allora si può cliccare il mazzo delle carte restanti in alto a destra (vedi \in{figura}[fig:mazzo]).
 Il mazzo delle carte restanti può essere usato a ripetizione fino a quando si svuota completamente.
+Però bisogna fare attenzione che il punteggio descresce, e di molto, ogni volta che il mazzo delle carte
+di supporto viene rigirato.
 
 \placefigure
     [][fig:mazzo]
@@ -110,21 +125,22 @@ Il mazzo delle carte restanti può essere usato a ripetizione fino a quando si s
     {\externalfigure[mazzo.png][width=0.9\makeupwidth]}
 
 \subject{Punteggio}
-Mentre si gioca al solitario viene conteggiato un punteggio. Esso viene memorizzato
-nella graduatoria dei migliori dieci quando il solitario riesce ed è superiore ad uno dei punteggi della
-classifica. Il menu {\italic High Score} visualizza la classifica.
+Durante il gioco viene aggiornato un punteggio sia in positivo che in negativo.
+Quando il solitario riesce,  il punteggio viene memorizzato nella graduatoria dei migliori dieci, sempre che sia un
+punteggio appartenente a questa categoria.
+Il menu {\italic High Score} visualizza la classifica attuale.
 
-\subsubject{Vantaggi}
+\subsubject{Punteggio virtuoso (positivo)}
 \startitemize[2]
-\item Per ogni carta portata dal mazzo alle pile del gioco: +45 punti
-\item Ogni carta girata: +25 punti
-\item Ogni carta portata sulle pile degli assi: +60 punti
+\item Ogni carta portata dal mazzo di supporto su una pila del tavolo da gioco: +45 punti
+\item Ogni carta girata sul tavolo: +25 punti
+\item Ogni carta portata sul basamento degli assi: +60 punti
 \stopitemize
 
-\subsubject{Penalità}
+\subsubject{Punteggio penalizzante (negativo)}
 \startitemize[2]
 \item Ogni secondo che passa: -1 Punto
-\item Ogni carta che dalle pile degli assi torna sul tavolo: -75 punti
+\item Ogni carta che dal basamento degli assi torna sul tavolo: -75 punti
 \item Quando il mazzo di supporto viene rigirato: -175 punti
 \stopitemize
 
@@ -144,7 +160,7 @@ punteggioFinale = bonus + punteggio
     {Tarocco Piemontese}
     {\externalfigure[tarocco.png][width=0.9\makeupwidth]}
 
-Tra i vari mazzi supportati dal Solitario vie è anche lo splendido mazzo del Tarocco PIemontese.
+Tra i vari mazzi supportati dal Solitario vie è anche lo splendido mazzo del Tarocco Piemontese.
 È un mazzo di 56 carte che consente, quando il solitario riesce, di conseguire un maggiore punteggio
 rispetto al mazzo da 40 carte della briscola. Ecco una sua spiegazione in lingua inglese che a cura di
 Domenico Starna che è anche il creatore del mazzo.
