@@ -46,17 +46,18 @@ class SetupCreator
 
     #@start_script = startscript
     # copy some extra file
-    #license_name = "License.txt"
+    license_name = "MIT.LICENSE"
     #manual_filename = "Invido-help.pdf"
     #readme_filename = "Readme.txt"
     #ruby_dirname = 'Ruby'
     #app_dirname = 'App'
 
     # copy license file
-    #log "Copy license"
-    #file_src = File.join(File.dirname(__FILE__), "../help/#{license_name}")
-    #dest_full = File.join(target_dir, license_name)
-    #FileUtils.cp(file_src, dest_full)
+    log "Copy license"
+    file_src = File.join(File.dirname(__FILE__), "#{license_name}")
+    dest_full = File.join(target_dir, license_name)
+    FileUtils.cp(file_src, dest_full)
+
     # copy manual file
     #log "Copy manual"
     #file_src = File.join(File.dirname(__FILE__), "../help/#{manual_filename}")

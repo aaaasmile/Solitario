@@ -4,7 +4,7 @@
 ;File template per creare un file nsi
 ; con ruby 3.2 questo file va salvato in UTF-8
 
-!define MUI_PRODUCT "Solitario"
+!define MYPRODUCT "Solitario"
 
 ;--------------------------------
 ;Include Modern UI
@@ -22,12 +22,8 @@
   OutFile "..\Solitario_<%="#{@ver_sw[0]}#{@ver_sw[1]}#{@ver_sw[2]}"%>_setup.exe"
 
   ;Default installation folder
-  InstallDir "$PROGRAMFILES64\invido_it\${MUI_PRODUCT}\ver_<%="#{@ver_sw[0]}_#{@ver_sw[1]}_#{@ver_sw[2]}"%>"
+  InstallDir "$PROGRAMFILES64\invido_it\${MYPRODUCT}\ver_<%="#{@ver_sw[0]}_#{@ver_sw[1]}_#{@ver_sw[2]}"%>"
   
-  ; Non uso il registro per non sovrascrivere vecchie versioni
-  ;Get installation folder from registry if available
-  ;InstallDirRegKey HKCU "Software\invido" ""
-
 ;--------------------------------
 ;Interface Settings
 
@@ -63,12 +59,12 @@ Function .onInit
   
   ; check se una versione vecchia è stata già installata  
   ReadRegStr $R0 HKLM \
-  "Software\Microsoft\Windows\CurrentVersion\Uninstall\${MUI_PRODUCT}" \
+  "Software\Microsoft\Windows\CurrentVersion\Uninstall\${MYPRODUCT}" \
   "UninstallString"
   StrCmp $R0 "" done
  
   MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION \
-  "${MUI_PRODUCT} è già installato. $\n$\nClicca `OK` per rimuovere \
+  "${MYPRODUCT} è già installato. $\n$\nClicca `OK` per rimuovere \
   la versione precedente `Cancel` per interrompere questo aggiornamento." \
   IDOK uninst
   Abort
@@ -88,7 +84,7 @@ uninst:
 done:
 
   Messagebox MB_YESNO|MB_ICONQUESTION \
-  "Questo setup sta per installare il programma ${MUI_PRODUCT} <%="#{@ver_sw[0]}.#{@ver_sw[1]}.#{@ver_sw[2]}"%>, un'applicazione per giocare a Invido. Vuoi continuare?" IDYES NoAbort
+  "Questo setup sta per installare il programma ${MYPRODUCT} <%="#{@ver_sw[0]}.#{@ver_sw[1]}.#{@ver_sw[2]}"%>, un'applicazione per giocare al Solitario con le carte da briscola. Vuoi continuare?" IDYES NoAbort
      Abort ; causes installer to quit.
    NoAbort:
 FunctionEnd
@@ -96,7 +92,7 @@ FunctionEnd
 ; al termine dell'installazione si lancia il programma
 Function .onInstSuccess
     MessageBox MB_YESNO "Installazione effettuata con successo. Vuoi lanciare il programma Solitario?" IDNO NoReadme
-    Exec "$INSTDIR\Invido.exe"
+    Exec "$INSTDIR\Solitario.exe"
     NoReadme:
 FunctionEnd
 
@@ -118,25 +114,25 @@ Section "Solitario" SecSolitario
   SetOutPath "$INSTDIR"
 
   ;Store installation folder
-  WriteRegStr HKEY_LOCAL_MACHINE "Software\Solitario_it\${MUI_PRODUCT}" "InstallDir" $INSTDIR
-  WriteRegStr HKEY_LOCAL_MACHINE "Software\Solitario_it\${MUI_PRODUCT}" "Ver0" <%= @ver_sw[0]%>
-  WriteRegStr HKEY_LOCAL_MACHINE "Software\Solitario_it\${MUI_PRODUCT}" "Ver1" <%= @ver_sw[1]%>
-  WriteRegStr HKEY_LOCAL_MACHINE "Software\Solitario_it\${MUI_PRODUCT}" "Ver2" <%= @ver_sw[2]%>
+  WriteRegStr HKEY_LOCAL_MACHINE "Software\Solitario_it\${MYPRODUCT}" "InstallDir" $INSTDIR
+  WriteRegStr HKEY_LOCAL_MACHINE "Software\Solitario_it\${MYPRODUCT}" "Ver0" <%= @ver_sw[0]%>
+  WriteRegStr HKEY_LOCAL_MACHINE "Software\Solitario_it\${MYPRODUCT}" "Ver1" <%= @ver_sw[1]%>
+  WriteRegStr HKEY_LOCAL_MACHINE "Software\Solitario_it\${MYPRODUCT}" "Ver2" <%= @ver_sw[2]%>
   
   ;Create uninstaller
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${MUI_PRODUCT}" "DisplayName" "${MUI_PRODUCT} (remove only)"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${MUI_PRODUCT}" "Publisher" "Invido.it"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${MUI_PRODUCT}" "DisplayVersion" "<%="#{@ver_sw[0]}.#{@ver_sw[1]}.#{@ver_sw[2]}"%>"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${MUI_PRODUCT}" "UninstallString" "$INSTDIR\Uninstall.exe"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${MYPRODUCT}" "DisplayName" "${MYPRODUCT} (remove only)"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${MYPRODUCT}" "Publisher" "Invido.it"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${MYPRODUCT}" "DisplayVersion" "<%="#{@ver_sw[0]}.#{@ver_sw[1]}.#{@ver_sw[2]}"%>"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${MYPRODUCT}" "UninstallString" "$INSTDIR\Uninstall.exe"
   WriteUninstaller "$INSTDIR\Uninstall.exe"
 
   ; crea un shortcut
-  CreateDirectory "$SMPROGRAMS\${MUI_PRODUCT}<%="#{@ver_sw[0]}_#{@ver_sw[1]}_#{@ver_sw[2]}"%>"
-  CreateShortCut "$SMPROGRAMS\${MUI_PRODUCT}<%="#{@ver_sw[0]}_#{@ver_sw[1]}_#{@ver_sw[2]}"%>\Solitario.lnk" \
+  CreateDirectory "$SMPROGRAMS\${MYPRODUCT}<%="#{@ver_sw[0]}_#{@ver_sw[1]}_#{@ver_sw[2]}"%>"
+  CreateShortCut "$SMPROGRAMS\${MYPRODUCT}<%="#{@ver_sw[0]}_#{@ver_sw[1]}_#{@ver_sw[2]}"%>\Solitario.lnk" \
     "$INSTDIR\solitario.exe"
-  CreateShortCut "$SMPROGRAMS\${MUI_PRODUCT}<%="#{@ver_sw[0]}_#{@ver_sw[1]}_#{@ver_sw[2]}"%>\Manuale.lnk" \
+  CreateShortCut "$SMPROGRAMS\${MYPRODUCT}<%="#{@ver_sw[0]}_#{@ver_sw[1]}_#{@ver_sw[2]}"%>\Manuale.lnk" \
     "$INSTDIR\data\help\solitario.pdf"
-  CreateShortCut "$SMPROGRAMS\${MUI_PRODUCT}<%="#{@ver_sw[0]}_#{@ver_sw[1]}_#{@ver_sw[2]}"%>\Uninstall.lnk" \
+  CreateShortCut "$SMPROGRAMS\${MYPRODUCT}<%="#{@ver_sw[0]}_#{@ver_sw[1]}_#{@ver_sw[2]}"%>\Uninstall.lnk" \
     "$INSTDIR\Uninstall.exe"
 
 
@@ -160,14 +156,14 @@ Section "Uninstall"
   ;Remove the installation directory
   RMDir "$INSTDIR"
   ; remove shortcuts
-  Delete "$SMPROGRAMS\${MUI_PRODUCT}<%="#{@ver_sw[0]}_#{@ver_sw[1]}_#{@ver_sw[2]}"%>\Solitario.lnk"
-  Delete "$SMPROGRAMS\${MUI_PRODUCT}<%="#{@ver_sw[0]}_#{@ver_sw[1]}_#{@ver_sw[2]}"%>\Manuale.lnk"
-  Delete "$SMPROGRAMS\${MUI_PRODUCT}<%="#{@ver_sw[0]}_#{@ver_sw[1]}_#{@ver_sw[2]}"%>\Uninstall.lnk"
-  RMDir /r  "$SMPROGRAMS\${MUI_PRODUCT}<%="#{@ver_sw[0]}_#{@ver_sw[1]}_#{@ver_sw[2]}"%>"
+  Delete "$SMPROGRAMS\${MYPRODUCT}<%="#{@ver_sw[0]}_#{@ver_sw[1]}_#{@ver_sw[2]}"%>\Solitario.lnk"
+  Delete "$SMPROGRAMS\${MYPRODUCT}<%="#{@ver_sw[0]}_#{@ver_sw[1]}_#{@ver_sw[2]}"%>\Manuale.lnk"
+  Delete "$SMPROGRAMS\${MYPRODUCT}<%="#{@ver_sw[0]}_#{@ver_sw[1]}_#{@ver_sw[2]}"%>\Uninstall.lnk"
+  RMDir /r  "$SMPROGRAMS\${MYPRODUCT}<%="#{@ver_sw[0]}_#{@ver_sw[1]}_#{@ver_sw[2]}"%>"
 
   ;Delete Uninstaller And Unistall Registry Entries
-  DeleteRegKey /ifempty HKCU "Software\invido_it\${MUI_PRODUCT}"
-  DeleteRegKey /ifempty HKEY_LOCAL_MACHINE "Software\invido_it\${MUI_PRODUCT}"
-  DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${MUI_PRODUCT}"  
+  DeleteRegKey /ifempty HKCU "Software\invido_it\${MYPRODUCT}"
+  DeleteRegKey /ifempty HKEY_LOCAL_MACHINE "Software\invido_it\${MYPRODUCT}"
+  DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${MYPRODUCT}"  
 
 SectionEnd
