@@ -131,7 +131,7 @@ Section "Solitario" SecSolitario
   CreateShortCut "$SMPROGRAMS\${MYPRODUCT}<%="#{@ver_sw[0]}_#{@ver_sw[1]}_#{@ver_sw[2]}"%>\Solitario.lnk" \
     "$INSTDIR\solitario.exe"
   CreateShortCut "$SMPROGRAMS\${MYPRODUCT}<%="#{@ver_sw[0]}_#{@ver_sw[1]}_#{@ver_sw[2]}"%>\Manuale.lnk" \
-    "$INSTDIR\data\help\solitario.pdf"
+    "$INSTDIR\data\solitario.pdf"
   CreateShortCut "$SMPROGRAMS\${MYPRODUCT}<%="#{@ver_sw[0]}_#{@ver_sw[1]}_#{@ver_sw[2]}"%>\Uninstall.lnk" \
     "$INSTDIR\Uninstall.exe"
 

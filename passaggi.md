@@ -296,9 +296,10 @@ oltre alla powershell con ninja in build, mi funziona la icona Build nella statu
 
 ### TODO
 - windows setup
+    - Il file exe dovrebbe avere un altra icona
     - Il deploy così com'è non va bene. Le dll e l'exe devono provenire dalla directory build.
-        Qui occorre un filtro per non inglobare anche i files di CMake. 
-    - Il link della guida nell'installazione è sbagliato
+        Qui occorre un filtro per non inglobare anche i files di CMake.  [DONE]
+    - Il link della guida nell'installazione è sbagliato [DONE]
 - Score (http://www.solitairecity.com/Help/Klondike_Scoring.shtml)
     - Menu "Punteggi" [DONE]
     - Salva i dieci migliori punteggi con la data e il nome dell'utente nel file ini e il numero delle carte (56 o 40) [DONE]
