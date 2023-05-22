@@ -1,6 +1,6 @@
 # yaml used for deploy
 ---
 
-:root_deploy: D:\Projects\github\carte\solitario\build\published
-:source_bin: D:\Projects\github\carte\solitario\build\out
+:root_deploy: D:\Projects\github\carte\solitario\published
+:source_bin: D:\Projects\github\carte\solitario\build
 :nsi_exe: C:\Program Files (x86)\NSIS\Bin\makensis.exe

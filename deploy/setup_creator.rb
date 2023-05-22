@@ -124,8 +124,7 @@ class SetupCreator
     fscd.is_silent = true
     fscd.scan_dir(root_dir)
     res_names = []
-    #each file need to be specified like without keyword File:
-    #   File "app\\src\\cuperativa_gui.rb"
+
     old_rel_dir_path = nil
     fscd.result_list.each do |file_src|
       name = file_src.gsub(name_to_cut, "")
@@ -135,7 +134,7 @@ class SetupCreator
       puts str_path_file = "#{name}"
       if rel_dir_path != old_rel_dir_path
         puts "Path changed to: #{rel_dir_path}"
-        adptrel_dir_path = "\\#{rel_dir_path.gsub("/", "\\")}" # need: \app\src\network
+        adptrel_dir_path = "\\#{rel_dir_path.gsub("/", "\\")}"
         res_names << { :filename => str_path_file, :out_path => adptrel_dir_path,
                        :delete_path => old_rel_dir_path }
         old_rel_dir_path = rel_dir_path
@@ -158,7 +157,9 @@ class SetupCreator
 
   def copy_app_subdir(src_app_dir, target_dir)
     fscd = FileScanDir.new
-    fscd.add_extension_filter([".yaml", ".yml", ".log"])
+    fscd.add_extension_filter([".yaml", ".yml", ".log", ".a", ".ninja_log", ".ninja_deps", ".ninja", ".cmake", ".nsi"])
+    fscd.add_dir_filter(["CMakeFiles", ".cmake"])
+    fscd.add_file_filter([".ninja_log", ".ninja_deps", "solitario_gen.nsi", "pong.exe", "compile_commands.json", "CMakeCache.txt"])
     fscd.is_silent = true
     start_dir = src_app_dir
     fscd.scan_dir(start_dir)
