@@ -352,11 +352,12 @@ Per avere gli script in formato kotlin (dopo aver cancellato quelli che avevo cr
 
 	./gradlew  init --dsl kotlin
  
-## SDL hello World
+## SDL2 hello World per android
 Vorrei provare a compilare un progetto HelloWorld per SDL2.
-Per partire scarico i sorgenti di SDL2 stabili in unsa dir temporanea e copio la sottodiretcory
-android-project nel mio scratch di android che uso come template. Qui copio il contenuto della directory src di SDL
-nella sotto directory \Ubuntu-22.04\home\igor\scratch\android\sdl-android-prj-hello\app\jni
+Per partire scarico i sorgenti di SDL2 stabili (SDL-release-2.26.5.tar.gz) in una dir temporanea 
+e copio la sottodiretcory android-project, che uso come template,  nel mio scratch di android. 
+Qui copio il contenuto della directory di SDL (non tutto vedi sotto)
+nella nuova sotto directory SDL in \Ubuntu-22.04\home\igor\scratch\android\sdl-android-prj-hello\app\jni
 In Ubuntu-22.04\home\igor\scratch\android\sdl-android-prj-hello\app\jni\src creo il file main.cpp
 dove il contenuto lo prendo dal gist https://gist.github.com/fschr/92958222e35a823e738bb181fe045274
 
@@ -365,12 +366,13 @@ e l'editor del progetto. Il file gradlew ha bisogno di essere eseguibile:
 
 	chmod +x ./gradlew
 Quando lancio ./gradlew tasks mi installa gradle 7.3
-Ora si tratta di settare le variabili di ambiente per compilare il progetto col framework 33.
+Ora si tratta di settare le variabili di ambiente per compilare il progetto.
 Il settaggio fatto in precedenza per la compilazione senza gradle non va. Sembra che occorra solo
 una variabile che mi definisce il ROOT delle installazioni di android
 
 	export ANDROID_SDK_ROOT=$HOME/android/
 	export PATH=${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin:${PATH}
+Il path cmdline-tools mi serve solo se voglio lanciare sdkmanager nel terminal.
 
 Ora si pianta qui:
 > Preparing "Install NDK (Side by side) 21.4.7075529   
@@ -380,12 +382,53 @@ Esso si vede e si installa con:
 
 	sdkmanager --list | grep ndk
 	sdkmanager "ndk;21.4.7075529"
+Anche se non sono sicuro che non faceva nulla. L'sdk 31 l'ha scaricato senza problemi, 
+probabile che il download di ndk non fosse finito in quanto con gradlew non c'è indicazione del progresso 
+come, invece, c'è in sdkmanager.
 
-ora il comando
+Ora il comando
 
-	./gradlew :tasks
-funziona
- 
-## obsoleto
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-sudo apt install openjdk-8-jdk ant android-sdk-platform-tools-common
+	./gradlew tasks
+funziona. Ora vorrei capire quale ABI target devo usare per il mio J320f
+Secondo https://de.wikipedia.org/wiki/Samsung_Galaxy_J3_(2016)#Hardware il processore è 
+un 1,5 GHz ARM Cortex-A7 CPU.
+Vale a dire l'ultima generazione dei processori ARM a 32 bit. Quindi il target v7 32 bit dovrebbe essere corretto.
+
+Ora posso partire per la compilazione con:
+
+	 ./gradlew compileDebugSources
+per un cleanup
+
+	./gradlew clean
+Nota che se manca qualcosa tipo build-tools o il framework  31 esso viene installato prima di partire con
+la compilazione. Non uso il framework 33 in quanto dovrei aggiornare anche gradlew.
+
+Nota che ho copiato i sorgenti di SDL dallo zip SDL-release-2.26.5.tar.gz che è l'ultima release stabile di sdl2
+dentro a app/jni/SDL. 
+Importante: non ho copiato tutto, ma solo i files di root (Android.mk ci deve essere) poi include
+e src. Le directories di SDL-release-2.26.5 "android project" è meglio non copiarle 
+che mi pianta tutto il file explorer. 
+Penso che partano dei daemon con una referenza circolare che ho risolto solo con un restart del computer. 
+In Andorid.mk uso poi:
+	
+	SDL_PATH := ../SDL
+	LOCAL_SHARED_LIBRARIES := SDL2
+Nota che SDL viene compilato come shared library (estensione so). 
+Il nome SDL2 si trova poi nella sotto directory SDL/Android.mk
+Nota che nominare la directory SDL2 invece di SDL in jni non serve. Visual Code per avere un editor senza errori
+usa un nuovo settings c_cpp_properties.json dove si ha un include path "${workspaceFolder}/**".
+Qui basta fare un reload window e in main.cpp si usa poi:
+
+	#include <SDL.h>
+senza usare riferimenti a SDL2 come nell'installazione di ubuntu. Per Android copio i sorgenti di SDL.
+Il processo di build crea i binaries nella sotto directory di build.
+Nella directory /build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a si vedono le due librerie 
+create con ndk: libSDL2.so libmain.so una volta che il build ha successo.
+In /build/intermediates/javac/debug/classes/org/libsdl/app ho, invece, tutti i files .class che servono per
+l'activity che, una volta lanciata, ingloba il loop di Sdl con il mio main.cpp.
+
+Quando si aggiunge la libreria SDL2_image essa va aggiunta nella funzione getLibraries() del file SDLActivity.java.
+
+Mi sembra che con gradlew e Visual Code riesco a programmare senza problemi senza dover installare Android Studio. 
+Tutti i miei esperimenti li ho fatti a linea di comando e in Visual Code
+usando WSL2 sotto windows 11. Con un progetto template che contenga gradle lo sviluppo risulta molto veloce.
