@@ -92,7 +92,7 @@ Ora in powershell riesco a lanciare il comando:
 	usbipd wsl list
 	BUSID  VID:PID    DEVICE                                                        STATE
 	2-4    04e8:6860  Samsung Galaxy J3 (2016), USB Serial Device (COM4)            Not attached
-Poi apro Ubuntu in un tab parallelo a powershel e in powershel (come admin) lancio
+Poi apro Ubuntu in un tab parallelo a powershell e in powershell (come admin) lancio
 
 	usbipd wsl attach --busid 2-4
 Ora  in ubuntu al comando lsusb ottengo:
@@ -115,7 +115,7 @@ Dopo un restart di windows il telefono va scollegato e collegato quando si fa l'
 
 	
 ### Hello World primo tentativo
-Sono partito usando la platform33 per poi retrocedere su piattaforme passate per via d'usare
+Sono partito usando la platform 33 per poi retrocedere su piattaforme passate per via d'usare
 tools che erano documentati. Alla fine, vedi sezione successiva, sono riuscito a fare andare 
 Hello World usando la platform 33. 
 Variabili di sistema da settare prima di partire:
@@ -127,7 +127,7 @@ Variabili di sistema da settare prima di partire:
 	export PATH=${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/build-tools/24.0.3:${ANDROID_HOME}/ndk-bundle:${PATH}
 	export PROJ=$HOME/scratch/android/hello	
 	
-A quanto pare server java 1.8 e non 1.11. In ogni modo sono riuscito a fare andare hello.apk
+A quanto pare serve java 1.8 e non 1.11 per android 24. In ogni modo sono riuscito a fare andare hello.apk
 usando l'alternativa (vedi punto 13 sotto), ma usa un tool ApkBuilderMain che è deprecated.
 Sarebbe interessante vedere se con java 1.8 (vedi sotto per lo switch) 
 Oppure la versione con d8 e appbuilder messa in StackOverflow alla fine.
@@ -162,7 +162,7 @@ Punto 12 (non riesco a capirlo quindi lo salto)
 Con l'sdk 24
 dx --dex --output=$PROJ/bin/classes.dex $PROJ/obj
 
-Con l'sdk 33 (che non riesco a farlo andare sul Samsung J320f)
+Con l'sdk 33 (con una sequenza non ancora essatta per Samsung J320f)
 	Nota che nella mia platform 33 dx ora si chiama d8
 	Questo comando non funziona:
 	d8 --output=$PROJ/bin/classes.dex $PROJ/obj
@@ -191,7 +191,7 @@ AndroidManifest.xml
 /home/igor/scratch/android/hello/bin/classes.dex
 Da cui si vede che il mio hello.unaligned.apk è composto di due files: il dex e il manifest.
 
-* Oppure che funziona!!! - inizio - *
+* Alternativa che funziona!!! - inizio - *
 NOTA: per usare questa alternativa ho dovuto usare java 8 che ho fatto lo switch con:
 	sudo update-alternatives --config javac
 	sudo update-alternatives --config java
@@ -221,7 +221,7 @@ apksigner sign --ks mykey.keystore $PROJ/bin/hello.apk
 Per vedere se la signature funziona:
 apksigner verify $PROJ/bin/hello.apk
 Nota che l'help mostra (https://developer.android.com/tools/apksigner):
-Caution: If you sign your APK using apksigner and make further changes to the APK, the APK's signature is invalidated. If you use zipalign to align your APK, use it before signing the APK.
+>Caution: If you sign your APK using apksigner and make further changes to the APK, the APK's signature is invalidated. If you use zipalign to align your APK, use it before signing the APK.
 Il che significa che la signature è l'ultimo step prima dell'installazione.
 
 Punto 16
@@ -230,26 +230,28 @@ qui l'opzione -r significa reinstall
 adb install -r $PROJ/bin/hello.apk
 
 Non funziona ancora:
-erforming Push Install
+performing Push Install
 /home/igor/scratch/android/hello/bin/hello.apk: 1 file pushed, 0 skipped. 474.3 MB/s (1573238 bytes in 0.003s)
         pkg: /data/local/tmp/hello.apk
 Failure [INSTALL_FAILED_DEXOPT]
 Per vedere il log dettagliato si usa:
 adb logcat
-che salvo sul file device.log per un'analisi dell'errore:
+salvato sul file device.log per un'analisi dell'errore:
 E/Parcel  (  754): Class not found when unmarshalling: xqm
 E/Parcel  (  754): java.lang.ClassNotFoundException: xqm
 
 Punto 17
-Se l'installazione funziona allora si usa
-adb shell am start -n dom.domain/.SayingHello
+Se l'installazione funziona allora si lancia l'app con:
+
+	adb shell am start -n dom.domain/.SayingHello
 
 Punto 18
 Disintallare l'app:
-adb uninstall dom.domain
+
+	adb uninstall dom.domain
 
 ### Hello World con java-11 e platform 33
-Come prerequisito uso java 11 e non java 8 come la sezione precedente
+Come prerequisito ora uso java 11 e non java 8 come la sezione precedente
 
 	export JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64
 	export ANDROID_HOME=$HOME/android
@@ -272,7 +274,7 @@ Compilazione resources
 	-J src -m \
 	-M AndroidManifest.xml -S res -v
 
-compilazione class
+compilazione class e dex
   
 	javac -d obj -bootclasspath ${ANDROID_SDK_ROOT}/android.jar  -classpath src -source 1.7 -target 1.7 src/dom/domain/*.java
 
@@ -313,7 +315,7 @@ Disintallare l'app:
 	
 ### adb devices
 Questo comando mi ha mostrato la lista vuota, il che significa che non c'è nessun dispositivo collegato.
-Ora da blog halimsamy.com creo questo file:
+Ora, come citato nel blog halimsamy.com, creo questo file:
 
 	sudo nano /etc/udev/rules.d/51-android.rules
 e lì ci metto questa riga:
@@ -376,6 +378,7 @@ Il path cmdline-tools mi serve solo se voglio lanciare sdkmanager nel terminal.
 
 Ora si pianta qui:
 > Preparing "Install NDK (Side by side) 21.4.7075529   
+
 e non fa più nulla. Dovrei installare NDK con sdk-manager a linea di comando. Come?
 Con sdkmanager, che funziona dopo aver aggiornato il path con i cmdline-tools, vedo di installare ndk 21.4.7075529 
 Esso si vede e si installa con:  
