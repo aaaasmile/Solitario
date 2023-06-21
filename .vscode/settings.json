@@ -51,5 +51,14 @@
         "sstream": "cpp",
         "musicmanager.h": "c"
     },
-    "cmake.configureOnOpen": false
+    "cmake.configureOnOpen": false,
+    "cSpell.words": [
+        "commandlinetools",
+        "Cortex",
+        "l'Invido",
+        "libini",
+        "Nougart",
+        "samsumg",
+        "Saying"
+    ]
 }

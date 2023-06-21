@@ -71,7 +71,7 @@ Alla fine nella sottodirectory libini ho il file _libini.a_ da linkare staticame
 programma principale. Nota che ranlib e ar sono due programmi che servono per 
 creare il file libini.a. _Runlib_ sembra un alias di _ar_.
 Nota che la libreria nel progetto ha un proprio target e make file.
-Il file libini.a, peró, non viene installato ma semplicemente linkato. Il processo è indicato qui:
+Il file libini.a, però, non viene installato ma semplicemente linkato. Il processo è indicato qui:
 _(concept of a "convenience library", which is an intermediate target that is never itself installed, 
 but contains object code that can be linked into an executable or a larger library_.
 
@@ -86,7 +86,7 @@ Questo è il link che uso (versione 2.71):
 https://www.gnu.org/software/autoconf/manual/autoconf-2.71/html_node/Initializing-configure.html.
 Questo per avere i parametri iniziali definiti poi in Config.h (Nome, Versione, e-mail, tarball e URL).
 Il file di partenza è configure.ac e sono partito da zero guardando il tutorial.
-Ho messo le macro indispendabili come:
+Ho messo le macro indispensabili come:
 
     AC_INIT -> inizializza le info basilari
     AM_INIT_AUTOMAKE -> comincia ad usarle con dei parametri di verbosità e tolleranza
@@ -113,7 +113,7 @@ dove risiede il Makefile.
 Sono partito dalla versione linux, quindi in WSL lancio
 
     code . 
-(la liea di comando di VsCode) che mi setta l'ambiente
+(la linea di comando di VsCode) che mi setta l'ambiente
 remoto WSL:Ubuntu-22.04. Il compilatore con _automake_, _configure_ e _make_ li uso da command line bash.
 Per avere il goto definition in questo ambiente mi serve il path che setto creando un file
 
@@ -154,7 +154,7 @@ Basta provare con Xclock, che una volta installato parte senza altri server.
 Per vedere se funziona un programma SDL2 nella WSL2 basta provare a clonare la
 repository https://github.com/aminosbh/falling-brick-game
 e seguire le istruzioni per compilare ed eseguire il programma. Nel mio caso ha funzionato.
-Per fare il debug del solitario ho invece dovuto aggiungere un lauch.json e 
+Per fare il debug del solitario ho invece dovuto aggiungere un launch.json e 
 nel task.jon ho messo il "Debug Build", che altro non è che il make standard visto
 che aggiunge di default il parametro -g. Basta mettere un Breakpoint in main.cpp e 
 premere F5 e gdb parte subito.
@@ -283,7 +283,7 @@ Quello che mi manca è l'integrazione in VsCode con diversi target per la produz
 
 ## Visual Code in Windows
 Il file c_cpp_properties.json è nella repository, quindi viene usato sia in WSL2 che in windows.
-Ci sono due confugurazioni: win32 e linux. Sono due nomi riservati che vengono selezionati automaticamente.
+Ci sono due configurazioni: win32 e linux. Sono due nomi riservati che vengono selezionati automaticamente.
 Esse servono per avere un editor con intellisense ed errori appropriati in quanto i folder delle
 librerie nei due ambienti sono piazzate in paths differenti. Se non viene selezionato in modo 
 corretto, nella statusbar in basso a destra lo si può selezionare manualmente.
@@ -328,7 +328,7 @@ oltre alla powershell con ninja in build, mi funziona la icona Build nella statu
 - Le opzioni cambiate vanno scritte nell'options.ini dell'utente [DONE]
 - Draw del background non contiene i bordi neri. Il drag della prima foundation è sporco [DONE]
 - Il drag parte da x,y = 0,0 [DONE]
-- Il menu ha ancora bisogno di correzzioni sdl 1.2 -> sdl 2.0 [DONE]
+- Il menu ha ancora bisogno di correzioni sdl 1.2 -> sdl 2.0 [DONE]
 - Il rendering del gioco non usa le immagini in formato Pac ma quelle singole [DONE]
 
 ### TODO Nice To Have

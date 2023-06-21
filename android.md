@@ -13,7 +13,7 @@ Siccome uso WSL-2 uso come referenza anche il link: https://halimsamy.com/wsl-fo
 sudo apt install gradle
 
 
-Vediamo di installarre i tools, dove il link si trova su https://developer.android.com/studio#downloads
+Vediamo di installare i tools, dove il link si trova su https://developer.android.com/studio#downloads
 nella sezione command links only.
 Lo zip per Linux l'ho scaricato col browser e l'ho copiato nella directory \\wsl.localhost\Ubuntu-22.04\tmp
 Poi nella WSL:
@@ -24,7 +24,7 @@ Poi nella WSL:
 	mv android/cmdline-tools/cmdline-tools android/cmdline-tools/latest
 	rm /tmp/cmd-tools.zip # delete the zip file (optional)
 
-Ho settato delle varibili per lo sviluppo con android-33
+Ho settato delle variabili per lo sviluppo con android-33
 
 	export ANDROID_HOME=$HOME/android
 	export ANDROID_SDK_ROOT=${ANDROID_HOME}/platforms/android-33
@@ -59,7 +59,7 @@ Questi comandi li ho aggiunti di mio
 	sdkmanager "platform-tools"
 	sdkmanager "ndk-bundle"
 	
-Il comnando sdkmanager "tools" scarica gli emulatori che non ho intenzione di usare.
+Il comando sdkmanager "tools" scarica gli emulatori che non ho intenzione di usare.
 
 ## Samsumg J320f
 Mi piacerebbe usare il vecchio Samsumg J320f per provare qualche applicazione apk. 
@@ -83,7 +83,7 @@ Url di riferimento è: https://wiki.libsdl.org/SDL2/Android#install_sdl_in_a_gcc
 
 ### Collegare J320f con WSL2
 La url di riferimento è https://halimsamy.com/wsl-for-developers-connect-usb-devices
-Bisogna usare usbipd che si installa con poweshell e il comando:
+Bisogna usare usbipd che si installa con powershell e il comando:
 winget install usbipd
 usbipd url di riferimento è: https://github.com/dorssel/usbipd-win
 Dopo ho fatto un restart di windows
@@ -162,7 +162,7 @@ Punto 12 (non riesco a capirlo quindi lo salto)
 Con l'sdk 24
 dx --dex --output=$PROJ/bin/classes.dex $PROJ/obj
 
-Con l'sdk 33 (con una sequenza non ancora essatta per Samsung J320f)
+Con l'sdk 33 (con una sequenza non ancora esatta per Samsung J320f)
 	Nota che nella mia platform 33 dx ora si chiama d8
 	Questo comando non funziona:
 	d8 --output=$PROJ/bin/classes.dex $PROJ/obj
@@ -186,7 +186,7 @@ aapt add $PROJ/bin/hello.unaligned.apk $PROJ/bin/classes.dex
 
 A questo punto il comando:
 aapt list $PROJ/bin/hello.unaligned.apk
-Mi mostra il seguente risulato:
+Mi mostra il seguente risultato:
 AndroidManifest.xml
 /home/igor/scratch/android/hello/bin/classes.dex
 Da cui si vede che il mio hello.unaligned.apk è composto di due files: il dex e il manifest.
@@ -246,7 +246,7 @@ Se l'installazione funziona allora si lancia l'app con:
 	adb shell am start -n dom.domain/.SayingHello
 
 Punto 18
-Disintallare l'app:
+Disinstallare l'app:
 
 	adb uninstall dom.domain
 
@@ -309,12 +309,32 @@ Start
 	
 	adb shell am start -n dom.domain/.SayingHello
 	
-Disintallare l'app:
+Disinstallare l'app:
 
 	adb uninstall dom.domain
 	
 ### adb devices
-Questo comando mi ha mostrato la lista vuota, il che significa che non c'è nessun dispositivo collegato.
+Prerequisito è una powershell in admin con
+	
+	usbipd wsl list
+	usbipd wsl attach --busid 2-4
+E in ubuntu WSL bisogna avere sdb. Se uso SDL2 allora uso le seguenti variabili di sistema:
+
+	export ANDROID_SDK_ROOT=$HOME/android/
+	export PATH=${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin:${ANDROID_SDK_ROOT}/platform-tools:${PATH}
+	
+
+Ora  stop e restart del server, ma questa volta usando sudo.
+Nota che sul device mi compare un messaggio per autorizzare il collegamento
+
+	adb kill-server
+	sudo /home/igor/android/platform-tools/adb start-server
+	adb devices
+List of devices attached
+420050c6cc2eb300        device 
+
+Se non funziona e mostra una lista vuota, significa che non c'è nessun dispositivo collegato.
+Se invece c'è, allora prova a vedere il file 51-android.rules dove ci piazzo il mio dispositivo
 Ora, come citato nel blog halimsamy.com, creo questo file:
 
 	sudo nano /etc/udev/rules.d/51-android.rules
@@ -326,14 +346,6 @@ Vendor e Prod Id in lsusb
 Vendor 04e8
 ProdId 6860 
 
-Ora  stop e restart del server, ma questa volta usando sudo.
-Nota che sul device mi compare un messaggio per autorizzare il collegamento
-
-	adb kill-server
-	sudo /home/igor/android/platform-tools/adb start-server
-	adb devices
-List of devices attached
-420050c6cc2eb300        device 
 
 ## Gradle
 Android Studio usa Gradle per compilare i progetti col target android.
@@ -355,14 +367,51 @@ Per avere gli script in formato kotlin (dopo aver cancellato quelli che avevo cr
 	./gradlew  init --dsl kotlin
  
 ## SDL2 hello World per android
-Vorrei provare a compilare un progetto HelloWorld per SDL2.
+Vorrei provare a compilare un progetto HelloWorld per SDL2. È un programma che mostra
+un rettangolo 
+
+### Uso dopo aver settato tutto
+
+	cd scratch/android/sdl-android-prj-hello/
+	code .
+Nel terminal di Code e il telefono collegato all'hub provo a vedere se adb funziona
+
+	export ANDROID_SDK_ROOT=$HOME/android/
+	export PATH=${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin:${ANDROID_SDK_ROOT}/platform-tools:${PATH}
+	sudo /home/igor/android/platform-tools/adb start-server
+	adb devices
+	
+Compilare il codice
+
+	./gradlew compileDebugSources
+	
+Compilare e Installare il programma sul device (anche dopo aver cambiato il codice):
+
+	./gradlew installDebug
+	
+Il programma con l'icona SDLGame si trova sotto il menu Apps alla fine
+Per farlo partire dal computer si usa:
+	
+	adb shell am start -n org.libsdl.app/.SDLActivity
+	
+Per vedere altri tasks si usa:
+
+	./gradlew tasks
+	
+### Problemi
+Il comando
+
+	./gradlew installDebug
+mi manda windows in blue screen of the death. Per ricollegarmi al device ho dovuto
+far ripartire windows due volte. Il telefono solo una volta.
+	
+### Settaggio iniziale del progetto SDL2 hello World
 Per partire scarico i sorgenti di SDL2 stabili (SDL-release-2.26.5.tar.gz) in una dir temporanea 
-e copio la sottodiretcory android-project, che uso come template,  nel mio scratch di android. 
+e copio la sottodirectory android-project, che uso come template,  nel mio scratch di android. 
 Qui copio il contenuto della directory di SDL (non tutto vedi sotto)
 nella nuova sotto directory SDL in \Ubuntu-22.04\home\igor\scratch\android\sdl-android-prj-hello\app\jni
 In Ubuntu-22.04\home\igor\scratch\android\sdl-android-prj-hello\app\jni\src creo il file main.cpp
 dove il contenuto lo prendo dal gist https://gist.github.com/fschr/92958222e35a823e738bb181fe045274
-
 Ora si tratta di compilare il progetto con gradle, che è poi gradlew. Uso Visual Code per il terminal
 e l'editor del progetto. Il file gradlew ha bisogno di essere eseguibile:
 
@@ -373,8 +422,11 @@ Il settaggio fatto in precedenza per la compilazione senza gradle non va. Sembra
 una variabile che mi definisce il ROOT delle installazioni di android
 
 	export ANDROID_SDK_ROOT=$HOME/android/
-	export PATH=${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin:${PATH}
-Il path cmdline-tools mi serve solo se voglio lanciare sdkmanager nel terminal.
+	export PATH=${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin:${ANDROID_SDK_ROOT}/platform-tools:${PATH}
+	sudo /home/igor/android/platform-tools/adb start-server
+	adb devices
+Il path cmdline-tools mi serve solo se voglio lanciare sdkmanager nel terminal,
+mentre platform-tools mi server per adb e connettere un device.
 
 Ora si pianta qui:
 > Preparing "Install NDK (Side by side) 21.4.7075529   
