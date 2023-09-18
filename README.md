@@ -1,8 +1,8 @@
 # Solitario versione 2.0
 
-This is the a Solitaire game with 40 italian Briscola cards and the Tarock Piemontese with 56 cards. 
-The original game and source of inspiration is the [Klondike](https://en.wikipedia.org/wiki/Klondike_(solitaire)). 
-This is an SDL2 project developed on Linux Ubuntu.  
+This is the Solitaire game with 40 italian Briscola cards and the Tarock Piemontese with 56 cards. 
+The original game and source of inspiration is the game [Klondike](https://en.wikipedia.org/wiki/Klondike_(solitaire)). 
+This is an SDL2 project developed on Linux Ubuntu and Windows.  
 This is also ported to Windows using MSys2.
 
 ## Supported Deck
