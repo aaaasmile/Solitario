@@ -1,6 +1,9 @@
 # Uso CMake principalmente per il target Msys2 su Windows
 #$ cmake --version
 #cmake version 3.25.2
+#cmake version 3.27.5
+#  g++ --version
+#g++.exe (Rev2, Built by MSYS2 project) 13.2.0
 
 cmake_minimum_required(VERSION 3.20)
 project(solitario)

@@ -18,6 +18,7 @@
             "includePath": [
                 "${workspaceFolder}/**;C:/msys64/ucrt64/include;C:/msys64/ucrt64/include/SDL2",
                 "${workspaceFolder}/libini/include",
+                "${workspaceFolder}/src/App",
                 "${workspaceFolder}/src/**"
             ],
             "compilerArgs": [

@@ -110,7 +110,7 @@ volevo il risultato in quella directory. Molto più facile è avere il target
 dove risiede il Makefile.
 
 ## Sviluppo in VS Code
-Sono partito dalla versione linux, quindi in WSL lancio
+Sono partito dalla versione linux, quindi in WSL2 lancio
 
     code . 
 (la linea di comando di VsCode) che mi setta l'ambiente
@@ -136,7 +136,10 @@ carica diversi mazzi sempre in pac, ho fatto una nuova versione, la 1.6, che fun
 carte singole. Però solo con il mazzo del Tarocco Piemontese, mentre tutti gli altri mazzi sono
 rimasti in formato pac e quindi hanno bisogno dell'eseguibile alla versione 1.4. 
 Qui rimane il formato pac quello decisivo. 
-Nella nuova versione 1.7 le carte possono essere caricate in entrambi i formati (singolo e pac).
+Nella nuova versione 2.0 le carte possono essere caricate in entrambi i formati (singolo e pac).
+Visto che il formato singolo è superfluo uso solo il pac che ora include anche il tarocco piemontese.
+Come ho creato il formato pac? Ho usato il progetto PacSprite https://github.com/aaaasmile/PacSprite/blob/main/passaggi.md.
+Poi ho messo il risultato in data/mazzi.
 
 ## Error Handling
 Non vorrei usare il throw del c++ perché non mi convince. Nell'Invido
@@ -254,6 +257,9 @@ ConText lo faccio partire con SciTe da:
 
     D:\Projects\ConTex\prepare_context.ps1
 In Scite apro il file solitario.tex e genero il file pdf con CTRL + F7.
+
+## Target Windows
+
 ## CMake
 Dopo avere sviluppato l'intero progetto su WSL2 con Ubuntu è arrivato il momento di avere anche il target
 Windows, nel mio caso MySys2. Per questo voglio provare CMake e non cercare di fare andare Automake
@@ -280,6 +286,12 @@ Uso un solo file CMakeLists.txt che contiene tutti i sorgenti compresa la librer
 supporto solo il target MySys che definisce WIN32. L'unica funzione che da dei problemi è mkdir.
 Nota che se cambio la lista dei files o un linker, non ho bisogno di rilanciare cmake.
 Quello che mi manca è l'integrazione in VsCode con diversi target per la produzione, il debugger e i TRACE.
+Infatti quando installo l'extension di cmake, non usa ninja, ma mingw make che non è corretto.
+Il comando da usare, quando si cambia il file CMakeList.txt nella root, è quello di andare nella
+dir build e lanciare cmake
+
+    cd build
+    cmake ..
 
 ## Visual Code in Windows
 Il file c_cpp_properties.json è nella repository, quindi viene usato sia in WSL2 che in windows.
@@ -294,8 +306,39 @@ senza nessun task aggiuntivo come ho su Ubuntu. In Launch si tratta di avere il 
 con il suo path e gdb. Non mi funziona CTRL + SHIFT + B in quanto esegue make per ubuntu, ma, invece,
 oltre alla powershell con ninja in build, mi funziona la icona Build nella statusbar
 
+### Debugger della versione Msys2
+Basta semplicemente premere la toolbar di sinistra sull'icona del debug e selezionare il progetto
+"Debug MySys Win". Nota che la configurazione si trova nel file launch.json. La configurazione "(gdb) Launch"
+è usata per WSL2.  
+
+### Per partire con Visual Code su Windows (Msys2)
+Per compilare il solitario in windows, che ha come target windows e le dll di msys2, bisogna installare
+il sistema msys2. Come riferimento posso vedere le note di https://github.com/aaaasmile/HelloSDL/blob/main/passaggi.md
+Ho fatto un download del programma https://www.msys2.org/ e poi nella shell ho messo i seguenti comandi:
+
+    pacman -Syu   (=> qui ho fatto un restart della shell)
+    pacman -S mingw-w64-ucrt-x86_64-gcc
+    pacman -S mingw-w64-ucrt-x86_64-gtk2
+    pacman -S mingw-w64-ucrt-x86_64-make
+    pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain
+    pacman -S git mingw-w64-ucrt-x86_64-cmake mingw-w64-ucrt-x86_64-ninja
+    pacman -S mingw-w64-ucrt-x86_64-gtest mingw-w64-ucrt-x86_64-giflib
+    pacman -S mingw-w64-ucrt-x86_64-libpng mingw-w64-ucrt-x86_64-libjpeg-turbo
+    pacman -S mingw-w64-ucrt-x86_64-SDL2
+    pacman -S mingw-w64-ucrt-x86_64-SDL2_net
+    pacman -S mingw-w64-ucrt-x86_64-SDL2_mixer
+    pacman -S mingw-w64-ucrt-x86_64-SDL2_image
+    pacman -S mingw-w64-ucrt-x86_64-SDL2_ttf
+    pacman -S mingw-w64-ucrt-x86_64-SDL2_gfx
+Nota che è un'installazione che consente di compilare anche il sistem ConTex.
+Ora posso lanciare Visual Code con il path per compilare il solitario usando lo script .\start_code.ps1
+che lancia Visual Code con il path di msys2 corretto. Nota che non metto msys2 nel path di windows per
+la semplice ragione che uso versioni differenti del compilatore g++ e la sua toolchain a seconda del 
+linguaggio di programmazione e target (esempio in golang uso C:\TDM-GCC-64)
+
 ### TODO
 - windows setup
+    - suono del main loop del game è wings-of-the-wind.ogg
     - Il file exe dovrebbe avere un altra icona
     - Il deploy così com'è non va bene. Le dll e l'exe devono provenire dalla directory build.
         Qui occorre un filtro per non inglobare anche i files di CMake.  [DONE]

@@ -1,6 +1,7 @@
 #ifndef _CURRTIME_H
 #define _CURRTIME_H
 
+#include <cstdint>
 #include "WinTypeGlobal.h"
 
 class CurrentTime {
