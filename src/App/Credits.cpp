@@ -27,9 +27,9 @@ char const* credit_text[] = {
     "",
     "",
     "-MUSIC",
-    "AUTHOR OF WATERMUSIC",
+    "WATERMUSIC",
     "WOLMER AND ITS ACCORDION",
-    "",
+    "WINGS OF THE WIND BY GROOVYLAB80",
     "", /* The following blanks cause the screen to scroll to complete blank: */
     "",
     "",
