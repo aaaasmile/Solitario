@@ -35,6 +35,6 @@ This is also ported to Windows using MSys2.
 [Help Italian PDF file](./data/solitario.pdf) 
 
 ## Credits
-wings-of-the-wind.ogg: "Wings of the Wind" by GroovyLab80
-wolmer-invido.ogg: La fisarmonica di Wolmer Beltrami
-watermusic.it: water music free.
+- wings-of-the-wind.ogg: "Wings of the Wind" by GroovyLab80
+- wolmer-invido.ogg: La fisarmonica di Wolmer Beltrami
+- watermusic.it: water music free.
