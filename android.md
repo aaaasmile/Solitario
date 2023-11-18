@@ -63,8 +63,8 @@ Il comando sdkmanager "tools" scarica gli emulatori che non ho intenzione di usa
 
 ## Samsumg J320f
 Mi piacerebbe usare il vecchio Samsumg J320f per provare qualche applicazione apk. 
-Questo dispositivo, che ho acquistato su Amazon il febbraio 2017 per 130 euro, ha 8G
-di memoria e Android 5.1. Le api level di questo dispositivo è la 22. Avendo installato la 
+Questo dispositivo, che ho acquistato su Amazon il febbraio 2017 per 130 euro, ha 1,5 GB RAM, 32 GB
+di memoria interna e Android 5.1. Le api level di questo dispositivo è la 22. Avendo installato la 
 33 posso creare un app per Android 5.1 se metto come minimo livello l'API level 22.
 Per una lista di tutti i livelli ed a quale versione di Android corrisponde, vedi questo link:
 https://source.android.com/docs/setup/start/build-numbers?hl=de
@@ -113,6 +113,30 @@ Affinché funzioni in date explorer deve comparire il device. Può darsi che si 
 nella windows toolbar e poi fare un ricollegamento col cavo.
 Dopo un restart di windows il telefono va scollegato e collegato quando si fa l'attach da powershell
 
+### Collegare Redmi Note 11
+Questo dispositivo, che ho acquistato su Amazon in novembre 2023 per 147 euro, ha 4 GB RAM, 128 GB
+di memoria interna, così come un processore arm64 v8.
+In Powershell
+winget install usbipd
+Poi faccio ripartire Powershell ed ottengo:
+> usbipd wsl list
+5-1    2717:ff08  Redmi Note 11
+
+in admin powershell
+usbipd wsl attach --busid 5-1 --distribution UbuntuMinitoro
+
+Al primo tentativo ho ricevuto il seguente errore:
+usbipd: error: WSL 'usbip' client not correctly installed. See https://github.com/dorssel/usbipd-win/wiki/WSL-support for the latest instructions.
+L'ho corretto seguendo le istruzioni del link, che sono (uso UbuntuMinitoro dove ho Android e lo scratch di SDL2):
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt install linux-tools-virtual hwdata
+sudo update-alternatives --install /usr/local/bin/usbip usbip `ls /usr/lib/linux-tools/*/usbip | tail -n1` 20
+In Powershell ora il comando:
+usbipd wsl attach --busid 5-1 --distribution UbuntuMinitoro
+funziona senza problemi.
+In WSl il comando lsusb genera:
+Bus 001 Device 002: ID 2717:ff08 Xiaomi Inc. Redmi Note 3 (ADB Interface)
 	
 ### Hello World primo tentativo
 Sono partito usando la platform 33 per poi retrocedere su piattaforme passate per via d'usare
@@ -371,6 +395,7 @@ Vorrei provare a compilare un progetto HelloWorld per SDL2. È un programma che 
 un rettangolo 
 
 ### Uso dopo aver settato tutto
+Faccio partire UbuntuMinitoro su WSL.
 
 	cd scratch/android/sdl-android-prj-hello/
 	code .
@@ -404,6 +429,32 @@ Il comando
 	./gradlew installDebug
 mi manda windows in blue screen of the death. Per ricollegarmi al device ho dovuto
 far ripartire windows due volte. Il telefono solo una volta.
+
+Altro problema con RedMi 11
+
+	List of devices attached
+	f5c24a47        unauthorized
+Questo si risolve nel momento in cui si collega il cavo al telefono. Qui compare il popup che chiede
+l'autorizzazione. Dopo la conferma sul telefono, quello che avviene è:
+
+	List of devices attached
+	f5c24a47        device
+Interessante il fatto che adb devices lanciato in windows:
+
+	D:\Xiaomi\platform-tools_r34.0.5-windows\platform-tools>adb devices
+non mostra nulla se non si lancia 
+
+	usbipd wsl attach --busid 5-1 --distribution UbuntuMinitoro
+
+Altro problema su RedMi  
+INSTALL_FAILED_USER_RESTRICTED: Install canceled by user
+Questo dipende dai developer settings che non sono settati su:  
+Turn On "USB Debugging"
+Turn On "Install via USB"
+
+Il problema è che li posso attivare solo se ho inserito una simcard. Ho inserito la simcard di hot,
+che non è nenache attivata, ed ha funzionato l'attivazione delle opzioni.
+Ho poi tolto la simcard e fatto un reboot e l'opzione è rimasta attiva.
 	
 ### Settaggio iniziale del progetto SDL2 hello World
 Per partire scarico i sorgenti di SDL2 stabili (SDL-release-2.26.5.tar.gz) in una dir temporanea 
@@ -487,3 +538,17 @@ Quando si aggiunge la libreria SDL2_image essa va aggiunta nella funzione getLib
 Mi sembra che con gradlew e Visual Code riesco a programmare senza problemi senza dover installare Android Studio. 
 Tutti i miei esperimenti li ho fatti a linea di comando e in Visual Code
 usando WSL2 sotto windows 11. Con un progetto template che contenga gradle lo sviluppo risulta molto veloce.
+
+### SDL2 hello World su RedMi 11
+Su questo smartphone il processore è il Snapdragon 680. Ha 4GB Ram e 12GB di memoria interna.
+Su https://en.wikipedia.org/wiki/List_of_Qualcomm_Snapdragon_systems_on_chips
+viene descritto la sua caratteristica:
+4 + 4 cores (2.4 GHz Kryo 265 Gold – Cortex-A73 + 1.9 GHz Kryo 265 Silver – Cortex-A53).
+The ARM Cortex-A73 is a central processing unit implementing the ARMv8-A 64-bit instruction set designed by ARM Holdings' Sophia design centre
+Quindi è un arm v8 a 64 bit. l'opzione dovrebbe essere arm64-v8a.
+Per compilare uso:
+./gradlew compileDebugSources
+Per installare
+./gradlew installDebug
+Per lanciare l'app dal terminal di Visual Code:
+adb shell am start -n org.libsdl.app/.SDLActivity
